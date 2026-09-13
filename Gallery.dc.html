@@ -292,6 +292,8 @@ class Component extends DCLogic {
     size: t === 'Script' ? "11\u2032\u2032x 24\u2032\u2032" : "4\u2032\u2032x 6\u2032\u2032",
     desc: t === 'Script' ? 'Repeated strokes form a visual language.' : ''
   }));
+  // Artwork files are not in the repo yet; show a light green box until they are added.
+  ph(a) { return e => { e.currentTarget.src = a.orient === 'Vertical' ? 'assets/placeholder-portrait.svg' : 'assets/placeholder-landscape.svg'; }; }
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
@@ -341,7 +343,7 @@ class Component extends DCLogic {
       cards: filtered.map(({ a, k }) => ({
         title: a.title,
         aria: 'View ' + a.title,
-        img: React.createElement('img', { src: a.src, alt: a.title, style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' } }),
+        img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' } }),
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       back: () => this.setState({ sel: null, zoom: false, printView: false }),
@@ -355,8 +357,8 @@ class Component extends DCLogic {
       printInfoOrder: m ? 3 : 0,
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : 'min(70vh, 820px)',
-      printThumb: d && React.createElement('img', { src: d.src, alt: '', style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', style: { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 14px 36px rgba(20,20,20,0.14)' } }),
+      printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 14px 36px rgba(20,20,20,0.14)' } }),
       printSlot1: 'print-' + sel + '-alt1',
       printSlot2: 'print-' + sel + '-alt2',
       printSlot3: 'print-' + sel + '-alt3',
@@ -375,7 +377,7 @@ class Component extends DCLogic {
       enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',
-      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, style: { width: '100%', height: 'auto', display: 'block' } }),
+      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), style: { width: '100%', height: 'auto', display: 'block' } }),
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',

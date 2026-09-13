@@ -127,6 +127,8 @@ class Component extends DCLogic {
     { src: 'assets/art-7.png', alt: 'Ochre field with green and blue frames' }
   ];
   go(d) { this.setState(s => ({ index: (s.index + d + this.arts.length) % this.arts.length })); }
+  // Artwork files are not in the repo yet; show a light green box until they are added.
+  ph(e) { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
@@ -163,11 +165,11 @@ class Component extends DCLogic {
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : '16px',
       thumbH: m ? '38px' : '46px',
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', minWidth: 0, minHeight: 0, objectFit: 'contain', display: 'block', boxShadow: '0 14px 36px rgba(20,20,20,0.16)' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph, style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', minWidth: 0, minHeight: 0, objectFit: 'contain', display: 'block', boxShadow: '0 14px 36px rgba(20,20,20,0.16)' } }),
       prev: () => this.go(-1),
       next: () => this.go(1),
       thumbs: (m ? [(i + this.arts.length - 1) % this.arts.length, i, (i + 1) % this.arts.length] : this.arts.map((a, k) => k)).map(k => ({
-        img: React.createElement('img', { src: this.arts[k].src, alt: '', style: { display: 'block', height: m ? '38px' : '46px', width: 'auto' } }),
+        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph, style: { display: 'block', height: m ? '38px' : '46px', width: 'auto' } }),
         alt: 'Show ' + this.arts[k].alt,
         border: k === i ? '1.5px solid #141414' : '1px solid #E7E4DE',
         opacity: k === i ? 1 : 0.75,
