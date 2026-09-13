@@ -24,8 +24,8 @@ a:hover { color: #6E6B66; }
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
-<div style="min-height: 100vh; display: flex; flex-direction: column">
-<header style="border-bottom: 1px solid #E7E4DE; position: relative" data-screen-label="Header">
+<div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
+<header style="border-bottom: 1px solid #E7E4DE" data-screen-label="Header">
   <div style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 32px">
     <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
     <div style="display: flex; gap: 40px; align-items: center">
@@ -48,16 +48,16 @@ a:hover { color: #6E6B66; }
         </a>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
-            <span style="display: block; width: 20px; height: 1.5px; background: #141414"></span>
-            <span style="display: block; width: 20px; height: 1.5px; background: #141414"></span>
-            <span style="display: block; width: 20px; height: 1.5px; background: #141414"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barTop }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: opacity 0.2s; opacity: {{ barMid }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barBot }}"></span>
           </button>
         </sc-if>
       </div>
     </div>
   </div>
   <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-    <nav style="position: absolute; top: 76px; left: 0; right: 0; z-index: 20; background: #FDFDFB; border-bottom: 1px solid #E7E4DE; display: grid; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase">
+    <nav style="position: absolute; top: 76px; bottom: 50px; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase">
       <a href="Gallery.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
       <a href="About.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">About</a>
       <a href="#" onClick="{{ closeMenu }}" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
@@ -141,20 +141,10 @@ a:hover { color: #6E6B66; }
   </section>
 </main>
 
-<footer style="border-top: 1px solid #E7E4DE; background: #FAF9F5; margin-top: auto" data-screen-label="Footer">
-  <div style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ footerPad }}; display: grid; grid-template-columns: {{ footerCols }}; gap: {{ footerGap }}; align-items: center">
-    <div style="display: grid; gap: 14px; font-size: 12px; color: #0F0F0F">
-      <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
-      <nav style="display: flex; gap: 10px; align-items: baseline">
-        <a href="Home.dc.html" style="color: #0F0F0F">Home</a><span style="color: #C9C5BD">|</span>
-        <a href="Gallery.dc.html" style="color: #0F0F0F">Gallery</a><span style="color: #C9C5BD">|</span>
-        <a href="About.dc.html" style="color: #0F0F0F">About</a><span style="color: #C9C5BD">|</span>
-        <a href="Contact%20Page.dc.html" style="color: #0F0F0F">Contact</a>
-      </nav>
-      <p style="margin: 0">arbor-eye.com</p>
-    </div>
-    <img src="assets/logo-mark.png" alt="Arbor &amp; Eye mark" style="display: block; width: 64px; opacity: 0.55; mix-blend-mode: multiply; order: 2; justify-self: end; align-self: center; grid-column: {{ markCol }}; grid-row: {{ markRow }}">
-    <div style="display: flex; gap: 16px; justify-self: {{ socialJustify }}; align-items: center; grid-column: {{ socialCol }}">
+<footer style="border-top: 1px solid #E7E4DE; background: #FAF9F5; height: 50px; box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
+  <div style="max-width: 1920px; width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+    <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
+    <div style="display: flex; gap: 16px; align-items: center">
       <a href="#" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
         <img src="uploads/social_IG.png" alt="Instagram" style="display: block; width: 27.5px; height: 27.5px">
       </a>
@@ -190,6 +180,9 @@ class Component extends DCLogic {
       isDesktop: !m,
       menuOpen: this.state.menuOpen,
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      barTop: this.state.menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
+      barMid: this.state.menuOpen ? 0 : 1,
+      barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
       closeMenu: () => this.setState({ menuOpen: false }),
       mainPad: m ? '0 24px' : '0 48px',
       shippingCols: m ? '1fr' : '7fr 5fr',
@@ -197,14 +190,7 @@ class Component extends DCLogic {
       sectionGap: m ? '48px' : '96px',
       shippingPad: m ? '72px 0' : '120px 0',
       returnsPad: m ? '0 0 88px' : '0 0 140px',
-      returnsImgOrder: m ? 2 : 0,
-      footerPad: m ? '32px 24px' : '40px 48px',
-      footerCols: m ? '1fr auto' : '1fr auto auto',
-      footerGap: m ? '20px 24px' : '48px',
-      markCol: m ? '2' : 'auto',
-      markRow: m ? '1' : 'auto',
-      socialCol: m ? '1 / -1' : 'auto',
-      socialJustify: m ? 'start' : 'end'
+      returnsImgOrder: m ? 2 : 0
     };
   }
 }
