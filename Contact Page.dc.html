@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Artwork files are not in the repo yet; show a light green box until they are added.
+  addEventListener('error', e => { if (e.target.tagName === 'IMG' && !e.target.src.endsWith('placeholder-landscape.svg')) e.target.src = 'assets/placeholder-landscape.svg'; }, true);
+</script>
 <script src="./support.js"></script>
 </head>
 <body>
