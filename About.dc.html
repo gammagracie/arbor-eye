@@ -22,7 +22,7 @@ a:hover { color: #6E6B66; }
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
-<header style="border-bottom: 1px solid #E7E4DE" data-screen-label="Header">
+<header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 32px">
     <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
     <div style="display: flex; gap: 40px; align-items: center">
@@ -34,6 +34,7 @@ a:hover { color: #6E6B66; }
         </nav>
       </sc-if>
       <div style="display: flex; gap: 20px; align-items: center">
+        <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: center">
         <a href="#" aria-label="Account" style="display: flex; color: #141414">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>
         </a>
@@ -43,6 +44,7 @@ a:hover { color: #6E6B66; }
             <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
           </sc-if>
         </a>
+        </div>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
             <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barTop }}"></span>
@@ -53,16 +55,25 @@ a:hover { color: #6E6B66; }
       </div>
     </div>
   </div>
-  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-    <nav style="position: absolute; top: 76px; bottom: 50px; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase">
-      <a href="Gallery.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-      <a href="About.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">About</a>
-      <a href="Contact%20Page.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
-      <a href="Contact%20Page.dc.html#shipping" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
-      <a href="Contact%20Page.dc.html#returns" style="padding: 14px 0">Returns &amp; Exchanges</a>
-    </nav>
-  </sc-if>
 </header>
+<nav style="position: absolute; top: 76px; bottom: 50px; left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="Gallery.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
+  <a href="About.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">About</a>
+  <a href="Contact%20Page.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
+  <a href="Contact%20Page.dc.html#shipping" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
+  <a href="Contact%20Page.dc.html#returns" style="padding: 14px 0">Returns &amp; Exchanges</a>
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; gap: 24px; align-items: center; padding: 20px 0 0">
+      <a href="#" aria-label="Account" style="display: flex; color: #141414">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>
+      </a>
+      <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 7.5h15l-1.2 12.5H5.7L4.5 7.5Z"></path><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"></path></svg>
+          <span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
+      </a>
+    </div>
+  </sc-if>
+</nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
   <section data-screen-label="About — Biography" style="padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
@@ -188,14 +199,18 @@ a:hover { color: #6E6B66; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, menuOpen: false, bio: 0, proc: 0, stu: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, menuOpen: false, bio: 0, proc: 0, stu: 0 };
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
+    this.mqNarrow = window.matchMedia('(max-width: 419px)');
+    this.onMqNarrow = () => this.setState({ narrow: this.mqNarrow.matches });
+    this.mqNarrow.addEventListener('change', this.onMqNarrow);
+    this.setState({ narrow: this.mqNarrow.matches });
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqNarrow) this.mqNarrow.removeEventListener('change', this.onMqNarrow); }
   car(key, n) {
     const i = this.state[key];
     const out = {};
@@ -218,6 +233,11 @@ class Component extends DCLogic {
       barTop: this.state.menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
       barMid: this.state.menuOpen ? 0 : 1,
       barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
+      menuTransform: this.state.menuOpen ? 'translateY(0)' : 'translateY(-100%)',
+      menuVis: this.state.menuOpen ? 'visible' : 'hidden',
+      narrow: this.state.narrow,
+      headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
+      badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: m ? '0 24px' : '0 48px',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
       twoColGap: m ? '28px' : '80px',
