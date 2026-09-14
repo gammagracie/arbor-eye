@@ -24,7 +24,7 @@ a:hover { color: #6E6B66; }
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
-  <div style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 32px">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 32px">
     <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
     <div style="display: flex; gap: 40px; align-items: center">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
@@ -72,7 +72,7 @@ a:hover { color: #6E6B66; }
   </sc-if>
 </nav>
 
-<main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid">
     <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0">
       {{ heroImg }}
@@ -97,7 +97,7 @@ a:hover { color: #6E6B66; }
 </main>
 
 <footer style="border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="max-width: 1920px; width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="#" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -162,8 +162,13 @@ class Component extends DCLogic {
     const m = this.state.mobile;
     const i = this.state.index;
     const n = this.arts.length;
-    // Desktop: no taller than the space between header and footer (107px = header border + hero padding + visible rail height); never wider than the content
-    const heroW = (m || this.state.tablet) ? '100%' : 'min(100%, calc((100vh - var(--header-h) - var(--footer-h) - 107px) * ' + this.state.ratio + '))';
+    // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
+    // rail adds 4.5% of the image width). Side padding follows the image edges, never less than 12% of the viewport,
+    // so the header and footer content line up with the image.
+    const k = this.state.ratio / (1 + 0.045 * this.state.ratio);
+    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 61px) * ' + k.toFixed(4) + ')';
+    const desktopPad = 'max(12vw, calc(50vw - ' + fitW + ' / 2))';
+    const thumbH = m ? '38px' : this.state.tablet ? '46px' : 'calc((100vw - 2 * ' + desktopPad + ') * 0.045)';
     const shown = (m ? [-1, 0, 1] : this.state.tablet ? [-2, -1, 0, 1, 2] : this.arts.map((a, k) => k - i)).map(o => (i + o + n) % n);
     return {
       cartCount,
@@ -181,22 +186,21 @@ class Component extends DCLogic {
       headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setState({ menuOpen: false }),
-      // Desktop: 12% side padding, capped at 230px so content maxes out at 1460px (a 1920 monitor); header and footer share it
-      mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 min(12vw, 230px)',
+      mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 ' + desktopPad,
       heroPad: m ? '32px 0 48px' : this.state.tablet ? '40px 0 56px' : '28px 0 32px',
       railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : '16px',
-      thumbH: m ? '38px' : '46px',
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
+      thumbH,
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: '100%', height: 'auto', display: 'block', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
       next: () => this.go(1),
       thumbs: shown.map(k => ({
-        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: m ? '38px' : '46px', width: 'auto' } }),
+        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
         alt: 'Show ' + this.arts[k].alt,
         border: k === i ? '1.5px solid #141414' : '1px solid #E7E4DE',
         opacity: k === i ? 1 : 0.75,
