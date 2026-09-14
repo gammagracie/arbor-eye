@@ -56,21 +56,17 @@ a:hover { color: #6E6B66; }
   </div>
 </header>
 <nav style="position: absolute; top: 76px; bottom: 50px; left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="Gallery.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="About.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">About</a>
-  <a href="Contact%20Page.dc.html" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
-  <a href="Contact%20Page.dc.html#shipping" style="padding: 14px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
-  <a href="Contact%20Page.dc.html#returns" style="padding: 14px 0">Returns &amp; Exchanges</a>
+  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
+  <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
+  <a href="Contact%20Page.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
+  <a href="Contact%20Page.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
+  <a href="Contact%20Page.dc.html#returns" style="padding: 28px 0">Returns &amp; Exchanges</a>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
-    <div style="display: flex; gap: 24px; align-items: center; padding: 20px 0 0">
-      <a href="#" aria-label="Account" style="display: flex; color: #141414">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>
-      </a>
-      <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 7.5h15l-1.2 12.5H5.7L4.5 7.5Z"></path><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"></path></svg>
-          <span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
-      </a>
-    </div>
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>Login/Account</a>
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
+      <span style="position: relative; display: flex"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 7.5h15l-1.2 12.5H5.7L4.5 7.5Z"></path><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span></span>
+      Shopping Cart
+    </a>
   </sc-if>
 </nav>
 
@@ -94,7 +90,7 @@ a:hover { color: #6E6B66; }
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 4 8 8-8 8"></path></svg>
       </button>
     </div>
-    <p style="margin: 16px 0 0; min-height: 18px; text-align: center; font-size: 13px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680">{{ hoverTitle }}</p>
+    <p style="margin: 40px 0 0; min-height: 24px; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680">{{ hoverTitle }}</p>
   </section>
 </main>
 
@@ -119,14 +115,14 @@ a:hover { color: #6E6B66; }
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false };
-  // Titles are the sample images' names for now; replace with the real titles when artwork is added.
+  // Titles match the two sample works in the Gallery for now; replace with the real titles when artwork is added.
   arts = [
     { src: 'assets/art-1.png', title: 'Core 18', alt: 'Green field with red, ochre and white forms' },
-    { src: 'assets/art-2.png', title: 'Select 02', alt: 'Chartreuse field with blue-ringed forms' },
+    { src: 'assets/art-2.png', title: 'Select 2', alt: 'Chartreuse field with blue-ringed forms' },
     { src: 'assets/art-3.png', title: 'Core 18', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/art-4.png', title: 'Select 02', alt: 'Color band study on textured paper' },
+    { src: 'assets/art-4.png', title: 'Select 2', alt: 'Color band study on textured paper' },
     { src: 'assets/art-5.png', title: 'Core 18', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/art-6.png', title: 'Select 02', alt: 'Two framed panels on black ground' },
+    { src: 'assets/art-6.png', title: 'Select 2', alt: 'Two framed panels on black ground' },
     { src: 'assets/art-7.png', title: 'Core 18', alt: 'Ochre field with green and blue frames' }
   ];
   go(d) { this.setState(s => ({ index: (s.index + d + this.arts.length) % this.arts.length })); }
@@ -178,7 +174,7 @@ class Component extends DCLogic {
       closeMenu: () => this.setState({ menuOpen: false }),
       mainPad: m ? '0 24px' : '0 48px',
       heroPad: m ? '32px 0 48px' : '40px 0 56px',
-      railMargin: m ? '28px' : '-22px',
+      railMargin: m ? '28px' : '-10px',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
