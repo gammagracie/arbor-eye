@@ -120,7 +120,7 @@ a:hover { color: #6E6B66; }
       </div>
       <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
-          <div style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
+          <div style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
               <span style="display: {{ chipDisplay }}; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; background: #FDFDFB; color: #141414; padding: 9px 16px; box-shadow: 0 2px 12px rgba(20,20,20,0.14)">{{ c.title }}</span>
