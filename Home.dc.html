@@ -91,8 +91,8 @@ a:hover { color: #6E6B66; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="16" height="44" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 10px 0 0; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
     </div>
-    <p style="margin: 40px 0 0; min-height: 24px; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680">{{ hoverTitle }}</p>
   </section>
 </main>
 
@@ -162,8 +162,8 @@ class Component extends DCLogic {
     const m = this.state.mobile;
     const i = this.state.index;
     const n = this.arts.length;
-    // Desktop: no taller than the space between header and footer (207px = header border + hero padding + rail + title line); never wider than the content
-    const heroW = (m || this.state.tablet) ? '100%' : 'min(100%, calc((100vh - var(--header-h) - var(--footer-h) - 207px) * ' + this.state.ratio + '))';
+    // Desktop: no taller than the space between header and footer (107px = header border + hero padding + visible rail height); never wider than the content
+    const heroW = (m || this.state.tablet) ? '100%' : 'min(100%, calc((100vh - var(--header-h) - var(--footer-h) - 107px) * ' + this.state.ratio + '))';
     const shown = (m ? [-1, 0, 1] : this.state.tablet ? [-2, -1, 0, 1, 2] : this.arts.map((a, k) => k - i)).map(o => (i + o + n) % n);
     return {
       cartCount,
@@ -183,7 +183,7 @@ class Component extends DCLogic {
       closeMenu: () => this.setState({ menuOpen: false }),
       // Desktop: 12% side padding, capped at 230px so content maxes out at 1460px (a 1920 monitor); header and footer share it
       mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 min(12vw, 230px)',
-      heroPad: m ? '32px 0 48px' : '40px 0 56px',
+      heroPad: m ? '32px 0 48px' : this.state.tablet ? '40px 0 56px' : '28px 0 32px',
       railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
