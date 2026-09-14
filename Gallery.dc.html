@@ -130,18 +130,24 @@ a:hover { color: #6E6B66; }
     </section>
   </sc-if>
   <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
-    <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; display: grid; gap: 32px; align-content: start">
+    <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 32px; align-content: start">
       <div>
         <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
       </div>
-      <div style="display: grid; grid-template-columns: {{ detailCols }}; gap: {{ detailGap }}; align-items: start">
-        <div style="display: grid; gap: 18px">
+      <div style="display: grid; grid-template-columns: {{ detailCols }}; gap: {{ printGap }}; align-items: center; align-self: center">
+        <div style="display: flex; flex-direction: {{ detailRailDir }}; gap: 14px; order: {{ printRailOrder }}; overflow: auto; margin-top: {{ detailRailTop }}">
+          <div style="border: 1px solid #141414; background: #FFFFFF; flex: none; width: {{ printThumbSize }}; height: {{ printThumbSize }}; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 10px">{{ printThumb }}</div>
+          <image-slot id="{{ frameSlot1 }}" shape="rect" placeholder="Black frame" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
+          <image-slot id="{{ frameSlot2 }}" shape="rect" placeholder="White frame" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
+          <image-slot id="{{ frameSlot3 }}" shape="rect" placeholder="Natural frame" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
+        </div>
+        <div style="position: relative; order: {{ printMainOrder }}">
           {{ detailImg }}
-          <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; justify-self: center; color: #141414; display: flex; padding: 8px" style-hover="color: #6E6B66">
+          <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 18px; border: none; background: transparent; cursor: pointer; color: #141414; display: flex; padding: 8px" style-hover="color: #6E6B66">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
           </button>
         </div>
-        <div style="display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ detailInfoPad }}">
+        <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <div style="display: grid; gap: 8px; font-size: 14px; color: #6E6B66; padding-top: 8px">
@@ -384,8 +390,12 @@ class Component extends DCLogic {
       addToCart: () => this.setState(s => ({ added: s.added + 1 })),
       toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
       zoomLabel: this.state.zoom ? 'Shrink artwork' : 'Enlarge artwork',
-      detailCols: (m || this.state.zoom) ? '1fr' : 'minmax(0, 1fr) 380px',
-      detailGap: m ? '32px' : 'clamp(56px, 7vw, 180px)',
+      detailCols: (m || this.state.zoom) ? '1fr' : '104px minmax(0, 1fr) 380px',
+      detailRailDir: (m || this.state.zoom) ? 'row' : 'column',
+      detailRailTop: (m || this.state.zoom) ? '40px' : '0',
+      frameSlot1: 'detail-' + sel + '-frame1',
+      frameSlot2: 'detail-' + sel + '-frame2',
+      frameSlot3: 'detail-' + sel + '-frame3',
       enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',
