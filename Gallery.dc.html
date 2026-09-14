@@ -134,20 +134,20 @@ a:hover { color: #6E6B66; }
       <div>
         <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
       </div>
-      <div style="display: grid; grid-template-columns: {{ detailCols }}; gap: {{ printGap }}; align-items: center; align-self: center">
-        <div style="display: grid; grid-template-columns: {{ detailRailCols }}; gap: 14px; order: {{ printRailOrder }}; overflow: auto; margin-top: {{ detailRailTop }}">
+      <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: center">
+        <div style="grid-column: 1; grid-row: {{ detailRailRow }}; display: grid; grid-template-columns: {{ detailRailCols }}; gap: 14px; overflow: auto">
           <div style="border: 1px solid #141414; background: #FFFFFF; width: 100%; aspect-ratio: 1 / 1; box-sizing: border-box; min-width: 0; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 10px">{{ printThumb }}</div>
           <image-slot id="{{ frameSlot1 }}" shape="rect" placeholder="Black frame" style="width: 100%; aspect-ratio: 1 / 1; box-sizing: border-box; min-width: 0"></image-slot>
           <image-slot id="{{ frameSlot2 }}" shape="rect" placeholder="White frame" style="width: 100%; aspect-ratio: 1 / 1; box-sizing: border-box; min-width: 0"></image-slot>
           <image-slot id="{{ frameSlot3 }}" shape="rect" placeholder="Natural frame" style="width: 100%; aspect-ratio: 1 / 1; box-sizing: border-box; min-width: 0"></image-slot>
         </div>
-        <div style="position: relative; order: {{ printMainOrder }}">
+        <div style="grid-column: {{ detailImgCol }}; grid-row: 1; position: relative">
           {{ detailImg }}
           <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 18px; border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 8px" style-hover="color: #6E6B66">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
           </button>
         </div>
-        <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start">
+        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <div style="display: grid; gap: 8px; font-size: 14px; color: #6E6B66; padding-top: 8px">
@@ -223,7 +223,7 @@ a:hover { color: #6E6B66; }
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, size: 0, added: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, size: 0, added: 0 };
   arts = [
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
@@ -309,17 +309,23 @@ class Component extends DCLogic {
     this.onMqNarrow = () => this.setState({ narrow: this.mqNarrow.matches });
     this.mqNarrow.addEventListener('change', this.onMqNarrow);
     this.setState({ narrow: this.mqNarrow.matches });
+    this.mqTablet = window.matchMedia('(max-width: 1279px)');
+    this.onMqTablet = () => this.setState({ tablet: this.mqTablet.matches });
+    this.mqTablet.addEventListener('change', this.onMqTablet);
+    this.setState({ tablet: this.mqTablet.matches });
     // Open the work named in the URL hash (linked from the home carousel).
     const k = this.arts.findIndex(a => a.title === decodeURIComponent(location.hash.slice(1)));
     if (k >= 0) this.setState({ sel: k });
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqNarrow) this.mqNarrow.removeEventListener('change', this.onMqNarrow); }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqNarrow) this.mqNarrow.removeEventListener('change', this.onMqNarrow); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); }
   renderVals() {
     const cartCount = (this.props.cartCount ?? 1) + this.state.added;
     const hoverTitles = this.props.hoverTitles ?? true;
     const m = this.state.mobile;
     const L = this.state.layout;
     const sel = this.state.sel;
+    const t = !m && this.state.tablet;
+    const oneCol = m || this.state.zoom;
     const d = sel != null ? this.arts[sel] : null;
     const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
       (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
@@ -393,10 +399,14 @@ class Component extends DCLogic {
       addToCart: () => this.setState(s => ({ added: s.added + 1 })),
       toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
       zoomLabel: this.state.zoom ? 'Shrink artwork' : 'Enlarge artwork',
-      detailCols: (m || this.state.zoom) ? '1fr' : '104px minmax(0, 1fr) auto',
+      detailCols: oneCol ? '1fr' : t ? 'minmax(0, 1fr) auto' : '104px minmax(0, 1fr) auto',
+      detailRowGap: m ? '32px' : (oneCol || t) ? '64px' : '0',
+      detailRailRow: (oneCol || t) ? '2' : '1',
+      detailImgCol: (oneCol || t) ? '1' : '2',
+      detailInfoCol: oneCol ? '1' : t ? '2' : '3',
+      detailInfoRow: oneCol ? '3' : t ? '1 / 3' : '1',
       zoomDisplay: m ? 'none' : 'flex',
-      detailRailCols: m ? 'repeat(4, minmax(0, 1fr))' : this.state.zoom ? 'repeat(4, 104px)' : '104px',
-      detailRailTop: m ? '4px' : this.state.zoom ? '40px' : '0', // mobile: 28px grid gap + 4px = 32px, matching the space above the image
+      detailRailCols: m ? 'repeat(4, minmax(0, 1fr))' : (oneCol || t) ? 'repeat(4, 104px)' : '104px',
       frameSlot1: 'detail-' + sel + '-frame1',
       frameSlot2: 'detail-' + sel + '-frame2',
       frameSlot3: 'detail-' + sel + '-frame3',
