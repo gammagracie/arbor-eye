@@ -20,6 +20,8 @@ a:hover { color: #6E6B66; }
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
+/* Grid-size switcher is desktop / tablet-landscape only */
+@media (max-width: 1023px) { .layout-switch { display: none !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -79,7 +81,7 @@ a:hover { color: #6E6B66; }
   <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
     <section data-screen-label="Gallery — Grid" style="padding: {{ topPad }} 0 80px; display: grid; gap: {{ toolbarGap }}; align-content: start">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px 32px">
-        <div style="display: flex; gap: 14px; align-items: center">
+        <div class="layout-switch" style="display: flex; gap: 14px; align-items: center">
           <button onClick="{{ setL3 }}" aria-label="Small grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c3 }}">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg>
           </button>
