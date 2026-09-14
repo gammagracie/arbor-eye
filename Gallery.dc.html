@@ -406,7 +406,7 @@ class Component extends DCLogic {
       detailInfoCol: oneCol ? '1' : t ? '2' : '3',
       detailInfoRow: oneCol ? '3' : t ? '1 / 3' : '1',
       zoomDisplay: m ? 'none' : 'flex',
-      detailRailCols: m ? 'repeat(4, minmax(0, 1fr))' : (oneCol || t) ? 'repeat(4, 104px)' : '104px',
+      detailRailCols: (m || t) ? 'repeat(4, minmax(0, 1fr))' : oneCol ? 'repeat(4, 104px)' : '104px',
       frameSlot1: 'detail-' + sel + '-frame1',
       frameSlot2: 'detail-' + sel + '-frame2',
       frameSlot3: 'detail-' + sel + '-frame3',
