@@ -76,8 +76,8 @@ a:hover { color: #6E6B66; }
       {{ heroImg }}
     </a>
     <div style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: center; justify-content: {{ railJustify }}; gap: {{ railGap }}">
-      <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #55524C; display: flex" style-hover="color: #141414">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4 7 12l8 8"></path></svg>
+      <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
+        <svg width="16" height="44" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="display: flex; gap: 14px; align-items: center; overflow-x: auto; padding: 4px 2px">
         <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
@@ -86,8 +86,8 @@ a:hover { color: #6E6B66; }
           </button>
         </sc-for>
       </div>
-      <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #55524C; display: flex" style-hover="color: #141414">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 4 8 8-8 8"></path></svg>
+      <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
+        <svg width="16" height="44" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
     </div>
     <p style="margin: 40px 0 0; min-height: 24px; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680">{{ hoverTitle }}</p>
@@ -114,7 +114,7 @@ a:hover { color: #6E6B66; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false };
   // Titles match the two sample works in the Gallery for now; replace with the real titles when artwork is added.
   arts = [
     { src: 'assets/art-1.png', title: 'Core 18', alt: 'Green field with red, ochre and white forms' },
@@ -125,7 +125,12 @@ class Component extends DCLogic {
     { src: 'assets/art-6.png', title: 'Select 2', alt: 'Two framed panels on black ground' },
     { src: 'assets/art-7.png', title: 'Core 18', alt: 'Ochre field with green and blue frames' }
   ];
-  go(d) { this.setState(s => ({ index: (s.index + d + this.arts.length) % this.arts.length })); }
+  go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
+  show(k) {
+    if (k === this.state.index || this.state.fade) return;
+    this.setState({ fade: true });
+    setTimeout(() => this.setState({ index: k, fade: false }), 200);
+  }
   // Artwork files are not in the repo yet; alternate two sample images until they are added.
   ph(k) { return e => { e.currentTarget.src = k % 2 ? 'uploads/SELECT_02.jpg' : 'uploads/CORE_18.jpg'; }; }
   componentDidMount() {
@@ -175,13 +180,13 @@ class Component extends DCLogic {
       // Desktop: 12% side padding, capped at 230px so content maxes out at 1460px (a 1920 monitor); header and footer share it
       mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 min(12vw, 230px)',
       heroPad: m ? '32px 0 48px' : '40px 0 56px',
-      railMargin: m ? '28px' : '-10px',
+      railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : '16px',
       thumbH: m ? '38px' : '46px',
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: '100%', height: 'auto', display: 'block', boxShadow: '0 6px 16px rgba(20,20,20,0.14)' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: '100%', height: 'auto', display: 'block', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
@@ -191,7 +196,7 @@ class Component extends DCLogic {
         alt: 'Show ' + this.arts[k].alt,
         border: k === i ? '1.5px solid #141414' : '1px solid #E7E4DE',
         opacity: k === i ? 1 : 0.75,
-        select: () => this.setState({ index: k })
+        select: () => this.show(k)
       }))
     };
   }
