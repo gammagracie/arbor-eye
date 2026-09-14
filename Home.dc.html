@@ -16,6 +16,7 @@ body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Helvetica N
 a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
+p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
 </style>
@@ -77,9 +78,9 @@ a:hover { color: #6E6B66; }
     <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0">
       {{ heroImg }}
     </a>
-    <div style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: center; justify-content: {{ railJustify }}; gap: {{ railGap }}">
+    <div style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: flex-end; justify-content: {{ railJustify }}; gap: {{ railGap }}">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="16" height="44" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="display: flex; gap: 14px; align-items: center; overflow-x: auto; padding: 4px 2px">
         <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
@@ -89,7 +90,7 @@ a:hover { color: #6E6B66; }
         </sc-for>
       </div>
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="16" height="44" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
       <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 10px 0 0; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
     </div>
