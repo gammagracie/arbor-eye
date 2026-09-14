@@ -172,7 +172,8 @@ class Component extends DCLogic {
       headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setState({ menuOpen: false }),
-      mainPad: m ? '0 24px' : '0 48px',
+      // Desktop: 12% side padding, capped at 230px so content maxes out at 1460px (a 1920 monitor); header and footer share it
+      mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 min(12vw, 230px)',
       heroPad: m ? '32px 0 48px' : '40px 0 56px',
       railMargin: m ? '28px' : '-10px',
       railJustify: 'center',
