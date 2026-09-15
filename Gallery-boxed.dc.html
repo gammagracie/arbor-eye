@@ -154,7 +154,7 @@ html { scrollbar-gutter: stable; }
       <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: center">
         <div style="grid-column: 1; grid-row: 1; position: relative">
           {{ detailImg }}
-          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 16px; display: grid; justify-items: center; gap: 10px">
+          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
             <div style="display: flex; gap: 12px; align-items: center">
               <sc-for list="{{ detailDots }}" as="dt" hint-placeholder-count="3">
                 <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer"></button>
@@ -487,7 +487,7 @@ class Component extends DCLogic {
       toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
       zoomLabel: this.state.zoom ? 'Shrink artwork' : 'Enlarge artwork',
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
-      detailRowGap: m ? '48px' : oneCol ? '96px' : '0', // room below the image for the dots (and zoom button) when the text stacks underneath
+      detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the dots (and zoom button) when the text stacks underneath
       detailInfoCol: oneCol ? '1' : '2',
       detailInfoRow: oneCol ? '2' : '1',
       zoomDisplay: m ? 'none' : 'flex',
