@@ -17,8 +17,17 @@ a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
+.work:hover .work-title { opacity: 1 !important; }
+.lightbox .lb-arrow { opacity: 0; transition: opacity 0.2s ease; }
+.lightbox:hover .lb-arrow { opacity: 1; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1200px */
+:root { --side-pad: 24px; }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 12vw; } }
+@media (min-width: 1200px) { :root { --side-pad: 15vw; } }
+html { scrollbar-gutter: stable; }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
 /* Grid-size switcher is desktop / tablet-landscape only */
@@ -80,7 +89,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column">
   <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
-    <section data-screen-label="Gallery — Grid" style="padding: {{ topPad }} 0 80px; display: grid; gap: {{ toolbarGap }}; align-content: start">
+    <section data-screen-label="Gallery — Grid (no boxes)" style="padding: {{ topPad }} 0 80px; display: grid; gap: {{ toolbarGap }}; align-content: start">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px 32px">
         <div class="layout-switch" style="display: flex; gap: 14px; align-items: center">
           <button onClick="{{ setL3 }}" aria-label="Small grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c3 }}">
@@ -94,7 +103,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
           </button>
         </div>
         <div style="display: flex; gap: 24px 48px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto">
-          <label style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px">
+          <label style="display: flex; align-items: center; gap: 8px; padding-bottom: 5px">
             <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg>
             <select value="{{ seriesVal }}" onChange="{{ setSeries }}" aria-label="Filter by series" style="appearance: none; border: none; background: transparent; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; padding: 0 40px 0 0">
               <option value="All">Series</option>
@@ -111,7 +120,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
               <option value="Vertical">Vertical</option>
             </select>
           </label>
-          <label style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px">
+          <label style="display: flex; align-items: center; gap: 8px; padding-bottom: 5px">
             <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg>
             <select value="{{ availVal }}" onChange="{{ setAvail }}" aria-label="Filter by availability" style="appearance: none; border: none; background: transparent; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; padding: 0 40px 0 0">
               <option value="All">Availability</option>
@@ -123,11 +132,11 @@ p, h1, h2, h3, li { text-wrap: pretty; }
       </div>
       <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
-          <div style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; background: #eef0f5; padding: 7%; transition: transform 0.3s ease, box-shadow 0.3s ease" style-hover="transform: translateY(-6px); box-shadow: inset 0 0 0 1px #D9D5CC">
+          <div class="work" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
-              <span style="display: {{ chipDisplay }}; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; background: #FDFDFB; color: #141414; padding: 9px 16px; box-shadow: 0 2px 12px rgba(20,20,20,0.14)">{{ c.title }}</span>
             </button>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -183,13 +192,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
         <button onClick="{{ viewOriginal }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">View original</button>
       </div>
       <div style="display: grid; grid-template-columns: {{ printCols }}; gap: {{ printGap }}; align-items: start">
-        <div style="display: flex; flex-direction: {{ printRailDir }}; gap: 14px; order: {{ printRailOrder }}; overflow: auto">
-          <div style="border: 1px solid #141414; background: #FFFFFF; flex: none; width: {{ printThumbSize }}; height: {{ printThumbSize }}; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 10px">{{ printThumb }}</div>
-          <image-slot id="{{ printSlot1 }}" shape="rect" placeholder="Framed view" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
-          <image-slot id="{{ printSlot2 }}" shape="rect" placeholder="Framed view" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
-          <image-slot id="{{ printSlot3 }}" shape="rect" placeholder="In situ" style="width: {{ printThumbSize }}; height: {{ printThumbSize }}; flex: none"></image-slot>
-        </div>
-        <div style="order: {{ printMainOrder }}; background: #F1F0EC; display: flex; align-items: center; justify-content: center; padding: clamp(24px, 6vw, 96px); box-sizing: border-box; min-height: {{ printStageMin }}">
+        <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="order: {{ printMainOrder }}; background: #F1F0EC; display: flex; align-items: center; justify-content: center; padding: clamp(24px, 6vw, 96px); box-sizing: border-box; min-height: {{ printStageMin }}; cursor: zoom-in">
           {{ printImg }}
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ detailInfoPad }}">
@@ -207,9 +210,39 @@ p, h1, h2, h3, li { text-wrap: pretty; }
               </sc-for>
             </div>
           </div>
+          <div style="display: grid; gap: 18px; padding-top: 20px">
+            <p style="margin: 0; font-size: 17px; font-weight: 300; letter-spacing: 0.1em">Choose Your Frame Color</p>
+            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
+              <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
+                <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
+                  <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 30px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
+                  <span style="display: {{ fr.textDisplay }}; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 30px">Unframed</span>
+                  <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); font-size: 14px; opacity: {{ fr.caret }}">^</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display: grid; gap: 10px; font-size: 17px; font-weight: 300; letter-spacing: 0.1em">
+              <p style="margin: 0">Frame: {{ frameLabel }}</p>
+              <p style="margin: 0">Mount: {{ mountLabel }}</p>
+            </div>
+          </div>
           <button onClick="{{ addToCart }}" style="align-self: start; width: 100%; max-width: 420px; background: #141414; color: #FFFFFF; border: none; padding: 16px 24px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; margin-top: 28px" style-hover="background: #333333">Add to cart</button>
         </div>
       </div>
+      <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="lightbox" onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(20,20,20,0.97); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; box-sizing: border-box; cursor: zoom-out">
+          <button onClick="{{ closeLightbox }}" aria-label="Close" style="position: absolute; top: 20px; right: 24px; border: none; background: transparent; color: #FDFDFB; font-size: 28px; line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
+          <button class="lb-arrow" onClick="{{ lbPrev }}" aria-label="Previous view" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+          <button class="lb-arrow" onClick="{{ lbNext }}" aria-label="Next view" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+          {{ lightboxImg }}
+          <div onClick="{{ lbStop }}" style="display: flex; gap: 12px; align-items: center; cursor: default">
+            <sc-for list="{{ lbDots }}" as="dt" hint-placeholder-count="3">
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer"></button>
+            </sc-for>
+          </div>
+          <p style="margin: 0; color: #FDFDFB; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8">{{ lbLabel }}</p>
+        </div>
+      </sc-if>
     </section>
   </sc-if>
 </main>
@@ -234,7 +267,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, size: 0, added: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5 };
   arts = [
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
@@ -309,8 +342,8 @@ class Component extends DCLogic {
     size: t === 'Script' ? "11\u2032\u2032x 24\u2032\u2032" : "4\u2032\u2032x 6\u2032\u2032",
     desc: t === 'Script' ? 'Repeated strokes form a visual language.' : ''
   }));
-  // Artwork files are not in the repo yet; show a light green box until they are added.
-  ph(a) { return e => { const f = a.src.split('/').pop(); e.currentTarget.src = ['CORE_18.jpg', 'SELECT_02.jpg'].includes(f) ? 'uploads/' + f : a.orient === 'Vertical' ? 'assets/placeholder-portrait.svg' : 'assets/placeholder-landscape.svg'; }; }
+  // Fallback if an artwork file is missing: a light green box
+  ph(a) { return e => { e.currentTarget.src = a.orient === 'Vertical' ? 'assets/placeholder-portrait.svg' : 'assets/placeholder-landscape.svg'; }; }
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
@@ -327,7 +360,13 @@ class Component extends DCLogic {
     // Open the work named in the URL hash (linked from the home carousel).
     const k = this.arts.findIndex(a => a.title === decodeURIComponent(location.hash.slice(1)));
     if (k >= 0) this.setState({ sel: k });
-    this.onKey = (e) => { if (e.key === 'Escape' && this.state.zoom) this.setState({ zoom: false }); };
+    this.onKey = (e) => {
+      if (this.state.lightbox) {
+        if (e.key === 'Escape') this.setState({ lightbox: false });
+        if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + 2) % 3 }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % 3 }));
+      } else if (e.key === 'Escape' && this.state.zoom) this.setState({ zoom: false });
+    };
     window.addEventListener('keydown', this.onKey);
   }
   componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqNarrow) this.mqNarrow.removeEventListener('change', this.onMqNarrow); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); window.removeEventListener('keydown', this.onKey); }
@@ -339,6 +378,10 @@ class Component extends DCLogic {
     const sel = this.state.sel;
     const t = !m && this.state.tablet;
     const oneCol = m || this.state.zoom;
+    const frame = this.state.frame;
+    const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
+    // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
+    const framed = f => f === 'none' ? { boxShadow: '0 14px 36px rgba(20,20,20,0.14)' } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxSizing: 'border-box', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), 0 14px 36px rgba(20,20,20,0.18)' };
     const d = sel != null ? this.arts[sel] : null;
     const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
       (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
@@ -358,7 +401,7 @@ class Component extends DCLogic {
       narrow: this.state.narrow,
       headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
-      mainPad: m ? '0 24px' : '0 48px',
+      mainPad: '0 var(--side-pad)',
       topPad: m ? '24px' : '36px',
       toolbarGap: m ? '32px' : '48px',
       isGrid: sel == null,
@@ -378,18 +421,18 @@ class Component extends DCLogic {
         : L === 'g3' ? 'repeat(3, minmax(0, 1fr))' : L === 'g2' ? 'repeat(2, minmax(0, 1fr))' : '1fr',
       gridGap: m ? '32px 20px' : L === 'g1' ? '88px' : '72px 56px',
       cardMax: L === 'g1' && !m ? '880px' : 'none',
-      chipDisplay: hoverTitles ? 'inline-block' : 'none',
+      chipDisplay: hoverTitles ? 'block' : 'none',
       noResults: filtered.length === 0,
       cards: filtered.map(({ a, k }) => ({
         title: a.title,
         aria: 'View ' + a.title,
-        img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' } }),
+        img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       back: () => this.setState({ sel: null, zoom: false, printView: false }),
       openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
-      printCols: m ? '1fr' : '104px minmax(0, 1fr) clamp(340px, 30vw, 460px)',
+      printCols: m ? '1fr' : 'minmax(0, 1fr) clamp(340px, 30vw, 460px)',
       printGap: m ? '28px' : 'clamp(40px, 4.5vw, 90px)',
       printRailDir: m ? 'row' : 'column',
       printRailOrder: m ? 2 : 0,
@@ -398,10 +441,25 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : 'min(70vh, 820px)',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 14px 36px rgba(20,20,20,0.14)' } }),
-      printSlot1: 'print-' + sel + '-alt1',
-      printSlot2: 'print-' + sel + '-alt2',
-      printSlot3: 'print-' + sel + '-alt3',
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto', display: 'block' }, framed(frame)) }),
+      // frame swatches
+      frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
+        pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
+        swatchDisplay: c ? 'block' : 'none', textDisplay: c ? 'none' : 'block', color: c || 'transparent', caret: frame === f ? 1 : 0
+      })),
+      frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : 'Black',
+      mountLabel: frame === 'none' ? 'None' : 'Reveal',
+      // lightbox carousel of the framing views
+      lightboxOpen: this.state.lightbox,
+      openLightbox: () => this.setState({ lightbox: true, lbIndex: Math.max(0, views.findIndex(v => v[0] === frame)) }),
+      closeLightbox: () => this.setState({ lightbox: false }),
+      lbStop: (e) => e.stopPropagation(),
+      lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + views.length - 1) % views.length })); },
+      lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % views.length })); },
+      lbDots: views.map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
+      lbLabel: views[this.state.lbIndex][1],
+      // sized from the image's own ratio so it fills the overlay without distortion
+      lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onClick: (e) => e.stopPropagation(), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
       hasDesc: !!(d && d.desc),
       sizes: ['8X12\u2033', '16X24\u2033', '24X36\u2033'].map((label, idx) => ({
         label,
