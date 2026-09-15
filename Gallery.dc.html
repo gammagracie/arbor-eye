@@ -39,18 +39,18 @@ html { scrollbar-gutter: stable; }
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
-  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 32px">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
     <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
-    <div style="display: flex; gap: 40px; align-items: center">
+    <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-        <nav style="display: flex; gap: 40px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="Gallery.dc.html" style="font-weight: 600; border-bottom: 1px solid #141414; padding-bottom: 3px">Gallery</a>
+        <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="Gallery.dc.html" style="font-weight: 600">Gallery</a>
           <a href="About.dc.html">About</a>
           <a href="Contact%20Page.dc.html">Contact</a>
         </nav>
       </sc-if>
-      <div style="display: flex; gap: 20px; align-items: center">
-        <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: center">
+      <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
+        <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: {{ headerAlign }}">
         <a href="#" aria-label="Account" style="display: flex; color: #141414">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>
         </a>
@@ -109,9 +109,9 @@ html { scrollbar-gutter: stable; }
               {{ seriesLabel }}
             </button>
             <sc-if value="{{ seriesOpen }}" hint-placeholder-val="{{ false }}">
-              <div role="listbox" style="position: absolute; top: 100%; right: 0; z-index: 25; min-width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: grid">
+              <div role="listbox" style="position: absolute; top: 100%; left: 0; z-index: 25; min-width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: grid">
                 <sc-for list="{{ seriesOptions }}" as="o" hint-placeholder-count="4">
-                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 15px; font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
+                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
                 </sc-for>
               </div>
             </sc-if>
@@ -124,7 +124,7 @@ html { scrollbar-gutter: stable; }
             <sc-if value="{{ availOpen }}" hint-placeholder-val="{{ false }}">
               <div role="listbox" style="position: absolute; top: 100%; right: 0; z-index: 25; min-width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: grid">
                 <sc-for list="{{ availOptions }}" as="o" hint-placeholder-count="4">
-                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 15px; font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
+                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
                 </sc-for>
               </div>
             </sc-if>
@@ -268,7 +268,7 @@ html { scrollbar-gutter: stable; }
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
   arts = [
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
@@ -350,10 +350,6 @@ class Component extends DCLogic {
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
-    this.mqNarrow = window.matchMedia('(max-width: 419px)');
-    this.onMqNarrow = () => this.setState({ narrow: this.mqNarrow.matches });
-    this.mqNarrow.addEventListener('change', this.onMqNarrow);
-    this.setState({ narrow: this.mqNarrow.matches });
     this.mqTablet = window.matchMedia('(max-width: 1279px)');
     this.onMqTablet = () => this.setState({ tablet: this.mqTablet.matches });
     this.mqTablet.addEventListener('change', this.onMqTablet);
@@ -373,7 +369,7 @@ class Component extends DCLogic {
     this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
     document.addEventListener('click', this.onDocClick);
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqNarrow) this.mqNarrow.removeEventListener('change', this.onMqNarrow); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
   renderVals() {
     const cartCount = (this.props.cartCount ?? 1) + this.state.added;
     const hoverTitles = this.props.hoverTitles ?? true;
@@ -395,6 +391,7 @@ class Component extends DCLogic {
       cartCount,
       showCartBadge: cartCount > 0,
       isMobile: m,
+      headerAlign: m ? 'center' : 'baseline', // phones have no nav text to align to
       isDesktop: !m,
       menuOpen: this.state.menuOpen,
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
@@ -403,8 +400,8 @@ class Component extends DCLogic {
       barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
       menuTransform: this.state.menuOpen ? 'translateY(0)' : 'translateY(-100%)',
       menuVis: this.state.menuOpen ? 'visible' : 'hidden',
-      narrow: this.state.narrow,
-      headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
+      narrow: m, // whenever the hamburger shows, the account and cart icons move into the menu
+      headerIconsDisplay: m ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       topPad: m ? '24px' : '36px',
