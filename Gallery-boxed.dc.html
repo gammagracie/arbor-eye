@@ -30,8 +30,8 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 html { scrollbar-gutter: stable; }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
-/* Grid-size switcher is desktop / tablet-landscape only */
-@media (max-width: 1023px) { .layout-switch { display: none !important; } }
+/* Grid-size switcher is hidden on phones only */
+@media (max-width: 767px) { .layout-switch { display: none !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
