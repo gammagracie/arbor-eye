@@ -87,7 +87,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="display: flex; gap: 22px; align-items: center; padding: 4px 2px">
+      <div style="display: flex; gap: 22px; align-items: center; padding: 10px 8px; overflow: hidden; transform: {{ railShift }}; transition: {{ railTransition }}">
         <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
           <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: {{ t.border }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease" style-hover="opacity: 1; transform: scale(1.16)">
             {{ t.img }}
@@ -122,7 +122,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, shift: 0, animate: false };
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles match the Gallery entries.
   arts = [
@@ -142,8 +142,14 @@ class Component extends DCLogic {
   touchEnd(e) { const dx = e.changedTouches[0].clientX - this.touchX; if (Math.abs(dx) > 40) this.go(dx < 0 ? 1 : -1); }
   show(k) {
     if (k === this.state.index || this.state.fade) return;
+    const n = this.arts.length;
+    let d = (k - this.state.index + n) % n; if (d > n / 2) d -= n; // signed number of slots the rail moves
     this.setState({ fade: true });
-    setTimeout(() => this.setState({ index: k, fade: false }), 200);
+    setTimeout(() => {
+      // new window is rendered offset by the slots it moved, then eased back to rest so the thumbnails slide in
+      this.setState({ index: k, fade: false, shift: d, animate: false });
+      setTimeout(() => this.setState({ shift: 0, animate: true }), 30);
+    }, 200);
   }
   // Fallback if an artwork file is missing: a light green box.
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
@@ -216,6 +222,9 @@ class Component extends DCLogic {
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
+      // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
+      railShift: 'translateX(calc(' + this.state.shift + ' * ((' + thumbH + ') * 1.5 + 30px)))',
+      railTransition: this.state.animate ? 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
       swipeStart: (e) => this.touchStart(e),
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
