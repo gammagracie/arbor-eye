@@ -19,6 +19,12 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1200px */
+:root { --side-pad: 24px; }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 12vw; } }
+@media (min-width: 1200px) { :root { --side-pad: 15vw; } }
+html { scrollbar-gutter: stable; }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -26,7 +32,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
-  <div style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 32px">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 32px">
     <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
     <div style="display: flex; gap: 40px; align-items: center">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
@@ -180,7 +186,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 </main>
 
 <footer style="border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="max-width: 1920px; width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="#" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -237,7 +243,7 @@ class Component extends DCLogic {
       narrow: this.state.narrow,
       headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
-      mainPad: m ? '0 24px' : '0 48px',
+      mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
       twoColGap: m ? '28px' : '80px',
       sectionPadFirst: m ? '32px 0 40px' : '64px 0 56px',

@@ -19,6 +19,12 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1200px */
+:root { --side-pad: 24px; }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 12vw; } }
+@media (min-width: 1200px) { :root { --side-pad: 15vw; } }
+html { scrollbar-gutter: stable; }
 </style>
 </helmet>
 
@@ -118,15 +124,15 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, narrow: typeof window !== 'undefined' && window.innerWidth < 420, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5 };
-  // Titles match the two sample works in the Gallery for now; replace with the real titles when artwork is added.
+  // Titles match the Gallery entries (art-1..7 are Core 12, 20, 11 'Script', 14, 16, 15, 17) so the hover label and click-through line up.
   arts = [
-    { src: 'assets/art-1.png', title: 'Core 18', alt: 'Green field with red, ochre and white forms' },
-    { src: 'assets/art-2.png', title: 'Select 2', alt: 'Chartreuse field with blue-ringed forms' },
-    { src: 'assets/art-3.png', title: 'Core 18', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/art-4.png', title: 'Select 2', alt: 'Color band study on textured paper' },
-    { src: 'assets/art-5.png', title: 'Core 18', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/art-6.png', title: 'Select 2', alt: 'Two framed panels on black ground' },
-    { src: 'assets/art-7.png', title: 'Core 18', alt: 'Ochre field with green and blue frames' }
+    { src: 'assets/art-1.png', title: 'Core 12', alt: 'Green field with red, ochre and white forms' },
+    { src: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
+    { src: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
+    { src: 'assets/art-4.png', title: 'Core 14', alt: 'Color band study on textured paper' },
+    { src: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
+    { src: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
+    { src: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' }
   ];
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   show(k) {
@@ -134,8 +140,8 @@ class Component extends DCLogic {
     this.setState({ fade: true });
     setTimeout(() => this.setState({ index: k, fade: false }), 200);
   }
-  // Artwork files are not in the repo yet; alternate two sample images until they are added.
-  ph(k) { return e => { e.currentTarget.src = k % 2 ? 'uploads/SELECT_02.jpg' : 'uploads/CORE_18.jpg'; }; }
+  // Fallback if an artwork file is missing: a light green box.
+  ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
@@ -164,12 +170,11 @@ class Component extends DCLogic {
     const i = this.state.index;
     const n = this.arts.length;
     // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
-    // rail adds 4.5% of the image width). Side padding follows the image edges, never less than 12% of the viewport,
-    // so the header and footer content line up with the image.
+    // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
     const k = this.state.ratio / (1 + 0.045 * this.state.ratio);
     const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 61px) * ' + k.toFixed(4) + ')';
-    const desktopPad = 'max(12vw, calc(50vw - ' + fitW + ' / 2))';
-    const thumbH = m ? '38px' : this.state.tablet ? '46px' : 'calc((100vw - 2 * ' + desktopPad + ') * 0.045)';
+    const heroW = (m || this.state.tablet) ? '100%' : 'min(100%, ' + fitW + ')';
+    const thumbH = m ? '38px' : this.state.tablet ? '46px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.045)';
     const shown = (m ? [-1, 0, 1] : this.state.tablet ? [-2, -1, 0, 1, 2] : this.arts.map((a, k) => k - i)).map(o => (i + o + n) % n);
     return {
       cartCount,
@@ -187,7 +192,7 @@ class Component extends DCLogic {
       headerIconsDisplay: this.state.narrow ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setState({ menuOpen: false }),
-      mainPad: m ? '0 24px' : this.state.tablet ? '0 48px' : '0 ' + desktopPad,
+      mainPad: '0 var(--side-pad)',
       heroPad: m ? '32px 0 48px' : this.state.tablet ? '40px 0 56px' : '28px 0 32px',
       railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
       railJustify: 'center',
@@ -195,7 +200,7 @@ class Component extends DCLogic {
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : '16px',
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: '100%', height: 'auto', display: 'block', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
