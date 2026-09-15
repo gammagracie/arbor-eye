@@ -83,7 +83,7 @@ html { scrollbar-gutter: stable; }
     <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0">
       {{ heroImg }}
     </a>
-    <div style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: flex-end; justify-content: {{ railJustify }}; gap: {{ railGap }}">
+    <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: flex-end; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
@@ -135,6 +135,9 @@ class Component extends DCLogic {
     { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' }
   ];
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
+  // finger swipe on the image or thumbnails: left = next, right = previous
+  touchStart(e) { this.touchX = e.touches[0].clientX; }
+  touchEnd(e) { const dx = e.changedTouches[0].clientX - this.touchX; if (Math.abs(dx) > 40) this.go(dx < 0 ? 1 : -1); }
   show(k) {
     if (k === this.state.index || this.state.fade) return;
     this.setState({ fade: true });
@@ -175,7 +178,8 @@ class Component extends DCLogic {
     // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
     const k = this.state.ratio / (1 + 0.045 * this.state.ratio);
     const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 61px) * ' + k.toFixed(4) + ')';
-    const heroW = (m || this.state.tablet) ? '100%' : 'min(100%, ' + fitW + ')';
+    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 148 : 134) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
+    const heroW = (m || this.state.tablet) ? 'min(100%, ' + smallFit + ')' : 'min(100%, ' + fitW + ')';
     const thumbH = m ? '38px' : this.state.tablet ? '46px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.045)';
     const shown = (m ? [-1, 0, 1] : this.state.tablet ? [-2, -1, 0, 1, 2] : this.arts.map((a, k) => k - i)).map(o => (i + o + n) % n);
     return {
@@ -197,17 +201,19 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroPad: m ? '32px 0 48px' : this.state.tablet ? '40px 0 56px' : '28px 0 32px',
+      heroPad: m ? '32px 0' : this.state.tablet ? '40px 0' : '28px 0 32px',
       railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : '16px',
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
+      swipeStart: (e) => this.touchStart(e),
+      swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
       thumbs: shown.map(k => ({
         img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
