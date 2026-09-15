@@ -123,15 +123,16 @@ html { scrollbar-gutter: stable; }
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5 };
-  // Titles match the Gallery entries (art-1..7 are Core 12, 20, 11 'Script', 14, 16, 15, 17) so the hover label and click-through line up.
+  // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
+  // cropped file for each piece in case it is wanted again. Titles match the Gallery entries.
   arts = [
-    { src: 'assets/art-1.png', title: 'Core 12', alt: 'Green field with red, ochre and white forms' },
-    { src: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
-    { src: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/art-4.png', title: 'Core 14', alt: 'Color band study on textured paper' },
-    { src: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
-    { src: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' }
+    { src: 'assets/works/CORE_12.jpg', cropped: 'assets/art-1.png', title: 'Core 12', alt: 'Green field with red, ochre and white forms' },
+    { src: 'assets/works/CORE_20.jpg', cropped: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
+    { src: 'assets/works/CORE_11.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
+    { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Core 14', alt: 'Color band study on textured paper' },
+    { src: 'assets/works/CORE_16.jpg', cropped: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
+    { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
+    { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' }
   ];
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   show(k) {
