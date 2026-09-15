@@ -385,7 +385,7 @@ class Component extends DCLogic {
     const frame = this.state.frame;
     const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
     // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
-    const wallShadow = '0 12px 48px rgba(20,20,20,0.20)';
+    const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
     const framed = f => f === 'none' ? { boxShadow: wallShadow } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxSizing: 'border-box', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + wallShadow };
     const d = sel != null ? this.arts[sel] : null;
     const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
