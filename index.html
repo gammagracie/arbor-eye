@@ -87,12 +87,14 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="display: flex; gap: 22px; align-items: center; padding: 10px 8px; overflow: hidden; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
-        <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
-          <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: {{ t.border }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease" style-hover="opacity: 1; transform: scale(1.16)">
-            {{ t.img }}
-          </button>
-        </sc-for>
+      <div style="overflow: hidden; width: {{ railWidth }}; padding: 10px 0; flex: none">
+        <div style="display: flex; gap: 22px; align-items: center; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
+          <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1; transform: scale(1.16)">
+              {{ t.img }}
+            </button>
+          </sc-for>
+        </div>
       </div>
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
@@ -122,7 +124,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, shift: 0, animate: false };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false };
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles match the Gallery entries.
   arts = [
@@ -140,15 +142,14 @@ class Component extends DCLogic {
   // finger swipe on the image or thumbnails: left = next, right = previous
   touchStart(e) { this.touchX = e.touches[0].clientX; }
   touchEnd(e) { const dx = e.changedTouches[0].clientX - this.touchX; if (Math.abs(dx) > 40) this.go(dx < 0 ? 1 : -1); }
+  // The thumbnail tray keeps one extra thumbnail waiting off-stage on each side. Selecting a work slides the
+  // whole strip by the slots travelled (0.65s ease), then re-centres it on the new work without a visible change.
   show(k) {
-    if (k === this.state.index || this.state.fade) return;
-    const n = this.arts.length;
-    let d = (k - this.state.index + n) % n; if (d > n / 2) d -= n; // signed number of slots the rail moves
+    if (k === this.state.index || this.state.fade || this.state.animate) return;
     this.setState({ fade: true });
     setTimeout(() => {
-      // new window is rendered offset by the slots it moved, then eased back to rest so the thumbnails slide in
-      this.setState({ index: k, fade: false, shift: d, animate: false });
-      setTimeout(() => this.setState({ shift: 0, animate: true }), 20);
+      this.setState({ index: k, fade: false, animate: true });
+      setTimeout(() => this.setState({ railBase: k, animate: false }), 700);
     }, 200);
   }
   // Fallback if an artwork file is missing: a light green box.
@@ -184,14 +185,17 @@ class Component extends DCLogic {
     const n = this.arts.length;
     // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
     // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
-    // rail = thumbnail + 17px of padding/border; 30% of it overlaps the image, so 70% (0.0385 x width + 12px) sits below
+    // rail = thumbnail + 29px of padding/border; 30% of it overlaps the image, so 70% (0.0385 x width + 20px) sits below
     const k = this.state.ratio / (1 + 0.0385 * this.state.ratio);
-    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 73px) * ' + k.toFixed(4) + ')';
-    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 154 : 129) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
+    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 81px) * ' + k.toFixed(4) + ')';
+    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 166 : 138) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
     const heroW = (m || this.state.tablet) ? 'min(100%, ' + smallFit + ')' : 'min(100%, ' + fitW + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '52px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.055)';
     const half = m ? 1 : this.state.tablet ? 2 : 3; // 3 / 5 / 7 thumbnails visible, centred on the current work
-    const shown = Array.from({ length: 2 * half + 1 }, (_, j) => (i + j - half + n) % n);
+    const base = this.state.railBase;
+    const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
+    let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
+    const slot = 'calc((' + thumbH + ') * 1.494 + 9px + 22px)'; // scans are 1.494:1; 9px = padding + border; 22px gap
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -212,7 +216,7 @@ class Component extends DCLogic {
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
       heroPad: m ? '32px 0' : this.state.tablet ? '40px 0' : '28px 0 32px',
-      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 17px))',
+      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 29px))',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
@@ -223,7 +227,8 @@ class Component extends DCLogic {
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
-      railShift: 'translateX(calc(' + this.state.shift + ' * ((' + thumbH + ') * 1.5 + 30px)))',
+      railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 22px)',
+      railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
       railTransition: this.state.animate ? 'transform 0.65s cubic-bezier(0.45, 0, 0.15, 1)' : 'none',
       swipeStart: (e) => this.touchStart(e),
       swipeEnd: (e) => this.touchEnd(e),
@@ -231,7 +236,7 @@ class Component extends DCLogic {
       thumbs: shown.map(k => ({
         img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
         alt: 'Show ' + this.arts[k].alt,
-        border: k === i ? '1.5px solid #141414' : '1px solid #E7E4DE',
+        borderColor: k === i ? '#141414' : '#E7E4DE',
         opacity: k === i ? 1 : 0.75,
         select: () => this.show(k)
       }))
