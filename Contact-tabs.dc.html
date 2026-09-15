@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Artwork files are not in the repo yet; show a light green box until they are added.
+  addEventListener('error', e => { if (e.target.tagName === 'IMG' && !e.target.src.endsWith('placeholder-landscape.svg')) e.target.src = 'assets/placeholder-landscape.svg'; }, true);
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+::selection { background: #E9E6DF; }
+p, h1, h2, h3, li { text-wrap: pretty; }
+/* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
+:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
+:root { --side-pad: 24px; }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html { scrollbar-gutter: stable; }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
+<div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
+<header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
+    <a href="Home.dc.html" style="font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</a>
+    <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="Gallery.dc.html">Gallery</a>
+          <a href="About.dc.html">About</a>
+          <a href="#" style="font-weight: 600">Contact</a>
+        </nav>
+      </sc-if>
+      <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
+        <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: {{ headerAlign }}">
+        <a href="#" aria-label="Account" style="display: flex; color: #141414">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>
+        </a>
+        <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 7.5h15l-1.2 12.5H5.7L4.5 7.5Z"></path><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"></path></svg>
+          <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
+          </sc-if>
+        </a>
+        </div>
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barTop }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: opacity 0.2s; opacity: {{ barMid }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barBot }}"></span>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</header>
+<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
+  <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
+  <a href="#tabs" onClick="{{ goContact }}" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
+  <a href="#tabs" onClick="{{ goShipping }}" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
+  <a href="#tabs" onClick="{{ goReturns }}" style="padding: 28px 0">Returns &amp; Exchanges</a>
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>Login/Account</a>
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
+      <span style="position: relative; display: flex"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 7.5h15l-1.2 12.5H5.7L4.5 7.5Z"></path><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span></span>
+      Shopping Cart
+    </a>
+  </sc-if>
+</nav>
+
+<main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
+  <section style="padding-top: 48px">
+    <img src="assets/hero.png" alt="Studio by the water" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 32px; padding: 20px 0; border-bottom: 1px solid #E7E4DE; font-size: 13px; flex-wrap: wrap">
+      <div style="display: flex; gap: 16px 40px; color: #6E6B66; flex-wrap: wrap">
+        <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
+        <span>Instagram &nbsp;<a href="#" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
+      </div>
+    </div>
+    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; padding: 32px 0 0; scroll-margin-top: 40px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <sc-if value="{{ tabContact }}" hint-placeholder-val="{{ true }}">
+  <section style="display: grid; grid-template-columns: {{ shippingCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Contact form">
+    <div>
+      <h2 style="margin: 0 0 16px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Get in touch</h2>
+      <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
+      <div style="display: grid; gap: 28px; max-width: 560px">
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" rows="6" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0; resize: vertical; line-height: 1.6"></textarea></label>
+        <div style="display: grid; gap: 14px; justify-items: start">
+          <button onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer" style-hover="background: #333333">Send</button>
+          <p style="margin: 0; font-size: 13px; color: #8A867E; min-height: 18px">{{ formNote }}</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <img src="uploads/NC_45474.jpg" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; width: 100%; aspect-ratio: 419 / 627; object-fit: cover; position: {{ imagePosition }}; top: 40px">
+    </div>
+  </section>
+  </sc-if>
+
+  <sc-if value="{{ tabShipping }}" hint-placeholder-val="{{ false }}">
+  <section style="display: grid; grid-template-columns: {{ shippingCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Shipping Policy">
+    <div>
+      <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Shipping Policy</h2>
+      <p style="margin: 0 0 36px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
+      <div style="margin-bottom: 48px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+          <span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+          <span>United States</span><span style="color: #6E6B66">3–5 business days</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+          <span>Europe</span><span style="color: #6E6B66">5–7 business days</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE; font-size: 14px">
+          <span>Production time</span><span style="color: #6E6B66">3–6 working days</span>
+        </div>
+      </div>
+      <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
+      <p style="margin: 0 0 20px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+      <div style="display: grid; gap: 20px; font-size: 14px; line-height: 1.7; color: #55524C">
+        <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
+        <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
+        <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
+        <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
+        <p style="margin: 0">Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</p>
+      </div>
+    </div>
+    <div>
+      <img src="uploads/NC_45474.jpg" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; width: 100%; aspect-ratio: 419 / 627; object-fit: cover; position: {{ imagePosition }}; top: 40px">
+    </div>
+  </section>
+
+  </sc-if>
+  <sc-if value="{{ tabReturns }}" hint-placeholder-val="{{ false }}">
+  <section style="display: grid; grid-template-columns: {{ returnsCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Returns &amp; Exchanges">
+    <div style="order: {{ returnsImgOrder }}">
+      <img src="assets/box.png" alt="Packaged order on a woven rug" style="display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; position: {{ imagePosition }}; top: 40px">
+    </div>
+    <div>
+      <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Returns &amp; Exchanges</h2>
+      <div style="display: grid; gap: 0">
+        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
+          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
+        </div>
+        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
+          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
+        </div>
+        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE">
+          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+</main>
+
+<footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+    <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
+    <div style="display: flex; gap: 16px; align-items: center">
+      <a href="#" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
+        <img src="uploads/social_IG.png" alt="Instagram" style="display: block; width: 27.5px; height: 27.5px">
+      </a>
+      <a href="#" aria-label="Pinterest" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
+        <img src="uploads/social_pinterest.png" alt="Pinterest" style="display: block; width: 27.5px; height: 27.5px">
+      </a>
+    </div>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;stickyImages&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;},
+  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
+}">
+class Component extends DCLogic {
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '' };
+  goTab(tab) { this.setMenu(false); this.setState({ tab }); }
+  // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
+  setMenu(open) {
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) window.scrollTo({ top: 0, behavior: 'instant' });
+    this.setState({ menuOpen: open });
+  }
+  componentDidMount() {
+    // #shipping / #returns deep links open that tab
+    const h = location.hash.slice(1);
+    if (h === 'shipping' || h === 'returns') this.setState({ tab: h });
+    this.mq = window.matchMedia('(max-width: 767px)');
+    this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
+    this.mq.addEventListener('change', this.onMq);
+    this.setState({ mobile: this.mq.matches });
+  }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); }
+  renderVals() {
+    const cartCount = this.props.cartCount ?? 1;
+    const m = this.state.mobile;
+    const tab = this.state.tab;
+    return {
+      cartCount,
+      showCartBadge: cartCount > 0,
+      imagePosition: !m && (this.props.stickyImages ?? true) ? 'sticky' : 'static',
+      isMobile: m,
+      headerAlign: m ? 'center' : 'baseline', // phones have no nav text to align to
+      isDesktop: !m,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setMenu(!this.state.menuOpen),
+      footerPos: this.state.menuOpen ? 'fixed' : 'static',
+      barTop: this.state.menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
+      barMid: this.state.menuOpen ? 0 : 1,
+      barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
+      menuTransform: this.state.menuOpen ? 'translateY(0)' : 'translateY(-100%)',
+      menuVis: this.state.menuOpen ? 'visible' : 'hidden',
+      narrow: m, // whenever the hamburger shows, the account and cart icons move into the menu
+      headerIconsDisplay: m ? 'none' : 'flex',
+      badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
+      closeMenu: () => this.setMenu(false),
+      mainPad: '0 var(--side-pad)',
+      shippingCols: m ? '1fr' : '7fr 5fr',
+      returnsCols: m ? '1fr' : '5fr 7fr',
+      sectionGap: m ? '48px' : '96px',
+      shippingPad: m ? '72px 0' : '120px 0',
+      returnsPad: m ? '0 0 88px' : '0 0 140px',
+      returnsImgOrder: m ? 2 : 0,
+      panelPad: m ? '48px 0 88px' : '72px 0 140px',
+      tabGap: m ? '24px' : '40px',
+      // tabs: Contact (default) | Shipping | Returns & Exchanges
+      tabs: [['contact', 'Contact'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
+        label, selected: tab === k, pick: () => this.setState({ tab: k }),
+        weight: tab === k ? 600 : 400, color: tab === k ? '#141414' : '#8A867E', border: tab === k ? '1px solid #141414' : '1px solid transparent'
+      })),
+      tabContact: tab === 'contact',
+      tabShipping: tab === 'shipping',
+      tabReturns: tab === 'returns',
+      goContact: () => this.goTab('contact'),
+      goShipping: () => this.goTab('shipping'),
+      goReturns: () => this.goTab('returns'),
+      // contact form: opens the visitor's mail app with the message filled in (no server needed)
+      nameVal: this.state.name,
+      emailVal: this.state.email,
+      messageVal: this.state.message,
+      setName: (e) => this.setState({ name: e.target.value, note: '' }),
+      setEmail: (e) => this.setState({ email: e.target.value, note: '' }),
+      setMessage: (e) => this.setState({ message: e.target.value, note: '' }),
+      formNote: this.state.note,
+      send: () => {
+        const { name, email, message } = this.state;
+        if (!name.trim() || !email.trim() || !message.trim()) { this.setState({ note: 'Please fill in your name, email and message.' }); return; }
+        location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website enquiry from ' + name) + '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
+        this.setState({ note: 'Opening your mail app…' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
