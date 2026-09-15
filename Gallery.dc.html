@@ -22,11 +22,10 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 .lightbox:hover .lb-arrow { opacity: 1; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
-/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1720px */
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
-@media (min-width: 1024px) { :root { --side-pad: 12vw; } }
-@media (min-width: 1720px) { :root { --side-pad: 15vw; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
