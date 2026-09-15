@@ -19,11 +19,11 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
-/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1200px */
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 12% from 1024px, 15% from 1720px */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 12vw; } }
-@media (min-width: 1200px) { :root { --side-pad: 15vw; } }
+@media (min-width: 1720px) { :root { --side-pad: 15vw; } }
 html { scrollbar-gutter: stable; }
 </style>
 <script src="./image-slot.js"></script>
