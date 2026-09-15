@@ -131,7 +131,7 @@ html { scrollbar-gutter: stable; }
   </section>
 
   <section data-screen-label="About — Process" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
-    <div style="display: grid; gap: 16px">
+    <div style="display: grid; gap: 16px; order: {{ procImgOrder }}">
       <div style="display: grid; overflow: hidden">
         <div style="grid-area: 1 / 1; display: {{ procD0 }}; aspect-ratio: 4 / 3"><img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
         <div style="grid-area: 1 / 1; display: {{ procD1 }}; aspect-ratio: 4 / 3"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and finished postcards laid out on the table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
@@ -254,6 +254,7 @@ class Component extends DCLogic {
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
       bioCols: m ? '1fr' : 'minmax(0, 480px) minmax(0, 1fr)', // photo on the content's left edge, text fills the rest
       twoColGap: m ? '28px' : '80px',
+      procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
       sectionPadFirst: m ? '32px 0 40px' : '64px 0 56px',
       sectionPad: m ? '40px 0' : '72px 0',
       quotePad: m ? '48px 0' : '104px 0 88px',
