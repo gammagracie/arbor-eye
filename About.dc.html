@@ -17,6 +17,10 @@ a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
+/* About page: every paragraph is 15px; paragraphs and the quote share one line height; headings share one line height */
+main p { font-size: 15px; }
+main p, main blockquote { line-height: 1.75; }
+main h1, main h2 { line-height: 1.2; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
 /* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
@@ -110,7 +114,7 @@ html { scrollbar-gutter: stable; }
   <section data-screen-label="About — Quote" style="padding: {{ quotePad }}; display: flex; justify-content: center">
     <div style="position: relative; max-width: 860px; padding: {{ quoteInset }}">
       <img src="uploads/left_quote.png" alt="" style="position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; pointer-events: none">
-      <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.6; text-transform: uppercase; text-align: center; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
+      <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
       <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkTop }}; right: 0; width: {{ quoteMarkSize }}; pointer-events: none">
     </div>
   </section>
@@ -144,7 +148,7 @@ html { scrollbar-gutter: stable; }
     </div>
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Process</h2>
-      <div style="display: grid; gap: 22px; font-size: 15px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
+      <div style="display: grid; gap: 18px; font-size: 15px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
         <p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
         <p style="margin: 0">Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p style="margin: 0">The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p>
