@@ -87,9 +87,9 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="display: flex; gap: 14px; align-items: center; overflow-x: auto; padding: 4px 2px">
+      <div style="display: flex; gap: 22px; align-items: center; padding: 4px 2px">
         <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
-          <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: {{ t.border }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block" style-hover="opacity: 1">
+          <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: {{ t.border }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.2s ease, opacity 0.2s ease" style-hover="opacity: 1; transform: scale(1.1)">
             {{ t.img }}
           </button>
         </sc-for>
@@ -132,7 +132,9 @@ class Component extends DCLogic {
     { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Core 14', alt: 'Color band study on textured paper' },
     { src: 'assets/works/CORE_16.jpg', cropped: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
     { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
-    { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' }
+    { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' },
+    { src: 'assets/works/CORE_13.jpg', title: 'Core 13', alt: 'Core 13' },
+    { src: 'assets/works/CORE_18.jpg', title: 'Core 18', alt: 'Core 18' }
   ];
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // finger swipe on the image or thumbnails: left = next, right = previous
@@ -176,12 +178,14 @@ class Component extends DCLogic {
     const n = this.arts.length;
     // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
     // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
-    const k = this.state.ratio / (1 + 0.045 * this.state.ratio);
-    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 61px) * ' + k.toFixed(4) + ')';
-    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 148 : 134) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
+    // rail = thumbnail + 17px of padding/border; 30% of it overlaps the image, so 70% (0.0385 x width + 12px) sits below
+    const k = this.state.ratio / (1 + 0.0385 * this.state.ratio);
+    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 73px) * ' + k.toFixed(4) + ')';
+    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 154 : 129) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
     const heroW = (m || this.state.tablet) ? 'min(100%, ' + smallFit + ')' : 'min(100%, ' + fitW + ')';
-    const thumbH = m ? '38px' : this.state.tablet ? '46px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.045)';
-    const shown = (m ? [-1, 0, 1] : this.state.tablet ? [-2, -1, 0, 1, 2] : this.arts.map((a, k) => k - i)).map(o => (i + o + n) % n);
+    const thumbH = m ? '44px' : this.state.tablet ? '52px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.055)';
+    const half = m ? 1 : this.state.tablet ? 2 : 3; // 3 / 5 / 7 thumbnails visible, centred on the current work
+    const shown = Array.from({ length: 2 * half + 1 }, (_, j) => (i + j - half + n) % n);
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -202,7 +206,7 @@ class Component extends DCLogic {
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
       heroPad: m ? '32px 0' : this.state.tablet ? '40px 0' : '28px 0 32px',
-      railMargin: m ? '28px' : this.state.tablet ? '-10px' : '-17px',
+      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 17px))',
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
