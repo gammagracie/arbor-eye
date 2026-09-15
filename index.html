@@ -87,7 +87,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="display: flex; gap: 22px; align-items: center; padding: 10px 8px; overflow: hidden; transform: {{ railShift }}; transition: {{ railTransition }}">
+      <div style="display: flex; gap: 22px; align-items: center; padding: 10px 8px; overflow: hidden; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
         <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="7">
           <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: {{ t.border }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease" style-hover="opacity: 1; transform: scale(1.16)">
             {{ t.img }}
@@ -148,7 +148,7 @@ class Component extends DCLogic {
     setTimeout(() => {
       // new window is rendered offset by the slots it moved, then eased back to rest so the thumbnails slide in
       this.setState({ index: k, fade: false, shift: d, animate: false });
-      setTimeout(() => this.setState({ shift: 0, animate: true }), 30);
+      requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ shift: 0, animate: true })));
     }, 200);
   }
   // Fallback if an artwork file is missing: a light green box.
@@ -224,7 +224,7 @@ class Component extends DCLogic {
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railShift: 'translateX(calc(' + this.state.shift + ' * ((' + thumbH + ') * 1.5 + 30px)))',
-      railTransition: this.state.animate ? 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+      railTransition: this.state.animate ? 'transform 0.65s cubic-bezier(0.45, 0, 0.15, 1)' : 'none',
       swipeStart: (e) => this.touchStart(e),
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
