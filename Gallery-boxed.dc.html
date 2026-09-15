@@ -71,7 +71,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </div>
 </header>
-<nav style="position: absolute; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">Gallery</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact%20Page.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
@@ -247,7 +247,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </main>
 
-<footer style="border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
+<footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
   <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
     <div style="display: flex; gap: 16px; align-items: center">
@@ -344,9 +344,15 @@ class Component extends DCLogic {
   }));
   // Fallback if an artwork file is missing: a light green box
   ph(a) { return e => { e.currentTarget.src = a.orient === 'Vertical' ? 'assets/placeholder-portrait.svg' : 'assets/placeholder-landscape.svg'; }; }
+  // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
+  setMenu(open) {
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) window.scrollTo({ top: 0, behavior: 'instant' });
+    this.setState({ menuOpen: open });
+  }
   componentDidMount() {
     this.mq = window.matchMedia('(max-width: 767px)');
-    this.onMq = () => this.setState({ mobile: this.mq.matches, menuOpen: false });
+    this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
     this.mqTablet = window.matchMedia('(max-width: 1279px)');
@@ -393,7 +399,8 @@ class Component extends DCLogic {
       headerAlign: m ? 'center' : 'baseline', // phones have no nav text to align to
       isDesktop: !m,
       menuOpen: this.state.menuOpen,
-      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      toggleMenu: () => this.setMenu(!this.state.menuOpen),
+      footerPos: this.state.menuOpen ? 'fixed' : 'static',
       barTop: this.state.menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
       barMid: this.state.menuOpen ? 0 : 1,
       barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
