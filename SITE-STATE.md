@@ -47,7 +47,8 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 
 - Two columns on desktop and tablet: image left, text right; stacked on phones. Text is vertically centred on the image; whole block centred in the space below the back link.
 - Text: "Original", italic title, medium, size, then two icon lines (limited edition set; certificate of authenticity). On tablet-portrait widths (600–767px) the two icon lines sit in a right-hand column. "Email to enquire" and "Buy the print" links at 11px.
-- **Framing carousel**: three dots below the image (Unframed / White frame / Black frame). Frames are drawn in code (16px border + white mount) and ease on/off over 0.5s. Tap the right half of the image or swipe left for next, left half or swipe right for previous. Zoom button below the dots (desktop/tablet only); Escape leaves zoom.
+- **Framing carousel**: three dots below the image (Unframed / White frame / Black frame). Frames are drawn in code (16px border + white mount) and ease on/off over 0.5s. Tap the right half of the image or swipe left for next, left half or swipe right for previous.
+- **Magnified view** (zoom button below the dots, desktop/tablet): a white lightbox covering the page showing only the artwork with the framing dots. Double-click / double-tap steps the zoom 1x → 2x → 3x → 1x, keeping the clicked point in view (the lightbox scrolls); option-click steps it back down. Arrow keys flip frames, swipe works, Escape or × closes.
 
 ## Buy page ("Print")
 

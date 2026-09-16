@@ -184,6 +184,20 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
       </div>
+      <sc-if value="{{ zoomOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: rgba(253,253,251,0.97); overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 120px; box-sizing: border-box">
+          {{ zoomImg }}
+        </div>
+        <button onClick="{{ closeZoom }}" aria-label="Close" style="position: fixed; top: 18px; right: 24px; z-index: 41; border: none; background: transparent; color: #141414; font-size: 30px; line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
+        <div style="position: fixed; left: 0; right: 0; bottom: 44px; z-index: 41; display: grid; justify-items: center; gap: 14px; pointer-events: none">
+          <div style="display: flex; gap: 12px; align-items: center; pointer-events: auto">
+            <sc-for list="{{ detailDots }}" as="dt" hint-placeholder-count="3">
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
+        </div>
+      </sc-if>
     </section>
   </sc-if>
   <sc-if value="{{ isPrint }}" hint-placeholder-val="{{ false }}">
@@ -267,7 +281,7 @@ html { scrollbar-gutter: stable; }
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
   arts = [
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
@@ -342,6 +356,21 @@ class Component extends DCLogic {
     size: t === 'Script' ? "11\u2032\u2032x 24\u2032\u2032" : "4\u2032\u2032x 6\u2032\u2032",
     desc: t === 'Script' ? 'Repeated strokes form a visual language.' : ''
   }));
+  setZoom(open) {
+    document.body.style.overflow = open ? 'hidden' : '';
+    this.setState({ zoom: open, zoomLevel: 1 });
+  }
+  // step the zoom level, then scroll the lightbox so the point that was clicked stays in view
+  zoomStep(e, level) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    this.setState({ zoomLevel: level });
+    setTimeout(() => {
+      const box = document.querySelector('.zoombox'); const img = box && box.querySelector('img'); if (!img) return;
+      box.scrollLeft = img.offsetLeft + fx * img.offsetWidth - box.clientWidth / 2;
+      box.scrollTop = img.offsetTop + fy * img.offsetHeight - box.clientHeight / 2;
+    }, 30);
+  }
   // Tap / click zones and finger swipes on the framing carousels: right half or swipe left = next, left half or swipe right = previous
   side(e) { const r = e.currentTarget.getBoundingClientRect(); return (e.clientX - r.left) > r.width / 2 ? 1 : 2; } // +1 next, +2 = previous (mod 3)
   viewTouchStart(e) { this.touchX = e.touches[0].clientX; }
@@ -376,7 +405,11 @@ class Component extends DCLogic {
         if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + 2) % 3 }));
         if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % 3 }));
       } else if (e.key === 'Escape' && this.state.openMenu) this.setState({ openMenu: null });
-      else if (e.key === 'Escape' && this.state.zoom) this.setState({ zoom: false });
+      else if (this.state.zoom) {
+        if (e.key === 'Escape') this.setZoom(false);
+        if (e.key === 'ArrowLeft') this.setState(s => ({ detailView: (s.detailView + 2) % 3 }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ detailView: (s.detailView + 1) % 3 }));
+      }
     };
     window.addEventListener('keydown', this.onKey);
     this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
@@ -390,7 +423,7 @@ class Component extends DCLogic {
     const L = this.state.layout;
     const sel = this.state.sel;
     const t = !m && this.state.tablet;
-    const oneCol = m || this.state.zoom;
+    const oneCol = m;
     const frame = this.state.frame;
     const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
     // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
@@ -458,7 +491,7 @@ class Component extends DCLogic {
         img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
-      back: () => this.setState({ sel: null, zoom: false, printView: false }),
+      back: () => { document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false }); },
       openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
       printCols: m ? '1fr' : 'minmax(0, 1fr) clamp(340px, 30vw, 460px)',
@@ -497,8 +530,17 @@ class Component extends DCLogic {
         pick: () => this.setState({ size: idx })
       })),
       addToCart: () => this.setState(s => ({ added: s.added + 1 })),
-      toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
-      zoomLabel: this.state.zoom ? 'Shrink artwork' : 'Enlarge artwork',
+      toggleZoom: () => this.setZoom(true),
+      zoomLabel: 'Enlarge artwork',
+      // magnified view: white lightbox with the framing dots; double-click steps the zoom 1x -> 2x -> 3x -> 1x, option-click steps it down
+      zoomOpen: this.state.zoom,
+      closeZoom: () => this.setZoom(false),
+      zoomHint: this.state.zoomLevel > 1 ? this.state.zoomLevel + 'x \u00b7 option-click to zoom out \u00b7 esc to close' : 'double-click to zoom in \u00b7 esc to close',
+      zoomImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+        onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : this.state.zoomLevel + 1),
+        onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, this.state.zoomLevel - 1)); },
+        onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ detailView: (s.detailView + d2 + 3) % 3 }))),
+        style: Object.assign({ width: 'calc(min(90vw, 80vh * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, framed(views[this.state.detailView][0])) }),
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
       detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the dots (and zoom button) when the text stacks underneath
       detailInfoCol: oneCol ? '1' : '2',
