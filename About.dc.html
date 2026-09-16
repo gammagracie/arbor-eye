@@ -17,12 +17,12 @@ a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
-/* About page text: 15px / 1.75 at 1440px and up, scaling down with the viewport (so text and photo heights stay in step),
+/* About page text: 14px / 1.75 at 1320px and up, scaling down with the viewport (so text and photo heights stay in step),
    never below 11px; line height eases from 1.75 to 1.5 at the small end. Phones use fixed 15px / 1.75. */
-main p { font-size: 15px; }
+main p { font-size: 14px; }
 main p, main blockquote { line-height: 1.75; }
 .copy { gap: 18px; }
-@media (min-width: 768px) { main p { font-size: clamp(11px, 1.06vw, 15px); line-height: clamp(15.5px, 1.84vw, 26.25px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
+@media (min-width: 768px) { main p { font-size: clamp(11px, 1.06vw, 14px); line-height: clamp(15.5px, 1.84vw, 24.5px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
 main h1, main h2 { line-height: 1.2; }
 /* Header and footer grow with the viewport from 1280px (76px / 50px) to 1920px (86px / 64px) */
 :root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); }
@@ -90,15 +90,15 @@ html { scrollbar-gutter: stable; }
   <section data-screen-label="About — Biography" style="padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; gap: {{ bioGap }}; align-items: start">
     <div style="display: grid; gap: 16px">
       <div onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y">
-        <div style="grid-area: 1 / 1; display: {{ bioD0 }}; aspect-ratio: 3 / 4"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; display: {{ bioD1 }}; aspect-ratio: 3 / 4"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; display: {{ bioD2 }}; aspect-ratio: 3 / 4"><img src="uploads/about/about1.webp" alt="Ned Church painting on a taped plexiglass panel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD2 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/about1.webp" alt="Ned Church painting on a taped plexiglass panel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ bioPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ bioDots }}" as="d" hint-placeholder-count="3">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -106,7 +106,7 @@ html { scrollbar-gutter: stable; }
     </div>
     <div style="position: relative; max-width: {{ bioTextMax }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
-      <div class="copy" style="display: grid; font-size: 15px; line-height: 1.75; text-align: center">
+      <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: center">
         <p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
         <p style="margin: 0">Working with 4 x 6–inch formats, my paintings explore the tension between control and acceptance. Watercolor is a medium that moves on its own terms — bleeding, pooling, and surprising the brush that guides it. The more I work with the medium, the more I recognize a rhythm that feels both familiar and instructive. Over time, I’ve realized that this process — one of discovery and adjustment — has brought me closer to my father’s approach: beginning with a vision, guided by intuition, and allowing the painting to reveal itself. In his words: “The work will tell you what it wants; you just have to be patient enough to listen.” I’ve come to recognize that his words speak more than just painting; they reflect a way of living. They are a reminder that patience and persistence can shape not only the creative process but also the way we meet what life places before us.</p>
         <p style="margin: 0">My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p>
@@ -126,7 +126,7 @@ html { scrollbar-gutter: stable; }
     <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Tree of Life</h2>
-      <div class="copy" style="display: grid; font-size: 15px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
+      <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
         <p style="margin: 0">The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
         <p style="margin: 0">The original pin was designed and fabricated by Sharon Church shortly after her nephew Ned was injured in a car accident. Over time, the insignia evolved into the foundation for the name Arbor &amp; Eye and its broader visual identity, gradually coming to embody endurance, renewal, and continuity within Ned Church’s work.</p>
       </div>
@@ -136,14 +136,14 @@ html { scrollbar-gutter: stable; }
   <section data-screen-label="About — Process" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
     <div style="display: grid; gap: 16px; order: {{ procImgOrder }}">
       <div onTouchStart="{{ procTouchStart }}" onTouchEnd="{{ procTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y">
-        <div style="grid-area: 1 / 1; display: {{ procD0 }}; aspect-ratio: 4 / 3"><img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; display: {{ procD1 }}; aspect-ratio: 4 / 3"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and finished postcards laid out on the table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD0 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD1 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and finished postcards laid out on the table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ procPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ procDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ procNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -151,7 +151,7 @@ html { scrollbar-gutter: stable; }
     </div>
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Process</h2>
-      <div class="copy" style="display: grid; font-size: 15px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
+      <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: center; max-width: 620px; margin: 0 auto">
         <p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
         <p style="margin: 0">Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p style="margin: 0">The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p>
@@ -174,15 +174,15 @@ html { scrollbar-gutter: stable; }
     <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
     <div style="max-width: 540px; margin: 0 auto; display: grid; gap: 16px">
       <div onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y">
-        <div style="grid-area: 1 / 1; display: {{ stuD0 }}; aspect-ratio: 3 / 4"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; display: {{ stuD1 }}; aspect-ratio: 3 / 4"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; display: {{ stuD2 }}; aspect-ratio: 3 / 4"><img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ stuD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ stuD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ stuD2 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ stuPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ stuDots }}" as="d" hint-placeholder-count="3">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ stuNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -227,7 +227,7 @@ class Component extends DCLogic {
   car(key, n) {
     const i = this.state[key];
     const out = {};
-    for (let k = 0; k < n; k++) out[key + 'D' + k] = i === k ? 'block' : 'none';
+    for (let k = 0; k < n; k++) out[key + 'D' + k] = i === k ? 1 : 0; // opacity: photos crossfade
     out[key + 'Dots'] = Array.from({ length: n }, (_, k) => ({ bg: i === k ? '#141414' : '#C9C5BD', go: () => this.setState({ [key]: k }) }));
     out[key + 'Prev'] = () => this.setState(s => ({ [key]: (s[key] + n - 1) % n }));
     out[key + 'Next'] = () => this.setState(s => ({ [key]: (s[key] + 1) % n }));

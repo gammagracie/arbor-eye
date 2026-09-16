@@ -156,7 +156,7 @@ html { scrollbar-gutter: stable; }
           <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
             <div style="display: flex; gap: 12px; align-items: center">
               <sc-for list="{{ detailDots }}" as="dt" hint-placeholder-count="3">
-                <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer"></button>
+                <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
               </sc-for>
             </div>
             <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 6px" style-hover="color: #6E6B66">
@@ -237,7 +237,7 @@ html { scrollbar-gutter: stable; }
           {{ lightboxImg }}
           <div onClick="{{ lbStop }}" style="display: flex; gap: 12px; align-items: center; cursor: default">
             <sc-for list="{{ lbDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
             </sc-for>
           </div>
           <p style="margin: 0; color: #FDFDFB; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8">{{ lbLabel }}</p>
@@ -387,7 +387,9 @@ class Component extends DCLogic {
     const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
     // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
     const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
-    const framed = f => f === 'none' ? { boxShadow: wallShadow } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxSizing: 'border-box', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + wallShadow };
+    // both states share numeric border/padding values so switching frames animates smoothly
+    const ease = { boxSizing: 'border-box', transition: 'border 0.5s ease, padding 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease' };
+    const framed = f => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: wallShadow } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + wallShadow });
     const d = sel != null ? this.arts[sel] : null;
     const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
       (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
