@@ -87,10 +87,10 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="clip-path: inset(-120px 0 -20px 0); width: {{ railWidth }}; padding: 10px 0; flex: none">
+      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 22px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
             </button>
           </sc-for>
@@ -148,7 +148,7 @@ class Component extends DCLogic {
     const strip = e.currentTarget; const btns = Array.from(strip.children);
     if (!this.dock || this.dock.length !== btns.length) this.dockBase(strip);
     const base = this.dock; const slot = base.length > 1 ? base[1].cx - base[0].cx : 100;
-    const scales = base.map(b => 1 + 0.55 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.15 * slot), 2)));
+    const scales = base.map(b => 1 + 0.3 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.15 * slot), 2)));
     const extra = scales.map((sc, k) => (sc - 1) * base[k].w);
     const total = extra.reduce((a, b) => a + b, 0);
     let acc = 0;
@@ -247,7 +247,7 @@ class Component extends DCLogic {
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
-      railGap: m ? '4px' : '16px',
+      railGap: m ? '4px' : this.state.tablet ? '40px' : '56px',
       thumbH,
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
@@ -257,12 +257,14 @@ class Component extends DCLogic {
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 22px)',
       railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
       railTransition: this.state.animate ? 'transform 0.65s cubic-bezier(0.45, 0, 0.15, 1)' : 'none',
+      railClip: this.state.animate ? 'inset(-120px 0 -20px 0)' : 'inset(-120px -60px -20px -60px)',
       dockMove: (e) => this.dockMove(e),
       dockLeave: (e) => this.dockLeave(e),
       swipeStart: (e) => this.touchStart(e),
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
-      thumbs: shown.map(k => ({
+      thumbs: shown.map((k, j) => ({
+        vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
         img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
         alt: 'Show ' + this.arts[k].alt,
         borderColor: k === i ? '#141414' : '#E7E4DE',
