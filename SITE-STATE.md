@@ -40,6 +40,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Filters: **Series** and **Availability** as styled dropdown panels (white panel, thin dark rule on top, 14px light text, soft shadow), always right-aligned; close on pick, outside click or Escape.
 - Grid-size switcher (3 / 2 / 1 columns) shown from 768px up; hidden on phones.
 - Three-column layout drops to two columns under 1000px. Phones use two columns.
+- **Vertical filter**: one extra column at every size (4 desktop, 3 under 1000px, 3 on phones), taller row gaps (120px desktop, 56px phone) and square cells so the tall works keep their size.
 - Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title centred below it.
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 

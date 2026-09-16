@@ -132,7 +132,7 @@ html { scrollbar-gutter: stable; }
       </div>
       <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
-          <div class="work" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; background: #eef0f5; padding: 7%; transition: transform 0.3s ease, box-shadow 0.3s ease" style-hover="transform: translateY(-6px); box-shadow: inset 0 0 0 1px #D9D5CC">
+          <div class="work" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: {{ cellRatio }}; display: flex; align-items: center; justify-content: center; box-sizing: border-box; background: #eef0f5; padding: 7%; transition: transform 0.3s ease, box-shadow 0.3s ease" style-hover="transform: translateY(-6px); box-shadow: inset 0 0 0 1px #D9D5CC">
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
@@ -432,6 +432,10 @@ class Component extends DCLogic {
     const ease = { boxSizing: 'border-box', transition: 'border 0.5s ease, padding 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease' };
     const framed = f => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: wallShadow } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + wallShadow });
     const d = sel != null ? this.arts[sel] : null;
+    const vertical = this.state.series === 'Vertical';
+    // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
+    const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
+    const cols = baseCols === 1 ? 1 : baseCols + (vertical ? 1 : 0);
     const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
       (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
       (this.state.avail === 'All' || a.avail === this.state.avail));
@@ -479,9 +483,10 @@ class Component extends DCLogic {
         label: label || v, selected: this.state.avail === v, color: this.state.avail === v ? '#8A867E' : '#141414',
         pick: (e) => { e.stopPropagation(); this.setState({ avail: v, openMenu: null }); }
       })),
-      gridCols: m ? (L === 'g3' ? 'repeat(2, minmax(0, 1fr))' : '1fr')
-        : L === 'g3' ? (this.state.narrowGrid ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))') : L === 'g2' ? 'repeat(2, minmax(0, 1fr))' : '1fr', // three columns become two under 1000px
-      gridGap: m ? '32px 20px' : L === 'g1' ? '88px' : '72px 56px',
+      // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size
+      gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
+      gridGap: m ? (vertical ? '56px 20px' : '32px 20px') : L === 'g1' ? '88px' : vertical ? '120px 56px' : '72px 56px',
+      cellRatio: vertical ? '1 / 1' : '1 / 1',
       cardMax: L === 'g1' && !m ? '880px' : 'none',
       chipDisplay: hoverTitles ? 'block' : 'none',
       noResults: filtered.length === 0,
