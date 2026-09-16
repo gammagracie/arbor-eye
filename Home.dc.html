@@ -87,10 +87,10 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="overflow: hidden; width: {{ railWidth }}; padding: 10px 0; flex: none">
-        <div style="display: flex; gap: 22px; align-items: center; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
+      <div style="clip-path: inset(-120px 0 -20px 0); width: {{ railWidth }}; padding: 10px 0; flex: none">
+        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 22px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1; transform: scale(1.16)">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
             </button>
           </sc-for>
@@ -139,6 +139,33 @@ class Component extends DCLogic {
     { src: 'assets/works/CORE_18.jpg', title: 'Core 18', alt: 'Core 18' }
   ];
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
+  // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored
+  // at their bottom edge and nudged sideways so they never overlap. Styles are set directly for smooth tracking.
+  dockBase(strip) {
+    this.dock = Array.from(strip.children).map(b => { const r = b.getBoundingClientRect(); return { cx: r.left + r.width / 2, w: r.width }; });
+  }
+  dockMove(e) {
+    const strip = e.currentTarget; const btns = Array.from(strip.children);
+    if (!this.dock || this.dock.length !== btns.length) this.dockBase(strip);
+    const base = this.dock; const slot = base.length > 1 ? base[1].cx - base[0].cx : 100;
+    const scales = base.map(b => 1 + 0.55 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.15 * slot), 2)));
+    const extra = scales.map((sc, k) => (sc - 1) * base[k].w);
+    const total = extra.reduce((a, b) => a + b, 0);
+    let acc = 0;
+    btns.forEach((btn, k) => {
+      const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
+      btn.style.transition = 'transform 0.14s ease-out, opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
+      btn.style.zIndex = String(Math.round(scales[k] * 100));
+    });
+  }
+  dockLeave(e) {
+    Array.from(e.currentTarget.children).forEach(btn => {
+      btn.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transform = ''; btn.style.zIndex = '';
+    });
+    this.dock = null;
+  }
   // finger swipe on the image or thumbnails: left = next, right = previous
   touchStart(e) { this.touchX = e.touches[0].clientX; }
   touchEnd(e) { const dx = e.changedTouches[0].clientX - this.touchX; if (Math.abs(dx) > 40) this.go(dx < 0 ? 1 : -1); }
@@ -230,6 +257,8 @@ class Component extends DCLogic {
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 22px)',
       railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
       railTransition: this.state.animate ? 'transform 0.65s cubic-bezier(0.45, 0, 0.15, 1)' : 'none',
+      dockMove: (e) => this.dockMove(e),
+      dockLeave: (e) => this.dockLeave(e),
       swipeStart: (e) => this.touchStart(e),
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
