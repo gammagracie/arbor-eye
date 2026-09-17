@@ -136,7 +136,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-style: italic; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -211,8 +211,8 @@ html { scrollbar-gutter: stable; }
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ detailInfoPad }}">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
-          <p style="margin: 0; font-size: 16px; letter-spacing: 0.08em">$225</p>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
+          <p style="margin: 0; font-size: 16px; letter-spacing: 0.08em">{{ printPrice }}</p>
           <sc-if value="{{ hasDesc }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.01em">{{ detailDesc }}</p>
           </sc-if>
@@ -286,7 +286,7 @@ class Component extends DCLogic {
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
     ['CORE_13.jpg', 'Core', 'Core 13'],
-    ['CORE_14.jpg', 'Core', 'Core 14'],
+    ['CORE_14.jpg', 'Core', 'Articulation', true], // hidden: Ned does not want it in the gallery
     ['CORE_15.jpg', 'Core', 'Core 15'],
     ['CORE_16.jpg', 'Core', 'Core 16'],
     ['CORE_17.jpg', 'Core', 'Core 17'],
@@ -346,7 +346,8 @@ class Component extends DCLogic {
     ['ASCENT_09_415da3c4-59af-4e88-b149-81033125ed05.jpg', 'Ascent', 'Ascent 9'],
     ['DSC01769.jpg', '', 'Untitled'],
     ['DSC01754.jpg', '', 'Untitled']
-  ].map(([f, s, t]) => ({
+  ].map(([f, s, t, hidden]) => ({
+    hidden: !!hidden,
     orient: /^(ASCENT|STRUCTURE)/.test(f) ? 'Vertical' : 'Horizontal',
     src: 'assets/works/' + f,
     title: t,
@@ -436,7 +437,7 @@ class Component extends DCLogic {
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
     const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
     const cols = baseCols === 1 ? 1 : baseCols + (vertical ? 1 : 0);
-    const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) =>
+    const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) => !a.hidden &&
       (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
       (this.state.avail === 'All' || a.avail === this.state.avail));
     return {
@@ -528,7 +529,8 @@ class Component extends DCLogic {
       // sized from the image's own ratio so it fills the overlay without distortion
       lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + this.side(e)) % 3 })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + 3) % 3 }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
       hasDesc: !!(d && d.desc),
-      sizes: ['8X12\u2033', '16X24\u2033', '24X36\u2033'].map((label, idx) => ({
+      printPrice: ['$225', '$595', '$1,195'][this.state.size],
+      sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
         label,
         bg: this.state.size === idx ? '#141414' : '#FFFFFF',
         color: this.state.size === idx ? '#FFFFFF' : '#141414',

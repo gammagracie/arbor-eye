@@ -27,9 +27,9 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 
 ## Home
 
-- **Carousel of nine Core works** (uncropped gallery scans with the paper border): Core 12, Core 20, Script (Core 11), Core 14, Core 16, Core 15, Core 17, Core 13, Core 18. Titles match the Gallery so hover label and click-through line up. Original cropped file paths are kept on each entry (`cropped`).
+- **Carousel of eight Core works** (uncropped gallery scans with the paper border): Core 12, Core 20, Script (Core 11), Core 16, Core 15, Core 17, Core 13, Core 18. Titles match the Gallery so hover label and click-through line up. Original cropped file paths are kept on each entry (`cropped`). "Articulation" (Core 14) is in the data but flagged `hidden` at Ned's request.
 - **Main image**: on desktop it fits the height between header and footer and is centred, never wider than the content; on phones/tablets it also fits the screen height so the footer is always visible and the image-plus-thumbnails block is vertically centred. Image fades out/in (0.2s) on change.
-- **Hover** on the main image shows the work's title in light text below the thumbnails. **Click** opens that work's Gallery detail page (`Gallery.dc.html#Title`).
+- **Hover** on the main image shows the work's title in light italic text below the thumbnails. **Click** opens that work's Gallery detail page (`Gallery.dc.html#Title`).
 - **Thumbnails**: 7 visible on desktop, 5 tablet, 3 phone, centred on the current work; one extra waits off-stage each side. Size 5.5% of the image width on desktop (52px tablet, 44px phone), 22px apart, overlapping the image by 30% of the rail height on desktop/tablet (no overlap on phones). Arrows are tall thin chevrons in light grey, bottom-aligned with the thumbnails, 56px clear of the tray on desktop.
 - **Tray motion**: selecting a work slides the whole strip one slot in the direction of travel (0.65s ease-in-out) then re-centres silently.
 - **Dock-style magnification** (mouse only): thumbnail under the cursor grows to 130%, neighbours ~114%, anchored at the bottom, neighbours nudged aside; end thumbnails have 60px of room so they are never cropped.
@@ -41,20 +41,21 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Grid-size switcher (3 / 2 / 1 columns) shown from 768px up; hidden on phones.
 - Three-column layout drops to two columns under 1000px. Phones use two columns.
 - **Vertical filter**: one extra column at every size (4 desktop, 3 under 1000px, 3 on phones), taller row gaps (120px desktop, 56px phone) and square cells so the tall works keep their size.
-- Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title centred below it.
+- Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title (italic) centred below it.
+- "Articulation" (file CORE_14) is in the data but hidden from the grid at Ned's request (`hidden` flag).
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 
 ## Detail view ("Original")
 
 - Two columns on desktop and tablet: image left, text right; stacked on phones. Text is vertically centred on the image; whole block centred in the space below the back link.
-- Text: "Original", italic title, medium, size, then two icon lines (limited edition set; certificate of authenticity). On tablet-portrait widths (600–767px) the two icon lines sit in a right-hand column. "Email to enquire" and "Buy the print" links at 11px.
+- Text: "Original", italic title (all work titles on the site are italic), medium, size, then two icon lines (limited edition set; certificate of authenticity). On tablet-portrait widths (600–767px) the two icon lines sit in a right-hand column. "Email to enquire" and "Buy the print" links at 11px.
 - **Framing carousel**: three dots below the image (Unframed / White frame / Black frame). Frames are drawn in code (16px border + white mount) and ease on/off over 0.5s. Tap the right half of the image or swipe left for next, left half or swipe right for previous.
 - **Magnified view** (zoom button below the dots, desktop/tablet): a white lightbox covering the page showing only the artwork with the framing dots. Double-click / double-tap steps the zoom 1x → 2x → 3x → 1x, keeping the clicked point in view (the lightbox scrolls); option-click steps it back down. Arrow keys flip frames, swipe works, Escape or × closes.
 
 ## Buy page ("Print")
 
 - Print shown on an off-white wall (`#F0F2EF`) with a soft shadow; clicking it opens a **lightbox carousel** (dark overlay) of the three framing views with dots, hover arrows, tap zones, swipe, arrow keys and Escape.
-- Size buttons, then **Choose Your Frame Color**: white and black swatches plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
+- Italic title, then the price for the selected size: 8x12″ $225 · 16x24″ $595 · 24x36″ $1,195. Size buttons, then **Choose Your Frame Color**: white and black swatches plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
 - Add to cart button.
 
 ## About
