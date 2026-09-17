@@ -99,7 +99,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 10px 0 0; text-align: center; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 10px 0 0; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -131,13 +131,13 @@ class Component extends DCLogic {
     { src: 'assets/works/CORE_12.jpg', cropped: 'assets/art-1.png', title: 'Core 12', alt: 'Green field with red, ochre and white forms' },
     { src: 'assets/works/CORE_20.jpg', cropped: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
     { src: 'assets/works/CORE_11.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Core 14', alt: 'Color band study on textured paper' },
+    { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Articulation', alt: 'Color band study on textured paper', hidden: true }, // Ned does not want it shown
     { src: 'assets/works/CORE_16.jpg', cropped: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
     { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
     { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' },
     { src: 'assets/works/CORE_13.jpg', title: 'Core 13', alt: 'Core 13' },
     { src: 'assets/works/CORE_18.jpg', title: 'Core 18', alt: 'Core 18' }
-  ];
+  ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored
   // at their bottom edge and nudged sideways so they never overlap. Styles are set directly for smooth tracking.
