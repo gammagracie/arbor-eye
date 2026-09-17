@@ -80,7 +80,7 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid">
-    <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0; position: relative; background: url(uploads/arbor-mark.png) center / auto 78% no-repeat">
+    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; aspect-ratio: 1.494; margin: 0 auto; min-width: 0; position: relative; background: url(uploads/arbor-mark.png) center / auto 78% no-repeat">
       {{ heroImg }}
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
     </a>
@@ -125,7 +125,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: true };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: true }; // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -179,7 +179,7 @@ class Component extends DCLogic {
     setTimeout(() => {
       this.setState({ index: k, fade: false, animate: true });
       setTimeout(() => this.setState({ railBase: k, animate: false }), 700);
-    }, 200);
+    }, 400);
   }
   // Fallback if an artwork file is missing: a light green box.
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
@@ -190,6 +190,7 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
+    this.arts.forEach(a => { const im = new Image(); im.src = a.src; }); // preload so swaps are instant
     this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); // wordmark overlay fades off after 3s
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
@@ -253,7 +254,8 @@ class Component extends DCLogic {
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : this.state.tablet ? '40px' : '56px',
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.4s ease' } }),
+      heroW,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introOpacity: this.state.intro ? 1 : 0,
       hoverTitle: this.state.hover ? this.arts[i].title : '',
