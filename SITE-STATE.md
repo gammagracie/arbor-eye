@@ -44,7 +44,8 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title (italic) centred below it.
 - "Articulation" (file CORE_14) is in the data but hidden from the grid at Ned's request (`hidden` flag).
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
-- Per-work details live in a `DETAILS` map (Script and Brilliance: acrylic and pastel on canvas, 11 x 24 in, with a one-line description); everything else defaults to watercolour on paper, 4 x 6 in.
+- Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
+- Per-work details live in a `DETAILS` map (Script, Brilliance and Canopy: acrylic and pastel on canvas, 11 x 24 in, each with a one-line description); everything else defaults to watercolour on paper, 4 x 6 in.
 
 ## Detail view ("Original")
 
