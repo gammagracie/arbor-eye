@@ -126,18 +126,18 @@ html { scrollbar-gutter: stable; }
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false };
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
-  // cropped file for each piece in case it is wanted again. Titles match the Gallery entries.
+  // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
     { src: 'assets/works/DSC01769.jpg', title: 'Brilliance', alt: 'Brilliance' }, // first, per Ned
-    { src: 'assets/works/CORE_12.jpg', cropped: 'assets/art-1.png', title: 'Core 12', alt: 'Green field with red, ochre and white forms' },
+    { src: 'assets/works/CORE_12.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', alt: 'Green field with red, ochre and white forms' },
     { src: 'assets/works/CORE_20.jpg', cropped: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
     { src: 'assets/works/CORE_11.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
     { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Articulation', alt: 'Color band study on textured paper', hidden: true }, // Ned does not want it shown
     { src: 'assets/works/CORE_16.jpg', cropped: 'assets/art-5.png', title: 'Core 16', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Core 15', alt: 'Two framed panels on black ground' },
+    { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Chamber', alt: 'Two framed panels on black ground' },
     { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' },
-    { src: 'assets/works/CORE_13.jpg', title: 'Core 13', alt: 'Core 13' },
-    { src: 'assets/works/CORE_18.jpg', title: 'Core 18', alt: 'Core 18' }
+    { src: 'assets/works/CORE_13.jpg', title: 'Conduit', alt: 'Conduit' },
+    { src: 'assets/works/CORE_18.jpg', title: 'Upwelling', alt: 'Upwelling' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored

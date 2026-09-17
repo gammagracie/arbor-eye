@@ -284,22 +284,30 @@ html { scrollbar-gutter: stable; }
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Repeated strokes form a visual language.' },
   'Brilliance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Light reveals what was always there' },
-  'Canopy': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Life surrounds us.' }
+  'Canopy': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Life surrounds us.' },
+  'Passage': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'The journey continues.' },
+  'Conduit': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Pathways connect a shared structure.' },
+  'Symbiosis': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Distinct forms exist through mutual relationships.' },
+  'Chamber': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Defined spaces establish internal relationships.' },
+  'Upwelling': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Parallel forms organize a living field.' },
+  'Outliers 1': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
+  'Outliers 3': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
+  'Outliers 4': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' }
 };
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
   arts = [
     ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
-    ['CORE_12.jpg', 'Core', 'Core 12'],
-    ['CORE_13.jpg', 'Core', 'Core 13'],
+    ['CORE_12.jpg', 'Core', 'Symbiosis'],
+    ['CORE_13.jpg', 'Core', 'Conduit'],
     ['CORE_14.jpg', 'Core', 'Articulation', true], // hidden: Ned does not want it in the gallery
-    ['CORE_15.jpg', 'Core', 'Core 15'],
+    ['CORE_15.jpg', 'Core', 'Chamber'],
     ['CORE_16.jpg', 'Core', 'Core 16'],
     ['CORE_17.jpg', 'Core', 'Core 17'],
-    ['CORE_18.jpg', 'Core', 'Core 18'],
+    ['CORE_18.jpg', 'Core', 'Upwelling'],
     ['CORE_20.jpg', 'Core', 'Core 20'],
-    ['THETURNING_08.jpg', 'The Turning', 'The Turning 8'],
+    ['THETURNING_08.jpg', 'The Turning', 'Passage'],
     ['OUTLIERS_01.jpg', 'Outliers', 'Outliers 1'],
     ['OUTLIERS_02.jpg', 'Outliers', 'Outliers 2'],
     ['OUTLIERS_03.jpg', 'Outliers', 'Outliers 3'],

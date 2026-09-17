@@ -27,7 +27,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 
 ## Home
 
-- **Carousel of nine works** (uncropped gallery scans with the paper border): Brilliance first, then Core 12, Core 20, Script (Core 11), Core 16, Core 15, Core 17, Core 13, Core 18. Titles match the Gallery so hover label and click-through line up. Original cropped file paths are kept on each entry (`cropped`). "Articulation" (Core 14) is in the data but flagged `hidden` at Ned's request.
+- **Carousel of nine works** (uncropped gallery scans with the paper border): Brilliance first, then Symbiosis (Core 12), Core 20, Script (Core 11), Core 16, Chamber (Core 15), Core 17, Conduit (Core 13), Upwelling (Core 18). Titles match the Gallery so hover label and click-through line up. Original cropped file paths are kept on each entry (`cropped`). "Articulation" (Core 14) is in the data but flagged `hidden` at Ned's request.
 - **Main image**: on desktop it fits the height between header and footer and is centred, never wider than the content; on phones/tablets it also fits the screen height so the footer is always visible and the image-plus-thumbnails block is vertically centred. Image fades out/in (0.2s) on change.
 - **Hover** on the main image shows the work's title in light italic text below the thumbnails. **Click** opens that work's Gallery detail page (`Gallery.dc.html#Title`).
 - **Thumbnails**: 7 visible on desktop, 5 tablet, 3 phone, centred on the current work; one extra waits off-stage each side. Size 5.5% of the image width on desktop (52px tablet, 44px phone), 22px apart, overlapping the image by 30% of the rail height on desktop/tablet (no overlap on phones). Arrows are tall thin chevrons in light grey, bottom-aligned with the thumbnails, 56px clear of the tray on desktop.
@@ -45,7 +45,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - "Articulation" (file CORE_14) is in the data but hidden from the grid at Ned's request (`hidden` flag).
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 - Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
-- Per-work details live in a `DETAILS` map (Script, Brilliance and Canopy: acrylic and pastel on canvas, 11 x 24 in, each with a one-line description); everything else defaults to watercolour on paper, 4 x 6 in.
+- Per-work details live in a `DETAILS` map keyed by title. Acrylic and pastel on canvas, 11 x 24 in, with a one-line description: Script, Brilliance, Canopy, Passage (The Turning 8 scan), Conduit (Core 13), Symbiosis (Core 12), Chamber (Core 15), Upwelling (Core 18); the same medium and size without a description: Outliers 1, 3 and 4. Everything else defaults to watercolour on paper, 4 x 6 in.
 
 ## Detail view ("Original")
 
