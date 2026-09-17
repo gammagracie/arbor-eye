@@ -283,11 +283,13 @@ html { scrollbar-gutter: stable; }
 // Works whose details differ from the default (watercolour on paper, 4 x 6 in)
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Repeated strokes form a visual language.' },
-  'Brilliance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Light reveals what was always there' }
+  'Brilliance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Light reveals what was always there' },
+  'Canopy': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Life surrounds us.' }
 };
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
   arts = [
+    ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
     ['CORE_12.jpg', 'Core', 'Core 12'],
     ['CORE_13.jpg', 'Core', 'Core 13'],
@@ -349,8 +351,7 @@ class Component extends DCLogic {
     ['ASCENT_07_ba0414ef-80d6-4940-8b36-0b8bebb7486f.jpg', 'Ascent', 'Ascent 7'],
     ['ASCENT_08_bb8b8ee5-af4c-4cc3-826f-a46218ea5940.jpg', 'Ascent', 'Ascent 8'],
     ['ASCENT_09_415da3c4-59af-4e88-b149-81033125ed05.jpg', 'Ascent', 'Ascent 9'],
-    ['DSC01769.jpg', '', 'Brilliance'],
-    ['DSC01754.jpg', '', 'Untitled']
+    ['DSC01754.jpg', '', 'Canopy']
   ].map(([f, s, t, hidden]) => ({
     hidden: !!hidden,
     orient: /^(ASCENT|STRUCTURE)/.test(f) ? 'Vertical' : 'Horizontal',
