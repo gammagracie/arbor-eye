@@ -80,8 +80,9 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid">
-    <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0">
+    <a href="{{ heroHref }}" style="display: block; width: 100%; min-width: 0; position: relative; background: url(uploads/arbor-mark.png) center / auto 78% no-repeat">
       {{ heroImg }}
+      <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: flex-end; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px 8px 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
@@ -124,7 +125,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: true };
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -189,6 +190,7 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
+    this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); // wordmark overlay fades off after 3s
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -205,6 +207,7 @@ class Component extends DCLogic {
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet);
     window.removeEventListener('keydown', this.onKey);
     clearInterval(this.timer);
+    clearTimeout(this.introTimer);
   }
   renderVals() {
     const cartCount = this.props.cartCount ?? 1;
@@ -252,6 +255,7 @@ class Component extends DCLogic {
       thumbH,
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onLoad: e => this.setState({ ratio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { width: heroW, height: 'auto', display: 'block', margin: '0 auto', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.2s ease' } }),
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
+      introOpacity: this.state.intro ? 1 : 0,
       hoverTitle: this.state.hover ? this.arts[i].title : '',
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
