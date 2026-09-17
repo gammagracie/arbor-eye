@@ -265,7 +265,7 @@ html { scrollbar-gutter: stable; }
   <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 Arbor &amp; Eye</p>
     <div style="display: flex; gap: 16px; align-items: center">
-      <a href="#" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
+      <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
         <img src="uploads/social_IG.png" alt="Instagram" style="display: block; width: 27.5px; height: 27.5px">
       </a>
       <a href="#" aria-label="Pinterest" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -292,7 +292,12 @@ const DETAILS = {
   'Upwelling': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Parallel forms organize a living field.' },
   'Outliers 1': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
   'Outliers 3': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
-  'Outliers 4': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' }
+  'Outliers 4': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
+  'Coastal Silence': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Stillness settles as movement comes to rest.' },
+  'Habitat': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Living forms establish a shared environment.' },
+  'Crossings': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Color settles where forms overlap and diverge.' },
+  'Aurora': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Creation unfolds through harmony.' },
+  'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
@@ -303,7 +308,7 @@ class Component extends DCLogic {
     ['CORE_13.jpg', 'Core', 'Conduit'],
     ['CORE_14.jpg', 'Core', 'Articulation', true], // hidden: Ned does not want it in the gallery
     ['CORE_15.jpg', 'Core', 'Chamber'],
-    ['CORE_16.jpg', 'Core', 'Core 16'],
+    ['CORE_16.jpg', 'Core', 'Habitat'],
     ['CORE_17.jpg', 'Core', 'Core 17'],
     ['CORE_18.jpg', 'Core', 'Upwelling'],
     ['CORE_20.jpg', 'Core', 'Core 20'],
@@ -315,13 +320,13 @@ class Component extends DCLogic {
     ['OUTLIERS_05.jpg', 'Outliers', 'Outliers 5'],
     ['OUTLIERS_06.jpg', 'Outliers', 'Outliers 6'],
     ['OUTLIERS_07.jpg', 'Outliers', 'Outliers 7'],
-    ['SELECT_02.jpg', 'Select', 'Select 2'],
+    ['SELECT_02.jpg', 'Select', 'Aurora'],
     ['SELECT_03.jpg', 'Select', 'Select 3'],
     ['SELECT_04.jpg', 'Select', 'Select 4'],
     ['SELECT_05.jpg', 'Select', 'Select 5'],
     ['SELECT_06.jpg', 'Select', 'Select 6'],
     ['SELECT_07.jpg', 'Select', 'Select 7'],
-    ['SELECT_08.jpg', 'Select', 'Select 8'],
+    ['SELECT_08.jpg', 'Select', 'Resonance'],
     ['SPECTRUM_01.jpg', 'Spectrum', 'Spectrum 1'],
     ['SPECTRUM_02.jpg', 'Spectrum', 'Spectrum 2'],
     ['SPECTRUM_03.jpg', 'Spectrum', 'Spectrum 3'],
@@ -329,7 +334,7 @@ class Component extends DCLogic {
     ['STRUCTURE_01.jpg', 'Structure', 'Structure 1'],
     ['STRUCTURE_02.jpg', 'Structure', 'Structure 2'],
     ['STRUCTURE_03.jpg', 'Structure', 'Structure 3'],
-    ['STRUCTURE_04.jpg', 'Structure', 'Structure 4'],
+    ['STRUCTURE_04.jpg', 'Structure', 'Crossings'],
     ['STRUCTURE_05.jpg', 'Structure', 'Structure 5'],
     ['THETURNING_01.jpg', 'The Turning', 'The Turning 1'],
     ['THETURNING_02.jpg', 'The Turning', 'The Turning 2'],
@@ -354,7 +359,7 @@ class Component extends DCLogic {
     ['ASCENT_13_0204696a-f577-48c5-a3c2-3c8f12a9d6fa.jpg', 'Ascent', 'Ascent 13'],
     ['ASCENT_03_a1250a1b-76ce-4d44-9640-59e606473398.jpg', 'Ascent', 'Ascent 3'],
     ['ASCENT_04_cc0af23a-5580-4a9f-ad8f-de1c0a7122a4.jpg', 'Ascent', 'Ascent 4'],
-    ['ASCENT_05_3b6eae9f-57ba-4c04-8234-a9ce2c335c98.jpg', 'Ascent', 'Ascent 5'],
+    ['ASCENT_05_3b6eae9f-57ba-4c04-8234-a9ce2c335c98.jpg', 'Ascent', 'Coastal Silence'],
     ['ASCENT_06_88b2cbea-2e1b-4c87-b957-481676147cc0.jpg', 'Ascent', 'Ascent 6'],
     ['ASCENT_07_ba0414ef-80d6-4940-8b36-0b8bebb7486f.jpg', 'Ascent', 'Ascent 7'],
     ['ASCENT_08_bb8b8ee5-af4c-4cc3-826f-a46218ea5940.jpg', 'Ascent', 'Ascent 8'],
