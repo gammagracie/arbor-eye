@@ -417,7 +417,8 @@ class Component extends DCLogic {
     this.setState({ narrowGrid: this.mqGrid.matches });
     this.setState({ tablet: this.mqTablet.matches });
     // Open the work named in the URL hash (linked from the home carousel).
-    const k = this.arts.findIndex(a => a.title === decodeURIComponent(location.hash.slice(1)));
+    const want = decodeURIComponent(location.hash.slice(1));
+    const k = this.arts.findIndex(a => a.title === want || a.src.split('/').pop() === want); // by title or by file name
     if (k >= 0) this.setState({ sel: k });
     this.onKey = (e) => {
       if (this.state.lightbox) {

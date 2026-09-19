@@ -10,11 +10,12 @@ Repo: https://github.com/gammagracie/arbor-eye · Live: https://gammagracie.gith
 | `index.html` / `Home.dc.html` | Home carousel (identical files) | yes |
 | `Gallery.dc.html` | Gallery, clean version (no boxes behind works) | yes |
 | `Gallery-boxed.dc.html` | Gallery, alternate version with `#eef0f5` boxes behind works | no (back pocket) |
+| `gallery-filmstrip.html` | Gallery, alternate "filmstrip" version: one large work with a strip of every work along the bottom | no (back pocket) |
 | `About.dc.html` | About | yes |
 | `Contact Page.dc.html` | Contact with shipping and returns below | yes |
 | `Contact-tabs.dc.html` | Alternate contact page: form + Contact / Shipping / Returns tabs | no (back pocket) |
 
-Both gallery files are kept in step; every gallery change is applied to both. Git tag `approved-2026-09-14` marks an earlier signed-off version.
+Both gallery files are kept in step; every gallery change is applied to both. Git tags: `approved-2026-09-14` (earlier signed-off version) and `pinned-2026-09-19` (state before the filmstrip experiment).
 
 ## Global layout
 
@@ -47,6 +48,14 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 - Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
 - Per-work details live in a `DETAILS` map keyed by title. Acrylic and pastel on canvas, 11 x 24 in, with a one-line description: Script, Brilliance, Canopy, Passage (The Turning 8 scan), Conduit (Core 13), Symbiosis (Core 12), Chamber (Core 15), Upwelling (Core 18), Coastal Silence (Ascent 5), Crossings (Structure 4), Habitat (Core 16), Aurora (Select 2), Resonance (Select 8); the same medium and size without a description: Outliers 1, 3 and 4. Everything else defaults to watercolour on paper, 4 x 6 in.
+
+## Gallery, filmstrip version (`gallery-filmstrip.html`)
+
+- Standalone plain HTML/CSS/JS page (not templated) with the same header, footer, side padding and mobile menu. The page never scrolls.
+- **Stage**: the selected work shown whole, as large as the space between header and filmstrip allows, centred on the off-white page with the usual soft shadow; works crossfade (0.6s) with the insignia behind. First work (Brilliance) on load, or the work named in the URL hash.
+- **Hover** on the work shows its italic title and a "View details" cue (always visible on touch screens). **Click** opens that work's detail view in the main gallery (`Gallery.dc.html#<file>`; the gallery's deep link accepts a title or a file name, so the several "Untitled" works resolve correctly).
+- **Filmstrip**: every visible work in one row anchored above the footer, thumbnails 40px tall with 7px gaps (small files in `assets/thumbs/`), edges faded. The strip glides with the mouse: left of the screen = start of the row, right = end. It also scrolls by trackpad/wheel and by finger. Click a thumbnail to show that work; the active one is outlined, the rest dimmed. Arrow keys and finger swipes on the stage step through works.
+- The works list is embedded in the page (generated from `Gallery.dc.html`, hidden works left out) and needs regenerating when the gallery's list changes.
 
 ## Detail view ("Original")
 
