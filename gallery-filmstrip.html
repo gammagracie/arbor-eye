@@ -8,7 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 40px; }
+:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 52px; }
+@media (min-width: 768px) { :root { --thumb-h: 64px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -56,17 +57,21 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .page.hovering .caption { opacity: 1; }
 @media (hover: none) { .caption { opacity: 1; } }
 
-/* filmstrip: every work in one row, anchored above the footer */
-.strip-wrap { flex: none; padding: 6px 0 16px; }
-.strip { display: flex; gap: 7px; align-items: flex-end; overflow-x: auto; overflow-y: hidden; padding: 6px var(--side-pad); scrollbar-width: none; -webkit-overflow-scrolling: touch;
+/* filmstrip: every work in one row, anchored above the footer. On mouse devices the row is a track moved by
+   transform (fluid, eased) and thumbnails magnify under the cursor; on touch screens it scrolls natively. */
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 16px; pointer-events: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
-.strip::-webkit-scrollbar { display: none; }
-.strip::before, .strip::after { content: ''; margin: auto; } /* centres the row when it is narrower than the screen */
-.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; transition: opacity 0.3s ease, outline-color 0.3s ease; }
-.thumb img { display: block; height: var(--thumb-h); width: auto; }
-.thumb:hover { opacity: 1; }
+.strip { overflow: visible; padding: 6px 0; }
+.track { display: flex; gap: 10px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
+.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
+@media (hover: none) {
+  .strip-wrap { margin-top: 0; padding-top: 6px; pointer-events: auto; }
+  .strip { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .strip::-webkit-scrollbar { display: none; }
+}
 
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
@@ -114,7 +119,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span><small>View details</small></p>
 
   <div class="strip-wrap" id="stripWrap">
-    <div class="strip" id="strip" role="listbox" aria-label="All works"></div>
+    <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"></div></div>
   </div>
 
   <footer>
@@ -197,7 +202,8 @@ const WORKS = [
 ];
 
 const $ = id => document.getElementById(id);
-const stage = $('stage'), art = $('art'), strip = $('strip'), page = $('page');
+const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page');
+const HOVER = matchMedia('(hover: hover)').matches;
 const imgs = [$('imgA'), $('imgB')];
 let current = -1, front = 0;
 
@@ -222,12 +228,8 @@ function show(k, scrollIntoView) {
   if (next.complete && next.naturalWidth) swap();
   art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
   $('capTitle').textContent = w.t;
-  [...strip.children].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
-  if (scrollIntoView) {
-    const b = strip.children[k];
-    target = Math.max(0, Math.min(strip.scrollWidth - strip.clientWidth, b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
-    glide();
-  }
+  [...track.children].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
+  if (scrollIntoView) centreOn(track.children[k]);
   history.replaceState(null, '', '#' + encodeURIComponent(w.f));
 }
 
@@ -236,34 +238,72 @@ WORKS.forEach((w, k) => {
   const b = document.createElement('button');
   b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
   const im = document.createElement('img');
-  im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy'; im.width = Math.round(40 * w.r); im.height = 40;
+  im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
   b.appendChild(im);
   b.addEventListener('click', () => show(k, false));
-  strip.appendChild(b);
+  track.appendChild(b);
 });
 
-// the strip follows the mouse: left edge of the screen = start of the row, right edge = end (eased)
-let target = 0, gliding = false;
-function glide() {
-  if (gliding) return; gliding = true;
+// ---- Filmstrip motion (mouse devices)
+// The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
+// (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
+let pos = 0, target = 0, running = false, mouseX = null;
+const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
+function run() {
+  if (running) return; running = true;
   const step = () => {
-    const d = target - strip.scrollLeft;
-    if (Math.abs(d) < 0.5) { strip.scrollLeft = target; gliding = false; return; }
-    strip.scrollLeft += d * 0.09;
-    requestAnimationFrame(step);
+    const d = target - pos;
+    pos = Math.abs(d) < 0.3 ? target : pos + d * 0.075;
+    track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)';
+    if (mouseX !== null) magnify(mouseX);
+    if (pos !== target || mouseX !== null) requestAnimationFrame(step); else running = false;
   };
   requestAnimationFrame(step);
 }
-if (matchMedia('(hover: hover)').matches) {
-  $('stripWrap').addEventListener('mousemove', e => {
-    const pad = Math.min(160, innerWidth * 0.12);
-    const ratio = Math.max(0, Math.min(1, (e.clientX - pad) / (innerWidth - 2 * pad)));
-    target = ratio * (strip.scrollWidth - strip.clientWidth);
-    glide();
+function centreOn(b) {
+  if (!HOVER) { strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: 'smooth' }); return; }
+  target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
+  run();
+}
+
+// Dock-style magnification: thumbnails swell under the cursor (bell curve), growing up from the baseline;
+// neighbours slide aside, and the thumbnail under the cursor stays under it.
+const PEAK = 0.9;              // +90% at the cursor
+function magnify(x) {
+  const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
+  const btns = [...track.children];
+  const geo = btns.map(b => ({ l: left + b.offsetLeft, w: b.offsetWidth }));
+  const sigma = 1.7 * (geo[0].w + 10);
+  const bell = geo.map(g => Math.exp(-Math.pow((x - (g.l + g.w / 2)) / sigma, 2)));
+  const extra = geo.map((g, k) => PEAK * bell[k] * g.w);
+  let cursorExtra = 0;          // growth that sits to the left of the cursor
+  geo.forEach((g, k) => { cursorExtra += extra[k] * Math.max(0, Math.min(1, (x - g.l) / g.w)); });
+  let acc = 0;
+  btns.forEach((b, k) => {
+    const shift = acc + extra[k] / 2 - cursorExtra; acc += extra[k];
+    b.style.transform = bell[k] < 0.002 && Math.abs(shift) < 0.5 ? '' : 'translateX(' + shift.toFixed(1) + 'px) scale(' + (1 + PEAK * bell[k]).toFixed(3) + ')';
+    b.style.opacity = b.classList.contains('on') ? '' : (0.55 + 0.45 * bell[k]).toFixed(2);
+    b.style.zIndex = Math.round(bell[k] * 100);
   });
 }
-strip.addEventListener('wheel', () => { gliding = false; target = strip.scrollLeft; }, { passive: true });
-strip.addEventListener('touchstart', () => { gliding = false; }, { passive: true });
+function relax() {
+  mouseX = null;
+  [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
+  setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
+}
+if (HOVER) {
+  addEventListener('mousemove', e => {
+    const band = strip.getBoundingClientRect();
+    const inBand = e.clientY > band.top - 70 && e.clientY < band.bottom + 12;   // generous zone so magnified thumbnails stay "hovered"
+    if (!inBand) { if (mouseX !== null) relax(); return; }
+    mouseX = e.clientX;
+    const pad = Math.min(180, innerWidth * 0.14);
+    target = Math.max(0, Math.min(1, (e.clientX - pad) / (innerWidth - 2 * pad))) * maxPan();
+    run();
+  });
+  document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); run(); }, { passive: false });
+}
 
 // title on hover, keyboard, resize
 art.addEventListener('mouseenter', () => page.classList.add('hovering'));
