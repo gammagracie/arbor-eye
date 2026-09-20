@@ -23,6 +23,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - **Header**: 76px tall, growing to 86px between 1280px and 1920px wide. Logo, nav links (14px, tracked uppercase) and account/bag icons share one baseline on desktop. Active nav item is bold, no underline. Phone header is vertically centred.
 - **Footer**: 50px tall, growing to 64px between 1280px and 1920px. One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
+- **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
@@ -43,7 +44,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Grid-size switcher (3 / 2 / 1 columns) shown from 768px up; hidden on phones.
 - Three-column layout drops to two columns under 1000px. Phones use two columns.
 - **Vertical filter**: one extra column at every size (4 desktop, 3 under 1000px, 3 on phones), taller row gaps (120px desktop, 56px phone) and square cells so the tall works keep their size.
-- Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title (italic) centred below it.
+- Works sit in 4:3 cells with no background (clean version) and a soft grey shadow; hover lifts the work and shows its title centred below it in black EB Garamond italic capitals (15px), the same face as the detail-page title.
 - "Articulation" (file CORE_14) is in the data but hidden from the grid at Ned's request (`hidden` flag).
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 - Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
@@ -53,8 +54,8 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 
 - Standalone plain HTML/CSS/JS page (not templated) with the same header, footer, side padding and mobile menu. The page never scrolls.
 - **Stage**: the selected work shown whole, as large as the space between header and filmstrip allows, centred on the off-white page with the usual soft shadow; works crossfade (0.6s) with the insignia behind. First work (Brilliance) on load, or the work named in the URL hash.
-- **Hover** on the work shows its italic title and a "View details" cue (always visible on touch screens). **Click** opens that work's detail view in the main gallery (`Gallery.dc.html#<file>`; the gallery's deep link accepts a title or a file name, so the several "Untitled" works resolve correctly).
-- **Filmstrip**: every visible work in one row anchored above the footer, thumbnails 64px tall (52px on phones) with 10px gaps (files in `assets/thumbs/`, 260px tall so they stay sharp when magnified), edges faded. On mouse devices the row is a track moved by an eased transform: the cursor's position across the screen sets where the row sits (left = start, right = end) and it glides there; the wheel/trackpad also moves it. Thumbnails magnify Dock-style under the cursor (up to about 190%, bell-curve falloff, growing up from the baseline, neighbours sliding aside, the one under the cursor staying under it) and relax when the cursor leaves the strip. On touch screens the strip scrolls natively with no magnification. Click a thumbnail to show that work; the active one is outlined, the rest dimmed. Arrow keys and finger swipes on the stage step through works.
+- **Hover** on the work shows its title below the image (black EB Garamond italic capitals, matching the detail page) and a small "View details" cue (always visible on touch screens). **Click** opens that work's detail view in the main gallery (`Gallery.dc.html#<file>`; the gallery's deep link accepts a title or a file name, so the several "Untitled" works resolve correctly).
+- **Filmstrip**: every visible work in one row anchored above the footer, thumbnails 64px tall (52px on phones) with 10px gaps (files in `assets/thumbs/`, 260px tall so they stay sharp when magnified), edges faded. On mouse devices the row is a track moved by an eased transform: the cursor's position across the screen sets where the row sits (left = start, right = end) and it glides there (time-based easing, about 320ms to close two-thirds of the gap, settling in roughly 2s, identical on 60Hz and 120Hz screens); the wheel/trackpad also moves it. Thumbnails magnify Dock-style under the cursor (up to about 190%, bell-curve falloff, growing up from the baseline, neighbours sliding aside, the one under the cursor staying under it) and relax when the cursor leaves the strip. On touch screens the strip scrolls natively with no magnification. Click a thumbnail to show that work; the active one is outlined, the rest dimmed. Arrow keys and finger swipes on the stage step through works.
 - The works list is embedded in the page (generated from `Gallery.dc.html`, hidden works left out) and needs regenerating when the gallery's list changes.
 
 ## Detail view ("Original")
@@ -67,7 +68,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 ## Buy page ("Print")
 
 - Print shown on an off-white wall (`#F0F2EF`) with a soft shadow; clicking it opens a **lightbox carousel** (dark overlay) of the three framing views with dots, hover arrows, tap zones, swipe, arrow keys and Escape.
-- Italic title, then the price for the selected size: 8x12″ $225 · 16x24″ $595 · 24x36″ $1,195. Size buttons, then **Choose Your Frame Color**: white and black swatches plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
+- Italic title, then the price for the selected size: 8x12″ $225 · 16x24″ $595 · 24x36″ $1,195. Size buttons, then **Choose Your Frame Color**: white and black swatches (thin 100 x 12px slivers) plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
 - Add to cart button.
 
 ## About

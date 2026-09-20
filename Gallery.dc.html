@@ -8,11 +8,12 @@
 <body>
 <x-dc>
 <helmet>
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
@@ -136,7 +137,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-style: italic; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -229,8 +230,8 @@ html { scrollbar-gutter: stable; }
             <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
               <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
-                  <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 30px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
-                  <span style="display: {{ fr.textDisplay }}; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 30px">Unframed</span>
+                  <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 12px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
+                  <span style="display: {{ fr.textDisplay }}; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 14px">Unframed</span>
                   <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); font-size: 14px; opacity: {{ fr.caret }}">^</span>
                 </button>
               </sc-for>
