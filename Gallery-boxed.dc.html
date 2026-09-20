@@ -32,6 +32,8 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
 /* Grid-size switcher is hidden on phones only */
 @media (max-width: 767px) { .layout-switch { display: none !important; } }
+/* TEMP: while Gallery2 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1099px) { header nav { gap: 14px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
