@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 52px; --step-w: 24px; }
-@media (min-width: 768px) { :root { --thumb-h: 64px; --step-w: 56px; } }
+:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 52px; --step-w: 32px; }
+@media (min-width: 768px) { :root { --thumb-h: 64px; --step-w: 84px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -54,11 +54,11 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
 .art img.on { opacity: 1; }
 /* previous / next chevrons either side of the work (placed by fit()) */
-.step { position: absolute; top: 50%; transform: translateY(-50%); width: var(--step-w); height: 96px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step { position: absolute; top: 50%; transform: translateY(-50%); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: 13px; height: 36px; }
-@media (max-width: 767px) { .step svg { width: 10px; height: 28px; } }
+.step svg { width: 39px; height: 108px; }
+@media (max-width: 767px) { .step svg { width: 20px; height: 56px; } }
 .caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
@@ -124,8 +124,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a class="art" id="art" href="#" aria-label="View work details">
       <img id="imgA" alt=""><img id="imgB" alt="">
     </a>
-    <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
-    <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+    <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
+    <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
   </main>
   <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span><small>View details</small></p>
 
@@ -330,7 +330,8 @@ function relax() {
   [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
 }
-const inBand = y => { const band = strip.getBoundingClientRect(); return y > band.top - 70 && y < band.bottom + 12; };   // generous zone so magnified thumbnails stay "hovered"
+// the row only moves while the pointer is on the thumbnails: the row itself, or a magnified thumbnail rising above it
+const inBand = (y, el) => { const band = track.getBoundingClientRect(); return (y >= band.top - 4 && y <= band.bottom + 4) || !!(el && el.closest && el.closest('.thumb')); };
 function follow(x) {
   mouseX = x;
   const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
@@ -345,7 +346,7 @@ addEventListener('touchstart', e => {
   lastTouch = Date.now();
   document.documentElement.classList.add('touch');
   const t = e.touches[0];
-  touching = inBand(t.clientY);
+  touching = inBand(t.clientY, e.target);
   if (touching) follow(t.clientX); else halt();
 }, { passive: true, capture: true });
 addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follow(e.touches[0].clientX); }, { passive: true });
@@ -354,7 +355,7 @@ addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follo
   addEventListener('mousemove', e => {
     if (Date.now() - lastTouch < 1200) return;   // mouse events synthesised from a tap
     document.documentElement.classList.remove('touch');
-    if (!inBand(e.clientY)) { if (mouseX !== null) relax(); return; }
+    if (!inBand(e.clientY, e.target)) { if (mouseX !== null) relax(); return; }
     follow(e.clientX);
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
