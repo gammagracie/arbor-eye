@@ -81,7 +81,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 ## Contact
 
 - `Contact Page.dc.html`: hero, email/Instagram line, then Shipping Policy and Returns & Exchanges sections.
-- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. `#shipping` / `#returns` open that tab.
+- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The portrait image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`); the original contact page keeps the earlier ampersand photo. `#shipping` / `#returns` open that tab.
 
 ## Assets
 
