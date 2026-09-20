@@ -90,7 +90,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <a class="logo" href="Home.dc.html">Arbor <span>&amp;</span> Eye</a>
       <div class="right">
         <nav class="main">
-          <a class="on" href="Gallery.dc.html">Gallery</a>
+          <a href="Gallery.dc.html">Gallery</a>
+          <a class="on" href="gallery-filmstrip.html">Gallery2</a>
           <a href="About.dc.html">About</a>
           <a href="Contact%20Page.dc.html">Contact</a>
         </nav>
@@ -103,7 +104,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="Gallery.dc.html" style="font-weight: 600">Gallery</a>
+    <a href="Gallery.dc.html">Gallery</a>
+    <a href="gallery-filmstrip.html" style="font-weight: 600">Gallery2</a>
     <a href="About.dc.html">About</a>
     <a href="Contact%20Page.dc.html">Contact</a>
     <a href="Contact%20Page.dc.html#shipping">Shipping</a>
@@ -251,17 +253,25 @@ WORKS.forEach((w, k) => {
 // ---- Filmstrip motion (mouse devices)
 // The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
 // (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
-let pos = 0, target = 0, running = false, mouseX = null;
-const GLIDE = 900;
+let pos = 0, target = 0, vel = 0, cap = 0, running = false, mouseX = null;
+// GLIDE: ms to close ~63% of the gap when settling; CRUISE: top speed (px per second) while following the mouse;
+// ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
+const GLIDE = 1200, CRUISE = 380, ACCEL = 260;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
   let last = performance.now();
   const step = now => {
-    // time-based easing (GLIDE = ms to close ~63% of the gap) so the speed is the same on 60Hz and 120Hz screens
+    // time-based so the speed is the same on 60Hz and 120Hz screens: the row eases up to a capped cruising
+    // speed, drifts, then eases to rest
     const dt = Math.min(64, now - last); last = now;
     const d = target - pos;
-    pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / GLIDE));
+    if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
+    else {
+      const want = Math.max(-cap, Math.min(cap, d / GLIDE));   // px per ms
+      vel += (want - vel) * (1 - Math.exp(-dt / ACCEL));
+      if (Math.abs(d) < 0.3 && Math.abs(vel) < 0.01) { pos = target; vel = 0; } else pos += vel * dt;
+    }
     track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)';
     if (mouseX !== null) magnify(mouseX);
     if (pos !== target || mouseX !== null) requestAnimationFrame(step); else running = false;
@@ -271,6 +281,7 @@ function run() {
 function centreOn(b) {
   if (!HOVER) { strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: 'smooth' }); return; }
   target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
+  cap = CRUISE / 1000;
   run();
 }
 
@@ -296,6 +307,7 @@ function magnify(x) {
 }
 function relax() {
   mouseX = null;
+  if (cap !== Infinity) target = Math.max(0, Math.min(maxPan(), pos + vel * GLIDE * 0.5));   // coast to a stop rather than drifting on to the old target
   [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
 }
@@ -307,10 +319,11 @@ if (HOVER) {
     mouseX = e.clientX;
     const pad = Math.min(180, innerWidth * 0.14);
     target = Math.max(0, Math.min(1, (e.clientX - pad) / (innerWidth - 2 * pad))) * maxPan();
+    cap = CRUISE / 1000;
     run();
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); run(); }, { passive: false });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
 }
 
 // title on hover, keyboard, resize
