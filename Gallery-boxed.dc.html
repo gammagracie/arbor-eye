@@ -45,6 +45,7 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Gallery.dc.html" style="font-weight: 600">Gallery</a>
+          <a href="gallery-filmstrip.html">Gallery2</a>
           <a href="About.dc.html">About</a>
           <a href="Contact%20Page.dc.html">Contact</a>
         </nav>
@@ -74,6 +75,7 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">Gallery</a>
+  <a href="gallery-filmstrip.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery2</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact%20Page.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
   <a href="Contact%20Page.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
@@ -226,7 +228,7 @@ html { scrollbar-gutter: stable; }
             </div>
           </div>
           <div style="display: grid; gap: 18px; padding-top: 20px">
-            <p style="margin: 0; font-size: 17px; font-weight: 300; letter-spacing: 0.1em">Choose Your Frame Color</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 400; letter-spacing: 0.1em">Choose Your Frame Color</p>
             <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
               <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
@@ -236,7 +238,7 @@ html { scrollbar-gutter: stable; }
                 </button>
               </sc-for>
             </div>
-            <div style="display: grid; gap: 10px; font-size: 17px; font-weight: 300; letter-spacing: 0.1em">
+            <div style="display: grid; gap: 10px; font-size: 14px; font-weight: 400; letter-spacing: 0.1em">
               <p style="margin: 0">Frame: {{ frameLabel }}</p>
               <p style="margin: 0">Mount: {{ mountLabel }}</p>
             </div>
