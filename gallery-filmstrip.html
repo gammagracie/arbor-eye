@@ -256,10 +256,12 @@ WORKS.forEach((w, k) => {
 // ---- Filmstrip motion (mouse devices)
 // The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
 // (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
-let pos = 0, target = 0, vel = 0, cap = 0, running = false, mouseX = null;
-// GLIDE: ms to close ~63% of the gap when settling; CRUISE: top speed (px per second) while following the mouse;
+let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX = null;
+// The cursor (or finger) steers the row: in the middle DEAD share of the page it eases to a stop, and the further
+// left or right of that the faster it drifts that way, up to CRUISE at the page edges.
+// GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
 // ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
-const GLIDE = 1200, CRUISE = 380, ACCEL = 260;
+const GLIDE = 1200, CRUISE = 380, ACCEL = 260, DEAD = 0.10;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
@@ -269,7 +271,13 @@ function run() {
     // speed, drifts, then eases to rest
     const dt = Math.min(64, now - last); last = now;
     const d = target - pos;
-    if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
+    if (drive !== null) {   // steering: ease toward the speed the cursor asks for, stopping at either end
+      vel += (drive - vel) * (1 - Math.exp(-dt / ACCEL));
+      pos = Math.max(0, Math.min(maxPan(), pos + vel * dt));
+      if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.002)) vel = 0;
+      target = pos;
+    }
+    else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
     else {
       const want = Math.max(-cap, Math.min(cap, d / GLIDE));   // px per ms
       vel += (want - vel) * (1 - Math.exp(-dt / ACCEL));
@@ -283,7 +291,7 @@ function run() {
 }
 function centreOn(b) {
   target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
-  cap = CRUISE / 1000;
+  cap = CRUISE / 1000; drive = null;
   run();
 }
 
@@ -308,7 +316,7 @@ function magnify(x) {
   });
 }
 function relax() {
-  mouseX = null;
+  mouseX = null; drive = null;
   if (cap !== Infinity) target = Math.max(0, Math.min(maxPan(), pos + vel * GLIDE * 0.5));   // coast to a stop rather than drifting on to the old target
   [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
@@ -316,8 +324,8 @@ function relax() {
 const inBand = y => { const band = strip.getBoundingClientRect(); return y > band.top - 70 && y < band.bottom + 12; };   // generous zone so magnified thumbnails stay "hovered"
 function follow(x) {
   mouseX = x;
-  const pad = Math.min(180, innerWidth * 0.14);
-  target = Math.max(0, Math.min(1, (x - pad) / (innerWidth - 2 * pad))) * maxPan();
+  const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
+  drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08))) * CRUISE / 1000;
   cap = CRUISE / 1000;
   run();
 }
@@ -341,7 +349,7 @@ addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follo
     follow(e.clientX);
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; drive = null; run(); }, { passive: false });
 }
 
 // title on hover, keyboard, resize
