@@ -77,6 +77,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while Gallery2 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1099px) { header nav { gap: 14px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 </style>
 </head>
 <body>

@@ -24,6 +24,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - **Footer**: 50px tall, growing to 64px between 1280px and 1920px. One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
 - **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
+- **Temporary nav items**: "Gallery2" (filmstrip gallery) and "A2" (tabbed contact page) sit in the header nav and mobile menu for review; while they are there a temporary rule tightens the nav (12px, closer spacing) between 768px and 1099px so the header stays on one line. Remove both items and that rule together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
@@ -81,7 +82,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 ## Contact
 
 - `Contact Page.dc.html`: hero, email/Instagram line, then Shipping Policy and Returns & Exchanges sections.
-- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The portrait image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`); the original contact page keeps the earlier ampersand photo. `#shipping` / `#returns` open that tab.
+- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`, a square file). On the Contact tab it is tied to the form: its top lines up with the "Get in touch" heading and its bottom with the bottom of the Send button, so it never runs lower than the form; it shows as the full square where the column is wide enough and crops its sides (sculpture stays whole) where the column is narrower; stacked below the form as a full square on phones. The form's confirmation note floats under the Send button without adding height. On the Shipping tab it keeps the sticky portrait crop; the original contact page keeps the earlier ampersand photo. `#shipping` / `#returns` open that tab.
 
 ## Assets
 
