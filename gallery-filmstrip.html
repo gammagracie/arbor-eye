@@ -58,8 +58,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .page.hovering .caption { opacity: 1; }
 html.touch .caption { opacity: 1; }
 
-/* filmstrip: every work in one row, anchored above the footer. On mouse devices the row is a track moved by
-   transform (fluid, eased) and thumbnails magnify under the cursor; on touch screens it scrolls natively. */
+/* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
+   eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
 .strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 16px; pointer-events: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
@@ -68,10 +68,7 @@ html.touch .caption { opacity: 1; }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
-html.touch .strip-wrap { margin-top: 0; padding-top: 0; pointer-events: auto; }
-html.touch .strip { overflow-x: auto; overflow-y: hidden; padding: 16px 0 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-html.touch .strip::-webkit-scrollbar { display: none; }
-html.touch .thumb { transform: none !important; }
+html.touch .track { touch-action: none; }
 
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
@@ -92,6 +89,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
           <a href="Gallery.dc.html">Gallery</a>
           <a class="on" href="gallery-filmstrip.html">Gallery2</a>
           <a href="About.dc.html">About</a>
+          <a href="Contact-tabs.dc.html">A2</a>
           <a href="Contact%20Page.dc.html">Contact</a>
         </nav>
         <div class="icons">
@@ -106,6 +104,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="Gallery.dc.html">Gallery</a>
     <a href="gallery-filmstrip.html" style="font-weight: 600">Gallery2</a>
     <a href="About.dc.html">About</a>
+    <a href="Contact-tabs.dc.html">A2</a>
     <a href="Contact%20Page.dc.html">Contact</a>
     <a href="Contact%20Page.dc.html#shipping">Shipping</a>
     <a href="Contact%20Page.dc.html#returns">Returns &amp; Exchanges</a>
@@ -205,10 +204,10 @@ const WORKS = [
 
 const $ = id => document.getElementById(id);
 const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
-// Mouse mode (glide + magnify) or touch mode (native scrolling). Starts from the media query, then follows the
-// input actually used: any touch switches to touch mode, real mouse movement switches back.
-let HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches, lastTouch = 0;
-document.documentElement.classList.toggle('touch', !HOVER);
+// The filmstrip glides and magnifies for both mouse and finger. The "touch" class (title always shown) starts
+// from the media query, then follows the input actually used.
+let lastTouch = 0, touching = false;
+document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 const imgs = [$('imgA'), $('imgB')];
 let current = -1, front = 0;
 
@@ -281,7 +280,6 @@ function run() {
   requestAnimationFrame(step);
 }
 function centreOn(b) {
-  if (!HOVER) { strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: 'smooth' }); return; }
   target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
   cap = CRUISE / 1000;
   run();
@@ -313,37 +311,35 @@ function relax() {
   [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
 }
-function setMode(mouse) {
-  if (HOVER === mouse) return;
-  HOVER = mouse;
-  const keep = mouse ? strip.scrollLeft : pos;   // the row stays where it is across the switch
-  relax(); vel = 0; pos = target = mouse ? keep : 0;
-  document.documentElement.classList.toggle('touch', !mouse);
-  track.style.transform = mouse ? 'translate3d(' + (-keep) + 'px,0,0)' : '';
-  strip.scrollLeft = mouse ? 0 : keep;
-  fit();
+const inBand = y => { const band = strip.getBoundingClientRect(); return y > band.top - 70 && y < band.bottom + 12; };   // generous zone so magnified thumbnails stay "hovered"
+function follow(x) {
+  mouseX = x;
+  const pad = Math.min(180, innerWidth * 0.14);
+  target = Math.max(0, Math.min(1, (x - pad) / (innerWidth - 2 * pad))) * maxPan();
+  cap = CRUISE / 1000;
+  run();
 }
-// any touch: touch mode, and a touch outside the filmstrip stops it dead (kills leftover scroll momentum too)
+function halt() { relax(); target = pos; vel = 0; }
+// finger: the row glides and magnifies only while a finger is on the filmstrip, coasts to rest when it lifts,
+// and a touch anywhere else on the page stops it dead
 addEventListener('touchstart', e => {
   lastTouch = Date.now();
-  setMode(false);
-  if (!strip.contains(e.target)) { strip.style.overflowX = 'hidden'; requestAnimationFrame(() => { strip.style.overflowX = ''; }); }
+  document.documentElement.classList.add('touch');
+  const t = e.touches[0];
+  touching = inBand(t.clientY);
+  if (touching) follow(t.clientX); else halt();
 }, { passive: true, capture: true });
+addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follow(e.touches[0].clientX); }, { passive: true });
+['touchend', 'touchcancel'].forEach(n => addEventListener(n, () => { lastTouch = Date.now(); if (touching) { touching = false; relax(); } }, { passive: true }));
 {
   addEventListener('mousemove', e => {
     if (Date.now() - lastTouch < 1200) return;   // mouse events synthesised from a tap
-    setMode(true);
-    const band = strip.getBoundingClientRect();
-    const inBand = e.clientY > band.top - 70 && e.clientY < band.bottom + 12;   // generous zone so magnified thumbnails stay "hovered"
-    if (!inBand) { if (mouseX !== null) relax(); return; }
-    mouseX = e.clientX;
-    const pad = Math.min(180, innerWidth * 0.14);
-    target = Math.max(0, Math.min(1, (e.clientX - pad) / (innerWidth - 2 * pad))) * maxPan();
-    cap = CRUISE / 1000;
-    run();
+    document.documentElement.classList.remove('touch');
+    if (!inBand(e.clientY)) { if (mouseX !== null) relax(); return; }
+    follow(e.clientX);
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { if (!HOVER) return; e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
 }
 
 // title on hover, keyboard, resize
