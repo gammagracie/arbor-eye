@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 52px; }
-@media (min-width: 768px) { :root { --thumb-h: 64px; } }
+:root { --header-h: clamp(76px, 56px + 1.5625vw, 86px); --footer-h: clamp(50px, 22px + 2.1875vw, 64px); --side-pad: 24px; --thumb-h: 52px; --step-w: 24px; }
+@media (min-width: 768px) { :root { --thumb-h: 64px; --step-w: 56px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -53,6 +53,12 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); background: url(uploads/arbor-mark.png) center / auto 70% no-repeat; cursor: pointer; }
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
 .art img.on { opacity: 1; }
+/* previous / next chevrons either side of the work (placed by fit()) */
+.step { position: absolute; top: 50%; transform: translateY(-50%); width: var(--step-w); height: 96px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: 13px; height: 36px; }
+@media (max-width: 767px) { .step svg { width: 10px; height: 28px; } }
 .caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
@@ -118,6 +124,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a class="art" id="art" href="#" aria-label="View work details">
       <img id="imgA" alt=""><img id="imgB" alt="">
     </a>
+    <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+    <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
   </main>
   <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span><small>View details</small></p>
 
@@ -216,8 +224,9 @@ let current = -1, front = 0;
 // size the artwork box to the largest size that fits the stage, keeping the work's own proportions
 function fit() {
   if (current < 0) return;
-  const r = WORKS[current].r, W = stage.clientWidth, H = stage.clientHeight;
+  const r = WORKS[current].r, step = $('prev').offsetWidth, W = stage.clientWidth - 2 * step, H = stage.clientHeight;
   const w = Math.min(W, H * r);
+  $('prev').style.left = $('next').style.right = ((stage.clientWidth - w) / 2 - step) + 'px';   // chevrons hug the work
   art.style.width = w + 'px';
   art.style.height = (w / r) + 'px';
   // sit the hover title midway between the bottom of the work and the top of the thumbnails
@@ -358,6 +367,9 @@ art.addEventListener('mouseleave', () => page.classList.remove('hovering'));
 addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(current + 1, true); if (e.key === 'ArrowLeft') show(current - 1, true); });
 addEventListener('resize', fit);
 new ResizeObserver(fit).observe(stage);
+
+$('prev').addEventListener('click', () => show(current - 1, true));
+$('next').addEventListener('click', () => show(current + 1, true));
 
 // swipe the main image on touch screens
 let tx = 0;
