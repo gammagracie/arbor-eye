@@ -1,0 +1,4 @@
+/* Neuzeit Grotesk: Light 300, Regular 400, Bold 700 (600 resolves to Bold) */
+@font-face { font-family: 'Neuzeit Grotesk'; src: url('NeuzeitGro-Lig.woff2') format('woff2'), url('NeuzeitGro-Lig.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Neuzeit Grotesk'; src: url('NeuzeitGro-Reg.woff2') format('woff2'), url('NeuzeitGro-Reg.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Neuzeit Grotesk'; src: url('NeuzeitGro-Bol.woff2') format('woff2'), url('NeuzeitGro-Bol.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }

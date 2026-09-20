@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gallery (filmstrip) — Arbor &amp; Eye</title>
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -13,7 +14,7 @@
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
-body { background: #FDFDFB; color: #141414; font-family: "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
 a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 button { font-family: inherit; }
@@ -52,8 +53,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); background: url(uploads/arbor-mark.png) center / auto 70% no-repeat; cursor: pointer; }
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
 .art img.on { opacity: 1; }
-.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 15px; font-weight: 300; font-style: italic; letter-spacing: 0.04em; color: #8A8680; opacity: 0; transition: opacity 0.35s ease; }
-.caption small { font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 @media (hover: none) { .caption { opacity: 1; } }
 
@@ -248,12 +249,16 @@ WORKS.forEach((w, k) => {
 // The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
 // (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
 let pos = 0, target = 0, running = false, mouseX = null;
+const GLIDE = 320;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
-  const step = () => {
+  let last = performance.now();
+  const step = now => {
+    // time-based easing (GLIDE = ms to close ~63% of the gap) so the speed is the same on 60Hz and 120Hz screens
+    const dt = Math.min(64, now - last); last = now;
     const d = target - pos;
-    pos = Math.abs(d) < 0.3 ? target : pos + d * 0.075;
+    pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / GLIDE));
     track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)';
     if (mouseX !== null) magnify(mouseX);
     if (pos !== target || mouseX !== null) requestAnimationFrame(step); else running = false;
