@@ -56,7 +56,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
-@media (hover: none) { .caption { opacity: 1; } }
+html.touch .caption { opacity: 1; }
 
 /* filmstrip: every work in one row, anchored above the footer. On mouse devices the row is a track moved by
    transform (fluid, eased) and thumbnails magnify under the cursor; on touch screens it scrolls natively. */
@@ -68,11 +68,10 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
-@media (hover: none) {
-  .strip-wrap { margin-top: 0; padding-top: 6px; pointer-events: auto; }
-  .strip { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .strip::-webkit-scrollbar { display: none; }
-}
+html.touch .strip-wrap { margin-top: 0; padding-top: 0; pointer-events: auto; }
+html.touch .strip { overflow-x: auto; overflow-y: hidden; padding: 16px 0 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+html.touch .strip::-webkit-scrollbar { display: none; }
+html.touch .thumb { transform: none !important; }
 
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
@@ -206,7 +205,10 @@ const WORKS = [
 
 const $ = id => document.getElementById(id);
 const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
-const HOVER = matchMedia('(hover: hover)').matches;
+// Mouse mode (glide + magnify) or touch mode (native scrolling). Starts from the media query, then follows the
+// input actually used: any touch switches to touch mode, real mouse movement switches back.
+let HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches, lastTouch = 0;
+document.documentElement.classList.toggle('touch', !HOVER);
 const imgs = [$('imgA'), $('imgB')];
 let current = -1, front = 0;
 
@@ -311,8 +313,26 @@ function relax() {
   [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
 }
-if (HOVER) {
+function setMode(mouse) {
+  if (HOVER === mouse) return;
+  HOVER = mouse;
+  const keep = mouse ? strip.scrollLeft : pos;   // the row stays where it is across the switch
+  relax(); vel = 0; pos = target = mouse ? keep : 0;
+  document.documentElement.classList.toggle('touch', !mouse);
+  track.style.transform = mouse ? 'translate3d(' + (-keep) + 'px,0,0)' : '';
+  strip.scrollLeft = mouse ? 0 : keep;
+  fit();
+}
+// any touch: touch mode, and a touch outside the filmstrip stops it dead (kills leftover scroll momentum too)
+addEventListener('touchstart', e => {
+  lastTouch = Date.now();
+  setMode(false);
+  if (!strip.contains(e.target)) { strip.style.overflowX = 'hidden'; requestAnimationFrame(() => { strip.style.overflowX = ''; }); }
+}, { passive: true, capture: true });
+{
   addEventListener('mousemove', e => {
+    if (Date.now() - lastTouch < 1200) return;   // mouse events synthesised from a tap
+    setMode(true);
     const band = strip.getBoundingClientRect();
     const inBand = e.clientY > band.top - 70 && e.clientY < band.bottom + 12;   // generous zone so magnified thumbnails stay "hovered"
     if (!inBand) { if (mouseX !== null) relax(); return; }
@@ -323,7 +343,7 @@ if (HOVER) {
     run();
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
+  strip.addEventListener('wheel', e => { if (!HOVER) return; e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; run(); }, { passive: false });
 }
 
 // title on hover, keyboard, resize
