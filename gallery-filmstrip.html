@@ -203,7 +203,7 @@ const WORKS = [
 ];
 
 const $ = id => document.getElementById(id);
-const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page');
+const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
 const HOVER = matchMedia('(hover: hover)').matches;
 const imgs = [$('imgA'), $('imgB')];
 let current = -1, front = 0;
@@ -215,6 +215,9 @@ function fit() {
   const w = Math.min(W, H * r);
   art.style.width = w + 'px';
   art.style.height = (w / r) + 'px';
+  // sit the hover title midway between the bottom of the work and the top of the thumbnails
+  const sb = stage.getBoundingClientRect().bottom, artBottom = sb - (H - w / r) / 2;
+  caption.style.transform = 'translateY(' + ((artBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2)).toFixed(1) + 'px)';
 }
 
 function show(k, scrollIntoView) {
@@ -249,7 +252,7 @@ WORKS.forEach((w, k) => {
 // The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
 // (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
 let pos = 0, target = 0, running = false, mouseX = null;
-const GLIDE = 320;
+const GLIDE = 900;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
