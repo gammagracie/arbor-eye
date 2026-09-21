@@ -55,8 +55,9 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Gallery, horizontal scroll version (`Gallery-horizontal.dc.html`)
 
-- A copy of the clean grid gallery with the same filters, hover titles (below each work, EB Garamond italic capitals), detail view, buy page and deep links; the grid-size switcher is removed.
-- Works sit in the same 4:3 cells with soft shadows, two rows deep, in columns that run off the right edge of the screen (the row bleeds past the side padding; first column lines up with the logo). Cell size comes from the height between toolbar and footer, so the page itself never scrolls: about three and a half columns show on a 1440 x 900 screen, one and a bit on phones. Order runs down each column, then right. The Vertical filter uses square cells.
+- A copy of the clean grid gallery with the same filters, hover titles (below each work, EB Garamond italic capitals), detail view, buy page and deep links.
+- **Row switch** (top left, square icons, shown from 768px up): a 3 x 3 grid of small squares = three rows of works; two horizontal bars = two rows (the view the page opens on); one solid square = a single large scrolling band, works filling the height. Phones always show two rows. Changing the row count starts the rows again from the left.
+- Works sit in the same 4:3 cells with soft shadows, one, two or three rows deep, in columns that run off the right edge of the screen (the row bleeds past the side padding; first column lines up with the logo). Cell size comes from the height between toolbar and footer, so the page itself never scrolls: on a 1440 x 900 screen that is about five and a half columns at three rows, three and a half at two rows, and one and a half works in the single band; one and a bit columns on phones. Order runs down each column, then right. The Vertical filter uses square cells.
 - **Scrolling**: wheel or trackpad travel in either direction (up/down or sideways) moves the rows left/right with a short ease so mouse-wheel steps glide; left/right arrow keys move about 60% of a screen; phones swipe sideways natively. No scrollbar is shown.
 - Opening a work and coming back returns the rows to where they were; changing a filter starts them again from the left.
 

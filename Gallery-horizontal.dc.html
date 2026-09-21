@@ -32,10 +32,11 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
 /* Horizontal gallery: the same 4:3 cells as the grid gallery, laid out two rows deep in columns that run off the
    right edge; the rows fill the space between toolbar and footer, bleed to the screen edges, and are moved by
-   the wheel / trackpad (vertical scrolling is turned into sideways travel) */
-:root { --row-gap: 72px; --col-gap: 56px; --row-h: clamp(300px, calc(100dvh - var(--header-h) - var(--footer-h) - 236px), 900px); --cell-h: calc((var(--row-h) - var(--row-gap)) / 2); }
-@media (max-width: 767px) { :root { --row-gap: 56px; --col-gap: 20px; } }
-.hscroll { display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, var(--cell-h)); gap: var(--row-gap) var(--col-gap); overflow-x: auto; overflow-y: hidden; margin: 0 calc(-1 * var(--side-pad)); padding: 16px var(--side-pad) 60px; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+   the wheel / trackpad (vertical scrolling is turned into sideways travel). The switch at top left picks 3, 2 or
+   1 rows; row count, cell size and gaps are set inline from the logic. */
+:root { --col-gap: 56px; --row-h: clamp(300px, calc(100dvh - var(--header-h) - var(--footer-h) - 236px), 900px); }
+@media (max-width: 767px) { :root { --col-gap: 20px; } }
+.hscroll { display: grid; grid-auto-flow: column; overflow-x: auto; overflow-y: hidden; margin: 0 calc(-1 * var(--side-pad)); padding: 16px var(--side-pad) 60px; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
 .hscroll::-webkit-scrollbar { display: none; }
 /* Grid-size switcher is hidden on phones only */
 @media (max-width: 767px) { .layout-switch { display: none !important; } }
@@ -109,6 +110,17 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
     <section data-screen-label="Gallery — Horizontal row" style="padding: {{ topPad }} 0 24px; display: grid; gap: {{ toolbarGap }}; align-content: start">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px 32px">
+        <div class="layout-switch" style="display: flex; gap: 14px; align-items: center">
+          <button onClick="{{ setL3 }}" aria-label="Three rows" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c3 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="4.6" height="4.6"></rect><rect x="6.7" y="0" width="4.6" height="4.6"></rect><rect x="13.4" y="0" width="4.6" height="4.6"></rect><rect x="0" y="6.7" width="4.6" height="4.6"></rect><rect x="6.7" y="6.7" width="4.6" height="4.6"></rect><rect x="13.4" y="6.7" width="4.6" height="4.6"></rect><rect x="0" y="13.4" width="4.6" height="4.6"></rect><rect x="6.7" y="13.4" width="4.6" height="4.6"></rect><rect x="13.4" y="13.4" width="4.6" height="4.6"></rect></svg>
+          </button>
+          <button onClick="{{ setL2 }}" aria-label="Two rows" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c2 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="18" height="8"></rect><rect x="0" y="10" width="18" height="8"></rect></svg>
+          </button>
+          <button onClick="{{ setL1 }}" aria-label="One row" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c1 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="18" height="18"></rect></svg>
+          </button>
+        </div>
         <div style="display: flex; gap: 24px 48px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto">
           <div class="filter-menu" style="position: relative">
             <button onClick="{{ toggleSeries }}" aria-haspopup="listbox" aria-expanded="{{ seriesOpen }}" style="display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer">
@@ -138,7 +150,7 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
       </div>
-      <div class="hscroll" style="grid-auto-columns: {{ colW }}">
+      <div class="hscroll" style="grid-template-rows: {{ gridRows }}; grid-auto-columns: {{ colW }}; gap: {{ hGap }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
           <div class="work" style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
             {{ c.img }}
@@ -308,7 +320,7 @@ const DETAILS = {
   'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g2', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
   arts = [
     ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
@@ -473,9 +485,9 @@ class Component extends DCLogic {
     this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
     document.addEventListener('click', this.onDocClick);
   }
-  // back from a work: return the row to where it was; new filter: start the row again from the left
+  // back from a work: return the row to where it was; new filter or row count: start again from the left
   componentDidUpdate() {
-    const grid = this.state.sel == null, key = this.state.series + '|' + this.state.avail;
+    const grid = this.state.sel == null, key = this.state.series + '|' + this.state.avail + '|' + this.state.layout;
     const el = document.querySelector('.hscroll');
     if (el && grid && this.wasGrid === false) el.scrollLeft = this.hPos || 0;
     if (el && this.filterKey !== undefined && this.filterKey !== key) { el.scrollLeft = 0; this.hTarget = 0; }
@@ -487,6 +499,10 @@ class Component extends DCLogic {
     const hoverTitles = this.props.hoverTitles ?? true;
     const m = this.state.mobile;
     const L = this.state.layout;
+    // rows in the horizontal gallery: 3 / 2 / 1 from the switch (phones always 2); cells share the height between toolbar and footer
+    const rowsN = this.state.mobile ? 2 : L === 'g3' ? 3 : L === 'g2' ? 2 : 1;
+    const rowGap = rowsN === 3 ? 52 : rowsN === 2 ? (this.state.mobile ? 56 : 72) : 0;
+    const cellH = 'calc((var(--row-h) - ' + (rowsN - 1) * rowGap + 'px) / ' + rowsN + ')';
     const sel = this.state.sel;
     const t = !m && this.state.tablet;
     const oneCol = m;
@@ -551,7 +567,9 @@ class Component extends DCLogic {
       })),
       // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size
       gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
-      colW: vertical ? 'var(--cell-h)' : 'calc(var(--cell-h) * 4 / 3)', // square cells for the vertical works, as in the grid gallery
+      gridRows: 'repeat(' + rowsN + ', ' + cellH + ')',
+      colW: vertical ? cellH : 'min(calc(' + cellH + ' * 4 / 3), 84vw)', // square cells for the vertical works, as in the grid gallery
+      hGap: rowGap + 'px var(--col-gap)',
       gridGap: m ? (vertical ? '56px 20px' : '32px 20px') : L === 'g1' ? '88px' : vertical ? '120px 56px' : '72px 56px',
       cellRatio: vertical ? '1 / 1' : '4 / 3',
       cardMax: L === 'g1' && !m ? '880px' : 'none',
@@ -560,7 +578,8 @@ class Component extends DCLogic {
       cards: filtered.map(({ a, k }) => ({
         title: a.title,
         aria: 'View ' + a.title,
-        img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
+        // one row: the work fills its cell (scaled up if the scan is smaller); 2 or 3 rows: it fits inside at its own size
+        img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, rowsN > 1 ? { width: 'auto', height: 'auto' } : a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),
         open: () => { const el = document.querySelector('.hscroll'); this.hPos = el ? el.scrollLeft : 0; this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       back: () => { document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false }); },
