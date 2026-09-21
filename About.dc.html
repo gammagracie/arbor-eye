@@ -32,7 +32,7 @@ main h1, main h2 { line-height: 1.2; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while G2 / G3 / G4 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while G3 / G4 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
@@ -48,12 +48,10 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Gallery.dc.html">Gallery</a>
-          <a href="Gallery-boxed.dc.html">G2</a>
           <a href="gallery-filmstrip.html">G3</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="About.dc.html" style="font-weight: 600">About</a>
-          <a href="Contact-tabs.dc.html">A2</a>
-          <a href="Contact%20Page.dc.html">Contact</a>
+          <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
       </sc-if>
       <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
@@ -81,14 +79,12 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="Gallery-boxed.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G2</a>
   <a href="gallery-filmstrip.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G3</a>
   <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">About</a>
-  <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">A2</a>
-  <a href="Contact%20Page.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
-  <a href="Contact%20Page.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
-  <a href="Contact%20Page.dc.html#returns" style="padding: 28px 0">Returns &amp; Exchanges</a>
+  <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
+  <a href="Contact-tabs.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
+  <a href="Contact-tabs.dc.html#returns" style="padding: 28px 0">Returns &amp; Exchanges</a>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 20c1.4-3.2 4.2-5 7.5-5s6.1 1.8 7.5 5"></path></svg>Login/Account</a>
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">

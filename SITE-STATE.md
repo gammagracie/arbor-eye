@@ -10,12 +10,11 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/Art-Arbor-min`; m
 |---|---|---|
 | `index.html` / `Home.dc.html` | Home carousel (identical files) | yes |
 | `Gallery.dc.html` | Gallery, clean grid (no boxes behind works) | yes: "Gallery" |
-| `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | yes, temporary: "G2" |
+| `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | no (back pocket, link only) |
 | `gallery-filmstrip.html` | Gallery, "filmstrip": one large work with a strip of every work along the bottom | yes, temporary: "G3" |
 | `Gallery-horizontal.dc.html` | Gallery, horizontal scroll: the clean grid's cells two rows deep, running off the right edge | yes, temporary: "G4" |
 | `About.dc.html` | About | yes |
-| `Contact Page.dc.html` | Contact with shipping and returns below | yes |
-| `Contact-tabs.dc.html` | Alternate contact page: form + Contact / Shipping / Returns tabs | yes, as a temporary "A2" item after About (header nav and mobile menu, every page) |
+| `Contact-tabs.dc.html` | Contact: form + Contact / Shipping / Returns tabs | yes: "Contact" (the mobile menu's Shipping and Returns links open its tabs) |
 
 The three templated gallery files (clean, boxed, horizontal) share the same data, filters, detail view and buy page and are kept in step; every gallery change is applied to all of them, and the filmstrip's embedded works list is regenerated when the list changes. Git tags: `approved-2026-09-14` (earlier signed-off version) and `pinned-2026-09-19` (state before the filmstrip experiment).
 
@@ -27,7 +26,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - **Footer**: 50px tall, growing to 64px between 1280px and 1920px. One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
 - **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
-- **Temporary nav items**: the header nav and mobile menu read Gallery · G2 · G3 · G4 · About · A2 · Contact while the alternates are under review (G2 boxed gallery, G3 filmstrip, G4 horizontal scroll, A2 tabbed contact page). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
+- **Temporary nav items**: the header nav and mobile menu read Gallery · G3 · G4 · About · Contact while the alternate galleries are under review (G3 filmstrip, G4 horizontal scroll). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
@@ -93,8 +92,8 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Contact
 
-- `Contact Page.dc.html`: hero, email/Instagram line, then Shipping Policy and Returns & Exchanges sections.
-- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`, a square file). On the Contact tab the whole square image is shown, never cropped: from 1100px up it sits in the right-hand column (44% of the content width, at least 440px) with its top level with the "Get in touch" heading, the form's fields take the narrower left column, and the Message field stretches so its bottom line meets the bottom of the image exactly; the Send button sits on the row below, its confirmation note floating under it. Under 1100px the page stacks form, Send, then the full square image (max 520px). On the Shipping tab it keeps the sticky portrait crop; the original contact page keeps the earlier ampersand photo. `#shipping` / `#returns` open that tab.
+- The original single-page contact layout (`Contact Page.dc.html`) was removed on 2026-09-21; it is recoverable from the `pinned-2026-09-21` tag.
+- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`, a square file). On the Contact tab the whole square image is shown, never cropped: from 1100px up it sits in the right-hand column (44% of the content width, at least 440px) with its top level with the "Get in touch" heading, the form's fields take the narrower left column, and the Message field stretches so its bottom line meets the bottom of the image exactly; the Send button sits on the row below, its confirmation note floating under it. Under 1100px the page stacks form, Send, then the full square image (max 520px). On the Shipping tab it keeps the sticky portrait crop. `#shipping` / `#returns` open that tab.
 
 ## Assets
 
