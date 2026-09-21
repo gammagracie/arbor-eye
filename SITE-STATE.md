@@ -94,5 +94,6 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 
 ## Open items
 
+- **New artwork details and higher-resolution images are expected.** Intake: full-size originals go in `~/Desktop/art-arbor-gallery-NED/_incoming/images/`, details (spreadsheet, text or screenshots) in `_incoming/details/` or in chat; Claude makes the web-sized copies, updates both galleries, the home carousel and the filmstrip list, and pushes. Originals stay out of the repo; nothing is placed in `~/Sites/arbor-eye` by hand.
 - Real edition numbers per work (edition line was removed from the detail page).
 - Framed product photography could replace the drawn frames.
