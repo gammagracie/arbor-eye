@@ -9,17 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 52px; --step-w: 32px; }
-@media (min-width: 768px) { :root { --thumb-h: 64px; --step-w: 84px; } }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31px; --step-w: 32px; }
+@media (min-width: 768px) { :root { --thumb-h: 38px; --step-w: 84px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
-body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 button { font-family: inherit; }
 ::selection { background: #E9E6DF; }
 
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
 .page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
 
 /* header */
@@ -38,7 +39,7 @@ nav.main .on { font-weight: 600; }
 body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 body.menu-open .burger span:nth-child(2) { opacity: 0; }
 body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-.menu { position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
 body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
 .menu a:last-child { border-bottom: none; }
@@ -68,11 +69,11 @@ html.touch .caption { opacity: 1; }
 
 /* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
    eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
-.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 16px; pointer-events: none;
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; }
-.track { display: flex; gap: 10px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
+.track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
@@ -135,8 +136,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   <div class="strip-wrap" id="stripWrap">
     <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"></div></div>
   </div>
+</div>
 
-  <footer>
+<footer>
     <div class="foot">
       <p>Copyright © 2026 Arbor &amp; Eye</p>
       <div class="social">
@@ -144,8 +146,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
         <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
       </div>
     </div>
-  </footer>
-</div>
+</footer>
 
 <script>
 // Works shown in the filmstrip. Generated from Gallery.dc.html (hidden works left out): f = file in assets/works,
@@ -316,7 +317,7 @@ function magnify(x) {
   const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
   const btns = [...track.children];
   const geo = btns.map(b => ({ l: left + b.offsetLeft, w: b.offsetWidth }));
-  const sigma = 1.7 * (geo[0].w + 10);
+  const sigma = 1.7 * (geo[0].w + 6);
   const bell = geo.map(g => Math.exp(-Math.pow((x - (g.l + g.w / 2)) / sigma, 2)));
   const extra = geo.map((g, k) => PEAK * bell[k] * g.w);
   let cursorExtra = 0;          // growth that sits to the left of the cursor
