@@ -9,14 +9,15 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/Art-Arbor-min`; m
 | File | What it is | Linked from nav |
 |---|---|---|
 | `index.html` / `Home.dc.html` | Home carousel (identical files) | yes |
-| `Gallery.dc.html` | Gallery, clean version (no boxes behind works) | yes |
-| `Gallery-boxed.dc.html` | Gallery, alternate version with `#eef0f5` boxes behind works | no (back pocket) |
-| `gallery-filmstrip.html` | Gallery, alternate "filmstrip" version: one large work with a strip of every work along the bottom | yes, as a temporary "Gallery2" item after Gallery (header nav and mobile menu, every page) |
+| `Gallery.dc.html` | Gallery, clean grid (no boxes behind works) | yes: "Gallery" |
+| `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | yes, temporary: "G2" |
+| `gallery-filmstrip.html` | Gallery, "filmstrip": one large work with a strip of every work along the bottom | yes, temporary: "G3" |
+| `Gallery-horizontal.dc.html` | Gallery, horizontal scroll: the clean grid's cells two rows deep, running off the right edge | yes, temporary: "G4" |
 | `About.dc.html` | About | yes |
 | `Contact Page.dc.html` | Contact with shipping and returns below | yes |
 | `Contact-tabs.dc.html` | Alternate contact page: form + Contact / Shipping / Returns tabs | yes, as a temporary "A2" item after About (header nav and mobile menu, every page) |
 
-Both gallery files are kept in step; every gallery change is applied to both. Git tags: `approved-2026-09-14` (earlier signed-off version) and `pinned-2026-09-19` (state before the filmstrip experiment).
+The three templated gallery files (clean, boxed, horizontal) share the same data, filters, detail view and buy page and are kept in step; every gallery change is applied to all of them, and the filmstrip's embedded works list is regenerated when the list changes. Git tags: `approved-2026-09-14` (earlier signed-off version) and `pinned-2026-09-19` (state before the filmstrip experiment).
 
 ## Global layout
 
@@ -25,7 +26,7 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - **Footer**: 50px tall, growing to 64px between 1280px and 1920px. One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
 - **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
-- **Temporary nav items**: "Gallery2" (filmstrip gallery) and "A2" (tabbed contact page) sit in the header nav and mobile menu for review; while they are there a temporary rule tightens the nav (12px, closer spacing) between 768px and 1099px so the header stays on one line. Remove both items and that rule together.
+- **Temporary nav items**: the header nav and mobile menu read Gallery · G2 · G3 · G4 · About · A2 · Contact while the alternates are under review (G2 boxed gallery, G3 filmstrip, G4 horizontal scroll, A2 tabbed contact page). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
@@ -51,6 +52,13 @@ Both gallery files are kept in step; every gallery change is applied to both. Gi
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 - Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
 - Per-work details live in a `DETAILS` map keyed by title. Acrylic and pastel on canvas, 11 x 24 in, with a one-line description: Script, Brilliance, Canopy, Passage (The Turning 8 scan), Conduit (Core 13), Symbiosis (Core 12), Chamber (Core 15), Upwelling (Core 18), Coastal Silence (Ascent 5), Crossings (Structure 4), Habitat (Core 16), Aurora (Select 2), Resonance (Select 8); the same medium and size without a description: Outliers 1, 3 and 4. Everything else defaults to watercolour on paper, 4 x 6 in.
+
+## Gallery, horizontal scroll version (`Gallery-horizontal.dc.html`)
+
+- A copy of the clean grid gallery with the same filters, hover titles (below each work, EB Garamond italic capitals), detail view, buy page and deep links; the grid-size switcher is removed.
+- Works sit in the same 4:3 cells with soft shadows, two rows deep, in columns that run off the right edge of the screen (the row bleeds past the side padding; first column lines up with the logo). Cell size comes from the height between toolbar and footer, so the page itself never scrolls: about three and a half columns show on a 1440 x 900 screen, one and a bit on phones. Order runs down each column, then right. The Vertical filter uses square cells.
+- **Scrolling**: wheel or trackpad travel in either direction (up/down or sideways) moves the rows left/right with a short ease so mouse-wheel steps glide; left/right arrow keys move about 60% of a screen; phones swipe sideways natively. No scrollbar is shown.
+- Opening a work and coming back returns the rows to where they were; changing a filter starts them again from the left.
 
 ## Gallery, filmstrip version (`gallery-filmstrip.html`)
 

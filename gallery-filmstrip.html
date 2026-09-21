@@ -83,8 +83,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while Gallery2 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1099px) { header nav { gap: 14px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+/* TEMP: while G2 / G3 / G4 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
 </head>
 <body>
@@ -95,7 +96,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <div class="right">
         <nav class="main">
           <a href="Gallery.dc.html">Gallery</a>
-          <a class="on" href="gallery-filmstrip.html">Gallery2</a>
+          <a href="Gallery-boxed.dc.html">G2</a>
+          <a class="on" href="gallery-filmstrip.html">G3</a>
+          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">A2</a>
           <a href="Contact%20Page.dc.html">Contact</a>
@@ -110,7 +113,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   </header>
   <nav class="menu" aria-label="Mobile menu">
     <a href="Gallery.dc.html">Gallery</a>
-    <a href="gallery-filmstrip.html" style="font-weight: 600">Gallery2</a>
+    <a href="Gallery-boxed.dc.html">G2</a>
+    <a href="gallery-filmstrip.html" style="font-weight: 600">G3</a>
+    <a href="Gallery-horizontal.dc.html">G4</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">A2</a>
     <a href="Contact%20Page.dc.html">Contact</a>

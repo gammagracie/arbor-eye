@@ -29,8 +29,9 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while Gallery2 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1099px) { header nav { gap: 14px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+/* TEMP: while G2 / G3 / G4 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
 </helmet>
 
@@ -43,7 +44,9 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Gallery.dc.html">Gallery</a>
-          <a href="gallery-filmstrip.html">Gallery2</a>
+          <a href="Gallery-boxed.dc.html">G2</a>
+          <a href="gallery-filmstrip.html">G3</a>
+          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html" style="font-weight: 600">A2</a>
           <a href="Contact Page.dc.html">Contact</a>
@@ -74,7 +77,9 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="gallery-filmstrip.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery2</a>
+  <a href="Gallery-boxed.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G2</a>
+  <a href="gallery-filmstrip.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G3</a>
+  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">A2</a>
   <a href="#tabs" onClick="{{ goContact }}" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
