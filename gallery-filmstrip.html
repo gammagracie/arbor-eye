@@ -53,7 +53,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 16px var(--side-pad) 0; }
 @media (min-width: 768px) { .stage { margin: 16px max(24px, 3vw) 0; } }
 .art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); background: url(uploads/arbor-mark.png) center / auto 70% no-repeat; cursor: pointer; }
-.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; }
 .art img.on { opacity: 1; }
 /* previous / next chevrons either side of the work (placed by fit()) */
 .step { position: absolute; top: 50%; transform: translateY(-50%); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
@@ -226,7 +226,7 @@ const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track')
 let lastTouch = 0, touching = false;
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 const imgs = [$('imgA'), $('imgB')];
-let current = -1, front = 0;
+let current = -1, front = 0, turns = 0;
 
 // size the artwork box to the largest size that fits the stage, keeping the work's own proportions
 function fit() {
@@ -245,12 +245,14 @@ function show(k, scrollIntoView) {
   k = (k + WORKS.length) % WORKS.length;
   if (k === current) return;
   current = k;
-  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front];
-  const swap = () => { fit(); next.classList.add('on'); prev.classList.remove('on'); front = 1 - front; };
-  next.onload = swap; next.onerror = swap;
+  // soft crossfade: the incoming image is fully decoded first, then fades in over the outgoing one (once per change,
+  // and only for the latest request if arrows are tapped quickly)
+  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], turn = ++turns;
+  const swap = () => { if (turn !== turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); front = 1 - front; };
   next.alt = w.t;
   next.src = 'assets/works/' + w.f;
-  if (next.complete && next.naturalWidth) swap();
+  (next.decode ? next.decode() : Promise.resolve()).then(swap, swap);
+  [k - 1, k + 1].forEach(n => { new Image().src = 'assets/works/' + WORKS[(n + WORKS.length) % WORKS.length].f; });   // neighbours ready for the arrows
   art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
   $('capTitle').textContent = w.t;
   [...track.children].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
