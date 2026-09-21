@@ -111,22 +111,24 @@ html { scrollbar-gutter: stable; }
   </section>
 
   <sc-if value="{{ tabContact }}" hint-placeholder-val="{{ true }}">
-  <section style="display: grid; grid-template-columns: {{ shippingCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Contact form">
-    <div>
+  <section style="display: grid; grid-template-columns: {{ formCols }}; gap: 28px {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Contact form">
+    <div style="grid-column: 1; grid-row: 1; display: flex; flex-direction: column; min-width: 0">
       <h2 style="margin: 0 0 16px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Get in touch</h2>
       <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
-      <div style="display: grid; gap: 28px; max-width: 560px">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
-        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" rows="6" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0; resize: vertical; line-height: 1.6"></textarea></label>
+        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
+      </div>
+    </div>
+    <div style="grid-column: 1; grid-row: 2">
         <div style="position: relative; display: grid; justify-items: start">
           <button onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer" style-hover="background: #333333">Send</button>
           <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: 13px; color: #8A867E">{{ formNote }}</p>
         </div>
-      </div>
     </div>
-    <div style="position: relative">
-      <img src="uploads/ampersand-sculpture.webp" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; position: {{ formImgPos }}; top: 0; right: 0; height: {{ formImgH }}; width: {{ formImgW }}; max-width: 100%; aspect-ratio: 1 / 1; object-fit: cover">
+    <div style="grid-column: {{ formImgCol }}; grid-row: {{ formImgRow }}; max-width: {{ formImgMax }}">
+      <img src="uploads/ampersand-sculpture.webp" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover">
     </div>
   </section>
   </sc-if>
@@ -212,7 +214,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '' };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '' };
   goTab(tab) { this.setMenu(false); this.setState({ tab }); }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
@@ -228,11 +230,15 @@ class Component extends DCLogic {
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
+    this.mqWide = window.matchMedia('(min-width: 1100px)');
+    this.onMqWide = () => this.setState({ wide: this.mqWide.matches });
+    this.mqWide.addEventListener('change', this.onMqWide);
+    this.setState({ wide: this.mqWide.matches });
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide); }
   renderVals() {
     const cartCount = this.props.cartCount ?? 1;
-    const m = this.state.mobile;
+    const m = this.state.mobile, wide = this.state.wide;
     const tab = this.state.tab;
     return {
       cartCount,
@@ -255,8 +261,11 @@ class Component extends DCLogic {
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
       shippingCols: m ? '1fr' : '7fr 5fr',
-      // contact tab image: as tall as the form (never below the Send button), square at most, cropping its sides when the column is narrower
-      formImgPos: m ? 'static' : 'absolute', formImgH: m ? 'auto' : '100%', formImgW: m ? '100%' : 'auto',
+      // contact tab: the whole square image sits beside the form from 1100px up; the message field stretches so its bottom line
+      // meets the bottom of the image, and Send sits on the row below. Narrower screens stack form, Send, image.
+      formCols: wide ? 'minmax(0, 1fr) minmax(440px, 44%)' : '1fr',
+      formImgCol: wide ? '2' : '1', formImgRow: wide ? '1' : '3', formImgMax: wide ? 'none' : '520px',
+      messageFlex: wide ? '1 1 auto' : 'none', messageH: wide ? '0' : '150px',
       returnsCols: m ? '1fr' : '5fr 7fr',
       sectionGap: m ? '48px' : '96px',
       shippingPad: m ? '72px 0' : '120px 0',
