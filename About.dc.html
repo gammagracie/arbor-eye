@@ -20,6 +20,7 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* About page text: 14px / 1.75 at 1320px and up, scaling down with the viewport (so text and photo heights stay in step),
    never below 11px; line height eases from 1.75 to 1.5 at the small end. Phones use fixed 15px / 1.75. */
+body { overflow-x: clip; } /* the Biography opener is full-bleed (100vw) */
 main p { font-size: 14px; }
 main p, main blockquote { line-height: 1.75; }
 .copy { gap: 18px; }
@@ -95,12 +96,12 @@ html { scrollbar-gutter: stable; }
 </nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
-  <section data-screen-label="About — Biography" style="padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; gap: {{ bioGap }}; align-items: start">
-    <div style="display: grid; gap: 16px">
+  <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; gap: {{ bioGap }}; align-items: center">
+    <div style="display: grid; gap: 16px; align-self: start">
       <div onClick="{{ bioTap }}" onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
-        <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; opacity: {{ bioD2 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/about1.webp" alt="Ned Church painting on a taped plexiglass panel" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ bioD2 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/about1.webp" alt="Ned Church painting on a taped plexiglass panel" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ bioPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
@@ -112,7 +113,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <div style="position: relative; max-width: {{ bioTextMax }}">
+    <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: center">
         <p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
@@ -218,7 +219,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, menuOpen: false, bio: 0, proc: 0, stu: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, bio: 0, proc: 0, stu: 0 };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -230,8 +231,12 @@ class Component extends DCLogic {
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
+    this.mqStack = window.matchMedia('(max-width: 999px)');
+    this.onMqStack = () => this.setState({ stack: this.mqStack.matches });
+    this.mqStack.addEventListener('change', this.onMqStack);
+    this.setState({ stack: this.mqStack.matches });
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); }
+  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
   car(key, n) {
     const i = this.state[key];
     const out = {};
@@ -248,7 +253,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const cartCount = this.props.cartCount ?? 1;
-    const m = this.state.mobile;
+    const m = this.state.mobile, stack = this.state.stack;
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -268,12 +273,15 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
-      bioCols: m ? '1fr' : 'minmax(0, min(42%, 480px)) minmax(0, 1fr)', // photo takes 42% of the content width (up to 480px), text fills the rest
-      bioGap: m ? '28px' : 'clamp(40px, 5.5vw, 80px)',
-      bioTextMax: m ? 'none' : '600px', // keeps the copy about as tall as the photo on very wide screens
+      // Biography opener: a square photo fills the left half of the screen, flush with the screen edge and the header;
+      // the copy is centred in the right half. Under 1000px it stacks: full-width square photo, then the copy.
+      bioCols: stack ? '1fr' : '50% minmax(0, 1fr)',
+      bioGap: stack ? '28px' : '0',
+      bioTextMax: stack ? 'none' : '680px',
+      bioTextPad: stack ? '0 var(--side-pad)' : '32px clamp(32px, 5vw, 80px)',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
-      sectionPadFirst: m ? '32px 0 40px' : '64px 0 56px',
+      sectionPadFirst: stack ? '0 0 40px' : '0 0 56px',
       sectionPad: m ? '40px 0' : '72px 0',
       quotePad: m ? '48px 0' : '104px 0 88px',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',

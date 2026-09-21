@@ -86,7 +86,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 ## About
 
 - Paragraph text 14px / 1.75 line height, scaling down with the viewport to no less than 11px (line height eases to 1.4) so copy and photo heights stay in step; 18px between paragraphs; headings share one line height; the quote keeps its display size.
-- **Biography**: photo on the content's left edge (42% of the width, max 480px), heading level with the top of the photo, text fills the rest (capped at 600px on very wide screens).
+- **Biography (page opener)**: from 1000px up, a square photo fills the left half of the screen, flush with the left screen edge and touching the bottom of the header (the section is full-bleed; photos are cropped square, framed toward the top so faces stay in view); the heading and copy are centred, vertically and horizontally, in the right half (max 680px wide). The carousel's arrows and dots sit centred under the photo. Under 1000px it stacks: full-width square photo under the header, controls, then heading and copy with the normal side padding.
 - **Process**: text left, photos right on desktop.
 - Photo carousels (Biography, Process, Studio): crossfade 0.7s; chevron arrows; dots; tap right/left half or swipe to move.
 
