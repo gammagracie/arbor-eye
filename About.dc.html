@@ -286,9 +286,9 @@ class Component extends DCLogic {
       quotePad: m ? '28px 0' : '52px 0 44px',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',
       quoteSize: m ? '20px' : '27px',
-      quoteInset: m ? '20px calc(clamp(44px, 13.4vw, 192px) + 6px)' : '12px calc(clamp(44px, 13.4vw, 192px) + 28px)', // text sits between the two marks
-      quoteMarkSize: 'clamp(44px, 13.4vw, 192px)', // 192px (3x the earlier 64px) from ~1440px wide, scaling down with the screen; drawn at 70% strength
-      quoteMarkTop: m ? '-4px' : 'calc(clamp(44px, 13.4vw, 192px) * -0.16)', // opening mark rides a little above the first line, closing mark a little below the last
+      quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '12px calc(clamp(32px, 8.7vw, 125px) + 28px)', // text sits between the two marks
+      quoteMarkSize: 'clamp(32px, 8.7vw, 125px)', // 125px from ~1440px wide, scaling down with the screen (about 33px on phones); drawn at 70% strength
+      quoteMarkTop: m ? '-4px' : 'calc(clamp(32px, 8.7vw, 125px) * -0.16)', // opening mark rides a little above the first line, closing mark a little below the last
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 3),
       ...this.car('proc', 2),
