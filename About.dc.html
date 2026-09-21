@@ -124,10 +124,10 @@ html { scrollbar-gutter: stable; }
   </section>
 
   <section data-screen-label="About — Quote" style="padding: {{ quotePad }}; display: flex; justify-content: center">
-    <div style="position: relative; max-width: 860px; padding: {{ quoteInset }}">
-      <img src="uploads/left_quote.png" alt="" style="position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; pointer-events: none">
-      <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
-      <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkTop }}; right: 0; width: {{ quoteMarkSize }}; pointer-events: none">
+    <div style="position: relative; max-width: 1080px; padding: {{ quoteInset }}">
+      <img src="uploads/left_quote.png" alt="" style="position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
+      <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; text-wrap: balance; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
+      <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkTop }}; right: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
     </div>
   </section>
 
@@ -283,12 +283,12 @@ class Component extends DCLogic {
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
       sectionPadFirst: stack ? '0 0 40px' : '0 0 56px',
       sectionPad: m ? '40px 0' : '72px 0',
-      quotePad: m ? '48px 0' : '104px 0 88px',
+      quotePad: m ? '28px 0' : '52px 0 44px',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',
       quoteSize: m ? '20px' : '27px',
-      quoteInset: m ? '28px 44px' : '36px 110px',
-      quoteMarkSize: m ? '36px' : '64px',
-      quoteMarkTop: m ? '-6px' : '-14px',
+      quoteInset: m ? '20px calc(clamp(44px, 13.4vw, 192px) + 6px)' : '12px calc(clamp(44px, 13.4vw, 192px) + 28px)', // text sits between the two marks
+      quoteMarkSize: 'clamp(44px, 13.4vw, 192px)', // 192px (3x the earlier 64px) from ~1440px wide, scaling down with the screen; drawn at 70% strength
+      quoteMarkTop: m ? '-4px' : 'calc(clamp(44px, 13.4vw, 192px) * -0.16)', // opening mark rides a little above the first line, closing mark a little below the last
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 3),
       ...this.car('proc', 2),
