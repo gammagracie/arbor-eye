@@ -90,9 +90,9 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
-  <section style="padding: {{ heroPad }}; display: grid">
-    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; aspect-ratio: 1.494; margin: 0 auto; min-width: 0; position: relative; background: url(uploads/arbor-mark.png) center / auto 78% no-repeat">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+  <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0">
+    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; aspect-ratio: 1.494; justify-self: center; position: relative; background: url(uploads/arbor-mark.png) center / auto 78% no-repeat">
       {{ heroImg }}
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
     </a>
@@ -231,10 +231,13 @@ class Component extends DCLogic {
     // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
     // rail = thumbnail + 29px of padding/border; 30% of it overlaps the image, so 70% (0.0385 x width + 20px) sits below
     const k = this.state.ratio / (1 + 0.0385 * this.state.ratio);
-    const fitW = 'calc((100vh - var(--header-h) - var(--footer-h) - 81px) * ' + k.toFixed(4) + ')';
-    const smallFit = 'calc((100vh - var(--header-h) - var(--footer-h) - ' + (m ? 166 : 138) + 'px) * ' + this.state.ratio.toFixed(4) + ')';
-    const heroW = (m || this.state.tablet) ? 'min(100%, ' + smallFit + ')' : 'min(100%, ' + fitW + ')';
-    const thumbH = m ? '44px' : this.state.tablet ? '52px' : 'calc(min(100vw - 2 * var(--side-pad), ' + fitW + ') * 0.055)';
+    // Desktop / tablet: header + image + thumbnails fill the screen exactly (thumbnails sit at the bottom of the viewport,
+    // footer follows below the fold). Budgets = section padding + the part of the tray that hangs below the image.
+    const fitW = 'calc((100vh - var(--header-h) - 74px) * ' + k.toFixed(4) + ')';
+    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 122px) * ' + this.state.ratio.toFixed(4) + ')';
+    // desktop / tablet: the image may run wider than the side padding (to 94% of the screen) so it can fill the height on very wide-and-tall screens
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : 'min(94vw, ' + (this.state.tablet ? smallFit : fitW) + ')';
+    const thumbH = m ? '44px' : this.state.tablet ? '52px' : 'calc(min(94vw, ' + fitW + ') * 0.055)';
     const half = m ? 1 : this.state.tablet ? 2 : 3; // 3 / 5 / 7 thumbnails visible, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
@@ -259,7 +262,8 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroPad: m ? '32px 0' : this.state.tablet ? '40px 0' : '28px 0 32px',
+      heroPad: m ? '32px 0' : this.state.tablet ? '40px 0 24px' : '28px 0 24px',
+      mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 29px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
       arrowPadBottom: m ? '8px' : '15px', // tray padding (10px) + thumbnail padding/border (4.5px) puts the chevron on the thumbnail baseline
