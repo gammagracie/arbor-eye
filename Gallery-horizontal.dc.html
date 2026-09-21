@@ -30,6 +30,13 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 html { scrollbar-gutter: stable; }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
+/* Horizontal gallery: the same 4:3 cells as the grid gallery, laid out two rows deep in columns that run off the
+   right edge; the rows fill the space between toolbar and footer, bleed to the screen edges, and are moved by
+   the wheel / trackpad (vertical scrolling is turned into sideways travel) */
+:root { --row-gap: 72px; --col-gap: 56px; --row-h: clamp(300px, calc(100dvh - var(--header-h) - var(--footer-h) - 236px), 900px); --cell-h: calc((var(--row-h) - var(--row-gap)) / 2); }
+@media (max-width: 767px) { :root { --row-gap: 56px; --col-gap: 20px; } }
+.hscroll { display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, var(--cell-h)); gap: var(--row-gap) var(--col-gap); overflow-x: auto; overflow-y: hidden; margin: 0 calc(-1 * var(--side-pad)); padding: 16px var(--side-pad) 60px; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.hscroll::-webkit-scrollbar { display: none; }
 /* Grid-size switcher is hidden on phones only */
 @media (max-width: 767px) { .layout-switch { display: none !important; } }
 /* TEMP: while G2 / G3 / G4 / A2 are in the nav, tighten it at tablet widths so the header stays on one line */
@@ -47,10 +54,10 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="Gallery.dc.html" style="font-weight: 600">Gallery</a>
+          <a href="Gallery.dc.html">Gallery</a>
           <a href="Gallery-boxed.dc.html">G2</a>
           <a href="gallery-filmstrip.html">G3</a>
-          <a href="Gallery-horizontal.dc.html">G4</a>
+          <a href="Gallery-horizontal.dc.html" style="font-weight: 600">G4</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">A2</a>
           <a href="Contact%20Page.dc.html">Contact</a>
@@ -80,10 +87,10 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">Gallery</a>
+  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="Gallery-boxed.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G2</a>
   <a href="gallery-filmstrip.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G3</a>
-  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
+  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">G4</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">A2</a>
   <a href="Contact%20Page.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
@@ -100,19 +107,8 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column">
   <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
-    <section data-screen-label="Gallery — Grid (no boxes)" style="padding: {{ topPad }} 0 80px; display: grid; gap: {{ toolbarGap }}; align-content: start">
+    <section data-screen-label="Gallery — Horizontal row" style="padding: {{ topPad }} 0 24px; display: grid; gap: {{ toolbarGap }}; align-content: start">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px 32px">
-        <div class="layout-switch" style="display: flex; gap: 14px; align-items: center">
-          <button onClick="{{ setL3 }}" aria-label="Small grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c3 }}">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg>
-          </button>
-          <button onClick="{{ setL2 }}" aria-label="Two-column grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c2 }}">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="8" height="18"></rect><rect x="10" y="0" width="8" height="18"></rect></svg>
-          </button>
-          <button onClick="{{ setL1 }}" aria-label="Single column" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c1 }}">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="18" height="18"></rect></svg>
-          </button>
-        </div>
         <div style="display: flex; gap: 24px 48px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto">
           <div class="filter-menu" style="position: relative">
             <button onClick="{{ toggleSeries }}" aria-haspopup="listbox" aria-expanded="{{ seriesOpen }}" style="display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer">
@@ -142,13 +138,13 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
       </div>
-      <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
+      <div class="hscroll" style="grid-auto-columns: {{ colW }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
-          <div class="work" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: {{ cellRatio }}; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
+          <div class="work" style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease" style-hover="transform: translateY(-6px)">
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 14px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 16px 0 0; display: {{ chipDisplay }}; text-align: center; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -442,13 +438,50 @@ class Component extends DCLogic {
         if (e.key === 'Escape') this.setZoom(false);
         if (e.key === 'ArrowLeft') this.setState(s => ({ detailView: (s.detailView + 2) % 3 }));
         if (e.key === 'ArrowRight') this.setState(s => ({ detailView: (s.detailView + 1) % 3 }));
+      } else if (this.state.sel == null && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        const el = document.querySelector('.hscroll');
+        if (el) this.hGo(el, (e.key === 'ArrowRight' ? 0.6 : -0.6) * el.clientWidth);
       }
     };
+    // Horizontal row: wheel / trackpad travel (either axis) moves the row sideways, eased so mouse-wheel steps glide
+    this.hGo = (el, by) => {
+      const max = el.scrollWidth - el.clientWidth;
+      this.hTarget = Math.max(0, Math.min(max, (this.hRunning ? this.hTarget : el.scrollLeft) + by));
+      if (this.hRunning) return;
+      this.hRunning = true;
+      let last = performance.now();
+      const step = (now) => {
+        const dt = Math.min(64, now - last); last = now;
+        const d = this.hTarget - el.scrollLeft;
+        if (Math.abs(d) < 0.5 || !el.isConnected) { if (el.isConnected) el.scrollLeft = this.hTarget; this.hRunning = false; return; }
+        el.scrollLeft += d * (1 - Math.exp(-dt / 90));
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    this.onWheel = (e) => {
+      if (this.state.sel != null || this.state.openMenu || this.state.menuOpen) return;
+      const el = document.querySelector('.hscroll');
+      if (!el) return;
+      const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (!d) return;
+      e.preventDefault();
+      this.hGo(el, e.deltaMode === 1 ? d * 32 : d);
+    };
+    window.addEventListener('wheel', this.onWheel, { passive: false });
     window.addEventListener('keydown', this.onKey);
     this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
     document.addEventListener('click', this.onDocClick);
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
+  // back from a work: return the row to where it was; new filter: start the row again from the left
+  componentDidUpdate() {
+    const grid = this.state.sel == null, key = this.state.series + '|' + this.state.avail;
+    const el = document.querySelector('.hscroll');
+    if (el && grid && this.wasGrid === false) el.scrollLeft = this.hPos || 0;
+    if (el && this.filterKey !== undefined && this.filterKey !== key) { el.scrollLeft = 0; this.hTarget = 0; }
+    this.wasGrid = grid; this.filterKey = key;
+  }
+  componentWillUnmount() { window.removeEventListener('wheel', this.onWheel); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
   renderVals() {
     const cartCount = (this.props.cartCount ?? 1) + this.state.added;
     const hoverTitles = this.props.hoverTitles ?? true;
@@ -518,6 +551,7 @@ class Component extends DCLogic {
       })),
       // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size
       gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
+      colW: vertical ? 'var(--cell-h)' : 'calc(var(--cell-h) * 4 / 3)', // square cells for the vertical works, as in the grid gallery
       gridGap: m ? (vertical ? '56px 20px' : '32px 20px') : L === 'g1' ? '88px' : vertical ? '120px 56px' : '72px 56px',
       cellRatio: vertical ? '1 / 1' : '4 / 3',
       cardMax: L === 'g1' && !m ? '880px' : 'none',
@@ -527,7 +561,7 @@ class Component extends DCLogic {
         title: a.title,
         aria: 'View ' + a.title,
         img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
-        open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
+        open: () => { const el = document.querySelector('.hscroll'); this.hPos = el ? el.scrollLeft : 0; this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       back: () => { document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false }); },
       openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
