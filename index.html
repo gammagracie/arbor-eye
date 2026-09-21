@@ -109,7 +109,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 10px 0 0; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 8px 0 0; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -259,7 +259,7 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroPad: m ? '32px 0' : this.state.tablet ? '40px 0 54px' : '28px 0 54px', // bottom: hover title (10px gap + one line) with 20px clear below it
+      heroPad: m ? '32px 0' : this.state.tablet ? '65px 0 29px' : '53px 0 29px', // block sits 25px lower than the natural fit; bottom keeps room for the hover title (8px gap + one line)
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 29px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
