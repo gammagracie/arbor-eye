@@ -2,6 +2,7 @@
 
 Living summary of how the staging site is built and behaves. Describes the final state only, not the history.
 Repo: https://github.com/gammagracie/arbor-eye · Live: https://gammagracie.github.io/arbor-eye/
+Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/Art-Arbor-min`; mirror in `~/Sites/arbor-eye` (every `git push` from the working copy updates GitHub and the mirror together; do not edit the mirror directly).
 
 ## Pages
 
