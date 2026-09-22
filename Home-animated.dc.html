@@ -216,8 +216,9 @@ class Component extends DCLogic {
     const $ = id => holder.querySelector('#' + id);
     const clamp = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (e, t, d) => clamp((e - t) / d);
     const outCubic = p => 1 - Math.pow(1 - p, 3), inOutSine = p => -(Math.cos(Math.PI * p) - 1) / 2, inOutCubic = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-    const tb = $('ae-treesrc').getBBox(), ab = $('ae-amp').getBBox();
-    const T = { cx: tb.x + tb.width / 2, cy: tb.y + tb.height / 2, h: tb.height }, A = { cx: ab.x + ab.width / 2, cy: ab.y + ab.height / 2, h: ab.height };
+    // fixed geometry of the tree and ampersand in the SVG's units (Safari cannot measure artwork inside <defs>,
+    // so getBBox() there returns zeros and the tree would be drawn unscaled)
+    const T = { cx: 573.56, cy: 959.55, h: 1211.5 }, A = { cx: 875.2, cy: 261.39, h: 150.42 };
     const START = 2.7, ENDS = 2.035, LIFT0 = 90, LIFT1 = 51, SHIFTX0 = -3, SHIFTX1 = 0, END = 6.6, fit = A.h / T.h;
     const tree = $('ae-tree');
     const apply = e => {
