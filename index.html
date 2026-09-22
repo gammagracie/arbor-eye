@@ -230,8 +230,8 @@ class Component extends DCLogic {
     const k = this.state.ratio / (1 + 0.0231 * this.state.ratio);
     // Desktop / tablet: header + image + thumbnails fill the screen exactly (thumbnails sit at the bottom of the viewport,
     // footer follows below the fold). Budgets = section padding + the part of the tray that hangs below the image.
-    const fitW = 'calc((100vh - var(--header-h) - 104px) * ' + k.toFixed(4) + ')';
-    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 137px) * ' + this.state.ratio.toFixed(4) + ')';
+    const fitW = 'calc((100vh - var(--header-h) - 104px) * ' + (k * 1.07).toFixed(4) + ')'; // 7% larger than the exact fit (block runs a little past the fold on short screens)
+    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 137px) * ' + (this.state.ratio * 1.07).toFixed(4) + ')';
     // desktop / tablet: the image may run wider than the side padding (to 94% of the screen) so it can fill the height on very wide-and-tall screens
     const heroW = m ? 'min(100%, ' + smallFit + ')' : 'min(94vw, ' + (this.state.tablet ? smallFit : fitW) + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc(min(94vw, ' + fitW + ') * 0.033)'; // desktop / tablet thumbnails are 60% of their earlier size
