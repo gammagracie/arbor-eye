@@ -115,7 +115,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 0; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -246,6 +246,10 @@ class Component extends DCLogic {
     this.startLogo();
     this.arts.forEach(a => { const im = new Image(); im.src = a.src; }); // preload so swaps are instant
     this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); // wordmark overlay fades off after 3s
+    this.mqPortrait = window.matchMedia('(orientation: portrait)');
+    this.onMqPortrait = () => this.setState({ portrait: this.mqPortrait.matches });
+    this.mqPortrait.addEventListener('change', this.onMqPortrait);
+    this.setState({ portrait: this.mqPortrait.matches });
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -258,7 +262,7 @@ class Component extends DCLogic {
     window.addEventListener('keydown', this.onKey);
     this.timer = setInterval(() => { if (this.props.autoplay) this.go(1); }, 5000);
   }
-  componentWillUnmount() { if (this.logoRaf) cancelAnimationFrame(this.logoRaf);
+  componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait); if (this.logoRaf) cancelAnimationFrame(this.logoRaf);
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet);
     window.removeEventListener('keydown', this.onKey);
     clearInterval(this.timer);
@@ -266,7 +270,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const cartCount = this.props.cartCount ?? 1;
-    const m = this.state.mobile;
+    const m = this.state.mobile, mp = m && this.state.portrait;
     const i = this.state.index;
     const n = this.arts.length;
     // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
@@ -304,9 +308,10 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroPad: m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
+      heroPad: mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
-      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 23px))',
+      // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 11.5px)' : m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 23px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
       arrowPadBottom: m ? '8px' : '12px', // tray padding (10px) + thumbnail border (1.5px) puts the chevron on the thumbnail baseline
       railJustify: 'center',
@@ -320,6 +325,7 @@ class Component extends DCLogic {
       introOpacity: this.state.intro ? 1 : 0,
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
+      hoverTitleMargin: mp ? '8.5px 0 0' : '0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 1.5 border + 8.5)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 22px)',
