@@ -2,7 +2,7 @@
 
 Living summary of how the staging site is built and behaves. Describes the final state only, not the history.
 Repo: https://github.com/gammagracie/arbor-eye · Live: https://gammagracie.github.io/arbor-eye/
-Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/Art-Arbor-min`; mirror in `~/Sites/arbor-eye` (every `git push` from the working copy updates GitHub and the mirror together; do not edit the mirror directly).
+Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/archive/Art-Arbor-min` (moved into `archive/` on 2026-09-22); mirror in `~/Sites/arbor-eye` (every `git push` from the working copy updates GitHub and the mirror together; do not edit the mirror directly).
 
 ## Pages
 
@@ -26,7 +26,8 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - **Header**: 72px tall, growing to 80px between 1280px and 1920px wide. Logo, nav links (13px, tracked uppercase) and account/bag icons share one baseline on desktop. Active nav item is bold, no underline. Phone header is vertically centred. Account and bag icons are thin line icons (a person outline and a square shopping bag) from `assets/icons/account.svg` and `cart.svg`, drawn at 19px in the header (80% of their 24px design size, line weight kept visually the same) and at 24px on the mobile menu rows; `assets/icons/mail.svg` (solid grey envelope) is stored for later use and not placed anywhere yet.
 - **Footer**: 43px tall, growing to 54px between 1280px and 1920px (15% shorter than the earlier 50–64px). One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
-- **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
+- **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for headings and work titles.
+- **Logo**: the supplied SVG wordmark (`uploads/arbor-eye-wordmark.svg`, from `ART/Logo/Wordmark/SVG`, cropped to the mark) on every page except H2, drawn in the text colour with hover dimming. It is sized so its capitals match the former text logo's cap height (20px), making it 188px wide, and sits on the same baseline; the former text logo is kept in the link invisibly so the header layout is unchanged at every screen size. H2 shows the same wordmark as the final frame of its animation. Licence for Neuzeit Grotesk to be confirmed before launch.
 - **Temporary nav items**: the header nav and mobile menu read H2 · Gallery · G3 · G4 · About · Contact while the alternates are under review (H2 animated-logo home, G3 filmstrip, G4 horizontal scroll). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
@@ -106,6 +107,6 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Open items
 
-- **New artwork details and higher-resolution images are expected.** Intake: full-size originals go in `~/Desktop/art-arbor-gallery-NED/_incoming/images/`, details (spreadsheet, text or screenshots) in `_incoming/details/` or in chat; Claude makes the web-sized copies, updates both galleries, the home carousel and the filmstrip list, and pushes. Originals stay out of the repo; nothing is placed in `~/Sites/arbor-eye` by hand.
+- **New artwork details and higher-resolution images are expected.** Intake: full-size originals go in `~/Desktop/art-arbor-gallery-NED/_incoming/images/` (that folder is still beside `archive/`, not inside it), details (spreadsheet, text or screenshots) in `_incoming/details/` or in chat; Claude makes the web-sized copies, updates both galleries, the home carousel and the filmstrip list, and pushes. Originals stay out of the repo; nothing is placed in `~/Sites/arbor-eye` by hand.
 - Real edition numbers per work (edition line was removed from the detail page).
 - Framed product photography could replace the drawn frames.
