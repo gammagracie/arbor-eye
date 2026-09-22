@@ -314,7 +314,7 @@ class Component extends DCLogic {
       railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 11.5px)' : m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 23px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
       arrowPadBottom: m ? '8px' : '12px', // tray padding (10px) + thumbnail border (1.5px) puts the chevron on the thumbnail baseline
-      railJustify: 'center',
+      railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '4px' : this.state.tablet ? '40px' : '56px',
