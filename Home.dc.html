@@ -109,7 +109,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 8px 0 0; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: 0; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -230,8 +230,8 @@ class Component extends DCLogic {
     const k = this.state.ratio / (1 + 0.0231 * this.state.ratio);
     // Desktop / tablet: header + image + thumbnails fill the screen exactly (thumbnails sit at the bottom of the viewport,
     // footer follows below the fold). Budgets = section padding + the part of the tray that hangs below the image.
-    const fitW = 'calc((100vh - var(--header-h) - 104px) * ' + (k * 1.07).toFixed(4) + ')'; // 7% larger than the exact fit (block runs a little past the fold on short screens)
-    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 137px) * ' + (this.state.ratio * 1.07).toFixed(4) + ')';
+    const fitW = 'calc((100vh - var(--header-h) - 77px) * ' + k.toFixed(4) + ')'; // 77 = 35px above the image + 20px below the tray (the tray's own 15px of padding makes it 35 under the thumbnails) + the tray's overhang
+    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
     // desktop / tablet: the image may run wider than the side padding (to 94% of the screen) so it can fill the height on very wide-and-tall screens
     const heroW = m ? 'min(100%, ' + smallFit + ')' : 'min(94vw, ' + (this.state.tablet ? smallFit : fitW) + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc(min(94vw, ' + fitW + ') * 0.033)'; // desktop / tablet thumbnails are 60% of their earlier size
@@ -259,7 +259,7 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroPad: m ? '32px 0' : this.state.tablet ? '55px 0 39px' : '43px 0 39px', // block sits 15px lower than the natural fit; bottom keeps room for the hover title (8px gap + one line)
+      heroPad: m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 29px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
