@@ -28,6 +28,8 @@ html { scrollbar-gutter: stable; }
 /* TEMP: while H2 / H3 / G3 / G4 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+/* Phones in portrait: footer twice as tall */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 </style>
 </helmet>
 
@@ -104,7 +106,7 @@ html { scrollbar-gutter: stable; }
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 22px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: #FFFFFF; padding: 3px; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
             </button>
           </sc-for>
@@ -282,7 +284,7 @@ class Component extends DCLogic {
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
     let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
-    const slot = 'calc((' + thumbH + ') * 1.494 + 9px + 22px)'; // scans are 1.494:1; 9px = padding + border; 22px gap
+    const slot = 'calc((' + thumbH + ') * 1.494 + 3px + 22px)'; // scans are 1.494:1; 3px = border; 22px gap
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -304,9 +306,9 @@ class Component extends DCLogic {
       mainPad: '0 var(--side-pad)',
       heroPad: m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
-      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 29px))',
+      railMargin: m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 23px))',
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
-      arrowPadBottom: m ? '8px' : '15px', // tray padding (10px) + thumbnail padding/border (4.5px) puts the chevron on the thumbnail baseline
+      arrowPadBottom: m ? '8px' : '12px', // tray padding (10px) + thumbnail border (1.5px) puts the chevron on the thumbnail baseline
       railJustify: 'center',
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
