@@ -8,7 +8,8 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/Art-Arbor-min`; m
 
 | File | What it is | Linked from nav |
 |---|---|---|
-| `index.html` / `Home.dc.html` | Home carousel (identical files) | yes |
+| `index.html` / `Home.dc.html` | Home carousel (identical files) | yes (logo) |
+| `Home-animated.dc.html` | Secondary home: identical to Home except the header logo is the animated wordmark (`uploads/logo-animation.svg`, the v2 storyboard animation: Tree of Life grows in, ARBOR / EYE fade in, the tree settles into the ampersand; plays once over 6.6s and holds the final frame, no loop). Sized to match the text logo (249px wide, view cropped to the wordmark); the tree overflows above the header while it plays. | yes, temporary: "H2" (first nav item) |
 | `Gallery.dc.html` | Gallery, clean grid (no boxes behind works) | yes: "Gallery" |
 | `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | no (back pocket, link only) |
 | `gallery-filmstrip.html` | Gallery, "filmstrip": one large work with a strip of every work along the bottom | yes, temporary: "G3" |
@@ -26,7 +27,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - **Footer**: 43px tall, growing to 54px between 1280px and 1920px (15% shorter than the earlier 50–64px). One line: copyright left, Instagram (links to instagram.com/arbor.eye, new tab) and Pinterest icons right. Sits at the end of the page (not sticky).
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
 - **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for the logo, headings and work titles. Licence for Neuzeit Grotesk to be confirmed before launch.
-- **Temporary nav items**: the header nav and mobile menu read Gallery · G3 · G4 · About · Contact while the alternate galleries are under review (G3 filmstrip, G4 horizontal scroll). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
+- **Temporary nav items**: the header nav and mobile menu read H2 · Gallery · G3 · G4 · About · Contact while the alternates are under review (H2 animated-logo home, G3 filmstrip, G4 horizontal scroll). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
