@@ -34,6 +34,11 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
+.cta { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #141414 !important; transition: color 0.35s ease; }
+.cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
+.cta:hover { color: #141414 !important; }
+.cta:hover::before { transform: scaleX(1); transform-origin: left; }
 </style>
 </helmet>
 
@@ -127,7 +132,7 @@ html { scrollbar-gutter: stable; }
     </div>
     <div style="grid-column: 1; grid-row: 2">
         <div style="position: relative; display: grid; justify-items: start">
-          <button onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer" style-hover="background: #333333">Send</button>
+          <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
           <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: 13px; color: #8A867E">{{ formNote }}</p>
         </div>
     </div>

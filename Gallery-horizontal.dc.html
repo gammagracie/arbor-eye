@@ -45,6 +45,11 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
+.cta { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #141414 !important; transition: color 0.35s ease; }
+.cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
+.cta:hover { color: #141414 !important; }
+.cta:hover::before { transform: scaleX(1); transform-origin: left; }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -264,7 +269,7 @@ html { scrollbar-gutter: stable; }
               <p style="margin: 0">Mount: {{ mountLabel }}</p>
             </div>
           </div>
-          <button onClick="{{ addToCart }}" style="align-self: start; width: 100%; max-width: 420px; background: #141414; color: #FFFFFF; border: none; padding: 16px 24px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; margin-top: 28px" style-hover="background: #333333">Add to cart</button>
+          <button class="cta" onClick="{{ addToCart }}" style="align-self: start; width: 100%; max-width: 420px; background: #141414; color: #FFFFFF; border: none; padding: 16px 24px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; margin-top: 28px">Add to cart</button>
         </div>
       </div>
       <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">

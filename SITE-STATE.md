@@ -85,7 +85,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 - Print shown on an off-white wall (`#F0F2EF`) with a soft shadow; clicking it opens a **lightbox carousel** (dark overlay) of the three framing views with dots, hover arrows, tap zones, swipe, arrow keys and Escape.
 - Italic title, then the price for the selected size: 8x12″ $225 · 16x24″ $595 · 24x36″ $1,195. Size buttons, then **Choose Your Frame Color** (this line and the Frame / Mount lines are 14px regular weight): white and black swatches (thin 100 x 12px slivers) plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
-- Add to cart button.
+- Add to cart button (solid black with white text and a hairline border). **CTA hover** (shared with the contact form's Send button): a pale fill sweeps in from the left edge over 0.45s while the text darkens; on leaving, the fill withdraws out through the right edge and the button returns to black.
 
 ## About
 
@@ -99,7 +99,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 ## Contact
 
 - The original single-page contact layout (`Contact Page.dc.html`) was removed on 2026-09-21; it is recoverable from the `pinned-2026-09-21` tag.
-- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com), Shipping, Returns & Exchanges. The image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`, a square file). On the Contact tab the whole square image is shown, never cropped: from 1100px up it sits in the right-hand column (44% of the content width, at least 440px) with its top level with the "Get in touch" heading, the form's fields take the narrower left column, and the Message field stretches so its bottom line meets the bottom of the image exactly; the Send button sits on the row below, its confirmation note floating under it. Under 1100px the page stacks form, Send, then the full square image (max 520px). On the Shipping tab it keeps the sticky portrait crop. `#shipping` / `#returns` open that tab.
+- `Contact-tabs.dc.html`: same hero, then three tabs — Contact (form: Name, Email, Message, Send — opens the visitor's mail app to NSChurch@gmail.com; Send has the sweep hover described under the buy page), Shipping, Returns & Exchanges. The image beside the form and the shipping text is the silver ampersand-and-leaves sculpture on grey (`uploads/ampersand-sculpture.webp`, a square file). On the Contact tab the whole square image is shown, never cropped: from 1100px up it sits in the right-hand column (44% of the content width, at least 440px) with its top level with the "Get in touch" heading, the form's fields take the narrower left column, and the Message field stretches so its bottom line meets the bottom of the image exactly; the Send button sits on the row below, its confirmation note floating under it. Under 1100px the page stacks form, Send, then the full square image (max 520px). On the Shipping tab it keeps the sticky portrait crop. `#shipping` / `#returns` open that tab.
 
 ## Assets
 
