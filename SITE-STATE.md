@@ -14,7 +14,7 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/archive/Art-Arbor
 | `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | no (back pocket, link only) |
 | `gallery-filmstrip.html` | Gallery, "filmstrip": one large work with a strip of every work along the bottom | yes, temporary: "G3" |
 | `Gallery-horizontal.dc.html` | Gallery, horizontal scroll: the clean grid's cells two rows deep, running off the right edge | yes, temporary: "G4" |
-| `Home-animated-2.dc.html` | Third home: as H2, but the whole animation (tree and wordmark) plays 20px lower on the header, the stem crossing the header line, then 0.3s after it finishes the finished mark slides up (0.8s, soft ease) to H2's resting position. | yes, temporary: "H3" (after H2) |
+| `Home-animated-2.dc.html` | Third home: as H2, but the tree fades in already at its resting size (no large-to-small phase) and the whole animation plays 8px lower on the header, the mark spanning 19px to 70px so it is fully visible and clear of the header line; 0.3s after it finishes the finished mark slides up (0.8s, soft ease) to H2's resting position. | yes, temporary: "H3" (after H2) |
 | `About.dc.html` | About | yes |
 | `Contact-tabs.dc.html` | Contact: form + Contact / Shipping / Returns tabs | yes: "Contact" (the mobile menu's Shipping and Returns links open its tabs) |
 
