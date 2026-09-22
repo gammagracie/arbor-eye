@@ -37,7 +37,7 @@ html { scrollbar-gutter: stable; }
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
-    <a href="Home.dc.html" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span id="ae-logo" aria-label="Arbor &amp; Eye" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block; transform: translateY(8px)"></span></a>
+    <a href="Home.dc.html" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span id="ae-logo" aria-label="Arbor &amp; Eye" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></span></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
@@ -206,8 +206,8 @@ class Component extends DCLogic {
     if (open) window.scrollTo({ top: 0, behavior: 'instant' });
     this.setState({ menuOpen: open });
   }
-  // Animated logo (third home, H3): as H2, but the tree keeps its resting size and the whole mark plays 8px lower on the
-  // header (19px from the top, 2px clear of the header line), sliding up to its final position at the end.
+  // Animated logo (third home, H3): as H2, but the tree fades in already at its resting size and height (no large-to-small
+  // phase) and nothing moves afterwards.
   // Animated logo (secondary home): the wordmark SVG is fetched and inlined here rather than templated, then the
   // tree-to-ampersand sequence plays once (6.6s) and holds its final frame. The view covers the whole final mark
   // (leaves above the wordmark, stem below) and is sized so the letters' cap height matches the text logo (19.9px);
@@ -229,8 +229,7 @@ class Component extends DCLogic {
     const T = { cx: 573.56, cy: 959.55, h: 1211.5 }, A = { cx: 875.2, cy: 261.39, h: 150.42 };
     // START/LIFT0: the tree's opening scale and height above the ampersand centre (chosen so the whole tree sits inside
     // the header from the first frame); ENDS/LIFT1: its resting scale and height once it has settled into the wordmark
-    // H3: the tree plays at its resting size and height throughout (no large-to-small phase), so the whole mark stays
-    // 51px tall and fits the header with the 8px it starts lower by
+    // H3: the tree plays at its resting size and height throughout (no large-to-small phase)
     const START = 2.035, ENDS = 2.035, LIFT0 = 51, LIFT1 = 51, SHIFTX0 = 0, SHIFTX1 = 0, END = 6.6, fit = A.h / T.h;
     const tree = $('ae-tree');
     const apply = e => {
@@ -245,11 +244,7 @@ class Component extends DCLogic {
       $('ae-amp').setAttribute('opacity', swap.toFixed(3));
     };
     const t0 = performance.now();
-    const frame = now => {
-      const e = Math.min((now - t0) / 1000, END); apply(e);
-      if (e < END) this.logoRaf = requestAnimationFrame(frame);
-      else setTimeout(() => { holder.style.transition = 'transform 0.8s cubic-bezier(0.45, 0, 0.15, 1)'; holder.style.transform = 'none'; }, 300);   // then the finished mark slides up into place
-    };
+    const frame = now => { const e = Math.min((now - t0) / 1000, END); apply(e); if (e < END) this.logoRaf = requestAnimationFrame(frame); };
     this.logoRaf = requestAnimationFrame(frame);
   }
   componentDidMount() {

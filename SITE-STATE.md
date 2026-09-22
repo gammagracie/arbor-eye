@@ -14,8 +14,8 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/archive/Art-Arbor
 | `Gallery-boxed.dc.html` | Gallery, grid with `#eef0f5` boxes behind works | no (back pocket, link only) |
 | `gallery-filmstrip.html` | Gallery, "filmstrip": one large work with a strip of every work along the bottom | yes, temporary: "G3" |
 | `Gallery-horizontal.dc.html` | Gallery, horizontal scroll: the clean grid's cells two rows deep, running off the right edge | yes, temporary: "G4" |
-| `Home-animated-2.dc.html` | Third home: as H2, but the tree fades in already at its resting size (no large-to-small phase) and the whole animation plays 8px lower on the header, the mark spanning 19px to 70px so it is fully visible and clear of the header line; 0.3s after it finishes the finished mark slides up (0.8s, soft ease) to H2's resting position. | yes, temporary: "H3" (after H2) |
-| `Home-animated-3.dc.html` | Fourth home: as H2, but 0.4s after the sequence finishes the Tree of Life fades away (0.9s) leaving the plain wordmark, which eases up 8px at the same time so it rests exactly where the static logo sits on every other page. Plays once, no loop. | yes, temporary: "H4" (after H3) |
+| `Home-animated-2.dc.html` | Third home: as H2, but the tree fades in already at its resting size and height (no large-to-small phase) and nothing moves afterwards; the mark sits at H2's resting position throughout. | yes, temporary: "H3" (after H2) |
+| `Home-animated-3.dc.html` | Fourth home: as H2, but as the tree turns into the ampersand (4.2s, over 1s) it also fades away and the wordmark eases up 8px, all at once, ending on the plain wordmark exactly where the static logo sits on every other page. Plays once, no loop. | yes, temporary: "H4" (after H3) |
 | `About.dc.html` | About | yes |
 | `Contact-tabs.dc.html` | Contact: form + Contact / Shipping / Returns tabs | yes: "Contact" (the mobile menu's Shipping and Returns links open its tabs) |
 

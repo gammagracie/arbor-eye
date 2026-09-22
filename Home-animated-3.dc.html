@@ -206,8 +206,8 @@ class Component extends DCLogic {
     if (open) window.scrollTo({ top: 0, behavior: 'instant' });
     this.setState({ menuOpen: open });
   }
-  // Animated logo (H4): as H2, but once the sequence has finished the Tree of Life fades away, leaving the plain wordmark,
-  // which eases up 8px so it sits exactly where the static logo sits on every other page.
+  // Animated logo (H4): as H2, but as the tree turns into the ampersand it also fades away, leaving the plain wordmark,
+  // which eases up 8px at the same time so it sits exactly where the static logo sits on every other page.
   // Animated logo (secondary home): the wordmark SVG is fetched and inlined here rather than templated, then the
   // tree-to-ampersand sequence plays once (6.6s) and holds its final frame. The view covers the whole final mark
   // (leaves above the wordmark, stem below) and is sized so the letters' cap height matches the text logo (19.9px);
@@ -243,13 +243,15 @@ class Component extends DCLogic {
       $('ae-amp').setAttribute('opacity', swap.toFixed(3));
     };
     const t0 = performance.now();
+    let fading = false;
     const frame = now => {
       const e = Math.min((now - t0) / 1000, END); apply(e);
+      if (e >= 4.2 && !fading) {   // as the ampersand swap begins (4.2s, 1s): the tree fades away and the wordmark eases up, all together
+        fading = true;
+        ['ae-tree-keep', 'ae-core'].forEach(id => { const g = $(id); g.style.transition = 'opacity 1s ease-in-out'; g.style.opacity = '0'; });
+        holder.style.transition = 'transform 1s cubic-bezier(0.45, 0, 0.15, 1)'; holder.style.transform = 'translateY(-8px)';
+      }
       if (e < END) this.logoRaf = requestAnimationFrame(frame);
-      else setTimeout(() => {
-        ['ae-tree-keep', 'ae-core'].forEach(id => { const g = $(id); g.style.transition = 'opacity 0.9s ease'; g.style.opacity = '0'; });
-        holder.style.transition = 'transform 0.9s cubic-bezier(0.45, 0, 0.15, 1)'; holder.style.transform = 'translateY(-8px)';
-      }, 400);
     };
     this.logoRaf = requestAnimationFrame(frame);
   }
