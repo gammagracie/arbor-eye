@@ -22,6 +22,8 @@ button { font-family: inherit; }
 
 /* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
 .page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
 
 /* header */
 header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
@@ -75,7 +77,7 @@ html.touch .caption { opacity: 1; }
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; }
 .track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
-.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 2px; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 0; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
 html.touch .track { touch-action: none; }
