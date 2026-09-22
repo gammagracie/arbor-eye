@@ -35,7 +35,7 @@ html { scrollbar-gutter: stable; }
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
-    <a href="Home.dc.html" aria-label="Arbor &amp; Eye" style="display: block; width: 249px; height: 33.4px; flex: none"><span id="ae-logo" style="display: block; width: 100%; height: 100%"></span></a>
+    <a href="Home.dc.html" style="position: relative; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span id="ae-logo" aria-label="Arbor &amp; Eye" style="position: absolute; left: 0; top: -14.9px; width: 188.2px; height: 51.2px; display: block"></span></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
@@ -201,14 +201,16 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   // Animated logo (secondary home): the wordmark SVG is fetched and inlined here rather than templated, then the
-  // tree-to-ampersand sequence plays once (6.6s) and holds its final frame. The view is cropped to the wordmark and
-  // sized to match the text logo (249px wide); the tree overflows above it while it plays.
+  // tree-to-ampersand sequence plays once (6.6s) and holds its final frame. The view covers the whole final mark
+  // (leaves above the wordmark, stem below) and is sized so the letters' cap height matches the text logo (19.9px);
+  // the text logo stays in the link, invisible, so the header keeps exactly the layout of every other page, and the
+  // mark is overlaid with its letters on that hidden text's baseline. The tree overflows above the header while it plays.
   async startLogo() {
     const holder = document.getElementById('ae-logo');
     if (!holder) return;
     holder.innerHTML = await (await fetch('uploads/logo-animation.svg')).text();
     const svg = holder.querySelector('svg');
-    svg.setAttribute('viewBox', '132.4 186.2 1123.5 150.4');
+    svg.setAttribute('viewBox', '132.4 57.8 1123.5 305.4');
     svg.style.overflow = 'visible';
     svg.style.fill = '#141414';
     const $ = id => holder.querySelector('#' + id);
