@@ -225,10 +225,10 @@ class Component extends DCLogic {
     const T = { cx: 573.56, cy: 959.55, h: 1211.5 }, A = { cx: 875.2, cy: 261.39, h: 150.42 };
     // START/LIFT0: the tree's opening scale and height above the ampersand centre (chosen so the whole tree sits inside
     // the header from the first frame); ENDS/LIFT1: its resting scale and height once it has settled into the wordmark
-    const START = 2.3, ENDS = 2.035, LIFT0 = 20, LIFT1 = 51, SHIFTX0 = -3, SHIFTX1 = 0, END = 6.6, fit = A.h / T.h;
+    const START = 2.3, ENDS = 2.035, LIFT0 = 20, LIFT1 = 51, SHIFTX0 = -3, SHIFTX1 = 0, END = 5.3, fit = A.h / T.h;
     const tree = $('ae-tree');
     const apply = e => {
-      const treeIn = outCubic(seg(e, 0.1, 0.8)), textIn = outCubic(seg(e, 1.0, 2.2)), shrink = inOutSine(seg(e, 2.9, 2.6)), swap = inOutCubic(seg(e, 5.5, 1.0));
+      const treeIn = outCubic(seg(e, 0.1, 0.8)), textIn = outCubic(seg(e, 1.0, 2.2)), shrink = inOutSine(seg(e, 2.9, 1.04)), swap = inOutCubic(seg(e, 4.2, 1.0));   // the rise into place is 2.5x quicker than the storyboard (1.04s), and the ampersand swap follows straight after
       const sc = fit * (START + (ENDS - START) * shrink), lift = LIFT0 + (LIFT1 - LIFT0) * shrink, sx = SHIFTX0 + (SHIFTX1 - SHIFTX0) * shrink;
       tree.setAttribute('transform', 'translate(' + (A.cx + sx).toFixed(2) + ' ' + (A.cy - lift).toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(' + (-T.cx) + ' ' + (-T.cy) + ')');
       $('ae-tree-e').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
