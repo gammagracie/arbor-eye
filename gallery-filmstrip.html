@@ -89,7 +89,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while H2 / H3 / H4 / G3 / G4 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H2 / H3 / H4 / G3 / G4 / G5 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
@@ -110,6 +110,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="Gallery.dc.html">Gallery</a>
           <a class="on" href="gallery-filmstrip.html">G3</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
+          <a href="gallery-filmstrip-2.html">G5</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
@@ -125,6 +126,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="Gallery.dc.html">Gallery</a>
     <a href="gallery-filmstrip.html" style="font-weight: 600">G3</a>
     <a href="Gallery-horizontal.dc.html">G4</a>
+    <a href="gallery-filmstrip-2.html">G5</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
@@ -257,7 +259,7 @@ function show(k, scrollIntoView) {
   const swap = () => { if (turn !== turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); front = 1 - front; };
   next.alt = w.t;
   next.src = 'assets/works/' + w.f;
-  (next.decode ? next.decode() : Promise.resolve()).then(swap, swap);
+  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
   [k - 1, k + 1].forEach(n => { new Image().src = 'assets/works/' + WORKS[(n + WORKS.length) % WORKS.length].f; });   // neighbours ready for the arrows
   art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
   $('capTitle').textContent = w.t;

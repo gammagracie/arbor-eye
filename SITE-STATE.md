@@ -16,6 +16,7 @@ Local copies: working copy in `~/Desktop/art-arbor-gallery-NED/archive/Art-Arbor
 | `Gallery-horizontal.dc.html` | Gallery, horizontal scroll: the clean grid's cells two rows deep, running off the right edge | yes, temporary: "G4" |
 | `Home-animated-2.dc.html` | Third home: as H2, but the tree fades in already at its resting size and height (no large-to-small phase) and nothing moves afterwards; the mark sits at H2's resting position throughout. | yes, temporary: "H3" (after H2) |
 | `Home-animated-3.dc.html` | Fourth home: as H2, but as the tree turns into the ampersand (4.2s, over 1s) it also fades away and the wordmark eases up 8px, all at once, ending on the plain wordmark exactly where the static logo sits on every other page. Plays once, no loop. | yes, temporary: "H4" (after H3) |
+| `gallery-filmstrip-2.html` | Gallery, filmstrip with a count switch: one, two, three or four works side by side above the filmstrip (opens on two) | yes, temporary: "G5" (after G4) |
 | `About.dc.html` | About | yes |
 | `Contact-tabs.dc.html` | Contact: form + Contact / Shipping / Returns tabs | yes: "Contact" (the mobile menu's Shipping and Returns links open its tabs) |
 
@@ -30,7 +31,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - **Mobile menu** (under 768px): hamburger becomes an X; the menu slides down as a fixed overlay between header and footer, footer pinned to the bottom of the screen, page scroll locked. Items: Gallery, About, Contact, Shipping, Returns & Exchanges, then Login/Account and Shopping Cart rows with icons (account/bag icons leave the header whenever the hamburger shows). Double spacing between items.
 - **Fonts**: Neuzeit Grotesk (self-hosted in `assets/fonts/`, loaded through `assets/fonts/neuzeit.css`; Light 300, Regular 400, Bold 700, with 600 resolving to Bold) for all sans text, falling back to Helvetica Neue; EB Garamond (Google Fonts) for headings and work titles.
 - **Logo**: the supplied SVG wordmark (`uploads/arbor-eye-wordmark.svg`, from `ART/Logo/Wordmark/SVG`, cropped to the mark) on every page except H2, drawn in the text colour with hover dimming. It is sized so its capitals match the former text logo's cap height (20px), making it 188px wide, and sits on the same baseline; the former text logo is kept in the link invisibly so the header layout is unchanged at every screen size (the link is clipped to the mark's 188px width so the narrowest phones keep logo and hamburger on one row). H2 shows the same wordmark as the final frame of its animation. Licence for Neuzeit Grotesk to be confirmed before launch.
-- **Temporary nav items**: the header nav and mobile menu read H2 · H3 · H4 · Gallery · G3 · G4 · About · Contact while the alternates are under review (H2 / H3 / H4 animated-logo homes, G3 filmstrip, G4 horizontal scroll). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
+- **Temporary nav items**: the header nav and mobile menu read H2 · H3 · H4 · Gallery · G3 · G4 · G5 · About · Contact while the alternates are under review (H2 / H3 / H4 animated-logo homes, G3 filmstrip, G4 horizontal scroll, G5 multi-up filmstrip). While they are there, temporary rules tighten the nav below 1280px (12px text; 11px and closer spacing under 900px) so the header stays on one line. Remove the extra items and those rules together.
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
@@ -56,6 +57,12 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - Clicking a work opens the detail view; `#Title` in the URL opens it directly.
 - Brilliance is the first work in the gallery (per Ned); Canopy (file DSC01754) is the last.
 - Per-work details live in a `DETAILS` map keyed by title. Acrylic and pastel on canvas, 11 x 24 in, with a one-line description: Script, Brilliance, Canopy, Passage (The Turning 8 scan), Conduit (Core 13), Symbiosis (Core 12), Chamber (Core 15), Upwelling (Core 18), Coastal Silence (Ascent 5), Crossings (Structure 4), Habitat (Core 16), Aurora (Select 2), Resonance (Select 8); the same medium and size without a description: Outliers 1, 3 and 4. Everything else defaults to watercolour on paper, 4 x 6 in.
+
+## Gallery, multi-up filmstrip (`gallery-filmstrip-2.html`, "G5")
+
+- A copy of the filmstrip gallery with a **count switch** at the top right of the content area (four square icons: one solid square, then two, three and four vertical bars; the active one black, the rest pale; hidden on phones, which stay one-up). It sets how many works are featured side by side: 1 (exactly the G3 behaviour), 2 (the default on load), 3 or 4.
+- The featured works form a centred row, all the same height, 28px apart, as large as the stage allows; the chevrons hug the row's ends. Each work crossfades when it changes, hovering any of them shows its title below the row, and clicking opens its detail view.
+- The featured set is a window over the list: the filmstrip thumbnails of every featured work get the active treatment (black outline, full colour). Clicking a thumbnail slides the window to it (that work becomes the leftmost, unless it is within the last few, when the window stops at the end of the list). Changing the count keeps the first featured work and extends or trims the window from there. Arrows, arrow keys and swipes move the window one work at a time; one-up wraps round at the ends, wider windows stop at them. The URL hash names the first featured work.
 
 ## Gallery, horizontal scroll version (`Gallery-horizontal.dc.html`)
 
