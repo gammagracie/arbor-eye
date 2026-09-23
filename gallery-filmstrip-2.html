@@ -74,7 +74,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: 39px; height: 108px; }
 @media (max-width: 767px) { .step svg { width: 20px; height: 56px; } }
-.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 html.touch .caption { opacity: 1; }
@@ -257,7 +257,7 @@ function buildSlots(n) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; page.classList.add('hovering'); });
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); placeCaption(); page.classList.add('hovering'); });
     a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
     row.appendChild(a); slots.push(slot);
   }
@@ -273,10 +273,13 @@ function fit() {
   let total = gap * (count - 1);
   slots.forEach(s => { const w = h * WORKS[s.idx].r; s.a.style.width = w + 'px'; s.a.style.height = h + 'px'; total += w; });
   $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
-  // sit the hover title midway between the bottom of the row and the top of the thumbnails
+  // sit the hover title midway between the bottom of the row and the top of the thumbnails, under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - h) / 2;
-  caption.style.transform = 'translateY(' + ((rowBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2)).toFixed(1) + 'px)';
+  capDy = (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2);
+  placeCaption();
 }
+let capDx = 0, capDy = 0;
+function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + capDy.toFixed(1) + 'px)'; }
 
 // put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
 function assign(slot, k) {
@@ -324,7 +327,7 @@ function setWindow(f, scrollIntoView, dir) {
   first = current = f;
   if (moving) slideTo(ks, dir || (f > slots[0].idx ? 1 : -1)); else slots.forEach((s, i) => assign(s, ks[i]));
   [...track.children].forEach((b, i) => { const on = i >= f && i < f + count; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
-  $('capTitle').textContent = WORKS[f].t;
+  $('capTitle').textContent = WORKS[f].t; capDx = 0; placeCaption();
   if (scrollIntoView) centreOn(track.children[f + Math.floor((count - 1) / 2)]);
   [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works/' + WORKS[n].f; });   // neighbours ready for the arrows
   history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
