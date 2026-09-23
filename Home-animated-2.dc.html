@@ -25,7 +25,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while H2 / H3 / H4 / G3 / G4 / G5 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H3 / H4 / G3 / G4 / G5 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -41,7 +41,6 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="Home-animated.dc.html">H2</a>
           <a href="Home-animated-2.dc.html" style="font-weight: 600">H3</a>
           <a href="Home-animated-3.dc.html">H4</a>
           <a href="Gallery.dc.html">Gallery</a>
@@ -76,7 +75,6 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="Home-animated.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
   <a href="Home-animated-2.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">H3</a>
   <a href="Home-animated-3.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H4</a>
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
