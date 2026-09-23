@@ -328,8 +328,8 @@ function setWindow(f, scrollIntoView, dir) {
   [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works/' + WORKS[n].f; });   // neighbours ready for the arrows
   history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
 }
-// one-up wraps round at the ends; wider windows stop at them
-function stepBy(d) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d, true, d); }
+// arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
+function stepBy(d) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d * count, true, d); }
 // change how many works show at once, keeping the current first work ("extend from current")
 function setCount(n) {
   count = n;
