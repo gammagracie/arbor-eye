@@ -291,7 +291,8 @@ function assign(slot, k) {
 }
 
 // slide the row: the current works glide out one way while the new set glides in from the other, moving together
-// like a belt (d = +1 forwards, -1 backwards); the incoming images are decoded before anything moves
+// like a belt. d = +1 for the right arrow (the works travel to the right, the new set arriving from the left),
+// -1 for the left arrow; the incoming images are decoded before anything moves
 let outRow = null;
 async function slideTo(ks, d) {
   if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
@@ -306,11 +307,11 @@ async function slideTo(ks, d) {
   });
   fit();
   const dist = outW / 2 + 28 + row.getBoundingClientRect().width / 2;
-  row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) translateX(' + (d * dist) + 'px)';
+  row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) translateX(' + (-d * dist) + 'px)';
   void row.offsetWidth;
   const ease = 'transform 0.65s cubic-bezier(0.45, 0, 0.15, 1)';
   row.style.transition = ease; out.style.transition = ease;
-  row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) translateX(' + (-d * dist) + 'px)';
+  row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) translateX(' + (d * dist) + 'px)';
   setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 700);
 }
 
