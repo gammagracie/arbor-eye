@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gallery (filmstrip) — Arbor &amp; Eye</title>
+<title>Gallery (filmstrip, multi) — Arbor &amp; Eye</title>
 <link rel="stylesheet" href="assets/fonts/neuzeit.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -54,9 +54,18 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 
 /* stage: the selected work, as large as the space allows */
 /* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
-.stage { flex: 1; min-height: 0; position: relative; margin: 16px var(--side-pad) 0; }
-@media (min-width: 768px) { .stage { margin: 16px max(24px, 3vw) 0; } }
-.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; }
+/* count switch (top right of the content area): how many works show side by side; phones are always one-up */
+.tools { flex: none; display: flex; justify-content: flex-end; gap: 14px; padding: 14px var(--side-pad) 0; }
+@media (min-width: 768px) { .tools { padding: 14px max(24px, 3vw) 0; } }
+@media (max-width: 767px) { .tools { display: none; } }
+.count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
+.count:hover { color: #6E6B66; } .count.on { color: #141414; }
+.count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; }
+@media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
+/* the featured works sit in a centred row, all the same height, a gap apart */
+.row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; }
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; }
 .art img.on { opacity: 1; }
 /* previous / next chevrons either side of the work (placed by fit()) */
@@ -108,9 +117,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
           <a href="Home-animated-2.dc.html">H3</a>
           <a href="Home-animated-3.dc.html">H4</a>
     <a href="Gallery.dc.html">Gallery</a>
-          <a class="on" href="gallery-filmstrip.html">G3</a>
+          <a href="gallery-filmstrip.html">G3</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
-          <a href="gallery-filmstrip-2.html">G5</a>
+          <a class="on" href="gallery-filmstrip-2.html">G5</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
@@ -124,9 +133,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   </header>
   <nav class="menu" aria-label="Mobile menu">
     <a href="Gallery.dc.html">Gallery</a>
-    <a href="gallery-filmstrip.html" style="font-weight: 600">G3</a>
+    <a href="gallery-filmstrip.html">G3</a>
     <a href="Gallery-horizontal.dc.html">G4</a>
-    <a href="gallery-filmstrip-2.html">G5</a>
+    <a href="gallery-filmstrip-2.html" style="font-weight: 600">G5</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
@@ -135,10 +144,15 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span class="badge">1</span></span>Shopping Cart</a>
   </nav>
 
+  <div class="tools" id="tools" role="group" aria-label="Works shown at once">
+    <button class="count" data-n="1" aria-label="1 work at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="18.00" height="18"></rect></svg></button>
+    <button class="count" data-n="2" aria-label="2 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="8.00" height="18"></rect><rect x="10.00" y="0" width="8.00" height="18"></rect></svg></button>
+    <button class="count" data-n="3" aria-label="3 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="4.67" height="18"></rect><rect x="6.67" y="0" width="4.67" height="18"></rect><rect x="13.33" y="0" width="4.67" height="18"></rect></svg></button>
+    <button class="count" data-n="4" aria-label="4 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="3.00" height="18"></rect><rect x="5.00" y="0" width="3.00" height="18"></rect><rect x="10.00" y="0" width="3.00" height="18"></rect><rect x="15.00" y="0" width="3.00" height="18"></rect></svg></button>
+  </div>
+
   <main class="stage" id="stage">
-    <a class="art" id="art" href="#" aria-label="View work details">
-      <img id="imgA" alt=""><img id="imgB" alt="">
-    </a>
+    <div class="row" id="row"></div>
     <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
     <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
   </main>
@@ -228,45 +242,78 @@ const WORKS = [
 ];
 
 const $ = id => document.getElementById(id);
-const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
+const stage = $('stage'), row = $('row'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
 // The filmstrip glides and magnifies for both mouse and finger. The "touch" class (title always shown) starts
 // from the media query, then follows the input actually used.
 let lastTouch = 0, touching = false;
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
-const imgs = [$('imgA'), $('imgB')];
-let current = -1, front = 0, turns = 0;
-
-// size the artwork box to the largest size that fits the stage, keeping the work's own proportions
-function fit() {
-  if (current < 0) return;
-  const r = WORKS[current].r, step = $('prev').offsetWidth, W = stage.clientWidth - 2 * step, H = stage.clientHeight;
-  const w = Math.min(W, H * r);
-  $('prev').style.left = $('next').style.right = ((stage.clientWidth - w) / 2 - step) + 'px';   // chevrons hug the work
-  art.style.width = w + 'px';
-  art.style.height = (w / r) + 'px';
-  // sit the hover title midway between the bottom of the work and the top of the thumbnails
-  const sb = stage.getBoundingClientRect().bottom, artBottom = sb - (H - w / r) / 2;
-  caption.style.transform = 'translateY(' + ((artBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2)).toFixed(1) + 'px)';
+// A window of `count` works starting at `first` is featured in the row; each slot crossfades between two images.
+const phone = matchMedia('(max-width: 767px)');
+let count = phone.matches ? 1 : 2, deskCount = 2, first = 0, current = 0;
+const slots = [];
+function buildSlots(n) {
+  row.innerHTML = ''; slots.length = 0;
+  for (let i = 0; i < n; i++) {
+    const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
+    const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
+    const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; page.classList.add('hovering'); });
+    a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
+    row.appendChild(a); slots.push(slot);
+  }
 }
 
-function show(k, scrollIntoView) {
-  k = (k + WORKS.length) % WORKS.length;
-  if (k === current) return;
-  current = k;
-  // soft crossfade: the incoming image is fully decoded first, then fades in over the outgoing one (once per change,
-  // and only for the latest request if arrows are tapped quickly)
-  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], turn = ++turns;
-  const swap = () => { if (turn !== turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); front = 1 - front; };
+// size the row: every featured work the same height, as large as the stage allows, chevrons hugging the row
+function fit() {
+  if (!slots.length || slots.some(s => s.idx < 0)) return;
+  const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0;
+  const W = stage.clientWidth - 2 * step - gap * (count - 1), H = stage.clientHeight;
+  const sumR = slots.reduce((t, s) => t + WORKS[s.idx].r, 0);
+  const h = Math.min(H, W / sumR);
+  let total = gap * (count - 1);
+  slots.forEach(s => { const w = h * WORKS[s.idx].r; s.a.style.width = w + 'px'; s.a.style.height = h + 'px'; total += w; });
+  $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
+  // sit the hover title midway between the bottom of the row and the top of the thumbnails
+  const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - h) / 2;
+  caption.style.transform = 'translateY(' + ((rowBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2)).toFixed(1) + 'px)';
+}
+
+// put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
+function assign(slot, k) {
+  if (slot.idx === k) return;
+  slot.idx = k;
+  const w = WORKS[k], next = slot.imgs[1 - slot.front], prev = slot.imgs[slot.front], turn = ++slot.turns;
+  const swap = () => { if (turn !== slot.turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); slot.front = 1 - slot.front; };
   next.alt = w.t;
   next.src = 'assets/works/' + w.f;
   Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
-  [k - 1, k + 1].forEach(n => { new Image().src = 'assets/works/' + WORKS[(n + WORKS.length) % WORKS.length].f; });   // neighbours ready for the arrows
-  art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
-  $('capTitle').textContent = w.t;
-  [...track.children].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
-  if (scrollIntoView) centreOn(track.children[k]);
-  history.replaceState(null, '', '#' + encodeURIComponent(w.f));
+  slot.a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
 }
+
+// feature the works from f onward (the window never runs past the end of the list)
+function setWindow(f, scrollIntoView) {
+  f = Math.max(0, Math.min(WORKS.length - count, f));
+  first = current = f;
+  slots.forEach((s, i) => assign(s, f + i));
+  [...track.children].forEach((b, i) => { const on = i >= f && i < f + count; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  $('capTitle').textContent = WORKS[f].t;
+  if (scrollIntoView) centreOn(track.children[f + Math.floor((count - 1) / 2)]);
+  [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works/' + WORKS[n].f; });   // neighbours ready for the arrows
+  history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
+}
+// one-up wraps round at the ends; wider windows stop at them
+function stepBy(d) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d, true); }
+// change how many works show at once, keeping the current first work ("extend from current")
+function setCount(n) {
+  count = n;
+  if (!phone.matches) deskCount = n;
+  [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === n));
+  buildSlots(n);
+  setWindow(first, false);
+}
+[...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
+phone.addEventListener('change', () => setCount(phone.matches ? 1 : deskCount));
+function show(k, scrollIntoView) { setWindow(k, scrollIntoView); }   // thumbnail click: the window slides to that work
 
 // build the strip
 WORKS.forEach((w, k) => {
@@ -379,20 +426,18 @@ addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follo
   strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; drive = null; run(); }, { passive: false });
 }
 
-// title on hover, keyboard, resize
-art.addEventListener('mouseenter', () => page.classList.add('hovering'));
-art.addEventListener('mouseleave', () => page.classList.remove('hovering'));
-addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(current + 1, true); if (e.key === 'ArrowLeft') show(current - 1, true); });
+// keyboard, resize
+addEventListener('keydown', e => { if (e.key === 'ArrowRight') stepBy(1); if (e.key === 'ArrowLeft') stepBy(-1); });
 addEventListener('resize', fit);
 new ResizeObserver(fit).observe(stage);
 
-$('prev').addEventListener('click', () => show(current - 1, true));
-$('next').addEventListener('click', () => show(current + 1, true));
+$('prev').addEventListener('click', () => stepBy(-1));
+$('next').addEventListener('click', () => stepBy(1));
 
 // swipe the main image on touch screens
 let tx = 0;
 stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-stage.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) show(current + (dx < 0 ? 1 : -1), true); });
+stage.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) stepBy(dx < 0 ? 1 : -1); });
 
 // mobile menu
 $('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
@@ -400,7 +445,9 @@ $('burger').addEventListener('click', () => document.body.classList.toggle('menu
 // start on the work named in the URL, else the first work
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
-show(start >= 0 ? start : 0, start > 0);
+[...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === count));
+buildSlots(count);
+setWindow(start >= 0 ? start : 0, start > 0);
 </script>
 </body>
 </html>
