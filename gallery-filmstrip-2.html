@@ -54,9 +54,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 
 /* stage: the selected work, as large as the space allows */
 /* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
-/* count switch (top left of the content area, where the grid gallery's switcher sits): how many works show side by side; phones are always one-up */
+/* count switch (top left, lined up with the logo like the grid gallery's switcher): how many works show side by side; phones are always one-up */
 .tools { flex: none; display: flex; justify-content: flex-start; gap: 14px; padding: 14px var(--side-pad) 0; }
-@media (min-width: 768px) { .tools { padding: 14px max(24px, 3vw) 0; } }
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -260,11 +259,14 @@ function buildSlots(n) {
   }
 }
 
-// size the row: every featured work the same height, as large as the stage allows, chevrons hugging the row
+// size the row: every featured work the same height, chevrons hugging the row. One-up: as large as the stage allows.
+// Several works: the row spans the page's content width exactly, so the first work's left edge lines up with the logo
+// and the last work's right edge with the bag icon (unless the works are so tall that the height limits them first)
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
-  const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0;
-  const W = stage.clientWidth - 2 * step - gap * (count - 1), H = stage.clientHeight;
+  const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0, H = stage.clientHeight;
+  const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
+  const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (count - 1);
   const sumR = slots.reduce((t, s) => t + WORKS[s.idx].r, 0);
   const h = Math.min(H, W / sumR);
   let total = gap * (count - 1);
