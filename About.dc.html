@@ -21,10 +21,10 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 /* About page text: 14px / 1.75 at 1320px and up, scaling down with the viewport (so text and photo heights stay in step),
    never below 11px; line height eases from 1.75 to 1.5 at the small end. Phones use fixed 15px / 1.75. */
 body { overflow-x: clip; } /* the Biography opener is full-bleed (100vw) */
-main p { font-size: 16px; }
+main p { font-size: 15px; }
 main p, main blockquote { line-height: 1.75; }
 .copy { gap: 18px; }
-@media (min-width: 768px) { main p { font-size: clamp(12.5px, 1.21vw, 16px); line-height: clamp(17.5px, 2.1vw, 28px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
+@media (min-width: 768px) { main p { font-size: clamp(12px, 1.14vw, 15px); line-height: clamp(17px, 2vw, 26.25px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
 main h1, main h2 { line-height: 1.2; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); }
@@ -102,9 +102,9 @@ html { scrollbar-gutter: stable; }
 </nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
-  <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; gap: {{ bioGap }}; align-items: center">
+  <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; gap: {{ bioGap }}; align-items: start">
     <div style="display: {{ bioSideDisplay }}"></div>
-    <div style="display: grid; gap: 16px; align-self: start">
+    <div style="display: grid; gap: 16px; align-self: start; padding-top: {{ bioTop }}">
       <div onClick="{{ bioTap }}" onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
@@ -120,7 +120,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 76px; height: auto; opacity: 0.25; justify-self: center; align-self: start; margin-top: calc((50vw - var(--side-pad)) / 2 - 79px); pointer-events: none">
+    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: start; margin-top: calc(40px + (50vw - var(--side-pad)) * 0.4 - 114px); pointer-events: none">
     <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
@@ -281,14 +281,15 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
-      // Biography opener: a square photo runs from the logo's left edge to the middle of the screen, flush with the header;
+      // Biography opener: a square photo (80% of the half-screen width) starts at the logo's left edge, 40px below the header;
       // a faint Tree of Life sits in the gap, and the copy is centred in the rest. Under 1000px it stacks: full-width square photo, then the copy.
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
-      bioCols: stack ? '1fr' : 'var(--side-pad) calc(50% - var(--side-pad)) 140px minmax(0, 1fr)',
+      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.8) 180px minmax(0, 1fr)',
+      bioTop: stack ? '0' : '40px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
       bioTextMax: stack ? 'none' : '680px',
-      bioTextPad: stack ? '0 var(--side-pad)' : '32px var(--side-pad) 32px 0',
+      bioTextPad: stack ? '0 var(--side-pad)' : '40px var(--side-pad) 32px 0',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
       sectionPadFirst: stack ? '0 0 40px' : '0 0 56px',
