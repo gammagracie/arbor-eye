@@ -120,7 +120,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: start; margin-top: calc(40px + (50vw - var(--side-pad)) * 0.4 - 114px); pointer-events: none">
+    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: center; pointer-events: none">
     <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
@@ -281,10 +281,10 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
-      // Biography opener: a square photo (80% of the half-screen width) starts at the logo's left edge, 40px below the header;
+      // Biography opener: a square photo (88% of the half-screen width) starts at the logo's left edge, 40px below the header;
       // a faint Tree of Life sits in the gap, and the copy is centred in the rest. Under 1000px it stacks: full-width square photo, then the copy.
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
-      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.8) 180px minmax(0, 1fr)',
+      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.88) 130px minmax(0, 1fr)',
       bioTop: stack ? '0' : '40px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
