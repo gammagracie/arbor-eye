@@ -120,7 +120,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: center; pointer-events: none">
+    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: center; margin-top: {{ bioTop }}; pointer-events: none">
     <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
@@ -139,6 +139,14 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
 
+  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}">
+    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: center; scroll-margin-top: 40px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </section>
+  <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ true }}">
   <section data-screen-label="About — Tree of Life" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
     <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
     <div>
@@ -149,7 +157,9 @@ html { scrollbar-gutter: stable; }
       </div>
     </div>
   </section>
+  </sc-if>
 
+  <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Process" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
     <div style="display: grid; gap: 16px; order: {{ procImgOrder }}">
       <div onClick="{{ procTap }}" onTouchStart="{{ procTouchStart }}" onTouchEnd="{{ procTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
@@ -175,7 +185,9 @@ html { scrollbar-gutter: stable; }
       </div>
     </div>
   </section>
+  </sc-if>
 
+  <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Film" style="padding: {{ sectionPad }}">
     <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden">
       <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
@@ -206,6 +218,7 @@ html { scrollbar-gutter: stable; }
       </div>
     </div>
   </section>
+  </sc-if>
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
@@ -227,7 +240,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, bio: 0, proc: 0, stu: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'tree', bio: 0, proc: 0, stu: 0 };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -235,6 +248,9 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
+    // #tree / #process / #studio deep links open that tab
+    const pick = () => { const h = location.hash.slice(1); if (['tree', 'process', 'studio'].includes(h)) this.setState({ tab: h }); };
+    pick(); this.onHash = pick; window.addEventListener('hashchange', this.onHash);
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -244,7 +260,7 @@ class Component extends DCLogic {
     this.mqStack.addEventListener('change', this.onMqStack);
     this.setState({ stack: this.mqStack.matches });
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
+  componentWillUnmount() { window.removeEventListener('hashchange', this.onHash); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
   car(key, n) {
     const i = this.state[key];
     const out = {};
@@ -281,19 +297,27 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
-      // Biography opener: a square photo (88% of the half-screen width) starts at the logo's left edge, 40px below the header;
+      // Biography opener: a square photo (88% of the half-screen width) starts at the logo's left edge, 60px below the header;
       // a faint Tree of Life sits in the gap, and the copy is centred in the rest. Under 1000px it stacks: full-width square photo, then the copy.
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
       bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.88) 130px minmax(0, 1fr)',
-      bioTop: stack ? '0' : '40px', // clear space above the photo; the copy's top lines up with the photo's
+      bioTop: stack ? '0' : '60px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
-      bioTextMax: stack ? 'none' : '680px',
-      bioTextPad: stack ? '0 var(--side-pad)' : '40px var(--side-pad) 32px 0',
+      bioTextMax: 'none', // the copy always runs out to the bag icon's line
+      bioTextPad: stack ? '0 var(--side-pad)' : '60px var(--side-pad) 32px 0',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
       sectionPadFirst: stack ? '0 0 40px' : '0 0 56px',
       sectionPad: m ? '40px 0' : '72px 0',
+      // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
+      tabsPad: m ? '8px 0 0' : '16px 0 0',
+      tabGap: m ? '24px' : '40px',
+      tabs: [['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
+        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + k); },
+        weight: this.state.tab === k ? 600 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
+      })),
+      tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
       quotePad: m ? '28px 0' : '52px 0 44px',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',
       quoteSize: m ? '20px' : '27px',
