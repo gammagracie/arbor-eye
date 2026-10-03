@@ -279,7 +279,7 @@ function fit() {
   const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.492 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
   const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(R)), 0);
-  const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR);
+  const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 1 : 0.95);   // one-up and twelve-up sit at 95% of the space, for more room above and below
   slots.forEach(s => { s.a.style.width = h * R(s) + 'px'; s.a.style.height = h + 'px'; });
   const total = h * sumR + gap * (nc - 1), rowH = h * nr + rowGap * (nr - 1);
   $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
