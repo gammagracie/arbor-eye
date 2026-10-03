@@ -195,7 +195,7 @@ html { scrollbar-gutter: stable; }
             </button>
           </div>
         </div>
-        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start">
+        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: 14px; color: #6E6B66; padding-top: 8px">
@@ -331,7 +331,7 @@ const DETAILS = {
   'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g2', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g2', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailShift: 0, detailView: 0 };
   arts = [
     ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
@@ -434,7 +434,16 @@ class Component extends DCLogic {
     if (open) window.scrollTo({ top: 0, behavior: 'instant' });
     this.setState({ menuOpen: open });
   }
+  // detail view (desktop and tablet): the text block moves left to the midpoint of the white space between it and the artwork
+  measureDetail() {
+    const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
+    const text = img && img.parentElement.nextElementSibling;
+    let x = 0;
+    if (img && text && !this.state.mobile) x = Math.max(0, (text.offsetLeft - (img.parentElement.offsetLeft + img.offsetLeft + img.offsetWidth)) / 2);
+    if (Math.abs(x - this.state.detailShift) > 0.5) this.setState({ detailShift: x });
+  }
   componentDidMount() {
+    this.onResize = () => this.measureDetail(); window.addEventListener('resize', this.onResize);
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -498,13 +507,14 @@ class Component extends DCLogic {
   }
   // back from a work: return the row to where it was; new filter or row count: start again from the left
   componentDidUpdate() {
+    this.measureDetail();
     const grid = this.state.sel == null, key = this.state.series + '|' + this.state.avail + '|' + this.state.layout;
     const el = document.querySelector('.hscroll');
     if (el && grid && this.wasGrid === false) el.scrollLeft = this.hPos || 0;
     if (el && this.filterKey !== undefined && this.filterKey !== key) { el.scrollLeft = 0; this.hTarget = 0; }
     this.wasGrid = grid; this.filterKey = key;
   }
-  componentWillUnmount() { window.removeEventListener('wheel', this.onWheel); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('wheel', this.onWheel); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
   renderVals() {
     const cartCount = (this.props.cartCount ?? 1) + this.state.added;
     const hoverTitles = this.props.hoverTitles ?? true;
@@ -661,6 +671,7 @@ class Component extends DCLogic {
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         style: Object.assign({ width: 'min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: '0 auto' }, framed(views[this.state.detailView][0])) }),
+      detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',

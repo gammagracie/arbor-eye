@@ -155,7 +155,7 @@ html { scrollbar-gutter: stable; }
       </div>
       <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
-          <div class="work" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: {{ cellRatio }}; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)" style-hover="transform: scale(1.03)">
+          <div class="work" data-file="{{ c.src }}" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: {{ cellRatio }}; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)" style-hover="transform: scale(1.03)">
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
@@ -187,7 +187,7 @@ html { scrollbar-gutter: stable; }
             </button>
           </div>
         </div>
-        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start">
+        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: 14px; color: #6E6B66; padding-top: 8px">
@@ -323,7 +323,7 @@ const DETAILS = {
   'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailShift: 0, detailView: 0 };
   arts = [
     ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
@@ -426,7 +426,75 @@ class Component extends DCLogic {
     if (open) window.scrollTo({ top: 0, behavior: 'instant' });
     this.setState({ menuOpen: open });
   }
+  // detail view (desktop and tablet): the text block moves left to the midpoint of the white space between it and the artwork
+  measureDetail() {
+    const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
+    const text = img && img.parentElement.nextElementSibling;
+    let x = 0;
+    if (img && text && !this.state.mobile) x = Math.max(0, (text.offsetLeft - (img.parentElement.offsetLeft + img.offsetLeft + img.offsetWidth)) / 2);
+    if (Math.abs(x - this.state.detailShift) > 0.5) this.setState({ detailShift: x });
+  }
+  shows(a, st) { return !a.hidden && (st.series === 'All' || a.series === st.series || a.orient === st.series) && (st.avail === 'All' || a.avail === st.avail); }
+  // ---- Filter change (desktop and tablet): the works leaving shrink away first; then the ones that stay glide to their new
+  // places while the newcomers rise in behind them, each a beat after the last
+  shuffleTo(patch) {
+    const next = Object.assign({}, this.state, patch);
+    const cards = [...document.querySelectorAll('.work[data-file]')];
+    if (this.state.mobile || !cards.length) { this.setState(Object.assign({ openMenu: null }, patch)); return; }
+    this.flipFrom = new Map(cards.map(c => [c.dataset.file, c.getBoundingClientRect()]));
+    let leaving = 0;
+    cards.forEach((c, i) => {
+      if (this.arts.some(a => a.src === c.dataset.file && this.shows(a, next))) return;
+      leaving++; c.style.transition = 'opacity 0.3s ease, transform 0.3s ease'; c.style.transitionDelay = Math.min(i * 10, 150) + 'ms';
+      c.style.opacity = '0'; c.style.transform = 'scale(0.9)'; c.style.pointerEvents = 'none';
+    });
+    clearTimeout(this.flipT);
+    this.flipT = setTimeout(() => this.setState(Object.assign({ openMenu: null }, patch)), leaving ? 320 : 0);
+  }
+  flip() {
+    const from = this.flipFrom; this.flipFrom = null;
+    const cards = [...document.querySelectorAll('.work[data-file]')];
+    let n = 0;
+    cards.forEach(c => {
+      const was = from.get(c.dataset.file), now = c.getBoundingClientRect();
+      c.style.transition = 'none'; c.style.pointerEvents = 'none';
+      if (was) { c.style.transform = 'translate(' + (was.left - now.left) + 'px, ' + (was.top - now.top) + 'px)'; c.style.opacity = '1'; }
+      else { c.style.transform = 'translateY(28px) scale(0.94)'; c.style.opacity = '0'; }
+      c.style.transitionDelay = ((was ? 0 : 140) + Math.min(n++ * 26, 400)) + 'ms';
+    });
+    void document.body.offsetWidth;
+    cards.forEach(c => { c.style.transition = 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease'; c.style.transform = ''; c.style.opacity = ''; });
+    clearTimeout(this.flipDone);
+    this.flipDone = setTimeout(() => cards.forEach(c => { c.style.transition = ''; c.style.transitionDelay = ''; c.style.pointerEvents = ''; }), 1400);
+  }
+  // ---- Eased scrolling (mouse wheel and trackpad): the page glides toward where the wheel asks instead of stepping
+  easeScroll() {
+    let target = 0, gliding = false, last = 0;
+    const max = () => document.documentElement.scrollHeight - window.innerHeight;
+    const glide = () => {
+      if (gliding) return; gliding = true; last = performance.now();
+      const step = now => {
+        const dt = Math.min(64, now - last); last = now;
+        const cur = window.scrollY, d = target - cur;
+        if (Math.abs(d) < 0.5) { window.scrollTo({ top: target, behavior: 'instant' }); gliding = false; return; }
+        window.scrollTo({ top: cur + d * (1 - Math.exp(-dt / 110)), behavior: 'instant' });
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    this.onWheel = e => {
+      if (e.ctrlKey || this.state.zoom || this.state.lightbox || this.state.menuOpen) return;   // pinch zoom; overlays and the menu scroll on their own
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1;
+      if (!gliding) target = window.scrollY;
+      target = Math.max(0, Math.min(max(), target + e.deltaY * unit));
+      glide();
+    };
+    window.addEventListener('wheel', this.onWheel, { passive: false });
+  }
   componentDidMount() {
+    this.easeScroll();
+    this.onResize = () => this.measureDetail(); window.addEventListener('resize', this.onResize);
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -459,7 +527,8 @@ class Component extends DCLogic {
     this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
     document.addEventListener('click', this.onDocClick);
   }
-  componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
+  componentDidUpdate() { this.measureDetail(); if (this.flipFrom) this.flip(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('wheel', this.onWheel); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
   renderVals() {
     const cartCount = (this.props.cartCount ?? 1) + this.state.added;
     const hoverTitles = this.props.hoverTitles ?? true;
@@ -481,9 +550,7 @@ class Component extends DCLogic {
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
     const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
     const cols = baseCols === 1 ? 1 : baseCols + (vertical ? 1 : 0);
-    const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) => !a.hidden &&
-      (this.state.series === 'All' || a.series === this.state.series || a.orient === this.state.series) &&
-      (this.state.avail === 'All' || a.avail === this.state.avail));
+    const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) => this.shows(a, this.state));
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -522,11 +589,11 @@ class Component extends DCLogic {
       availLabel: this.state.avail === 'All' ? 'Availability' : this.state.avail,
       seriesOptions: [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Outliers'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']].map(([v, label]) => ({
         label: label || v, selected: this.state.series === v, color: this.state.series === v ? '#8A867E' : '#141414',
-        pick: (e) => { e.stopPropagation(); this.setState({ series: v, openMenu: null }); }
+        pick: (e) => { e.stopPropagation(); this.shuffleTo({ series: v }); }
       })),
       availOptions: [['All', 'All Works'], ['Available'], ['Sold']].map(([v, label]) => ({
         label: label || v, selected: this.state.avail === v, color: this.state.avail === v ? '#8A867E' : '#141414',
-        pick: (e) => { e.stopPropagation(); this.setState({ avail: v, openMenu: null }); }
+        pick: (e) => { e.stopPropagation(); this.shuffleTo({ avail: v }); }
       })),
       // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size
       gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
@@ -536,7 +603,7 @@ class Component extends DCLogic {
       chipDisplay: hoverTitles ? 'block' : 'none',
       noResults: filtered.length === 0,
       cards: filtered.map(({ a, k }) => ({
-        title: a.title,
+        title: a.title, src: a.src,
         aria: 'View ' + a.title,
         img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
@@ -608,6 +675,7 @@ class Component extends DCLogic {
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         style: Object.assign({ width: 'min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: '0 auto' }, framed(views[this.state.detailView][0])) }),
+      detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',
