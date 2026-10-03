@@ -101,6 +101,7 @@ html { scrollbar-gutter: stable; }
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; aspect-ratio: 1.494; justify-self: center; position: relative">
       <span aria-hidden="true" style="position: absolute; inset: 0; background: url(uploads/arbor-mark.png) center / auto 49.7% no-repeat; opacity: 0.25; pointer-events: none"></span>
       {{ heroImg }}
+      <img src="assets/icon-512.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 42%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
@@ -108,9 +109,9 @@ html { scrollbar-gutter: stable; }
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
-        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 22px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
+        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 14px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: 1.5px solid {{ t.borderColor }}; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease" style-hover="opacity: 1">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1; transform: translateY(-4px)">
               {{ t.img }}
             </button>
           </sc-for>
@@ -144,7 +145,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: true }; // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: 'tree' }; // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -210,7 +211,8 @@ class Component extends DCLogic {
   }
   componentDidMount() {
     this.arts.forEach(a => { const im = new Image(); im.src = a.src; }); // preload so swaps are instant
-    this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); // wordmark overlay fades off after 3s
+    // intro over the first work: the Tree of Life shows for 2s, crossfades (0.9s) to the wordmark, which holds 3s and fades off
+    this.introTimer = setTimeout(() => { this.setState({ intro: 'mark' }); this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); }, 2000);
     this.mqPortrait = window.matchMedia('(orientation: portrait)');
     this.onMqPortrait = () => this.setState({ portrait: this.mqPortrait.matches });
     this.mqPortrait.addEventListener('change', this.onMqPortrait);
@@ -248,12 +250,12 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
     // desktop / tablet: the image may run wider than the side padding (to 94% of the screen) so it can fill the height on very wide-and-tall screens
     const heroW = m ? 'min(100%, ' + smallFit + ')' : 'min(94vw, ' + (this.state.tablet ? smallFit : fitW) + ')';
-    const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc(min(94vw, ' + fitW + ') * 0.033)'; // desktop / tablet thumbnails are 60% of their earlier size
+    const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc(min(94vw, ' + fitW + ') * 0.043)'; // desktop: 4.3% of the image width (tablet 31px, phones 44px)
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
     let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
-    const slot = 'calc((' + thumbH + ') * 1.494 + 3px + 22px)'; // scans are 1.494:1; 3px = border; 22px gap
+    const slot = 'calc((' + thumbH + ') * 1.494 + 14px)'; // scans are 1.494:1; 14px gap
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -276,9 +278,9 @@ class Component extends DCLogic {
       heroPad: mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
-      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 11.5px)' : m ? '28px' : 'calc(-0.3 * (' + thumbH + ' + 23px))',
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.5 * (' + thumbH + ' + 20px))',   // desktop: the thumbnails sit half their height up over the image
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
-      arrowPadBottom: m ? '8px' : '12px', // tray padding (10px) + thumbnail border (1.5px) puts the chevron on the thumbnail baseline
+      arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
       railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
@@ -287,13 +289,14 @@ class Component extends DCLogic {
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
       heroW,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
-      introOpacity: this.state.intro ? 1 : 0,
+      introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
+      introOpacity: this.state.intro === 'mark' ? 1 : 0,
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
-      hoverTitleMargin: mp ? '8.5px 0 0' : '0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 1.5 border + 8.5)
+      hoverTitleMargin: mp ? '10px 0 0' : '0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
-      railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 22px)',
+      railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 14px)',
       railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
       railTransition: this.state.animate ? 'transform 0.95s cubic-bezier(0.55, 0, 0.1, 1)' : 'none',
       railClip: this.state.animate ? 'inset(-120px 0 -20px 0)' : 'inset(-120px -60px -20px -60px)',
@@ -306,8 +309,7 @@ class Component extends DCLogic {
         vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
         img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
         alt: 'Show ' + this.arts[k].alt,
-        borderColor: k === i ? '#141414' : '#E7E4DE',
-        opacity: k === i ? 1 : 0.75,
+        opacity: k === i ? 1 : 0.5,
         select: () => this.show(k)
       }))
     };
