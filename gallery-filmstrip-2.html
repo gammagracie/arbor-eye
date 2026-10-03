@@ -12,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31px; --step-w: 32px; }
-@media (min-width: 768px) { :root { --thumb-h: 38px; --step-w: 84px; } }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: 32px; }
+@media (min-width: 768px) { :root { --thumb-h: 30px; --step-w: 84px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -408,7 +408,7 @@ function centreOn(b) {
 
 // Dock-style magnification: thumbnails swell under the cursor (bell curve), growing up from the baseline;
 // neighbours slide aside, and the thumbnail under the cursor stays under it.
-const PEAK = 0.9;              // +90% at the cursor
+const PEAK = 0.5;              // +50% at the cursor
 function magnify(x) {
   const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
   const btns = [...track.children];
