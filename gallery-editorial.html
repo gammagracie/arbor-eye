@@ -82,10 +82,13 @@ html:not(.touch) .scroller { cursor: grab; }
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
 .col { box-sizing: border-box; padding: 64px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
-.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
+.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+/* hover scale rides on top of the parallax shift; the scale eases in via --s */
+.work { --s: 1; transform: translateY(var(--py, 0px)) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+@property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
 .work:first-child { margin-top: 0; }
 .work img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
-html:not(.touch) .work:hover { transform: scale(1.05); z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
+html:not(.touch) .work:hover { --s: 1.05; z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
@@ -238,6 +241,7 @@ WORKS.forEach((w, i) => {
   a.style.setProperty('--r', w.r);
   const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
   a.style.setProperty('--k', k);
+  a.dataset.depth = (0.03 + (1 - k) * 0.16).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
@@ -245,6 +249,23 @@ WORKS.forEach((w, i) => {
   a.querySelector('.side span').textContent = w.t;
   col.appendChild(a);
 });
+
+// ---- Parallax: each work is nudged along the scroll by its depth, measured from the middle of the viewport, so the
+// stack separates into layers as it moves (front pieces travel a little faster than the ones behind).
+const works = [...col.querySelectorAll('.work')];
+let parallaxQueued = false;
+function parallax() {
+  parallaxQueued = false;
+  const vh = scroller.clientHeight, top = scroller.scrollTop, mid = top + vh / 2;
+  works.forEach(w => {
+    const centre = w.offsetTop + w.offsetHeight / 2;
+    if (Math.abs(centre - mid) > vh * 1.5) return;   // off screen: leave as is
+    w.style.setProperty('--py', ((centre - mid) * w.dataset.depth).toFixed(1) + 'px');
+  });
+}
+scroller.addEventListener('scroll', () => { if (!parallaxQueued) { parallaxQueued = true; requestAnimationFrame(parallax); } }, { passive: true });
+addEventListener('resize', parallax);
+parallax();
 
 // ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
 // Touch screens keep native scrolling. Keyboard and other native scrolls just re-sync the target.
