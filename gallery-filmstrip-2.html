@@ -91,9 +91,9 @@ html.touch .caption { opacity: 1; }
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; }
 .track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
-.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 0; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.5; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
-.thumb.on { opacity: 1; outline-color: #141414; }
+.thumb.on, .thumb:hover { opacity: 1; }   /* featured and hovered thumbnails at full strength, the rest at half; no outline */
 html.touch .track { touch-action: none; }
 
 /* footer */
@@ -422,14 +422,14 @@ function magnify(x) {
   btns.forEach((b, k) => {
     const shift = acc + extra[k] / 2 - cursorExtra; acc += extra[k];
     b.style.transform = bell[k] < 0.002 && Math.abs(shift) < 0.5 ? '' : 'translateX(' + shift.toFixed(1) + 'px) scale(' + (1 + PEAK * bell[k]).toFixed(3) + ')';
-    b.style.opacity = b.classList.contains('on') ? '' : (0.55 + 0.45 * bell[k]).toFixed(2);
+    b.style.opacity = b.classList.contains('on') ? '' : (0.5 + 0.5 * bell[k]).toFixed(2);
     b.style.zIndex = Math.round(bell[k] * 100);
   });
 }
 function relax() {
   mouseX = null; drive = null;
   if (cap !== Infinity) target = Math.max(0, Math.min(maxPan(), pos + vel * GLIDE * 0.5));   // coast to a stop rather than drifting on to the old target
-  [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
+  [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
   setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
 }
 // the row only moves while the pointer is on the thumbnails: the row itself, or a magnified thumbnail rising above it
