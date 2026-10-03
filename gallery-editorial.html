@@ -76,10 +76,10 @@ html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
 
-:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.09); }
+:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.07); }
 @media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
 /* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
-   over the one before it so they float over each other; later works sit on top */
+   over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
 .col { box-sizing: border-box; padding: 64px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
 .work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
@@ -88,8 +88,8 @@ html:not(.touch) .scroller { cursor: grab; }
 html:not(.touch) .work:hover { transform: scale(1.05); z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
-.work.r .side { left: calc(100% + 28px); align-items: flex-start; }
-.work.l .side { right: calc(100% + 28px); align-items: flex-end; }
+.work.r .side { left: calc(100% + 56px); align-items: flex-start; }
+.work.l .side { right: calc(100% + 56px); align-items: flex-end; }
 .work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 html:not(.touch) .work:hover .side { opacity: 1; }
@@ -236,8 +236,9 @@ WORKS.forEach((w, i) => {
   const a = document.createElement('a');
   a.className = 'work ' + (i % 2 ? 'l' : 'r'); a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
   a.style.setProperty('--r', w.r);
-  a.style.setProperty('--k', (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length]);
-  a.style.setProperty('--z', i + 1);
+  const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
+  a.style.setProperty('--k', k);
+  a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
   a.querySelector('img').alt = w.t;
