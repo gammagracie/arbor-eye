@@ -235,7 +235,18 @@ document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) a
 // ---- Layout: one centred stack. Widths cycle through a set of fractions of the column so the sizes keep changing
 // (portraits come out narrower still, from their own proportions); each work overlaps the previous one by --lap.
 const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
-WORKS.forEach((w, i) => {
+// Order: Brilliance opens and Canopy closes (as in the grid); between them the portraits are dealt out through the
+// landscapes one at a time after runs of 2, 3 or 4 landscapes (a fixed irregular rhythm), so neither orientation
+// ever bunches up. Each orientation keeps its own gallery order.
+const order = (() => {
+  const first = WORKS[0], last = WORKS[WORKS.length - 1], mid = WORKS.slice(1, -1);
+  const P = mid.filter(w => w.r < 1), L = mid.filter(w => w.r >= 1), runs = [3, 2, 4, 3, 2, 3, 4, 2, 3];
+  const out = [first];
+  P.forEach((p, i) => { out.push(...L.splice(0, Math.min(runs[i % runs.length], Math.max(1, Math.round(L.length / (P.length - i)))))); out.push(p); });
+  out.push(...L, last);
+  return out;
+})();
+order.forEach((w, i) => {
   const a = document.createElement('a');
   a.className = 'work ' + (i % 2 ? 'l' : 'r'); a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
   a.style.setProperty('--r', w.r);
