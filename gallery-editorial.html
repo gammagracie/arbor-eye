@@ -76,7 +76,7 @@ html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
 
-:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.07); }
+:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.045); }
 @media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
 /* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
