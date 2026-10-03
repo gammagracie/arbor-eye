@@ -67,7 +67,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
-.row.grid { display: grid; grid-template-columns: repeat(4, auto); justify-items: center; align-items: center; }   /* 12-up: four columns, three rows */
+.row.grid { display: grid; grid-template-columns: repeat(4, auto); justify-items: center; align-items: center; row-gap: 64px; }   /* 12-up: four columns, three rows, room under each work for its title */
+.row.grid .art img { object-fit: cover; }   /* 12-up: every landscape shares one 1.492 box, so the few wider works are trimmed a little at the sides to keep the columns aligned */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
@@ -271,14 +272,16 @@ function buildSlots(n) {
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
   const nc = cols(), nr = rows();
-  const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0, H = stage.clientHeight;
+  const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0, rowGap = count === 12 ? 64 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
   const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (nc - 1);
+  // 12-up: every landscape gets the same 1.492 box (the common proportion) so the columns line up; portraits keep their own
+  const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.492 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
-  const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(s => WORKS[s.idx].r)), 0);
-  const h = Math.min((H - gap * (nr - 1)) / nr, W / sumR);
-  slots.forEach(s => { s.a.style.width = h * WORKS[s.idx].r + 'px'; s.a.style.height = h + 'px'; });
-  const total = h * sumR + gap * (nc - 1), rowH = h * nr + gap * (nr - 1);
+  const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(R)), 0);
+  const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR);
+  slots.forEach(s => { s.a.style.width = h * R(s) + 'px'; s.a.style.height = h + 'px'; });
+  const total = h * sumR + gap * (nc - 1), rowH = h * nr + rowGap * (nr - 1);
   $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2, capH = caption.offsetHeight;
