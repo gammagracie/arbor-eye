@@ -57,7 +57,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 
 /* stage: the selected work, as large as the space allows */
 /* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
-/* count switch (top left, lined up with the logo like the grid gallery's switcher): how many works show side by side; phones are always one-up */
+/* view switch (top left, lined up with the logo like the grid gallery's switcher): 1 work, 3 in a row, or 12 in three rows of four; phones are always one-up */
 .tools { flex: none; display: flex; justify-content: flex-start; gap: 14px; padding: 14px var(--side-pad) 0; }
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
@@ -67,7 +67,9 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
-.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; }
+.row.grid { display: grid; grid-template-columns: repeat(4, auto); justify-items: center; align-items: center; }   /* 12-up: four columns, three rows */
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
 .art img.on { opacity: 1; }
@@ -101,7 +103,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while H3 / G3 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H3 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
@@ -115,7 +117,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
         <nav class="main">
     <a href="Home-animated-2.dc.html">H3</a>
     <a href="Gallery.dc.html">Gallery</a>
-          <a href="gallery-filmstrip.html">G3</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
           <a class="on" href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
@@ -133,7 +134,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   <nav class="menu" aria-label="Mobile menu">
     <a href="Home-animated-2.dc.html">H3</a>
     <a href="Gallery.dc.html">Gallery</a>
-    <a href="gallery-filmstrip.html">G3</a>
     <a href="Gallery-horizontal.dc.html">G4</a>
     <a href="gallery-filmstrip-2.html" style="font-weight: 600">G5</a>
     <a href="gallery-editorial.html">G6</a>
@@ -147,9 +147,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 
   <div class="tools" id="tools" role="group" aria-label="Works shown at once">
     <button class="count" data-n="1" aria-label="1 work at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="18.00" height="18"></rect></svg></button>
-    <button class="count" data-n="2" aria-label="2 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="8.00" height="18"></rect><rect x="10.00" y="0" width="8.00" height="18"></rect></svg></button>
     <button class="count" data-n="3" aria-label="3 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="4.67" height="18"></rect><rect x="6.67" y="0" width="4.67" height="18"></rect><rect x="13.33" y="0" width="4.67" height="18"></rect></svg></button>
-    <button class="count" data-n="4" aria-label="4 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="3.00" height="18"></rect><rect x="5.00" y="0" width="3.00" height="18"></rect><rect x="10.00" y="0" width="3.00" height="18"></rect><rect x="15.00" y="0" width="3.00" height="18"></rect></svg></button>
+    <button class="count" data-n="12" aria-label="12 works at a time"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="3" height="4.67"></rect><rect x="5" y="0" width="3" height="4.67"></rect><rect x="10" y="0" width="3" height="4.67"></rect><rect x="15" y="0" width="3" height="4.67"></rect><rect x="0" y="6.67" width="3" height="4.67"></rect><rect x="5" y="6.67" width="3" height="4.67"></rect><rect x="10" y="6.67" width="3" height="4.67"></rect><rect x="15" y="6.67" width="3" height="4.67"></rect><rect x="0" y="13.33" width="3" height="4.67"></rect><rect x="5" y="13.33" width="3" height="4.67"></rect><rect x="10" y="13.33" width="3" height="4.67"></rect><rect x="15" y="13.33" width="3" height="4.67"></rect></svg></button>
   </div>
 
   <main class="stage" id="stage">
@@ -248,17 +247,18 @@ const stage = $('stage'), row = $('row'), strip = $('strip'), track = $('track')
 // from the media query, then follows the input actually used.
 let lastTouch = 0, touching = false;
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
-// A window of `count` works starting at `first` is featured in the row; each slot crossfades between two images.
+// A window of `count` works starting at `first` is featured in the row (1, 3, or 12 as three rows of four); each slot crossfades between two images.
 const phone = matchMedia('(max-width: 767px)');
-let count = phone.matches ? 1 : 2, deskCount = 2, first = 0, current = 0;
+let count = phone.matches ? 1 : 3, deskCount = 3, first = 0, current = 0;
+const cols = () => count === 12 ? 4 : count, rows = () => count / cols();
 const slots = [];
 function buildSlots(n) {
-  row.innerHTML = ''; slots.length = 0;
+  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', n === 12);
   for (let i = 0; i < n; i++) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); placeCaption(); page.classList.add('hovering'); });
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + 25 - (caption.offsetHeight - 18) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
     a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
     row.appendChild(a); slots.push(slot);
   }
@@ -266,19 +266,22 @@ function buildSlots(n) {
 
 // size the row: every featured work the same height, chevrons hugging the row. One-up: as large as the stage allows.
 // Several works: the row spans the page's content width exactly, so the first work's left edge lines up with the logo
-// and the last work's right edge with the bag icon (unless the works are so tall that the height limits them first)
+// and the last work's right edge with the bag icon (unless the works are so tall that the height limits them first).
+// Twelve-up: three rows of four, all one height, as wide as the content width or as tall as the stage allows.
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
+  const nc = cols(), nr = rows();
   const step = $('prev').offsetWidth, gap = count > 1 ? 28 : 0, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
-  const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (count - 1);
-  const sumR = slots.reduce((t, s) => t + WORKS[s.idx].r, 0);
-  const h = Math.min(H, W / sumR);
-  let total = gap * (count - 1);
-  slots.forEach(s => { const w = h * WORKS[s.idx].r; s.a.style.width = w + 'px'; s.a.style.height = h + 'px'; total += w; });
+  const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (nc - 1);
+  // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
+  const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(s => WORKS[s.idx].r)), 0);
+  const h = Math.min((H - gap * (nr - 1)) / nr, W / sumR);
+  slots.forEach(s => { s.a.style.width = h * WORKS[s.idx].r + 'px'; s.a.style.height = h + 'px'; });
+  const total = h * sumR + gap * (nc - 1), rowH = h * nr + gap * (nr - 1);
   $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
-  // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the row
-  const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - h) / 2, capH = caption.offsetHeight;
+  // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
+  const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2, capH = caption.offsetHeight;
   capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + 25 - (capH - 18) / 2 - sb;
   placeCaption();
 }
