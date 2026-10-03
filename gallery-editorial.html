@@ -241,7 +241,7 @@ WORKS.forEach((w, i) => {
   a.style.setProperty('--r', w.r);
   const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
   a.style.setProperty('--k', k);
-  a.dataset.depth = (0.03 + (1 - k) * 0.16).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
+  a.dataset.depth = (0.05 + (1 - k) * 0.24).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
