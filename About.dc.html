@@ -22,13 +22,13 @@ a { color: #141414; text-decoration: none; }
 a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
-/* About page text: 14px / 1.75 at 1320px and up, scaling down with the viewport (so text and photo heights stay in step),
-   never below 11px; line height eases from 1.75 to 1.5 at the small end. Phones use fixed 15px / 1.75. */
+/* About page text: 14.5px / 1.75 from ~1270px up, scaling down with the viewport (so text and photo heights stay in step),
+   never below 12px. Phones use fixed 15px / 1.75. */
 body { overflow-x: clip; } /* the Biography opener is full-bleed (100vw) */
 main p { font-size: 15px; }
 main p, main blockquote { line-height: 1.75; }
 .copy { gap: 18px; }
-@media (min-width: 768px) { main p { font-size: clamp(12px, 1.14vw, 15px); line-height: clamp(17px, 2vw, 26.25px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
+@media (min-width: 768px) { main p { font-size: clamp(12px, 1.14vw, 14.5px); line-height: clamp(17px, 2vw, 25.4px); } .copy { gap: clamp(10px, 1.25vw, 18px); } }
 main h1, main h2 { line-height: 1.2; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); }
@@ -126,8 +126,8 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: center; margin: {{ bioTop }} 0 32px; pointer-events: none">
-    <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ bioTextPad }}">
+    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: start; margin: {{ tolMargin }}; pointer-events: none">
+    <div style="position: relative; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
         <p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
@@ -138,15 +138,15 @@ html { scrollbar-gutter: stable; }
   </section>
 
   <section data-screen-label="About — Quote" style="padding: {{ quotePad }}; display: flex; justify-content: center">
-    <div style="position: relative; max-width: 1080px; padding: {{ quoteInset }}">
+    <div style="position: relative; max-width: {{ quoteMax }}; padding: {{ quoteInset }}">
       <img src="uploads/left_quote.png" alt="" style="position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
       <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; text-wrap: balance; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
-      <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkTop }}; right: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
+      <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkBottom }}; right: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
     </div>
   </section>
 
-  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}">
-    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: center; scroll-margin-top: 40px">
+  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}">
+    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: {{ tabJustify }}; scroll-margin-top: 40px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
         <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
       </sc-for>
@@ -309,27 +309,34 @@ class Component extends DCLogic {
       bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.88) 130px minmax(0, 1fr)',
       bioTop: stack ? '0' : '60px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
+      // Tree of Life (110 x 228px) centred on the photo's height and nudged 15px right of the gutter's centre so it reads as sitting between photo and copy
+      tolMargin: 'calc(60px + ((50vw - var(--side-pad)) * 0.88 - 228px) / 2) 0 0 15px',
       bioGap: stack ? '28px' : '0',
-      bioTextMax: 'none', // the copy always runs out to the bag icon's line
+      bioTextMax: stack ? 'none' : 'calc(450px + var(--side-pad))', // desktop: a 450px measure (about 62 characters a line) starting at the gutter; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '60px var(--side-pad) 32px 0',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
-      sectionPadFirst: stack ? '0 0 40px' : '0 0 56px',
+      sectionPadFirst: stack ? '0 0 40px' : '0 0 24px',
       sectionPad: m ? '40px 0' : '72px 0',
       // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
-      tabsPad: m ? '8px 0 0' : '16px 0 0',
+      // desktop: left-justified under a hairline rule, as on the Contact page
+      tabsPad: m ? '8px 0 0' : '32px 0 0',
+      tabsRule: m ? 'none' : '1px solid #E7E4DE',
+      tabJustify: m ? 'center' : 'flex-start',
       tabGap: m ? '24px' : '40px',
       tabs: [['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
         label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + k); },
         weight: this.state.tab === k ? 600 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
-      quotePad: m ? '28px 0' : '52px 0 44px',
+      quotePad: m ? '28px 0' : '0 0 8px',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',
-      quoteSize: m ? '20px' : '27px',
-      quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '12px calc(clamp(32px, 8.7vw, 125px) + 28px)', // text sits between the two marks
-      quoteMarkSize: 'clamp(32px, 8.7vw, 125px)', // 125px from ~1440px wide, scaling down with the screen (about 33px on phones); drawn at 70% strength
-      quoteMarkTop: m ? '-4px' : 'calc(clamp(32px, 8.7vw, 125px) * -0.16)', // opening mark rides a little above the first line, closing mark a little below the last
+      quoteSize: m ? '20px' : '24px',
+      quoteMax: m ? '1080px' : '672px', // desktop: just wide enough for the two balanced lines at 24px, so the marks sit against the text
+      quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '12px 30px', // text sits between the two marks
+      quoteMarkSize: m ? 'clamp(32px, 8.7vw, 125px)' : '25px', // desktop: small 25px marks tucked against the text; phones scale with the screen (about 33px); drawn at 70% strength
+      quoteMarkTop: m ? '-4px' : '22px', // desktop: both marks hang from the cap height of their line
+      quoteMarkBottom: m ? '-4px' : '19px',
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 3),
       ...this.car('proc', 2),

@@ -333,7 +333,7 @@ const DETAILS = {
   'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g2', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailView: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g2', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailView: 0 };
   arts = [
     ['DSC01769.jpg', '', 'Brilliance'], // first in the gallery, per Ned
     ['CORE_11.jpg', 'Core', 'Script'],
@@ -521,6 +521,7 @@ class Component extends DCLogic {
     const oneCol = m;
     const frame = this.state.frame;
     const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
+    const detailFrame = views[this.state.detailView][0] === 'none' ? 0 : 76; // frame (16px) + mount (22px) on each side
     // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
     const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
     // both states share numeric border/padding values so switching frames animates smoothly
@@ -659,7 +660,9 @@ class Component extends DCLogic {
       enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',
-      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), style: Object.assign({ width: '100%', height: 'auto', display: 'block' }, framed(views[this.state.detailView][0])) }),
+      // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
+      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+        style: Object.assign({ width: 'min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: '0 auto' }, framed(views[this.state.detailView][0])) }),
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',
