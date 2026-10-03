@@ -76,28 +76,29 @@ html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
 
-:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.12); }
+:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.09); }
 @media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
 /* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
    over the one before it so they float over each other; later works sit on top */
 .col { box-sizing: border-box; padding: 64px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
-.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; overflow: hidden; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
+.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
 .work:first-child { margin-top: 0; }
 .work img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
 html:not(.touch) .work:hover { transform: scale(1.05); z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
-/* hover: the title over the work */
-.work .over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: rgba(20,20,20,0.32); color: #FDFDFB; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; text-align: center; }
-.work .over span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; }
-.work .over small { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.85; }
-html:not(.touch) .work:hover .over { opacity: 1; }
-@media (max-width: 767px) { .work .over span { font-size: 14px; } }
-
+/* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
+.work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.work.r .side { left: calc(100% + 28px); align-items: flex-start; }
+.work.l .side { right: calc(100% + 28px); align-items: flex-end; }
+.work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
+.work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+html:not(.touch) .work:hover .side { opacity: 1; }
+@media (max-width: 767px) { .work .side { display: none; } }
 /* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
-.sb { position: fixed; top: calc(var(--header-h) + 10px); bottom: 10px; right: 6px; width: 12px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
-.sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 4px; width: 1px; background: rgba(20,20,20,0.10); }
-.sb .thumb { position: absolute; right: 3px; width: 3px; border-radius: 2px; background: rgba(20,20,20,0.42); cursor: grab; transition: width 0.2s ease, right 0.2s ease, background 0.2s ease; }
-.sb:hover .thumb, .sb.held .thumb { width: 5px; right: 2px; background: rgba(20,20,20,0.6); }
+.sb { position: fixed; top: calc(var(--header-h) + 24px); bottom: 24px; right: var(--side-pad); width: 5px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
+.sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 1px; background: rgba(20,20,20,0.10); }
+.sb .thumb { position: absolute; right: 0; width: 3px; border-radius: 2px; background: rgba(20,20,20,0.42); cursor: grab; transition: width 0.2s ease, background 0.2s ease; }
+.sb:hover .thumb, .sb.held .thumb { width: 5px; background: rgba(20,20,20,0.6); }
 .sb.held .thumb { cursor: grabbing; }
 .sb.show, .sb:hover, .sb.held { opacity: 1; }
 html.touch .sb { display: none; }
@@ -233,14 +234,14 @@ document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) a
 const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
 WORKS.forEach((w, i) => {
   const a = document.createElement('a');
-  a.className = 'work'; a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
+  a.className = 'work ' + (i % 2 ? 'l' : 'r'); a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
   a.style.setProperty('--r', w.r);
   a.style.setProperty('--k', (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length]);
   a.style.setProperty('--z', i + 1);
-  a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="over"><span></span><small>View details</small></span>';
+  a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
   a.querySelector('img').alt = w.t;
-  a.querySelector('.over span').textContent = w.t;
+  a.querySelector('.side span').textContent = w.t;
   col.appendChild(a);
 });
 
