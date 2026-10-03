@@ -76,21 +76,16 @@ html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
 
-.col { box-sizing: border-box; padding: 64px var(--side-pad) 140px; display: flex; flex-direction: column; gap: 120px; }
-@media (max-width: 767px) { .col { padding: 32px var(--side-pad) 72px; gap: 56px; } }
-.row { display: flex; gap: 28px; justify-content: center; align-items: flex-end; }
-@media (max-width: 767px) { .row { gap: 14px; } }
-/* row types: a = one landscape across the column, b = two portraits, c = two landscapes, l / r = one smaller landscape set left / right */
-.row.a .work { width: min(100%, calc((100dvh - var(--header-h)) * 0.78 * var(--r))); }
-.row.b .work { width: min(calc(50% - 14px), calc((100dvh - var(--header-h)) * 0.8 * var(--r))); }
-.row.c .work { width: calc(50% - 14px); }
-.row.b .work:only-child { margin: 0 auto; }
-.row.l { justify-content: flex-start; } .row.r { justify-content: flex-end; }
-.row.l .work, .row.r .work { width: 58%; }
-@media (max-width: 767px) { .row.b .work, .row.c .work { width: calc(50% - 7px); } .row.l .work, .row.r .work { width: 82%; } }
-
-.work { position: relative; display: block; flex: none; aspect-ratio: var(--r); box-shadow: 0 6px 16px rgba(20,20,20,0.14); background: #F3F2EE; overflow: hidden; }
+:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.12); }
+@media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
+/* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
+   over the one before it so they float over each other; later works sit on top */
+.col { box-sizing: border-box; padding: 64px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }
+@media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
+.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; overflow: hidden; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
+.work:first-child { margin-top: 0; }
 .work img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+html:not(.touch) .work:hover { transform: scale(1.05); z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title over the work */
 .work .over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: rgba(20,20,20,0.32); color: #FDFDFB; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; text-align: center; }
 .work .over span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -233,37 +228,20 @@ const $ = id => document.getElementById(id);
 const scroller = $('scroller'), col = $('col'), sb = $('sb'), bar = $('sbThumb');
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 
-// ---- Layout: spread the portraits through the landscapes so orientation keeps changing.
-// Brilliance opens and Canopy closes (as in the grid); between them each pair of portraits is followed by a run of
-// landscapes set in a rotating pattern (an odd portrait out sits alone at the pair size): one large, one small on the right, two side by side, one small on the left.
-function rows() {
-  const first = WORKS[0], last = WORKS[WORKS.length - 1], mid = WORKS.slice(1, -1);
-  const P = mid.filter(w => w.r < 1), L = mid.filter(w => w.r >= 1);
-  const pairs = []; for (let i = 0; i < P.length; i += 2) pairs.push(P.slice(i, i + 2));
-  const out = [{ t: 'a', w: [first] }], pattern = ['r', 'c', 'l', 'a'];
-  let p = 0;
-  const landscapes = n => { for (let k = 0; k < n && L.length; k++) { const t = pattern[p++ % pattern.length]; out.push({ t, w: L.splice(0, t === 'c' && L.length > 1 ? 2 : 1) }); if (t === 'c') k++; } };
-  pairs.forEach((pair, i) => { out.push({ t: 'b', w: pair }); landscapes(Math.ceil(L.length / (pairs.length - i))); });
-  landscapes(L.length);
-  out.push({ t: 'a', w: [last] });
-  // never two large rows in a row: the first of them becomes a smaller one, set opposite its neighbour
-  for (let i = out.length - 2; i >= 0; i--) if (out[i].t === 'a' && out[i + 1].t === 'a' && i > 0) out[i].t = out[i - 1].t === 'l' ? 'r' : 'l';
-  return out;
-}
-rows().forEach(row => {
-  const div = document.createElement('div');
-  div.className = 'row ' + row.t;
-  row.w.forEach(w => {
-    const a = document.createElement('a');
-    a.className = 'work'; a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
-    a.style.setProperty('--r', w.r);
-    a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="over"><span></span><small>View details</small></span>';
-    a.querySelector('img').src = 'assets/works/' + w.f;
-    a.querySelector('img').alt = w.t;
-    a.querySelector('.over span').textContent = w.t;
-    div.appendChild(a);
-  });
-  col.appendChild(div);
+// ---- Layout: one centred stack. Widths cycle through a set of fractions of the column so the sizes keep changing
+// (portraits come out narrower still, from their own proportions); each work overlaps the previous one by --lap.
+const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
+WORKS.forEach((w, i) => {
+  const a = document.createElement('a');
+  a.className = 'work'; a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
+  a.style.setProperty('--r', w.r);
+  a.style.setProperty('--k', (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length]);
+  a.style.setProperty('--z', i + 1);
+  a.innerHTML = '<img loading="lazy" draggable="false" alt=""><span class="over"><span></span><small>View details</small></span>';
+  a.querySelector('img').src = 'assets/works/' + w.f;
+  a.querySelector('img').alt = w.t;
+  a.querySelector('.over span').textContent = w.t;
+  col.appendChild(a);
 });
 
 // ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
