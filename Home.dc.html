@@ -29,7 +29,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while H3 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -41,11 +41,11 @@ html { scrollbar-gutter: stable; }
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
-    <a href="Home.dc.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+    <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="Home-animated-2.dc.html">H3</a>
+          <a href="Home.dc.html" style="font-weight: 600">H1</a>
           <a href="Gallery.dc.html">Gallery</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
@@ -78,7 +78,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="Home-animated-2.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
+  <a href="Home.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">H1</a>
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
@@ -98,7 +98,7 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0">
-    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; aspect-ratio: 1.494; justify-self: center; position: relative">
+    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
       <span aria-hidden="true" style="position: absolute; inset: 0; background: url(uploads/arbor-mark.png) center / auto 49.7% no-repeat; opacity: 0.25; pointer-events: none"></span>
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
@@ -109,7 +109,7 @@ html { scrollbar-gutter: stable; }
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
-        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 14px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
+        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
             <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1; transform: translateY(-4px)">
               {{ t.img }}
@@ -240,22 +240,21 @@ class Component extends DCLogic {
     const m = this.state.mobile, mp = m && this.state.portrait;
     const i = this.state.index;
     const n = this.arts.length;
-    // Desktop: the image fits the height between header and footer (61px = header border + hero padding; the thumbnail
-    // rail adds 4.5% of the image width) and never exceeds the content width; thumbnails scale with the image.
-    // rail = thumbnail + 29px of padding/border; 30% of it overlaps the image, so 70% (0.0231 x width + 20px) sits below
-    const k = this.state.ratio / (1 + 0.0231 * this.state.ratio);
-    // Desktop / tablet: header + image + thumbnails fill the screen exactly (thumbnails sit at the bottom of the viewport,
-    // footer follows below the fold). Budgets = section padding + the part of the tray that hangs below the image.
-    const fitW = 'calc((100vh - var(--header-h) - 77px) * ' + k.toFixed(4) + ')'; // 77 = 35px above the image + 20px below the tray (the tray's own 15px of padding makes it 35 under the thumbnails) + the tray's overhang
+    // Desktop: the image spans the content width exactly (logo to bag icon) and takes the height left between the header
+    // and the bottom of the screen, cropping the scan to fit (object-fit cover); the thumbnail tray hangs 15% below it and the
+    // footer follows below the fold. Tablet / phones: the image keeps the scans' own proportion, fitting the height and never
+    // exceeding the content width (tablet may run out to 94% of the screen).
+    const desk = !m && !this.state.tablet;
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
-    // desktop / tablet: the image may run wider than the side padding (to 94% of the screen) so it can fill the height on very wide-and-tall screens
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : 'min(94vw, ' + (this.state.tablet ? smallFit : fitW) + ')';
-    const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc(min(94vw, ' + fitW + ') * 0.043)'; // desktop: 4.3% of the image width (tablet 31px, phones 44px)
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? '100%' : 'min(94vw, ' + smallFit + ')';
+    const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)'; // desktop: 5.2% of the image width (tablet 31px, phones 44px)
+    const heroH = desk ? 'calc(100vh - var(--header-h) - 55px - 0.15 * (' + thumbH + ' + 20px))' : 'auto'; // 55 = 35px above the image + 20px below the tray; the rest is the tray's overhang
+    const heroRatio = desk ? 'auto' : '1.494';
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
     let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
-    const slot = 'calc((' + thumbH + ') * 1.494 + 14px)'; // scans are 1.494:1; 14px gap
+    const slot = 'calc((' + thumbH + ') * 1.494 + 16px)'; // scans are 1.494:1; 16px gap
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -278,7 +277,7 @@ class Component extends DCLogic {
       heroPad: mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
-      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.5 * (' + thumbH + ' + 20px))',   // desktop: the thumbnails sit half their height up over the image
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.85 * (' + thumbH + ' + 20px))',   // desktop: the thumbnail tray sits 85% up over the image
       railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
       arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
       railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
@@ -287,7 +286,7 @@ class Component extends DCLogic {
       railGap: m ? '4px' : this.state.tablet ? '40px' : '56px',
       thumbH,
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
-      heroW,
+      heroW, heroH, heroRatio,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
@@ -296,7 +295,7 @@ class Component extends DCLogic {
       hoverTitleMargin: mp ? '10px 0 0' : '0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
-      railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 14px)',
+      railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
       railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
       railTransition: this.state.animate ? 'transform 0.95s cubic-bezier(0.55, 0, 0.1, 1)' : 'none',
       railClip: this.state.animate ? 'inset(-120px 0 -20px 0)' : 'inset(-120px -60px -20px -60px)',
