@@ -33,6 +33,9 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
+/* contact form: the field being typed in gets a very light grey ground */
+.contact-form input:focus, .contact-form textarea:focus { background: #EAEAEA !important; }
+.contact-form input, .contact-form textarea { transition: background 0.2s ease; }
 /* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
@@ -126,13 +129,20 @@ html { scrollbar-gutter: stable; }
     <div style="grid-column: 1; grid-row: 1; display: flex; flex-direction: column; min-width: 0">
       <h2 style="margin: 0 0 16px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Get in touch</h2>
       <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
-      <div style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
+      <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 560px; min-height: 240px" data-screen-label="Contact — Thank you">
+        <p style="margin: 0; font-family: 'EB Garamond', serif; font-size: 26px; line-height: 1.4; color: #141414; text-wrap: balance">Thank you for reaching out. We will be in contact very soon.</p>
+      </div>
+      </sc-if>
+      <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ true }}">
+      <div class="contact-form" style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
         <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
       </div>
+      </sc-if>
     </div>
-    <div style="grid-column: 1; grid-row: 2">
+    <div style="grid-column: 1; grid-row: 2; display: {{ sendDisplay }}">
         <div style="position: relative; display: grid; justify-items: start">
           <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
           <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: 13px; color: #8A867E">{{ formNote }}</p>
@@ -225,7 +235,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '' };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '', sent: false };
   goTab(tab) { this.setMenu(false); this.setState({ tab }); }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
@@ -303,11 +313,13 @@ class Component extends DCLogic {
       setEmail: (e) => this.setState({ email: e.target.value, note: '' }),
       setMessage: (e) => this.setState({ message: e.target.value, note: '' }),
       formNote: this.state.note,
+      // after a successful send the fields and button give way to a thank-you note in the same spot
+      formSent: this.state.sent, formOpen: !this.state.sent, sendDisplay: this.state.sent ? 'none' : 'block',
       send: () => {
         const { name, email, message } = this.state;
         if (!name.trim() || !email.trim() || !message.trim()) { this.setState({ note: 'Please fill in your name, email and message.' }); return; }
         location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website enquiry from ' + name) + '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
-        this.setState({ note: 'Opening your mail app…' });
+        this.setState({ note: '', sent: true });
       }
     };
   }
