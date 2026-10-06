@@ -63,7 +63,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while H3 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* G6: editorial column. The gallery is its own scroll area under the fixed header; wheel and drag glide it,
@@ -87,10 +87,10 @@ html:not(.touch) .scroller { cursor: grab; }
 .work { --s: 1; transform: translateY(var(--py, 0px)) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
 .work:first-child { margin-top: 0; }
-/* reveal: the picture is 8% larger than its window and slides inside it as the work crosses the screen (moving a little
+/* reveal: the picture is 14% larger than its window and slides inside it as the work crosses the screen (moving a little
    slower than the window), so more of its top or bottom comes into view as you scroll */
 .work .win { position: absolute; inset: 0; overflow: hidden; }
-.work img { position: absolute; left: -4%; top: 0; width: 108%; height: 108%; object-fit: cover; transform: translateY(var(--iy, 0px)); will-change: transform; -webkit-user-drag: none; user-select: none; }
+.work img { position: absolute; left: -7%; top: 0; width: 114%; height: 114%; object-fit: cover; transform: translateY(var(--iy, 0px)); will-change: transform; -webkit-user-drag: none; user-select: none; }
 html:not(.touch) .work:hover { --s: 1.03; z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
@@ -115,10 +115,10 @@ footer { flex: none; }
 <body>
   <header>
     <div class="bar">
-      <a class="logo" href="Home.dc.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
       <div class="right">
         <nav class="main">
-    <a href="Home-animated-2.dc.html">H3</a>
+    <a href="Home.dc.html">H1</a>
     <a href="Gallery.dc.html">Gallery</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
@@ -135,7 +135,7 @@ footer { flex: none; }
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="Home-animated-2.dc.html">H3</a>
+    <a href="Home.dc.html">H1</a>
     <a href="Gallery.dc.html">Gallery</a>
     <a href="Gallery-horizontal.dc.html">G4</a>
     <a href="gallery-filmstrip-2.html">G5</a>
@@ -254,7 +254,7 @@ order.forEach((w, i) => {
   a.style.setProperty('--r', w.r);
   const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
   a.style.setProperty('--k', k);
-  a.dataset.depth = (0.05 + (1 - k) * 0.24).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
+  a.dataset.depth = (0.10 + (1 - k) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
@@ -275,7 +275,7 @@ function parallax() {
     if (Math.abs(centre - mid) > vh * 1.5) return;   // off screen: leave as is
     w.style.setProperty('--py', ((centre - mid) * w.dataset.depth).toFixed(1) + 'px');
     // the picture inside: fully down (top edge showing) when the work is at the top of the screen, fully up at the bottom
-    w.style.setProperty('--iy', (-0.08 * w.offsetHeight * Math.min(1, Math.max(0, (centre - top) / vh))).toFixed(1) + 'px');
+    w.style.setProperty('--iy', (-0.14 * w.offsetHeight * Math.min(1, Math.max(0, (centre - top) / vh))).toFixed(1) + 'px');
   });
 }
 scroller.addEventListener('scroll', () => { if (!parallaxQueued) { parallaxQueued = true; requestAnimationFrame(parallax); } }, { passive: true });

@@ -37,7 +37,7 @@ main h1, main h2 { line-height: 1.2; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while H3 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -50,11 +50,11 @@ html { scrollbar-gutter: stable; }
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
-    <a href="Home.dc.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+    <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="Home-animated-2.dc.html">H3</a>
+          <a href="Home.dc.html">H1</a>
           <a href="Gallery.dc.html">Gallery</a>
           <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
@@ -87,7 +87,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="Home-animated-2.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
+  <a href="Home.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
   <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
