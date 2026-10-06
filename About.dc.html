@@ -135,9 +135,9 @@ html { scrollbar-gutter: stable; }
     </div>
     <div data-screen-label="About — Quote" style="grid-column: {{ quoteCol }}; grid-row: {{ quoteRow }}; align-self: start; padding: {{ quotePad }}; display: flex; justify-content: center">
       <div style="position: relative; max-width: {{ quoteMax }}; padding: {{ quoteInset }}">
-        <img src="uploads/left_quote.png" alt="" style="position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
+        <img src="uploads/left_quote.png" alt="" style="display: {{ quoteMarkDisplay }}; position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
         <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; text-wrap: balance; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
-        <img src="uploads/right_quote.png" alt="" style="position: absolute; bottom: {{ quoteMarkBottom }}; right: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
+        <img src="uploads/right_quote.png" alt="" style="display: {{ quoteMarkDisplay }}; position: absolute; bottom: {{ quoteMarkBottom }}; right: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
       </div>
     </div>
   </section>
@@ -150,7 +150,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Tree of Life" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ twoCols }}; gap: {{ twoColGap }}; align-items: center">
+  <section data-screen-label="About — Tree of Life" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ treeCols }}; gap: {{ twoColGap }}; align-items: center">
     <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Tree of Life</h2>
@@ -179,7 +179,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ procNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <div>
+    <div style="padding-bottom: {{ procTextLift }}">
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Process</h2>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left; max-width: 620px; margin: 0 auto">
         <p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
@@ -191,18 +191,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Film" style="padding: {{ sectionPad }}">
-    <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden">
-      <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
-      <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
-        <span style="width: 76px; height: 76px; border-radius: 50%; background: rgba(253,253,251,0.82); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(20,20,20,0.18)">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#141414"><path d="M8 5.5v13l11-6.5z"></path></svg>
-        </span>
-      </div>
-    </div>
-  </section>
-
-  <section data-screen-label="About — Studio" style="padding: {{ studioPad }}">
+  <section data-screen-label="About — Studio" style="padding: {{ sectionPad }}">
     <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
     <div style="max-width: 540px; margin: 0 auto; display: grid; gap: 16px">
       <div onClick="{{ stuTap }}" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
@@ -221,6 +210,17 @@ html { scrollbar-gutter: stable; }
       </div>
     </div>
   </section>
+  <section data-screen-label="About — Film" style="padding: {{ studioPad }}">
+    <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden">
+      <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+      <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+        <span style="width: 76px; height: 76px; border-radius: 50%; background: rgba(253,253,251,0.82); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(20,20,20,0.18)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#141414"><path d="M8 5.5v13l11-6.5z"></path></svg>
+        </span>
+      </div>
+    </div>
+  </section>
+
   </sc-if>
 </main>
 
@@ -300,6 +300,7 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       mainPad: '0 var(--side-pad)',
       twoCols: m ? '1fr' : 'minmax(0, 1.05fr) minmax(0, 1fr)',
+      treeCols: m ? '1fr' : 'minmax(0, 1.45fr) minmax(0, 1fr)', // Tree of Life: the fresco photo takes the larger share
       // Biography opener: a square photo (88% of the half-screen width) starts at the logo's left edge, 60px below the header;
       // a faint Tree of Life sits in the gap, and the copy is centred in the rest. Under 1000px it stacks: full-width square photo, then the copy.
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
@@ -312,13 +313,14 @@ class Component extends DCLogic {
       quoteCol: stack ? 'auto' : '2', quoteRow: stack ? 'auto' : '2',
       bioTop: stack ? '0' : '48px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
-      // Tree of Life (110 x 228px) centred on the photo's height, in the middle of the gutter but held 20px toward the photo (40px right margin on a centred item)
-      tolMargin: 'calc(48px + ((50vw - var(--side-pad)) * 0.88 - 228px) / 2) 40px 0 0',
+      // Tree of Life (110 x 228px) centred on the photo's height, in the gutter but held 20px toward the copy (40px left margin on a centred item), so it sits just off the text
+      tolMargin: 'calc(48px + ((50vw - var(--side-pad)) * 0.88 - 228px) / 2) 0 0 40px',
       bioGap: stack ? '28px' : '0',
       bioTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 24px 0',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
+      procTextLift: m ? '0' : '52px', // desktop: the copy is centred on the photo itself, not on photo plus the arrows-and-dots row beneath it (16px gap + 36px)
       sectionPadFirst: stack ? '0 0 40px' : '0 0 20px',
       sectionPad: m ? '40px 0' : '72px 0',
       // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
@@ -334,9 +336,10 @@ class Component extends DCLogic {
       tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
       quotePad: stack ? (m ? '28px 0' : '28px 0 0') : '24px 0 0',
       studioPad: m ? '40px 0 64px' : '72px 0 104px',
-      quoteSize: m ? '20px' : '19px',
+      quoteSize: m ? '20px' : '18px',
       quoteMax: m ? '1080px' : '100%', // desktop: the photo's width, so the two balanced lines sit under the photo with the marks against the text
-      quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '10px 26px', // text sits between the two marks
+      quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '10px 0', // phones: text sits between the two marks; desktop has no marks
+      quoteMarkDisplay: m ? 'block' : 'none',
       quoteMarkSize: m ? 'clamp(32px, 8.7vw, 125px)' : '22px', // desktop: small 22px marks tucked against the text; phones scale with the screen (about 33px); drawn at 70% strength
       quoteMarkTop: m ? '-4px' : '18px', // desktop: both marks hang from the cap height of their line
       quoteMarkBottom: m ? '-4px' : '16px',
