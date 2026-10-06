@@ -12,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: 32px; }
-@media (min-width: 768px) { :root { --thumb-h: 30px; --step-w: 84px; } }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -78,8 +78,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: 39px; height: 108px; }
-@media (max-width: 767px) { .step svg { width: 20px; height: 56px; } }
+.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }   /* 39 x 108px on a 1440px screen, scaling down with the viewport to 20 x 56px */
 .caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
@@ -282,7 +281,7 @@ function fit() {
   const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 1 : 0.95);   // one-up and twelve-up sit at 95% of the space, for more room above and below
   slots.forEach(s => { s.a.style.width = h * R(s) + 'px'; s.a.style.height = h + 'px'; });
   const total = h * sumR + gap * (nc - 1), rowH = h * nr + rowGap * (nr - 1);
-  $('prev').style.left = $('next').style.right = ((stage.clientWidth - total) / 2 - step) + 'px';
+  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : ((stage.clientWidth - total) / 2 - step) + 'px';   // phones: on the side padding, level with the logo and the menu button
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2, capH = caption.offsetHeight;
   capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + 25 - (capH - 18) / 2 - sb;
@@ -354,7 +353,7 @@ function setCount(n) {
 }
 [...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
 phone.addEventListener('change', () => setCount(phone.matches ? 1 : deskCount));
-function show(k, scrollIntoView) { setWindow(k, scrollIntoView); }   // thumbnail click: the window slides to that work
+function show(k, scrollIntoView) { setWindow(k, scrollIntoView, k > first ? -1 : 1); }   // thumbnail click: a work to the right slides the row left (it arrives from the right); a work to the left slides it right
 
 // build the strip
 WORKS.forEach((w, k) => {
@@ -375,7 +374,8 @@ let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX
 // left or right of that the faster it drifts that way, up to CRUISE at the page edges.
 // GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
 // ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
-const GLIDE = 1200, CRUISE = 380, ACCEL = 260, DEAD = 0.10;
+// BRAKE: ms time constant for coming to rest once the cursor stops moving (stopped within about 2s)
+const GLIDE = 1200, CRUISE = 220, ACCEL = 260, BRAKE = 550, DEAD = 0.10;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
@@ -386,9 +386,9 @@ function run() {
     const dt = Math.min(64, now - last); last = now;
     const d = target - pos;
     if (drive !== null) {   // steering: ease toward the speed the cursor asks for, stopping at either end
-      vel += (drive - vel) * (1 - Math.exp(-dt / ACCEL));
+      vel += (drive - vel) * (1 - Math.exp(-dt / (drive === 0 ? BRAKE : ACCEL)));
       pos = Math.max(0, Math.min(maxPan(), pos + vel * dt));
-      if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.002)) vel = 0;
+      if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.01)) vel = 0;
       target = pos;
     }
     else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
@@ -437,8 +437,11 @@ function relax() {
 }
 // the row only moves while the pointer is on the thumbnails: the row itself, or a magnified thumbnail rising above it
 const inBand = (y, el) => { const band = track.getBoundingClientRect(); return (y >= band.top - 4 && y <= band.bottom + 4) || !!(el && el.closest && el.closest('.thumb')); };
+let stillT = 0;
 function follow(x) {
   mouseX = x;
+  // the cursor steers only while it moves: once it rests on a thumbnail the row brakes to a stop, so the thumbnail can be clicked
+  clearTimeout(stillT); stillT = setTimeout(() => { if (mouseX !== null) drive = 0; }, 150);
   const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
   drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08))) * CRUISE / 1000;
   cap = CRUISE / 1000;
