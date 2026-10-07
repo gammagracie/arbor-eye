@@ -106,7 +106,11 @@ html { scrollbar-gutter: stable; }
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
   <section style="padding-top: 48px">
-    <img src="assets/hero.png" alt="Studio by the water" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
+    <picture>
+      <source media="(min-width: 2001px)" srcset="assets/hero.png">
+      <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="(min-width: 1024px) 80vw, 100vw">
+      <img src="assets/hero-1600.webp" alt="Studio by the water" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
+    </picture>
     <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 32px; padding: 20px 0; border-bottom: 1px solid #E7E4DE; font-size: 13px; flex-wrap: wrap">
       <div style="display: flex; gap: 16px 40px; color: #6E6B66; flex-wrap: wrap">
         <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>

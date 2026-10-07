@@ -102,9 +102,9 @@ html { scrollbar-gutter: stable; }
 </nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
-  <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; display: grid; grid-template-columns: {{ bioCols }}; grid-template-rows: {{ bioRows }}; gap: {{ bioGap }}; align-items: start">
+  <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; min-height: {{ bioMinH }}; display: grid; grid-template-columns: {{ bioCols }}; grid-template-rows: {{ bioRows }}; gap: {{ bioGap }}; align-items: {{ bioAlign }}; align-content: {{ bioAlign }}">
     <div style="display: {{ bioSideDisplay }}; grid-column: {{ col1 }}"></div>
-    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: start; padding-top: {{ bioTop }}">
+    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: {{ bioAlign }}; padding-top: {{ bioTop }}">
       <div onClick="{{ bioTap }}" onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/about2.webp" alt="Ned Church with his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 1 / 1"><img src="uploads/about/NC_8047_2.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block"></div>
@@ -120,7 +120,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; grid-column: {{ col3 }}; grid-row: {{ bioSpan }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: start; margin: {{ tolMargin }}; pointer-events: none">
+    <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="display: {{ bioSideDisplay }}; grid-column: {{ col3 }}; grid-row: {{ bioSpan }}; width: 110px; height: auto; opacity: 0.25; justify-self: center; align-self: {{ bioAlign }}; margin: {{ tolMargin }}; pointer-events: none">
     <div style="position: relative; grid-column: {{ col4 }}; grid-row: {{ bioSpan }}; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 0 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
@@ -147,7 +147,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Tree of Life" style="padding: {{ sectionPad }}; display: grid; grid-template-columns: {{ treeCols }}; gap: {{ twoColGap }}; align-items: center">
+  <section data-screen-label="About — Tree of Life" style="padding: {{ treePad }}; display: grid; grid-template-columns: {{ treeCols }}; gap: {{ twoColGap }}; align-items: center">
     <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Tree of Life</h2>
@@ -188,7 +188,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Studio" style="padding: {{ sectionPad }}">
+  <section data-screen-label="About — Studio" style="padding: {{ studioTopPad }}">
     <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
     <div style="max-width: 540px; margin: 0 auto; display: grid; gap: 16px">
       <div onClick="{{ stuTap }}" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
@@ -205,6 +205,16 @@ html { scrollbar-gutter: stable; }
         </div>
         <button onClick="{{ stuNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
+    </div>
+  </section>
+  <!-- TRIAL: Studio version B (the three photos side by side), shown under version A for comparison; keep one, delete the other -->
+  <section data-screen-label="About — Studio (version B)" style="padding: {{ sectionPad }}; border-top: 1px dashed #D9D5CC">
+    <p style="margin: 0 0 24px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E; text-align: center">Version B · side by side</p>
+    <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
+    <div style="display: grid; grid-template-columns: {{ studioBCols }}; gap: 25px">
+      <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+      <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+      <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
     </div>
   </section>
   <section data-screen-label="About — Film" style="padding: {{ studioPad }}">
@@ -303,16 +313,20 @@ class Component extends DCLogic {
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
       // columns: side padding | square photo out to the middle of the screen | flexible gutter with the Tree of Life | copy (480px, right edge on the bag icon's line)
       // rows: photo and copy on the first; the quote on the second, under the photo (the copy and the Tree of Life span both)
-      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 1.056) 190px minmax(0, 1fr)',   // photo 120% of its earlier 88% share; 190px gutter = Tree of Life (110px) + 40px each side; the copy takes the rest
-      bioRows: stack ? 'none' : 'auto 1fr',
-      bioSpan: stack ? 'auto' : '1 / span 2',
+      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.898) 190px minmax(0, 1fr)',   // photo 89.8% of the half-width; 190px gutter = Tree of Life (110px) + 40px each side; the copy takes the rest
+      // desktop: photo, Tree of Life and copy are centred on one another, and the opener fills the screen down to the tab row,
+      // so the pinned tabs keep exactly the same place on load
+      bioAlign: stack ? 'start' : 'center',
+      bioMinH: stack ? '0' : 'calc(100vh - var(--header-h) - 64px)',
+      bioRows: 'none',
+      bioSpan: stack ? 'auto' : '1',
       col1: stack ? 'auto' : '1', col2: stack ? 'auto' : '2', col3: stack ? 'auto' : '3', col4: stack ? 'auto' : '4', row1: stack ? 'auto' : '1',   // every item placed by hand (items with a set row would otherwise be placed before the others)
       quoteCol: stack ? 'auto' : '2', quoteRow: stack ? 'auto' : '2',
       quoteDisplay: stack ? 'flex' : 'none', // the quote is hidden on desktop for now
       bioTop: stack ? '0' : '48px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
       // Tree of Life (110 x 228px) centred in its 190px gutter (40px clear each side) and on the photo's height
-      tolMargin: 'calc(48px + ((50vw - var(--side-pad)) * 1.056 - 228px) / 2) 0 0 0',
+      tolMargin: '24px 0 0 0',
       bioGap: stack ? '28px' : '0',
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
@@ -322,6 +336,9 @@ class Component extends DCLogic {
       procTextLift: m ? '0' : '52px', // desktop: the copy is centred on the photo itself, not on photo plus the arrows-and-dots row beneath it (16px gap + 36px)
       sectionPadFirst: stack ? '0 0 40px' : '0 0 20px',
       sectionPad: m ? '40px 0' : '72px 0',
+      treePad: m ? '40px 0' : '37px 0 72px',   // desktop: Tree of Life tab content sits 35px higher
+      studioTopPad: m ? '40px 0' : '32px 0 72px',   // desktop: Studio tab content sits 40px higher
+      studioBCols: m ? '1fr' : 'repeat(3, minmax(0, 1fr))',
       // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
       // desktop: left-justified under a hairline rule, as on the Contact page
       tabsPad: m ? '8px 0 0' : stack ? '32px 0 0' : '22px 0 20px',
