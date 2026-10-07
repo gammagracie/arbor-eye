@@ -107,7 +107,7 @@ html { scrollbar-gutter: stable; }
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1; transform: translateY(-4px)">
+            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
             </button>
           </sc-for>
@@ -173,7 +173,7 @@ class Component extends DCLogic {
     btns.forEach((btn, k) => {
       const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
       btn.style.transition = 'transform 0.14s ease-out, opacity 0.35s ease, border-color 0.35s ease';
-      btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
+      btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) translateY(' + (-4 * (scales[k] - 1) / 0.3).toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';   // grows (to 130% under the cursor) and lifts up to 4px
       btn.style.zIndex = String(Math.round(scales[k] * 100));
     });
   }
