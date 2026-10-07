@@ -29,7 +29,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -46,8 +46,6 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Home.dc.html">H1</a>
-          <a href="Gallery.dc.html">Gallery</a>
-          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="About.dc.html">About</a>
@@ -79,8 +77,6 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Home.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
-  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
@@ -106,7 +102,7 @@ html { scrollbar-gutter: stable; }
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
@@ -118,7 +114,7 @@ html { scrollbar-gutter: stable; }
         </div>
       </div>
       <button onClick="{{ next }}" aria-label="Next artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
       <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
@@ -329,10 +325,11 @@ class Component extends DCLogic {
       railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
-      railGap: m ? '4px' : this.state.tablet ? '40px' : '56px',
+      railGap: m ? '4px' : this.state.tablet ? '40px' : '18px',   // desktop: chevrons sit close to the thumbnails
+      arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
-      heroW, heroH, heroRatio,
+      heroW, heroH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
@@ -354,7 +351,7 @@ class Component extends DCLogic {
         vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
         img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } }),   // a soft shadow lifts them off the painting
         alt: 'Show ' + this.arts[k].alt,
-        opacity: k === i ? 1 : 0.5,
+        opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k)
       }))
     };

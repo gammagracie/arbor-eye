@@ -36,7 +36,7 @@ html { scrollbar-gutter: stable; }
 /* contact form: the field being typed in gets a very light grey ground */
 .contact-form input:focus, .contact-form textarea:focus { background: #EAEAEA !important; }
 .contact-form input, .contact-form textarea { transition: background 0.2s ease; }
-/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -58,8 +58,6 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Home.dc.html">H1</a>
-          <a href="Gallery.dc.html">Gallery</a>
-          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="About.dc.html">About</a>
@@ -91,8 +89,6 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Home.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
-  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="../"><!-- archived page: paths resolve from the site root -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Gallery</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
@@ -83,7 +84,7 @@ html.touch .caption { opacity: 1; }
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; }
 .track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
-.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; opacity: 0.55; outline: 1.5px solid transparent; outline-offset: 0; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; outline: 1.5px solid transparent; outline-offset: 0; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
 .thumb.on { opacity: 1; outline-color: #141414; }
 html.touch .track { touch-action: none; }
@@ -95,7 +96,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 </style>
@@ -108,8 +109,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <div class="right">
         <nav class="main">
     <a href="Home.dc.html">H1</a>
-    <a href="Gallery.dc.html">Gallery</a>
-          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="About.dc.html">About</a>
@@ -125,8 +124,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   </header>
   <nav class="menu" aria-label="Mobile menu">
     <a href="Home.dc.html">H1</a>
-    <a href="Gallery.dc.html">Gallery</a>
-    <a href="Gallery-horizontal.dc.html">G4</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html">G6</a>
     <a href="About.dc.html">About</a>
@@ -339,7 +336,6 @@ function magnify(x) {
   btns.forEach((b, k) => {
     const shift = acc + extra[k] / 2 - cursorExtra; acc += extra[k];
     b.style.transform = bell[k] < 0.002 && Math.abs(shift) < 0.5 ? '' : 'translateX(' + shift.toFixed(1) + 'px) scale(' + (1 + PEAK * bell[k]).toFixed(3) + ')';
-    b.style.opacity = b.classList.contains('on') ? '' : (0.55 + 0.45 * bell[k]).toFixed(2);
     b.style.zIndex = Math.round(bell[k] * 100);
   });
 }
