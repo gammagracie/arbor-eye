@@ -37,7 +37,7 @@ main h1, main h2 { line-height: 1.2; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
-/* TEMP: while H1 / G4 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
@@ -55,8 +55,6 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
           <a href="Home.dc.html">H1</a>
-          <a href="Gallery.dc.html">Gallery</a>
-          <a href="Gallery-horizontal.dc.html">G4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="About.dc.html" style="font-weight: 600">About</a>
@@ -88,8 +86,6 @@ html { scrollbar-gutter: stable; }
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="Home.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
-  <a href="Gallery.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
-  <a href="Gallery-horizontal.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 600">About</a>
@@ -133,7 +129,7 @@ html { scrollbar-gutter: stable; }
         <p style="margin: 0">My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p>
       </div>
     </div>
-    <div data-screen-label="About — Quote" style="grid-column: {{ quoteCol }}; grid-row: {{ quoteRow }}; align-self: start; padding: {{ quotePad }}; display: flex; justify-content: center">
+    <div data-screen-label="About — Quote" style="grid-column: {{ quoteCol }}; grid-row: {{ quoteRow }}; align-self: start; padding: {{ quotePad }}; display: {{ quoteDisplay }}; justify-content: center">
       <div style="position: relative; max-width: {{ quoteMax }}; padding: {{ quoteInset }}">
         <img src="uploads/left_quote.png" alt="" style="display: {{ quoteMarkDisplay }}; position: absolute; top: {{ quoteMarkTop }}; left: 0; width: {{ quoteMarkSize }}; opacity: 0.7; pointer-events: none">
         <blockquote style="margin: 0; font-family: 'EB Garamond', serif; font-size: {{ quoteSize }}; letter-spacing: 0.1em; line-height: 1.75; text-transform: uppercase; text-align: center; text-wrap: balance; position: relative">The work will tell you what it wants; you just have to be patient enough to listen.</blockquote>
@@ -142,7 +138,8 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
 
-  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}">
+  <div id="tabs-anchor" aria-hidden="true"></div>
+  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}; position: {{ tabsPos }}; bottom: 0; z-index: 10; background: #FDFDFB">
     <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: {{ tabJustify }}; scroll-margin-top: 40px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
         <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
@@ -306,17 +303,19 @@ class Component extends DCLogic {
       // columns: side padding | square photo out to the middle of the screen | Tree of Life in the gap | copy
       // columns: side padding | square photo out to the middle of the screen | flexible gutter with the Tree of Life | copy (480px, right edge on the bag icon's line)
       // rows: photo and copy on the first; the quote on the second, under the photo (the copy and the Tree of Life span both)
-      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 0.88) minmax(0, 1fr) auto',
+      bioCols: stack ? '1fr' : 'var(--side-pad) calc((50% - var(--side-pad)) * 1.056) 190px minmax(0, 1fr)',   // photo 120% of its earlier 88% share; 190px gutter = Tree of Life (110px) + 40px each side; the copy takes the rest
       bioRows: stack ? 'none' : 'auto 1fr',
       bioSpan: stack ? 'auto' : '1 / span 2',
       col1: stack ? 'auto' : '1', col2: stack ? 'auto' : '2', col3: stack ? 'auto' : '3', col4: stack ? 'auto' : '4', row1: stack ? 'auto' : '1',   // every item placed by hand (items with a set row would otherwise be placed before the others)
       quoteCol: stack ? 'auto' : '2', quoteRow: stack ? 'auto' : '2',
+      quoteDisplay: stack ? 'flex' : 'none', // the quote is hidden on desktop for now
       bioTop: stack ? '0' : '48px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
-      // Tree of Life (110 x 228px) centred on the photo's height, in the gutter but held 20px toward the copy (40px left margin on a centred item), so it sits just off the text
-      tolMargin: 'calc(48px + ((50vw - var(--side-pad)) * 0.88 - 228px) / 2) 0 0 40px',
+      // Tree of Life (110 x 228px) centred in its 190px gutter (40px clear each side) and on the photo's height
+      tolMargin: 'calc(48px + ((50vw - var(--side-pad)) * 1.056 - 228px) / 2) 0 0 0',
       bioGap: stack ? '28px' : '0',
-      bioTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
+      bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
+      _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 24px 0',
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
@@ -325,12 +324,14 @@ class Component extends DCLogic {
       sectionPad: m ? '40px 0' : '72px 0',
       // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
       // desktop: left-justified under a hairline rule, as on the Contact page
-      tabsPad: m ? '8px 0 0' : '32px 0 0',
+      tabsPad: m ? '8px 0 0' : stack ? '32px 0 0' : '22px 0 20px',
+      // desktop: the tab row is pinned to the foot of the screen until the page scrolls down to it, so it is always in view on load
+      tabsPos: stack ? 'static' : 'sticky',
       tabsRule: m ? 'none' : '1px solid #E7E4DE',
       tabJustify: m ? 'center' : 'flex-start',
       tabGap: m ? '24px' : '40px',
       tabs: [['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
-        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + k); },
+        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + k); if (!this.state.stack) { const a = document.getElementById('tabs-anchor'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); } },   // desktop: bring the tabs and the chosen section up into view
         weight: this.state.tab === k ? 600 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
