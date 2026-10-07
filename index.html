@@ -101,8 +101,8 @@ html { scrollbar-gutter: stable; }
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
       <span aria-hidden="true" style="position: absolute; inset: 0; background: url(uploads/arbor-mark.png) center / auto 49.7% no-repeat; opacity: 0.25; pointer-events: none"></span>
       {{ heroImg }}
-      <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
-      <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 0.9s ease; pointer-events: none">
+      <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">
+      <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72%; max-width: 900px; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 0; margin-left: -2px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
@@ -145,7 +145,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: 'tree' }; // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: 'pre' }; // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -253,8 +253,10 @@ class Component extends DCLogic {
   componentDidMount() {
     this.startLogo();
     this.arts.forEach(a => { const im = new Image(); im.src = a.src; }); // preload so swaps are instant
-    // intro over the first work: the Tree of Life shows for 2s, crossfades (0.9s) to the wordmark, which holds 3s and fades off
-    this.introTimer = setTimeout(() => { this.setState({ intro: 'mark' }); this.introTimer = setTimeout(() => this.setState({ intro: false }), 3000); }, 2000);
+    // intro over the first work: the Tree of Life fades in (1.8s, soft ease), holds, crossfades to the wordmark (1.8s), which holds and fades off (1.8s)
+    this.introTimer = setTimeout(() => { this.setState({ intro: 'tree' });
+      this.introTimer = setTimeout(() => { this.setState({ intro: 'mark' });
+        this.introTimer = setTimeout(() => this.setState({ intro: false }), 3200); }, 2800); }, 150);
     this.mqPortrait = window.matchMedia('(orientation: portrait)');
     this.onMqPortrait = () => this.setState({ portrait: this.mqPortrait.matches });
     this.mqPortrait.addEventListener('change', this.onMqPortrait);
