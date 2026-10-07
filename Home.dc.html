@@ -252,7 +252,7 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
     const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? '100%' : 'min(94vw, ' + smallFit + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)'; // desktop: 5.2% of the image width (tablet 31px, phones 44px)
-    const heroH = desk ? 'calc(100vh - var(--header-h) - 55px - 0.15 * (' + thumbH + ' + 20px))' : 'auto'; // 55 = 35px above the image + 20px below the tray; the rest is the tray's overhang
+    const heroH = desk ? 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)' : 'auto'; // 55 = 35px above the image + 20px below the tray; the rest is the tray's overhang (35% of a thumbnail + 10px padding)
     const heroRatio = desk ? 'auto' : '1.494';
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
@@ -281,8 +281,8 @@ class Component extends DCLogic {
       heroPad: mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
-      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.85 * (' + thumbH + ' + 20px))',   // desktop: the thumbnail tray sits 85% up over the image
-      railAlign: m ? 'center' : 'flex-end', // phones (no overlap): arrows centred on the thumbnails; otherwise on their baseline
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
+      railAlign: mp ? 'flex-end' : 'center', // arrows centred on the thumbnails (portrait phones: on their baseline)
       arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
       railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
       imgW: m ? 'auto' : '100%',
@@ -310,7 +310,7 @@ class Component extends DCLogic {
       next: () => this.go(1),
       thumbs: shown.map((k, j) => ({
         vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
-        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto' } }),
+        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'auto', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } }),   // a soft shadow lifts them off the painting
         alt: 'Show ' + this.arts[k].alt,
         opacity: k === i ? 1 : 0.5,
         select: () => this.show(k)
