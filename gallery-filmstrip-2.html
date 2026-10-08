@@ -83,6 +83,8 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 html.touch .caption { opacity: 1; }
+/* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
+html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
 
 /* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
    eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
@@ -239,6 +241,10 @@ const WORKS = [
 ];
 
 const $ = id => document.getElementById(id);
+// marks the page as moving for ms milliseconds (extended by each new movement)
+let busyT = 0;
+function busy(ms) { const p = document.getElementById('page'); p.classList.add('moving'); clearTimeout(busyT); busyT = setTimeout(() => p.classList.remove('moving'), ms); }
+addEventListener('scroll', () => busy(500), { passive: true });
 const stage = $('stage'), row = $('row'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
 // The filmstrip glides and magnifies for both mouse and finger. The "touch" class (title always shown) starts
 // from the media query, then follows the input actually used.
@@ -294,6 +300,7 @@ function assign(slot, k) {
   if (slot.idx === k) return;
   slot.idx = k;
   const w = WORKS[k], next = slot.imgs[1 - slot.front], prev = slot.imgs[slot.front], turn = ++slot.turns;
+  busy(1000);
   const swap = () => { if (turn !== slot.turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); slot.front = 1 - slot.front; };
   next.alt = w.t;
   next.src = 'assets/works/' + w.f;
@@ -306,6 +313,7 @@ function assign(slot, k) {
 // -1 for the left arrow; the incoming images are decoded before anything moves
 let outRow = null;
 async function slideTo(ks, d, axis) {
+  busy(1900);   // from the moment of the request, through loading and the slide
   if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
   const outW = row.getBoundingClientRect().width;
   const out = row.cloneNode(true); out.id = ''; out.style.transition = 'none'; out.style.transform = ''; stage.appendChild(out); outRow = out;
@@ -327,6 +335,7 @@ async function slideTo(ks, d, axis) {
   const ease = 'transform 0.95s cubic-bezier(0.6, 0, 0.2, 1)';   // slow start and finish, brisk in the middle
   row.style.transition = ease; out.style.transition = ease;
   row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
+  busy(1100);
   setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1000);
 }
 
@@ -459,7 +468,7 @@ addEventListener('touchstart', e => {
   touching = inBand(t.clientY, e.target);
   if (touching) follow(t.clientX); else halt();
 }, { passive: true, capture: true });
-addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follow(e.touches[0].clientX); }, { passive: true });
+addEventListener('touchmove', e => { lastTouch = Date.now(); busy(600); if (touching) follow(e.touches[0].clientX); }, { passive: true });
 ['touchend', 'touchcancel'].forEach(n => addEventListener(n, () => { lastTouch = Date.now(); if (touching) { touching = false; relax(); } }, { passive: true }));
 {
   addEventListener('mousemove', e => {
@@ -493,6 +502,7 @@ stage.addEventListener('pointermove', e => {
   if (!drag || e.pointerId !== drag.id) return;
   const dx = e.clientX - drag.x;
   if (Math.abs(dx) > 4) drag.moved = true;
+  if (drag.moved) busy(600);
   if (drag.moved) { row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) translateX(' + dx + 'px)'; }
 });
 ['pointerup', 'pointercancel'].forEach(n => stage.addEventListener(n, e => {

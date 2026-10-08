@@ -89,9 +89,11 @@ html:not(.touch) .thumb:hover { transform: scale(1.18); }
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
             mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
   .track { grid-auto-flow: column; padding: 4px 24px; width: max-content; }
-  .thumb { border-bottom: 1.5px solid transparent; height: 44px; }
+  .thumb { border-bottom: 1.5px solid transparent; width: 56px; height: 44px; }
+  .thumb img { height: 38px; max-width: 56px; }   /* phones keep the larger thumbnails, easier to tap */
   .thumb.on { border-bottom-color: #141414; }
   .marker { display: none; }
+  .caption { flex-direction: column; gap: 6px; }   /* View details under the title */
 }
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
@@ -242,12 +244,13 @@ function fit() {
   if (current < 0) return;
   const r = WORKS[current].r, step = $('prev').offsetWidth;
   const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
-  const h = Math.min(H, W / r) * 0.85, w = h * r;   // 85% of the largest the stage allows
+  let h = Math.min(H, W / r) * 0.85, w = h * r;   // 85% of the largest the stage allows
+  if (phone.matches) { h = r >= 1 ? Math.min(stage.clientWidth / r, stage.clientHeight - 100) : stage.clientHeight - 100; w = Math.min(h * r, stage.clientWidth); h = w / r; }   // phones: landscapes span the stage (24px page margin each side), portraits leave 50px above and below
   art.style.width = w + 'px'; art.style.height = h + 'px';
   const im = imgs[front]; im.style.width = w + 'px'; im.style.height = h + 'px';
-  art.style.top = 'calc(50% - 28px)';
+  art.style.top = phone.matches ? '50%' : 'calc(50% - 28px)';
   $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
-  caption.style.top = 'calc(50% - 28px + ' + (h / 2 + 22) + 'px)';
+  caption.style.top = (phone.matches ? 'calc(50% + ' : 'calc(50% - 28px + ') + (h / 2 + (phone.matches ? 14 : 22)) + 'px)';
 }
 
 // show work k: the incoming image is decoded first, then rises in (dir +1, from below) or drops in (dir -1, from above)

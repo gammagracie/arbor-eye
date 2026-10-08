@@ -104,7 +104,16 @@ html:not(.touch) .work:hover { --s: 1.2; z-index: 50; box-shadow: 0 16px 40px rg
 .work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 html:not(.touch) .work:hover .side { opacity: 1; }
-@media (max-width: 767px) { .work .side { display: none; } }
+/* phones: widths range only from 80% to 100% of the column (portraits at two thirds of that, for the same area), so no work
+   is more than 25% larger or smaller than another; overlap 70% of desktop's (8.4% of each work's height). A tap shows the
+   title under the work, a second tap opens it. */
+@media (max-width: 767px) {
+  .work { width: calc(var(--col) * var(--kp)); margin-top: calc(-0.084 * var(--col) * var(--kp) / var(--r)); }
+  .work:first-child { margin-top: 0; }
+  .work .side { display: none; }
+  .work.tapped { z-index: 60; }
+  .work.r.tapped .side, .work.l.tapped .side { display: flex; opacity: 1; left: 50%; right: auto; top: calc(100% + 8px); transform: translateX(-50%); align-items: center; background: rgba(253,253,251,0.94); padding: 6px 10px; }
+}
 /* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
 .sb { position: fixed; top: calc(var(--header-h) + 24px); bottom: 24px; right: var(--side-pad); width: 5px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
 .sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 2px; background: rgba(20,20,20,0.10); }
@@ -254,8 +263,16 @@ const order = (() => {
 order.forEach((w, i) => {
   const a = document.createElement('a');
   a.className = 'work ' + (i % 2 ? 'l' : 'r'); a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
+  a.addEventListener('click', e => {
+    // phones: the first tap shows the title, a second tap on the same work opens it
+    if (matchMedia('(max-width: 767px)').matches && !a.classList.contains('tapped')) {
+      e.preventDefault(); col.querySelectorAll('.work.tapped').forEach(x => x.classList.remove('tapped')); a.classList.add('tapped'); return;
+    }
+    history.replaceState(null, '', '#' + encodeURIComponent(w.f));   // coming back from the detail view lands on this work
+  });
   a.style.setProperty('--r', w.r);
   const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
+  a.style.setProperty('--kp', ((0.8 + 0.2 * (SIZES[i % SIZES.length] - 0.6) / 0.4) * (w.r < 1 ? 0.667 : 1)).toFixed(3));   // phones: 80 - 100% of the column
   a.style.setProperty('--k', k);
   a.dataset.depth = (0.10 + (1 - k) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
@@ -379,6 +396,9 @@ sb.addEventListener('pointerdown', e => {
 });
 addEventListener('resize', place);
 new ResizeObserver(place).observe(col);
+
+// phones: a tap anywhere outside the works hides a shown title
+document.addEventListener('click', e => { if (!e.target.closest('.work')) col.querySelectorAll('.work.tapped').forEach(x => x.classList.remove('tapped')); });
 
 // mobile menu
 $('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
