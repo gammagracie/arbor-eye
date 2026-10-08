@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<base href="../"><!-- archived page: paths resolve from the site root -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Gallery</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
@@ -13,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31px; --step-w: 32px; }
-@media (min-width: 768px) { :root { --thumb-h: 38px; --step-w: 84px; } }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -56,39 +55,45 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
   .burger { display: grid; }
 }
 
-/* stage: the selected work, as large as the space allows */
-/* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
-.stage { flex: 1; min-height: 0; position: relative; margin: 16px var(--side-pad) 0; }
-@media (min-width: 768px) { .stage { margin: 16px max(24px, 3vw) 0; } }
-.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; }
-.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; }
+/* ---- G7: the selected work on the left, a vertical filmstrip down the right; a Tree of Life beside the strip marks the
+   active work. Header, work and strip fill the screen; the footer sits below the fold. */
+.body { flex: 1; min-height: 0; display: flex; gap: 40px; padding: 0 var(--side-pad); }
+.stage { flex: 1; min-width: 0; position: relative; }
+.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; -webkit-user-drag: none; user-select: none; }
 .art img.on { opacity: 1; }
-/* hover: a subtle centre-out enlargement */
-.art { transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
-html:not(.touch) .art:hover { transform: translate(-50%, -50%) scale(1.03); }
-/* previous / next chevrons either side of the work (placed by fit()) */
-.step { position: absolute; top: 50%; transform: translateY(-50%); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: clamp(32px, 4vw, 64px); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: 39px; height: 108px; }
-@media (max-width: 767px) { .step svg { width: 20px; height: 56px; } }
-.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
-.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
-.page.hovering .caption { opacity: 1; }
-html.touch .caption { opacity: 1; }
+.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 14px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
+.stage.hovering .caption, html.touch .caption { opacity: 1; }
 
-/* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
-   eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
-.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
-.strip { overflow: visible; padding: 6px 0; }
-.track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
-.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; outline: 1.5px solid transparent; outline-offset: 0; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease, outline-color 0.3s ease; }
-.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); }
-.thumb.on { opacity: 1; outline-color: #141414; }
-html.touch .track { touch-action: none; }
+/* the strip: small thumbnails in one column (56px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
+.rail { flex: none; width: 92px; position: relative; }
+.strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain;
+  -webkit-mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent);
+          mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent); }
+.strip::-webkit-scrollbar { display: none; }
+.track { position: relative; display: grid; gap: 10px; padding: 48px 0; }
+.thumb { width: 56px; height: 38px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.thumb img { display: block; height: 38px; width: auto; max-width: 56px; box-shadow: 0 2px 6px rgba(20,20,20,0.14); }
+html:not(.touch) .thumb:hover { transform: scale(1.18); }
+.marker { position: absolute; left: 70px; width: 20px; height: 40px; background: url(uploads/arbor-mark-ink.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
+/* phones: the strip runs along the bottom instead, the active thumbnail underlined (no Tree of Life) */
+@media (max-width: 767px) {
+  .body { flex-direction: column; gap: 16px; padding-bottom: 14px; }
+  .rail { width: auto; height: 52px; }
+  .strip { overflow-x: auto; overflow-y: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .track { grid-auto-flow: column; padding: 4px 24px; width: max-content; }
+  .thumb { border-bottom: 1.5px solid transparent; height: 44px; }
+  .thumb.on { border-bottom-color: #141414; }
+  .marker { display: none; }
+}
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
 .foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
@@ -111,7 +116,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="Home.dc.html">H1</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
-          <a href="gallery-filmstrip-vertical.html">G7</a>
+          <a class="on" href="gallery-filmstrip-vertical.html">G7</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
@@ -127,7 +132,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="Home.dc.html">H1</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html">G6</a>
-    <a href="gallery-filmstrip-vertical.html">G7</a>
+    <a href="gallery-filmstrip-vertical.html" style="font-weight: 600">G7</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
@@ -136,18 +141,17 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span class="badge">1</span></span>Shopping Cart</a>
   </nav>
 
-  <main class="stage" id="stage">
-    <a class="art" id="art" href="#" aria-label="View work details">
-      <img id="imgA" alt=""><img id="imgB" alt="">
-    </a>
-    <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
-    <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
+  <main class="body" id="body">
+    <div class="stage" id="stage">
+      <a class="art" id="art" href="#" aria-label="View work details"><img alt=""><img alt=""></a>
+      <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
+      <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
+      <p class="caption" id="caption"><span id="capTitle"></span><small>View details</small></p>
+    </div>
+    <div class="rail">
+      <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"><span class="marker" id="marker" aria-hidden="true"></span></div></div>
+    </div>
   </main>
-  <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span><small>View details</small></p>
-
-  <div class="strip-wrap" id="stripWrap">
-    <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"></div></div>
-  </div>
 </div>
 
 <footer>
@@ -227,180 +231,103 @@ const WORKS = [
   {"f": "ASCENT_09_415da3c4-59af-4e88-b149-81033125ed05.jpg", "s": "Ascent", "t": "Ascent 9", "r": 0.667},
   {"f": "DSC01754.jpg", "s": "", "t": "Canopy", "r": 1.494}
 ];
-
 const $ = id => document.getElementById(id);
-const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
-// The filmstrip glides and magnifies for both mouse and finger. The "touch" class (title always shown) starts
-// from the media query, then follows the input actually used.
-let lastTouch = 0, touching = false;
+const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), marker = $('marker'), caption = $('caption');
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
-const imgs = [$('imgA'), $('imgB')];
-let current = -1, front = 0, turns = 0;
+const phone = matchMedia('(max-width: 767px)');
+const imgs = [...art.querySelectorAll('img')];
+let current = -1, front = 0, turn = 0;
 
-// size the artwork box to the largest size that fits the stage, keeping the work's own proportions
+// the work: as large as the stage allows, leaving room for the chevrons either side and the title below
 function fit() {
   if (current < 0) return;
-  const r = WORKS[current].r, step = $('prev').offsetWidth, W = stage.clientWidth - 2 * step, H = stage.clientHeight;
-  const w = Math.min(W, H * r);
-  $('prev').style.left = $('next').style.right = ((stage.clientWidth - w) / 2 - step) + 'px';   // chevrons hug the work
-  art.style.width = w + 'px';
-  art.style.height = (w / r) + 'px';
-  // sit the hover title midway between the bottom of the work and the top of the thumbnails
-  const sb = stage.getBoundingClientRect().bottom, artBottom = sb - (H - w / r) / 2;
-  caption.style.transform = 'translateY(' + ((artBottom + track.getBoundingClientRect().top) / 2 - (sb + caption.offsetHeight / 2)).toFixed(1) + 'px)';
+  const r = WORKS[current].r, step = $('prev').offsetWidth;
+  const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
+  const h = Math.min(H, W / r), w = h * r;
+  art.style.width = w + 'px'; art.style.height = h + 'px';
+  art.style.top = 'calc(50% - 28px)';
+  $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
+  caption.style.top = 'calc(50% - 28px + ' + (h / 2 + 22) + 'px)';
 }
 
-function show(k, scrollIntoView) {
+// show work k: the incoming image is decoded first, then rises in (dir +1, from below) or drops in (dir -1, from above)
+// over the outgoing one, which fades away the other way
+function show(k, dir) {
   k = (k + WORKS.length) % WORKS.length;
   if (k === current) return;
+  dir = dir || (k > current ? 1 : -1);
+  const first = current < 0;
   current = k;
-  // soft crossfade: the incoming image is fully decoded first, then fades in over the outgoing one (once per change,
-  // and only for the latest request if arrows are tapped quickly)
-  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], turn = ++turns;
-  const swap = () => { if (turn !== turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); front = 1 - front; };
-  next.alt = w.t;
-  next.src = 'assets/works/' + w.f;
-  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
-  [k - 1, k + 1].forEach(n => { new Image().src = 'assets/works/' + WORKS[(n + WORKS.length) % WORKS.length].f; });   // neighbours ready for the arrows
-  art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
+  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], t = ++turn;
+  next.src = 'assets/works/' + w.f; next.alt = w.t;
+  art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
   $('capTitle').textContent = w.t;
-  [...track.children].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
-  if (scrollIntoView) centreOn(track.children[k]);
+  const swap = () => {
+    if (t !== turn) return;
+    fit();
+    const ease = 'opacity 0.8s ease-in-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
+    next.style.transition = 'none'; next.style.transform = first ? '' : 'translateY(' + (dir * 36) + 'px)';
+    void next.offsetWidth;
+    next.style.transition = prev.style.transition = ease;
+    next.style.transform = ''; next.classList.add('on');
+    prev.style.transform = first ? '' : 'translateY(' + (-dir * 36) + 'px)'; prev.classList.remove('on');
+    front = 1 - front;
+  };
+  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);
+  [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works/' + m.f; });   // neighbours ready
+  [...track.querySelectorAll('.thumb')].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
+  placeMarker(first);
   history.replaceState(null, '', '#' + encodeURIComponent(w.f));
+}
+
+// the Tree of Life sits beside the active thumbnail, and the strip glides to keep that thumbnail in the middle
+function placeMarker(instant) {
+  const b = track.querySelectorAll('.thumb')[current];
+  if (!b) return;
+  if (instant) marker.style.transition = 'none';
+  marker.style.top = (b.offsetTop + b.offsetHeight / 2 - marker.offsetHeight / 2) + 'px';
+  if (instant) { void marker.offsetWidth; marker.style.transition = ''; }
+  if (phone.matches) strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: instant ? 'auto' : 'smooth' });
+  else strip.scrollTo({ top: b.offsetTop + b.offsetHeight / 2 - strip.clientHeight / 2, behavior: instant ? 'auto' : 'smooth' });
 }
 
 // build the strip
 WORKS.forEach((w, k) => {
   const b = document.createElement('button');
   b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
-  const im = document.createElement('img');
-  im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
-  b.appendChild(im);
-  b.addEventListener('click', () => show(k, false));
+  const im = document.createElement('img'); im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
+  b.appendChild(im); b.addEventListener('click', () => show(k));
   track.appendChild(b);
 });
 
-// ---- Filmstrip motion (mouse devices)
-// The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
-// (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
-let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX = null;
-// The cursor (or finger) steers the row: in the middle DEAD share of the page it eases to a stop, and the further
-// left or right of that the faster it drifts that way, up to CRUISE at the page edges.
-// GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
-// ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
-const GLIDE = 1200, CRUISE = 380, ACCEL = 260, DEAD = 0.10;
-const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
-function run() {
-  if (running) return; running = true;
-  let last = performance.now();
-  const step = now => {
-    // time-based so the speed is the same on 60Hz and 120Hz screens: the row eases up to a capped cruising
-    // speed, drifts, then eases to rest
-    const dt = Math.min(64, now - last); last = now;
-    const d = target - pos;
-    if (drive !== null) {   // steering: ease toward the speed the cursor asks for, stopping at either end
-      vel += (drive - vel) * (1 - Math.exp(-dt / ACCEL));
-      pos = Math.max(0, Math.min(maxPan(), pos + vel * dt));
-      if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.002)) vel = 0;
-      target = pos;
-    }
-    else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
-    else {
-      const want = Math.max(-cap, Math.min(cap, d / GLIDE));   // px per ms
-      vel += (want - vel) * (1 - Math.exp(-dt / ACCEL));
-      if (Math.abs(d) < 0.3 && Math.abs(vel) < 0.01) { pos = target; vel = 0; } else pos += vel * dt;
-    }
-    track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)';
-    if (mouseX !== null) magnify(mouseX);
-    if (pos !== target || mouseX !== null) requestAnimationFrame(step); else running = false;
-  };
-  requestAnimationFrame(step);
-}
-function centreOn(b) {
-  target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
-  cap = CRUISE / 1000; drive = null;
-  run();
-}
-
-// Dock-style magnification: thumbnails swell under the cursor (bell curve), growing up from the baseline;
-// neighbours slide aside, and the thumbnail under the cursor stays under it.
-const PEAK = 0.9;              // +90% at the cursor
-function magnify(x) {
-  const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
-  const btns = [...track.children];
-  const geo = btns.map(b => ({ l: left + b.offsetLeft, w: b.offsetWidth }));
-  const sigma = 1.7 * (geo[0].w + 6);
-  const bell = geo.map(g => Math.exp(-Math.pow((x - (g.l + g.w / 2)) / sigma, 2)));
-  const extra = geo.map((g, k) => PEAK * bell[k] * g.w);
-  let cursorExtra = 0;          // growth that sits to the left of the cursor
-  geo.forEach((g, k) => { cursorExtra += extra[k] * Math.max(0, Math.min(1, (x - g.l) / g.w)); });
-  let acc = 0;
-  btns.forEach((b, k) => {
-    const shift = acc + extra[k] / 2 - cursorExtra; acc += extra[k];
-    b.style.transform = bell[k] < 0.002 && Math.abs(shift) < 0.5 ? '' : 'translateX(' + shift.toFixed(1) + 'px) scale(' + (1 + PEAK * bell[k]).toFixed(3) + ')';
-    b.style.zIndex = Math.round(bell[k] * 100);
-  });
-}
-function relax() {
-  mouseX = null; drive = null;
-  if (cap !== Infinity) target = Math.max(0, Math.min(maxPan(), pos + vel * GLIDE * 0.5));   // coast to a stop rather than drifting on to the old target
-  [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, outline-color 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
-  setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
-}
-// the row only moves while the pointer is on the thumbnails: the row itself, or a magnified thumbnail rising above it
-const inBand = (y, el) => { const band = track.getBoundingClientRect(); return (y >= band.top - 4 && y <= band.bottom + 4) || !!(el && el.closest && el.closest('.thumb')); };
-function follow(x) {
-  mouseX = x;
-  const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
-  drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08))) * CRUISE / 1000;
-  cap = CRUISE / 1000;
-  run();
-}
-function halt() { relax(); target = pos; vel = 0; }
-// finger: the row glides and magnifies only while a finger is on the filmstrip, coasts to rest when it lifts,
-// and a touch anywhere else on the page stops it dead
-addEventListener('touchstart', e => {
-  lastTouch = Date.now();
-  document.documentElement.classList.add('touch');
-  const t = e.touches[0];
-  touching = inBand(t.clientY, e.target);
-  if (touching) follow(t.clientX); else halt();
-}, { passive: true, capture: true });
-addEventListener('touchmove', e => { lastTouch = Date.now(); if (touching) follow(e.touches[0].clientX); }, { passive: true });
-['touchend', 'touchcancel'].forEach(n => addEventListener(n, () => { lastTouch = Date.now(); if (touching) { touching = false; relax(); } }, { passive: true }));
-{
-  addEventListener('mousemove', e => {
-    if (Date.now() - lastTouch < 1200) return;   // mouse events synthesised from a tap
-    document.documentElement.classList.remove('touch');
-    if (!inBand(e.clientY, e.target)) { if (mouseX !== null) relax(); return; }
-    follow(e.clientX);
-  });
-  document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; drive = null; run(); }, { passive: false });
-}
-
-// title on hover, keyboard, resize
-art.addEventListener('mouseenter', () => page.classList.add('hovering'));
-art.addEventListener('mouseleave', () => page.classList.remove('hovering'));
-addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(current + 1, true); if (e.key === 'ArrowLeft') show(current - 1, true); });
-addEventListener('resize', fit);
+// arrows, keys (left / up = previous, right / down = next), hover title
+$('prev').addEventListener('click', () => show(current - 1, -1));
+$('next').addEventListener('click', () => show(current + 1, 1));
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1, 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1, -1); }
+});
+art.addEventListener('mouseenter', () => stage.classList.add('hovering'));
+art.addEventListener('mouseleave', () => stage.classList.remove('hovering'));
+// finger swipe on the work: up / left = next, down / right = previous
+let touch0 = null;
+art.addEventListener('touchstart', e => { touch0 = e.touches[0]; }, { passive: true });
+art.addEventListener('touchend', e => {
+  if (!touch0) return; const t = e.changedTouches[0], dx = t.clientX - touch0.clientX, dy = t.clientY - touch0.clientY; touch0 = null;
+  const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (Math.abs(d) > 40) { e.preventDefault(); show(current + (d < 0 ? 1 : -1), d < 0 ? 1 : -1); }
+});
+addEventListener('resize', () => { fit(); placeMarker(true); });
 new ResizeObserver(fit).observe(stage);
-
-$('prev').addEventListener('click', () => show(current - 1, true));
-$('next').addEventListener('click', () => show(current + 1, true));
-
-// swipe the main image on touch screens
-let tx = 0;
-stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-stage.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) show(current + (dx < 0 ? 1 : -1), true); });
+phone.addEventListener('change', () => placeMarker(true));
 
 // mobile menu
 $('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
 
-// start on the work named in the URL, else the first work
+// start on the work named in the URL, else the first
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
-show(start >= 0 ? start : 0, start > 0);
+show(start >= 0 ? start : 0);
 </script>
 </body>
 </html>
