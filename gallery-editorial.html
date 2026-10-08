@@ -32,7 +32,7 @@ button { font-family: inherit; }
 /* header */
 header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
 .bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
-.logo { position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
 .logo .logo-text { visibility: hidden; }
 .logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
 .right, .icons { display: flex; align-items: baseline; }
@@ -87,16 +87,16 @@ html:not(.touch) .scroller { cursor: grab; }
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
 .col { box-sizing: border-box; padding: 64px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
-.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-1 * var(--lap)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
-/* hover scale rides on top of the parallax shift; the scale eases in via --s */
-.work { --s: 1; transform: translateY(var(--py, 0px)) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-0.12 * var(--col) * var(--k) / var(--r)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+/* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
+.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1), --hy 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
+@property --hy { syntax: '<length>'; inherits: false; initial-value: 0px; }
 .work:first-child { margin-top: 0; }
-/* reveal: the picture is 14% larger than its window and slides inside it as the work crosses the screen (moving a little
-   slower than the window), so more of its top or bottom comes into view as you scroll */
-.work .win { position: absolute; inset: 0; overflow: hidden; }
-.work img { position: absolute; left: -7%; top: 0; width: 114%; height: 114%; object-fit: cover; transform: translateY(var(--iy, 0px)); will-change: transform; -webkit-user-drag: none; user-select: none; }
-html:not(.touch) .work:hover { --s: 1.03; z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
+/* the whole painting always shows (frames share the scans' own proportions, so nothing is cropped) */
+.work .win { position: absolute; inset: 0; }
+.work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
+html:not(.touch) .work:hover { --s: 1.2; z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
@@ -107,9 +107,9 @@ html:not(.touch) .work:hover .side { opacity: 1; }
 @media (max-width: 767px) { .work .side { display: none; } }
 /* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
 .sb { position: fixed; top: calc(var(--header-h) + 24px); bottom: 24px; right: var(--side-pad); width: 5px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
-.sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 1px; background: rgba(20,20,20,0.10); }
-/* the handle is the Tree of Life (the favicon drawing, ink on transparent), 58px tall, centred on the hairline track */
-.sb .thumb { position: absolute; right: -27.5px; width: 58px; height: 58px; background: url(assets/icon-512.png) center / contain no-repeat; opacity: 0.8; cursor: grab; transition: opacity 0.2s ease; }
+.sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 2px; background: rgba(20,20,20,0.10); }
+/* the handle is the Tree of Life (the favicon drawing, ink on transparent), 58px tall, 4px right of the 2px track's centre */
+.sb .thumb { position: absolute; right: -31.5px; width: 58px; height: 58px; background: url(assets/icon-512.png) center / contain no-repeat; opacity: 0.8; cursor: grab; transition: opacity 0.2s ease; }
 .sb:hover .thumb, .sb.held .thumb { opacity: 1; }
 .sb.held .thumb { cursor: grabbing; }
 .sb.show, .sb:hover, .sb.held { opacity: 1; }
@@ -120,7 +120,7 @@ footer { flex: none; }
 <body>
   <header>
     <div class="bar">
-      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
       <div class="right">
         <nav class="main">
     <a href="Home.dc.html">H1</a>
@@ -266,24 +266,40 @@ order.forEach((w, i) => {
   col.appendChild(a);
 });
 
-// ---- Parallax: each work is nudged along the scroll by its depth, measured from the middle of the viewport, so the
-// stack separates into layers as it moves (front pieces travel a little faster than the ones behind).
+// ---- Parallax (motion-based): while the column scrolls, each work trails the scroll by its own amount (the smaller,
+// nearer pieces keep up more closely than the larger ones behind), so the layers drift apart and the pieces feel afloat;
+// when the scrolling stops they all settle back into the stack, overlapping as laid out (12% of each work's height).
 const works = [...col.querySelectorAll('.work')];
-let parallaxQueued = false;
-function parallax() {
-  parallaxQueued = false;
-  const vh = scroller.clientHeight, top = scroller.scrollTop, mid = top + vh / 2;
-  works.forEach(w => {
-    const centre = w.offsetTop + w.offsetHeight / 2;
-    if (Math.abs(centre - mid) > vh * 1.5) return;   // off screen: leave as is
-    w.style.setProperty('--py', ((centre - mid) * w.dataset.depth).toFixed(1) + 'px');
-    // the picture inside: fully down (top edge showing) when the work is at the top of the screen, fully up at the bottom
-    w.style.setProperty('--iy', (-0.14 * w.offsetHeight * Math.min(1, Math.max(0, (centre - top) / vh))).toFixed(1) + 'px');
+const trail = works.map(() => scroller.scrollTop);
+let parallaxRunning = false, parallaxLast = 0;
+function parallaxTick(now) {
+  const dt = parallaxLast ? Math.min(64, now - parallaxLast) : 16; parallaxLast = now;
+  const st = scroller.scrollTop; let moving = false;
+  works.forEach((w, i) => {
+    const tau = 420 - w.dataset.depth * 800;                     // ms to close ~63% of the gap: about 160 - 340ms by depth
+    trail[i] += (st - trail[i]) * (1 - Math.exp(-dt / tau));
+    let d = st - trail[i];
+    if (Math.abs(d) < 0.3) { trail[i] = st; d = 0; } else moving = true;
+    w.style.setProperty('--py', Math.max(-110, Math.min(110, d * 0.55)).toFixed(1) + 'px');
   });
+  if (moving) requestAnimationFrame(parallaxTick); else { parallaxRunning = false; parallaxLast = 0; }
 }
-scroller.addEventListener('scroll', () => { if (!parallaxQueued) { parallaxQueued = true; requestAnimationFrame(parallax); } }, { passive: true });
-addEventListener('resize', parallax);
-parallax();
+function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
+scroller.addEventListener('scroll', parallax, { passive: true });
+
+// ---- Hover (mouse): the work grows to 120% and the works above and below draw back to leave 25px clear around it
+const GAP = 25;
+works.forEach((w, i) => {
+  w.addEventListener('mouseenter', () => {
+    if (document.documentElement.classList.contains('touch')) return;
+    const r = w.getBoundingClientRect(), grow = r.height * 0.1;
+    const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top);
+    const up = above.length ? Math.min(0, (r.top - grow - GAP) - Math.max(...above)) : 0;
+    const down = below.length ? Math.max(0, (r.bottom + grow + GAP) - Math.min(...below)) : 0;
+    works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : 0).toFixed(1) + 'px'));
+  });
+  w.addEventListener('mouseleave', () => works.forEach(x => x.style.setProperty('--hy', '0px')));
+});
 
 // ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
 // Touch screens keep native scrolling. Keyboard and other native scrolls just re-sync the target.
@@ -343,9 +359,8 @@ function place() {
 }
 let barDrag = null, hideT = 0;
 function showBar() { sb.classList.add('show'); clearTimeout(hideT); }
-scroller.addEventListener('mouseenter', showBar);
-scroller.addEventListener('mousemove', showBar);
-scroller.addEventListener('mouseleave', () => { hideT = setTimeout(() => sb.classList.remove('show'), 250); });
+document.addEventListener('mousemove', showBar);   // shown while the pointer is anywhere on the page, header included
+document.documentElement.addEventListener('mouseleave', () => { hideT = setTimeout(() => sb.classList.remove('show'), 250); });
 bar.addEventListener('pointerdown', e => {
   e.preventDefault(); e.stopPropagation();
   barDrag = { y: e.clientY, top: scroller.scrollTop }; sb.classList.add('held'); bar.setPointerCapture(e.pointerId);
@@ -371,29 +386,28 @@ $('burger').addEventListener('click', () => document.body.classList.toggle('menu
 // open on the work named in the URL
 const want = decodeURIComponent(location.hash.slice(1));
 const hit = WORKS.find(w => w.f === want || w.t === want);
-if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit.f).offsetTop - 40); });
+if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit.f).offsetTop - 40); trail.fill(scroller.scrollTop); });   // arrive at rest, without a drift
 
 // ---- Opening (desktop and tablet; skipped when the URL names a work, on phones, and for reduced motion). The first twelve
-// works appear one by one as small dark tiles in a horizontal row in the middle of the screen; the row turns 90 degrees
-// clockwise into a column, grows toward the viewer to full size while settling into place, and the tiles turn into the
-// paintings. A click anywhere skips to the end. Driven frame by frame from one timeline (ms).
+// works appear one by one as small dark tiles spread evenly across the screen in a row, well apart; the row turns 90
+// degrees clockwise into an evenly spaced column; the tiles then grow toward the viewer into their places in the stack
+// (only now do they overlap) and turn into the paintings. A click anywhere skips to the end. One timeline (ms).
 (function intro() {
   if (hit || matchMedia('(max-width: 767px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  parallax();
-  const shown = works.slice(0, 12);
+  const shown = works.slice(0, 12), n = shown.length;
   const rects = shown.map(w => w.getBoundingClientRect());
-  const top = Math.min(...rects.map(r => r.top)), bottom = Math.max(...rects.map(r => r.bottom));
-  const cx = innerWidth / 2, cy = (top + bottom) / 2;                   // the column's own centre: the pivot
-  const mid = (scroller.getBoundingClientRect().top + innerHeight) / 2;   // middle of the space under the header
-  const s0 = Math.min(0.1, innerWidth * 0.4 / (bottom - top));           // the row spans about two fifths of the screen
-  const dy = mid - cy;                                                    // lifts the small row to the middle of the screen
+  const cx = innerWidth / 2, mid = (scroller.getBoundingClientRect().top + innerHeight) / 2;
+  const span = innerWidth * 0.8, slot = span / n;                                    // the row runs across 80% of the screen
+  const sR = Math.min(...rects.map(r => slot * 0.6 / r.height));                     // tiles fill 60% of their slot: clear gaps between
   const layer = document.createElement('div'), stack = document.createElement('div');
-  layer.className = 'intro'; stack.className = 'intro-stack'; stack.style.transformOrigin = cx + 'px ' + cy + 'px';
+  layer.className = 'intro'; stack.className = 'intro-stack'; stack.style.transformOrigin = cx + 'px ' + mid + 'px';
   const tiles = shown.map((w, i) => {
     const r = rects[i], t = document.createElement('div'), im = document.createElement('img');
     t.className = 'intro-tile'; im.src = w.querySelector('img').src; im.alt = '';
     Object.assign(t.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', zIndex: getComputedStyle(w).zIndex, opacity: 0 });
-    t.appendChild(im); stack.appendChild(t); return t;
+    t.appendChild(im); stack.appendChild(t);
+    // small place: on the column through the middle of the screen, one slot apart (the row, before the turn)
+    return { t, im, dx: cx - (r.left + r.width / 2), dy: mid - span / 2 + (i + 0.5) * slot - (r.top + r.height / 2) };
   });
   layer.appendChild(stack); document.body.appendChild(layer);
   scroller.style.opacity = '0';
@@ -403,12 +417,15 @@ if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit
   let t0 = performance.now(), skip = false, done = false;
   const frame = now => {
     const t = skip ? END : now - t0;
-    tiles.forEach((tile, i) => { const p = out(seg(t, 120 + i * 70, 380)); tile.style.opacity = p; tile.style.transform = 'scale(' + (0.3 + 0.7 * p).toFixed(3) + ')'; });  // appear, one by one
-    const a = -90 + 90 * inOut(seg(t, 1000, 1000));                       // turn 90 degrees clockwise (1.0 - 2.0s)
-    const g = out(seg(t, 2000, 1200));                                      // grow to full size and settle (2.0 - 3.2s)
-    stack.style.transform = 'translateY(' + (dy * (1 - g)).toFixed(1) + 'px) scale(' + (s0 + (1 - s0) * g).toFixed(4) + ') rotate(' + a.toFixed(2) + 'deg)';
-    const f = inOut(seg(t, 2900, 600)).toFixed(3);                          // tiles turn into the paintings (2.9 - 3.5s)
-    tiles.forEach(tile => { tile.firstChild.style.opacity = f; });
+    stack.style.transform = 'rotate(' + (-90 + 90 * inOut(seg(t, 1000, 1000))).toFixed(2) + 'deg)';   // turn 90 degrees clockwise (1.0 - 2.0s)
+    const g = out(seg(t, 2000, 1200));                                                                 // grow into place (2.0 - 3.2s)
+    const f = inOut(seg(t, 2900, 600)).toFixed(3);                                                     // become the paintings (2.9 - 3.5s)
+    tiles.forEach((x, i) => {
+      const p = out(seg(t, 120 + i * 70, 380));                                                        // appear, one by one
+      x.t.style.opacity = p;
+      x.t.style.transform = 'translate(' + (x.dx * (1 - g)).toFixed(1) + 'px, ' + (x.dy * (1 - g)).toFixed(1) + 'px) scale(' + ((sR + (1 - sR) * g) * (0.3 + 0.7 * p)).toFixed(4) + ')';
+      x.im.style.opacity = f;
+    });
     if (t < END) requestAnimationFrame(frame); else finish();
   };
   const finish = () => {
