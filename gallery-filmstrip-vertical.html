@@ -31,7 +31,7 @@ button { font-family: inherit; }
 /* header */
 header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
 .bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
-.logo { position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
 .logo .logo-text { visibility: hidden; }
 .logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
 .right, .icons { display: flex; align-items: baseline; }
@@ -59,10 +59,11 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
    active work. Header, work and strip fill the screen; the footer sits below the fold. */
 .body { flex: 1; min-height: 0; display: flex; gap: 40px; padding: 0 var(--side-pad); }
 .stage { flex: 1; min-width: 0; position: relative; }
-.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-.art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; -webkit-user-drag: none; user-select: none; }
+.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; }
+.art img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; opacity: 0; box-shadow: 0 6px 16px rgba(20,20,20,0.14); transition: opacity 0.8s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .art img.on { opacity: 1; }
-.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: clamp(32px, 4vw, 64px); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; transition: color 0.2s ease; }
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: clamp(32px, 4vw, 64px); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; opacity: 0; transition: color 0.2s ease, opacity 0.3s ease; }
+.stage:hover .step, .step:focus-visible { opacity: 1; }   /* the arrows appear while the pointer is over the work area */
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
@@ -70,17 +71,15 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
 
-/* the strip: small thumbnails in one column (56px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
-.rail { flex: none; width: 92px; position: relative; }
-.strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain;
-  -webkit-mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent);
-          mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent); }
+/* the strip: small thumbnails in one column (28px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
+.rail { flex: none; width: 58px; position: relative; }
+.strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
 .strip::-webkit-scrollbar { display: none; }
-.track { position: relative; display: grid; gap: 10px; padding: 48px 0; }
-.thumb { width: 56px; height: 38px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
-.thumb img { display: block; height: 38px; width: auto; max-width: 56px; box-shadow: 0 2px 6px rgba(20,20,20,0.14); }
+.track { position: relative; display: grid; gap: 7px; padding: 24px 6px; justify-content: start; }   /* 6px each side leaves room for a thumbnail growing on hover */
+.thumb { width: 28px; height: 19px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.thumb img { display: block; height: 19px; width: auto; max-width: 28px; box-shadow: 0 1px 4px rgba(20,20,20,0.16); }
 html:not(.touch) .thumb:hover { transform: scale(1.18); }
-.marker { position: absolute; left: 70px; width: 20px; height: 40px; background: url(uploads/arbor-mark-ink.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.marker { position: absolute; left: 44px; width: 14px; height: 28px; background: url(uploads/arbor-mark-ink.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
 /* phones: the strip runs along the bottom instead, the active thumbnail underlined (no Tree of Life) */
 @media (max-width: 767px) {
@@ -110,7 +109,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 <div class="page" id="page">
   <header>
     <div class="bar">
-      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
       <div class="right">
         <nav class="main">
     <a href="Home.dc.html">H1</a>
@@ -243,8 +242,9 @@ function fit() {
   if (current < 0) return;
   const r = WORKS[current].r, step = $('prev').offsetWidth;
   const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
-  const h = Math.min(H, W / r), w = h * r;
+  const h = Math.min(H, W / r) * 0.85, w = h * r;   // 85% of the largest the stage allows
   art.style.width = w + 'px'; art.style.height = h + 'px';
+  const im = imgs[front]; im.style.width = w + 'px'; im.style.height = h + 'px';
   art.style.top = 'calc(50% - 28px)';
   $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
   caption.style.top = 'calc(50% - 28px + ' + (h / 2 + 22) + 'px)';
@@ -262,16 +262,12 @@ function show(k, dir) {
   next.src = 'assets/works/' + w.f; next.alt = w.t;
   art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
   $('capTitle').textContent = w.t;
+  // a plain crossfade: the incoming image fades in over the outgoing one, each at its own size, nothing moves
   const swap = () => {
     if (t !== turn) return;
-    fit();
-    const ease = 'opacity 0.8s ease-in-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
-    next.style.transition = 'none'; next.style.transform = first ? '' : 'translateY(' + (dir * 36) + 'px)';
-    void next.offsetWidth;
-    next.style.transition = prev.style.transition = ease;
-    next.style.transform = ''; next.classList.add('on');
-    prev.style.transform = first ? '' : 'translateY(' + (-dir * 36) + 'px)'; prev.classList.remove('on');
     front = 1 - front;
+    fit();
+    next.classList.add('on'); prev.classList.remove('on');
   };
   Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);
   [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works/' + m.f; });   // neighbours ready
