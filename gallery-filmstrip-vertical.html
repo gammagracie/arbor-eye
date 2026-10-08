@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor &amp; Eye | Gallery</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 188.2px; overflow: hidden; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px; }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* ---- G7: the selected work on the left, a vertical filmstrip down the right; a Tree of Life beside the strip marks the
+   active work. Header, work and strip fill the screen; the footer sits below the fold. */
+.body { flex: 1; min-height: 0; display: flex; gap: 40px; padding: 0 var(--side-pad); }
+.stage { flex: 1; min-width: 0; position: relative; }
+.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; -webkit-user-drag: none; user-select: none; }
+.art img.on { opacity: 1; }
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: clamp(32px, 4vw, 64px); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; transition: color 0.2s ease; }
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 14px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
+.stage.hovering .caption, html.touch .caption { opacity: 1; }
+
+/* the strip: small thumbnails in one column (56px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
+.rail { flex: none; width: 92px; position: relative; }
+.strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain;
+  -webkit-mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent);
+          mask-image: linear-gradient(transparent, #000 48px, #000 calc(100% - 48px), transparent); }
+.strip::-webkit-scrollbar { display: none; }
+.track { position: relative; display: grid; gap: 10px; padding: 48px 0; }
+.thumb { width: 56px; height: 38px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.thumb img { display: block; height: 38px; width: auto; max-width: 56px; box-shadow: 0 2px 6px rgba(20,20,20,0.14); }
+html:not(.touch) .thumb:hover { transform: scale(1.18); }
+.marker { position: absolute; left: 70px; width: 20px; height: 40px; background: url(uploads/arbor-mark-ink.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* phones: the strip runs along the bottom instead, the active thumbnail underlined (no Tree of Life) */
+@media (max-width: 767px) {
+  .body { flex-direction: column; gap: 16px; padding-bottom: 14px; }
+  .rail { width: auto; height: 52px; }
+  .strip { overflow-x: auto; overflow-y: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .track { grid-auto-flow: column; padding: 4px 24px; width: max-content; }
+  .thumb { border-bottom: 1.5px solid transparent; height: 44px; }
+  .thumb.on { border-bottom-color: #141414; }
+  .marker { display: none; }
+}
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while H1 / G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><span aria-hidden="true" style="position: absolute; left: 0; top: 6.5px; width: 188.2px; height: 25.2px; background: currentColor; -webkit-mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat; mask: url(uploads/arbor-eye-wordmark.svg) center / contain no-repeat"></span></a>
+      <div class="right">
+        <nav class="main">
+    <a href="Home.dc.html">H1</a>
+          <a href="gallery-filmstrip-2.html">G5</a>
+          <a href="gallery-editorial.html">G6</a>
+          <a class="on" href="gallery-filmstrip-vertical.html">G7</a>
+          <a href="About.dc.html">About</a>
+          <a href="Contact-tabs.dc.html">Contact</a>
+        </nav>
+        <div class="icons">
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span class="badge">1</span></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="Home.dc.html">H1</a>
+    <a href="gallery-filmstrip-2.html">G5</a>
+    <a href="gallery-editorial.html">G6</a>
+    <a href="gallery-filmstrip-vertical.html" style="font-weight: 600">G7</a>
+    <a href="About.dc.html">About</a>
+    <a href="Contact-tabs.dc.html">Contact</a>
+    <a href="Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="Contact-tabs.dc.html#returns">Returns &amp; Exchanges</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span class="badge">1</span></span>Shopping Cart</a>
+  </nav>
+
+  <main class="body" id="body">
+    <div class="stage" id="stage">
+      <a class="art" id="art" href="#" aria-label="View work details"><img alt=""><img alt=""></a>
+      <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
+      <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
+      <p class="caption" id="caption"><span id="capTitle"></span><small>View details</small></p>
+    </div>
+    <div class="rail">
+      <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"><span class="marker" id="marker" aria-hidden="true"></span></div></div>
+    </div>
+  </main>
+</div>
+
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
+      </div>
+    </div>
+</footer>
+
+<script>
+// Works shown in the filmstrip. Generated from Gallery.dc.html (hidden works left out): f = file in assets/works,
+// s = series, t = title, r = width / height. Keep in step with the gallery's list when works change.
+const WORKS = [
+  {"f": "DSC01769.jpg", "s": "", "t": "Brilliance", "r": 1.494},
+  {"f": "CORE_11.jpg", "s": "Core", "t": "Script", "r": 1.494},
+  {"f": "CORE_12.jpg", "s": "Core", "t": "Symbiosis", "r": 1.494},
+  {"f": "CORE_13.jpg", "s": "Core", "t": "Conduit", "r": 1.494},
+  {"f": "CORE_15.jpg", "s": "Core", "t": "Chamber", "r": 1.494},
+  {"f": "CORE_16.jpg", "s": "Core", "t": "Habitat", "r": 1.494},
+  {"f": "CORE_17.jpg", "s": "Core", "t": "Core 17", "r": 1.494},
+  {"f": "CORE_18.jpg", "s": "Core", "t": "Upwelling", "r": 1.494},
+  {"f": "CORE_20.jpg", "s": "Core", "t": "Core 20", "r": 1.494},
+  {"f": "THETURNING_08.jpg", "s": "The Turning", "t": "Passage", "r": 1.494},
+  {"f": "OUTLIERS_01.jpg", "s": "Outliers", "t": "Outliers 1", "r": 1.494},
+  {"f": "OUTLIERS_02.jpg", "s": "Outliers", "t": "Outliers 2", "r": 1.494},
+  {"f": "OUTLIERS_03.jpg", "s": "Outliers", "t": "Outliers 3", "r": 1.494},
+  {"f": "OUTLIERS_04.jpg", "s": "Outliers", "t": "Outliers 4", "r": 1.494},
+  {"f": "OUTLIERS_05.jpg", "s": "Outliers", "t": "Outliers 5", "r": 1.494},
+  {"f": "OUTLIERS_06.jpg", "s": "Outliers", "t": "Outliers 6", "r": 1.494},
+  {"f": "OUTLIERS_07.jpg", "s": "Outliers", "t": "Outliers 7", "r": 1.494},
+  {"f": "SELECT_02.jpg", "s": "Select", "t": "Aurora", "r": 1.494},
+  {"f": "SELECT_03.jpg", "s": "Select", "t": "Select 3", "r": 1.494},
+  {"f": "SELECT_04.jpg", "s": "Select", "t": "Select 4", "r": 1.494},
+  {"f": "SELECT_05.jpg", "s": "Select", "t": "Select 5", "r": 1.494},
+  {"f": "SELECT_06.jpg", "s": "Select", "t": "Select 6", "r": 1.494},
+  {"f": "SELECT_07.jpg", "s": "Select", "t": "Select 7", "r": 1.494},
+  {"f": "SELECT_08.jpg", "s": "Select", "t": "Resonance", "r": 1.494},
+  {"f": "SPECTRUM_01.jpg", "s": "Spectrum", "t": "Spectrum 1", "r": 1.494},
+  {"f": "SPECTRUM_02.jpg", "s": "Spectrum", "t": "Spectrum 2", "r": 1.494},
+  {"f": "SPECTRUM_03.jpg", "s": "Spectrum", "t": "Spectrum 3", "r": 1.494},
+  {"f": "SPECTRUM_04.jpg", "s": "Spectrum", "t": "Spectrum 4", "r": 1.494},
+  {"f": "STRUCTURE_01.jpg", "s": "Structure", "t": "Structure 1", "r": 0.667},
+  {"f": "STRUCTURE_02.jpg", "s": "Structure", "t": "Structure 2", "r": 0.667},
+  {"f": "STRUCTURE_03.jpg", "s": "Structure", "t": "Structure 3", "r": 0.667},
+  {"f": "STRUCTURE_04.jpg", "s": "Structure", "t": "Crossings", "r": 0.667},
+  {"f": "STRUCTURE_05.jpg", "s": "Structure", "t": "Structure 5", "r": 0.667},
+  {"f": "THETURNING_01.jpg", "s": "The Turning", "t": "The Turning 1", "r": 1.494},
+  {"f": "THETURNING_02.jpg", "s": "The Turning", "t": "The Turning 2", "r": 1.494},
+  {"f": "THETURNING_03.jpg", "s": "The Turning", "t": "The Turning 3", "r": 1.494},
+  {"f": "THETURNING_04.jpg", "s": "The Turning", "t": "The Turning 4", "r": 1.494},
+  {"f": "THETURNING_05.jpg", "s": "The Turning", "t": "The Turning 5", "r": 1.494},
+  {"f": "THETURNING_07.jpg", "s": "The Turning", "t": "The Turning 7", "r": 1.494},
+  {"f": "THETURNING_06.jpg", "s": "The Turning", "t": "The Turning 6", "r": 1.494},
+  {"f": "TONAL_01.jpg", "s": "Tonal", "t": "Tonal 1", "r": 1.494},
+  {"f": "TONAL_02.jpg", "s": "Tonal", "t": "Tonal 2", "r": 1.494},
+  {"f": "TONAL_03.jpg", "s": "Tonal", "t": "Tonal 3", "r": 1.494},
+  {"f": "TONAL_04.jpg", "s": "Tonal", "t": "Tonal 4", "r": 1.494},
+  {"f": "b2c3e2d8842e37fb32c496a173ac7e739c46a632.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "4d6ce21130edbf551ac6b7727cb65ae339472c34.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "1b27d6c6022f7046a2dab5e82a0ce017b584e750.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "CONVERGENCE_06.jpg", "s": "Convergence", "t": "Convergence 6", "r": 1.494},
+  {"f": "CONVERGENCE_03.jpg", "s": "Convergence", "t": "Convergence 3", "r": 1.494},
+  {"f": "c4097402c30a2418da22b00140585fe9acb78350.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "CONVERGENCE_07.jpg", "s": "Convergence", "t": "Convergence 7", "r": 1.494},
+  {"f": "ASCENT_01_0c7e78cf-a7b1-4e63-b33d-2cf3be45b291.jpg", "s": "Ascent", "t": "Ascent 1", "r": 0.667},
+  {"f": "ASCENT_12_1fbebbf4-835a-4fb1-a4a5-40a3d8b1a8fe.jpg", "s": "Ascent", "t": "Ascent 12", "r": 0.667},
+  {"f": "ASCENT_13_0204696a-f577-48c5-a3c2-3c8f12a9d6fa.jpg", "s": "Ascent", "t": "Ascent 13", "r": 0.667},
+  {"f": "ASCENT_03_a1250a1b-76ce-4d44-9640-59e606473398.jpg", "s": "Ascent", "t": "Ascent 3", "r": 0.667},
+  {"f": "ASCENT_04_cc0af23a-5580-4a9f-ad8f-de1c0a7122a4.jpg", "s": "Ascent", "t": "Ascent 4", "r": 0.667},
+  {"f": "ASCENT_05_3b6eae9f-57ba-4c04-8234-a9ce2c335c98.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667},
+  {"f": "ASCENT_06_88b2cbea-2e1b-4c87-b957-481676147cc0.jpg", "s": "Ascent", "t": "Ascent 6", "r": 0.667},
+  {"f": "ASCENT_07_ba0414ef-80d6-4940-8b36-0b8bebb7486f.jpg", "s": "Ascent", "t": "Ascent 7", "r": 0.667},
+  {"f": "ASCENT_08_bb8b8ee5-af4c-4cc3-826f-a46218ea5940.jpg", "s": "Ascent", "t": "Ascent 8", "r": 0.667},
+  {"f": "ASCENT_09_415da3c4-59af-4e88-b149-81033125ed05.jpg", "s": "Ascent", "t": "Ascent 9", "r": 0.667},
+  {"f": "DSC01754.jpg", "s": "", "t": "Canopy", "r": 1.494}
+];
+const $ = id => document.getElementById(id);
+const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), marker = $('marker'), caption = $('caption');
+document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
+const phone = matchMedia('(max-width: 767px)');
+const imgs = [...art.querySelectorAll('img')];
+let current = -1, front = 0, turn = 0;
+
+// the work: as large as the stage allows, leaving room for the chevrons either side and the title below
+function fit() {
+  if (current < 0) return;
+  const r = WORKS[current].r, step = $('prev').offsetWidth;
+  const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
+  const h = Math.min(H, W / r), w = h * r;
+  art.style.width = w + 'px'; art.style.height = h + 'px';
+  art.style.top = 'calc(50% - 28px)';
+  $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
+  caption.style.top = 'calc(50% - 28px + ' + (h / 2 + 22) + 'px)';
+}
+
+// show work k: the incoming image is decoded first, then rises in (dir +1, from below) or drops in (dir -1, from above)
+// over the outgoing one, which fades away the other way
+function show(k, dir) {
+  k = (k + WORKS.length) % WORKS.length;
+  if (k === current) return;
+  dir = dir || (k > current ? 1 : -1);
+  const first = current < 0;
+  current = k;
+  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], t = ++turn;
+  next.src = 'assets/works/' + w.f; next.alt = w.t;
+  art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
+  $('capTitle').textContent = w.t;
+  const swap = () => {
+    if (t !== turn) return;
+    fit();
+    const ease = 'opacity 0.8s ease-in-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
+    next.style.transition = 'none'; next.style.transform = first ? '' : 'translateY(' + (dir * 36) + 'px)';
+    void next.offsetWidth;
+    next.style.transition = prev.style.transition = ease;
+    next.style.transform = ''; next.classList.add('on');
+    prev.style.transform = first ? '' : 'translateY(' + (-dir * 36) + 'px)'; prev.classList.remove('on');
+    front = 1 - front;
+  };
+  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);
+  [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works/' + m.f; });   // neighbours ready
+  [...track.querySelectorAll('.thumb')].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
+  placeMarker(first);
+  history.replaceState(null, '', '#' + encodeURIComponent(w.f));
+}
+
+// the Tree of Life sits beside the active thumbnail, and the strip glides to keep that thumbnail in the middle
+function placeMarker(instant) {
+  const b = track.querySelectorAll('.thumb')[current];
+  if (!b) return;
+  if (instant) marker.style.transition = 'none';
+  marker.style.top = (b.offsetTop + b.offsetHeight / 2 - marker.offsetHeight / 2) + 'px';
+  if (instant) { void marker.offsetWidth; marker.style.transition = ''; }
+  if (phone.matches) strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: instant ? 'auto' : 'smooth' });
+  else strip.scrollTo({ top: b.offsetTop + b.offsetHeight / 2 - strip.clientHeight / 2, behavior: instant ? 'auto' : 'smooth' });
+}
+
+// build the strip
+WORKS.forEach((w, k) => {
+  const b = document.createElement('button');
+  b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
+  const im = document.createElement('img'); im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
+  b.appendChild(im); b.addEventListener('click', () => show(k));
+  track.appendChild(b);
+});
+
+// arrows, keys (left / up = previous, right / down = next), hover title
+$('prev').addEventListener('click', () => show(current - 1, -1));
+$('next').addEventListener('click', () => show(current + 1, 1));
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1, 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1, -1); }
+});
+art.addEventListener('mouseenter', () => stage.classList.add('hovering'));
+art.addEventListener('mouseleave', () => stage.classList.remove('hovering'));
+// finger swipe on the work: up / left = next, down / right = previous
+let touch0 = null;
+art.addEventListener('touchstart', e => { touch0 = e.touches[0]; }, { passive: true });
+art.addEventListener('touchend', e => {
+  if (!touch0) return; const t = e.changedTouches[0], dx = t.clientX - touch0.clientX, dy = t.clientY - touch0.clientY; touch0 = null;
+  const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (Math.abs(d) > 40) { e.preventDefault(); show(current + (d < 0 ? 1 : -1), d < 0 ? 1 : -1); }
+});
+addEventListener('resize', () => { fit(); placeMarker(true); });
+new ResizeObserver(fit).observe(stage);
+phone.addEventListener('change', () => placeMarker(true));
+
+// mobile menu
+$('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+
+// start on the work named in the URL, else the first
+const want = decodeURIComponent(location.hash.slice(1));
+const start = WORKS.findIndex(w => w.f === want || w.t === want);
+show(start >= 0 ? start : 0);
+</script>
+</body>
+</html>

@@ -63,7 +63,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
-/* TEMP: while H1 / G5 / G6 are in the nav, tighten it at tablet widths so the header stays on one line */
+/* TEMP: while H1 / G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
 /* G6: editorial column. The gallery is its own scroll area under the fixed header; wheel and drag glide it,
@@ -72,6 +72,11 @@ html, body { overflow: hidden; }
 header { position: fixed; top: 0; left: 0; right: 0; }
 .scroller { position: fixed; top: var(--header-h); left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
 .scroller::-webkit-scrollbar { display: none; }
+/* opening sequence (see the script): dark tiles in a row that turn into the column, then into the paintings */
+.intro { position: fixed; inset: 0; z-index: 20; overflow: hidden; cursor: pointer; }
+.intro-stack { position: absolute; inset: 0; }
+.intro-tile { position: absolute; background: #141414; overflow: hidden; }
+.intro-tile img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
 html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
@@ -121,6 +126,7 @@ footer { flex: none; }
     <a href="Home.dc.html">H1</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a class="on" href="gallery-editorial.html">G6</a>
+          <a href="gallery-filmstrip-vertical.html">G7</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
@@ -136,6 +142,7 @@ footer { flex: none; }
     <a href="Home.dc.html">H1</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html" style="font-weight: 600">G6</a>
+    <a href="gallery-filmstrip-vertical.html">G7</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
@@ -365,6 +372,54 @@ $('burger').addEventListener('click', () => document.body.classList.toggle('menu
 const want = decodeURIComponent(location.hash.slice(1));
 const hit = WORKS.find(w => w.f === want || w.t === want);
 if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit.f).offsetTop - 40); });
+
+// ---- Opening (desktop and tablet; skipped when the URL names a work, on phones, and for reduced motion). The first twelve
+// works appear one by one as small dark tiles in a horizontal row in the middle of the screen; the row turns 90 degrees
+// clockwise into a column, grows toward the viewer to full size while settling into place, and the tiles turn into the
+// paintings. A click anywhere skips to the end. Driven frame by frame from one timeline (ms).
+(function intro() {
+  if (hit || matchMedia('(max-width: 767px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  parallax();
+  const shown = works.slice(0, 12);
+  const rects = shown.map(w => w.getBoundingClientRect());
+  const top = Math.min(...rects.map(r => r.top)), bottom = Math.max(...rects.map(r => r.bottom));
+  const cx = innerWidth / 2, cy = (top + bottom) / 2;                   // the column's own centre: the pivot
+  const mid = (scroller.getBoundingClientRect().top + innerHeight) / 2;   // middle of the space under the header
+  const s0 = Math.min(0.1, innerWidth * 0.4 / (bottom - top));           // the row spans about two fifths of the screen
+  const dy = mid - cy;                                                    // lifts the small row to the middle of the screen
+  const layer = document.createElement('div'), stack = document.createElement('div');
+  layer.className = 'intro'; stack.className = 'intro-stack'; stack.style.transformOrigin = cx + 'px ' + cy + 'px';
+  const tiles = shown.map((w, i) => {
+    const r = rects[i], t = document.createElement('div'), im = document.createElement('img');
+    t.className = 'intro-tile'; im.src = w.querySelector('img').src; im.alt = '';
+    Object.assign(t.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', zIndex: getComputedStyle(w).zIndex, opacity: 0 });
+    t.appendChild(im); stack.appendChild(t); return t;
+  });
+  layer.appendChild(stack); document.body.appendChild(layer);
+  scroller.style.opacity = '0';
+  const clamp01 = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (t, a, d) => clamp01((t - a) / d);
+  const inOut = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2, out = p => 1 - Math.pow(1 - p, 4);
+  const END = 3550;
+  let t0 = performance.now(), skip = false, done = false;
+  const frame = now => {
+    const t = skip ? END : now - t0;
+    tiles.forEach((tile, i) => { const p = out(seg(t, 120 + i * 70, 380)); tile.style.opacity = p; tile.style.transform = 'scale(' + (0.3 + 0.7 * p).toFixed(3) + ')'; });  // appear, one by one
+    const a = -90 + 90 * inOut(seg(t, 1000, 1000));                       // turn 90 degrees clockwise (1.0 - 2.0s)
+    const g = out(seg(t, 2000, 1200));                                      // grow to full size and settle (2.0 - 3.2s)
+    stack.style.transform = 'translateY(' + (dy * (1 - g)).toFixed(1) + 'px) scale(' + (s0 + (1 - s0) * g).toFixed(4) + ') rotate(' + a.toFixed(2) + 'deg)';
+    const f = inOut(seg(t, 2900, 600)).toFixed(3);                          // tiles turn into the paintings (2.9 - 3.5s)
+    tiles.forEach(tile => { tile.firstChild.style.opacity = f; });
+    if (t < END) requestAnimationFrame(frame); else finish();
+  };
+  const finish = () => {
+    if (done) return; done = true;
+    scroller.style.transition = 'opacity 0.45s ease-out'; scroller.style.opacity = '1';
+    layer.style.transition = 'opacity 0.45s ease-out'; layer.style.opacity = '0';
+    setTimeout(() => { layer.remove(); scroller.style.transition = ''; scroller.style.opacity = ''; }, 500);
+  };
+  layer.addEventListener('click', () => { skip = true; });
+  requestAnimationFrame(frame);
+})();
 place();
 </script>
 </body>
