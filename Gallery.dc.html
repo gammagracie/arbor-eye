@@ -606,7 +606,15 @@ class Component extends DCLogic {
         img: React.createElement('img', { src: a.src, alt: a.title, onError: this.ph(a), style: { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' } }),
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
-      back: () => { document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false }); },
+      // back: to the gallery version the visitor came from (G5, G6, G7, the homepage...), at the work they left, when they
+      // arrived from another page of this site; otherwise to this grid. QA before the Shopify move: once a single gallery
+      // is chosen, this should simply return to that gallery.
+      back: () => {
+        let fromOtherPage = false;
+        try { const u = new URL(document.referrer); fromOtherPage = u.origin === location.origin && !/Gallery\.dc\.html$/.test(u.pathname); } catch (e) {}
+        if (fromOtherPage && history.length > 1) { history.back(); return; }
+        document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false });
+      },
       openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
       printCols: m ? '1fr' : 'minmax(0, 1fr) clamp(340px, 30vw, 460px)',
