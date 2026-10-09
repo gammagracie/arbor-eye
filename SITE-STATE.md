@@ -145,7 +145,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Open items
 
-- **Simplified Tree of Life** (started 2026-10-09): a pared-down redraw of the Tree of Life for the logo and small uses (13 leaves instead of about 30, no hatching on the stem or ampersand), in a line and a solid version. Drafts, a comparison sheet and the generator script are in `ART/Logo/Tree of Life/Simplified/` (outside the site repo); not used on the site yet.
+- **Simplified Tree of Life** (started 2026-10-09): a pared-down redraw of the Tree of Life for the logo and small uses (13 leaves instead of about 30, no hatching on the stem or ampersand), in a line and a solid version (v1). A more minimal v2 (2026-10-09) keeps the same stem and ampersand with 7 leaves, for the smallest uses (logo, scrollbar handle). Drafts, comparison sheets and the generator scripts for both are in `ART/Logo/Tree of Life/Simplified/` (outside the site repo); not used on the site yet.
 
 - **QA before the Shopify move** (raised 2026-10-08): check that "Back to gallery" on every detail page returns to the chosen final gallery, now that the exploratory versions (G5, G6, G7, the grid) are narrowed to one.
 
