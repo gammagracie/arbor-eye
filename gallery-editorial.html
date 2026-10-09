@@ -293,11 +293,11 @@ function parallaxTick(now) {
   const dt = parallaxLast ? Math.min(64, now - parallaxLast) : 16; parallaxLast = now;
   const st = scroller.scrollTop; let moving = false;
   works.forEach((w, i) => {
-    const tau = 420 - w.dataset.depth * 800;                     // ms to close ~63% of the gap: about 160 - 340ms by depth
+    const tau = 760 - w.dataset.depth * 1100;                    // ms to close ~63% of the gap: about 420 - 650ms by depth, for a slow, fluid drift
     trail[i] += (st - trail[i]) * (1 - Math.exp(-dt / tau));
     let d = st - trail[i];
     if (Math.abs(d) < 0.3) { trail[i] = st; d = 0; } else moving = true;
-    w.style.setProperty('--py', Math.max(-110, Math.min(110, d * 0.55)).toFixed(1) + 'px');
+    w.style.setProperty('--py', (90 * Math.tanh(d * 0.4 / 90)).toFixed(1) + 'px');   // eases into its limit (90px) instead of stopping hard
   });
   if (moving) requestAnimationFrame(parallaxTick); else { parallaxRunning = false; parallaxLast = 0; }
 }
@@ -328,7 +328,7 @@ function glide() {
     const dt = Math.min(64, now - last); last = now;
     const cur = scroller.scrollTop, d = target - cur;
     if (Math.abs(d) < 0.5) { scroller.scrollTop = target; gliding = false; return; }
-    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 110));
+    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 220));   // a long, soft glide
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
