@@ -79,7 +79,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }   /* 39 x 108px on a 1440px screen, scaling down with the viewport to 20 x 56px */
-.caption { flex: none; height: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
+.caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 html.touch .caption { opacity: 1; }
@@ -365,7 +365,7 @@ function setCount(n) {
 }
 [...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
 phone.addEventListener('change', () => setCount(phone.matches ? 1 : deskCount));
-function show(k, scrollIntoView) { setWindow(k, scrollIntoView, k > first ? -1 : 1); }   // thumbnail click: a work to the right slides the row left (it arrives from the right); a work to the left slides it right
+function show(k, scrollIntoView) { setWindow(k, scrollIntoView, k > first ? 1 : -1, 'y'); }   // thumbnail tap: vertical like the arrows (a later work: the row goes up; an earlier one: down)   // thumbnail click: a work to the right slides the row left (it arrives from the right); a work to the left slides it right
 
 // build the strip
 WORKS.forEach((w, k) => {
