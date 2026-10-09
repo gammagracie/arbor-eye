@@ -117,8 +117,8 @@ html:not(.touch) .work:hover .side { opacity: 1; }
 /* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
 .sb { position: fixed; top: calc(var(--header-h) + 24px); bottom: 24px; right: var(--side-pad); width: 5px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
 .sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 2px; background: rgba(20,20,20,0.10); }
-/* the handle is the simplified Tree of Life (7-leaf solid version), 58px tall, 4px right of the 2px track's centre */
-.sb .thumb { position: absolute; right: -31.5px; width: 58px; height: 58px; background: url(uploads/tol-simple-solid.svg) center / contain no-repeat; opacity: 0.8; cursor: grab; transition: opacity 0.2s ease; }
+/* the handle is the simplified Tree of Life (v3: outlined 7-leaf crown, solid stem and ampersand), 58px tall, 4px right of the 2px track's centre */
+.sb .thumb { position: absolute; right: -31.5px; width: 58px; height: 58px; background: url(uploads/tol-v3.svg) center / contain no-repeat; opacity: 0.8; cursor: grab; transition: opacity 0.2s ease; }
 .sb:hover .thumb, .sb.held .thumb { opacity: 1; }
 .sb.held .thumb { cursor: grabbing; }
 .sb.show, .sb:hover, .sb.held { opacity: 1; }
@@ -129,7 +129,7 @@ footer { flex: none; }
 <body>
   <header>
     <div class="bar">
-      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol-simple.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol-v3.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
       <div class="right">
         <nav class="main">
     <a href="Home.dc.html">H1</a>
