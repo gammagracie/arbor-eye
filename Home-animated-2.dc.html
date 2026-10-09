@@ -223,6 +223,13 @@ class Component extends DCLogic {
     svg.setAttribute('viewBox', '132.4 57.8 1123.5 305.4');
     svg.style.overflow = 'visible';
     svg.style.fill = '#141414';
+    // the simplified Tree of Life (v3: outlined leaves, solid stem and ampersand), drawn in the same coordinates as the
+    // engraved tree; the animation crossfades to it at the end, so it is what the logo rests on
+    const simpleSrc = await (await fetch('uploads/tol-v3.svg')).text();
+    const simple = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    simple.setAttribute('id', 'ae-simple'); simple.setAttribute('opacity', '0');
+    simple.innerHTML = simpleSrc.slice(simpleSrc.indexOf('>') + 1, simpleSrc.lastIndexOf('</svg>'));
+    svg.appendChild(simple);
     const $ = id => holder.querySelector('#' + id);
     const clamp = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (e, t, d) => clamp((e - t) / d);
     const outCubic = p => 1 - Math.pow(1 - p, 3), inOutSine = p => -(Math.cos(Math.PI * p) - 1) / 2, inOutCubic = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
@@ -237,13 +244,17 @@ class Component extends DCLogic {
     const apply = e => {
       const treeIn = outCubic(seg(e, 0.1, 0.8)), textIn = outCubic(seg(e, 1.0, 2.2)), shrink = inOutSine(seg(e, 2.9, 2.6)), swap = inOutCubic(seg(e, 5.5, 1.0));
       const sc = fit * (START + (ENDS - START) * shrink), lift = LIFT0 + (LIFT1 - LIFT0) * shrink, sx = SHIFTX0 + (SHIFTX1 - SHIFTX0) * shrink;
-      tree.setAttribute('transform', 'translate(' + (A.cx + sx).toFixed(2) + ' ' + (A.cy - lift).toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(' + (-T.cx) + ' ' + (-T.cy) + ')');
+      const place = 'translate(' + (A.cx + sx).toFixed(2) + ' ' + (A.cy - lift).toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(' + (-T.cx) + ' ' + (-T.cy) + ')';
+      tree.setAttribute('transform', place); simple.setAttribute('transform', place);
+      // the engraved tree fades in with the letters, then (5.5 - 6.5s) crossfades into the simplified tree, whose own
+      // ribbon ampersand stands in for the letter ampersand
       $('ae-tree-e').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
-      $('ae-tree-keep').setAttribute('opacity', treeIn.toFixed(3));
-      $('ae-core').setAttribute('opacity', (0.4 * swap).toFixed(3));
+      $('ae-tree-keep').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
+      $('ae-core').setAttribute('opacity', '0');
       $('ae-arbor').setAttribute('opacity', textIn.toFixed(3));
       $('ae-eye').setAttribute('opacity', textIn.toFixed(3));
-      $('ae-amp').setAttribute('opacity', swap.toFixed(3));
+      $('ae-amp').setAttribute('opacity', '0');
+      simple.setAttribute('opacity', swap.toFixed(3));
     };
     const t0 = performance.now();
     const frame = now => { const e = Math.min((now - t0) / 1000, END); apply(e); if (e < END) this.logoRaf = requestAnimationFrame(frame); };
