@@ -328,7 +328,7 @@ class Component extends DCLogic {
       bioTop: stack ? '0' : '48px', // clear space above the photo; the copy's top lines up with the photo's
       bioSideDisplay: stack ? 'none' : 'block',
       // Tree of Life (110 x 228px) centred in its 190px gutter (40px clear each side) and on the photo's height
-      tolMargin: '24px 0 0 0',
+      tolMargin: '24px 0 0 30px',   // centred in the gutter, then 15px to the right so it looks centred between photo and copy
       bioGap: stack ? '28px' : '0',
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
