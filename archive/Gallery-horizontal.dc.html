@@ -166,7 +166,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 16px 0 0; display: {{ chipDisplay }}; text-align: center; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 16px 0 0; display: {{ chipDisplay }}; text-align: center; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}<span style="display: block; margin-top: 5px; font-family: 'Neuzeit Grotesk', 'Helvetica Neue', Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2">View details</span></p>
           </div>
         </sc-for>
       </div>

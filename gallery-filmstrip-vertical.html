@@ -67,7 +67,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
-.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 14px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
 
@@ -93,7 +93,6 @@ html:not(.touch) .thumb:hover { transform: scale(1.18); }
   .thumb img { height: 38px; max-width: 56px; }   /* phones keep the larger thumbnails, easier to tap */
   .thumb.on { border-bottom-color: #141414; }
   .marker { display: none; }
-  .caption { flex-direction: column; gap: 6px; }   /* View details under the title */
 }
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
