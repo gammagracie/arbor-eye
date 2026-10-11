@@ -683,7 +683,7 @@ class Component extends DCLogic {
       detailTitleSize: m ? '34px' : '46px',
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
-        style: Object.assign({ width: 'calc(' + (m ? 1 : 0.8) + ' * min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px)))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: m ? '0 auto' : '0' }, framed(views[this.state.detailView][0])) }),   // desktop / tablet: 80% of the largest that fits, starting on the logo's line
+        style: Object.assign({ width: 'calc(' + (m ? 1 : 0.88) + ' * min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px)))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: m ? '0 auto' : '0' }, framed(views[this.state.detailView][0])) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
       detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailDotsW: this.state.detailDotsW,
       // series number and name, as in Ned's documentation decks (Series 1, Ascent ... Series 8, Tonal); works outside the eight series keep "Original"
