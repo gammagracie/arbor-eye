@@ -186,7 +186,7 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
         <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}">
-          <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
+          <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">{{ detailSeries }}</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: 14px; color: #6E6B66; padding-top: 8px">
             <div style="display: grid; gap: 8px">
@@ -302,6 +302,7 @@ html { scrollbar-gutter: stable; }
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
 // Works whose details differ from the default (watercolour on paper, 4 x 6 in)
+const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spectrum': 5, 'Structure': 6, 'The Turning': 7, 'Tonal': 8 };
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Repeated strokes form a visual language.' },
   'Brilliance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Light reveals what was always there' },
@@ -684,6 +685,8 @@ class Component extends DCLogic {
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         style: Object.assign({ width: 'min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: '0 auto' }, framed(views[this.state.detailView][0])) }),
       detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
+      // series number and name, as in Ned's documentation decks (Series 1, Ascent ... Series 8, Tonal); works outside the eight series keep "Original"
+      detailSeries: d && SERIES_NO[d.series] ? 'Series ' + SERIES_NO[d.series] + ', ' + d.series : 'Original',
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',
