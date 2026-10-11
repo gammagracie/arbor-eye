@@ -302,10 +302,13 @@ class Component extends DCLogic {
     // exceeding the content width (tablet may run out to 94% of the screen).
     const desk = !m && !this.state.tablet;
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? '100%' : 'min(94vw, ' + smallFit + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)'; // desktop: 5.2% of the image width (tablet 31px, phones 44px)
-    const heroH = desk ? 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)' : 'auto'; // 55 = 35px above the image + 20px below the tray; the rest is the tray's overhang (35% of a thumbnail + 10px padding)
-    const heroRatio = desk ? 'auto' : '1.5';
+    const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px)
+    // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
+    // tighter, the content width (logo to bag icon) or the height left on screen
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(100%, calc((' + deskH + ') * 1.5))' : 'min(94vw, ' + smallFit + ')';
+    const heroH = 'auto';
+    const heroRatio = '1.5';
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
@@ -343,7 +346,7 @@ class Component extends DCLogic {
       prevMargin: m ? '-10px' : '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line; phones pull the left one out to the image edge
       arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
       heroW, heroH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
