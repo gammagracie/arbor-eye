@@ -143,20 +143,20 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.494, railBase: 0, animate: false, intro: 'pre' }; // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre' }; // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/works/DSC01769.jpg', title: 'Brilliance', alt: 'Brilliance' }, // first, per Ned
-    { src: 'assets/works/CORE_12.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', alt: 'Green field with red, ochre and white forms' },
-    { src: 'assets/works/CORE_20.jpg', cropped: 'assets/art-2.png', title: 'Core 20', alt: 'Chartreuse field with blue-ringed forms' },
-    { src: 'assets/works/CORE_11.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/works/CORE_14.jpg', cropped: 'assets/art-4.png', title: 'Articulation', alt: 'Color band study on textured paper', hidden: true }, // Ned does not want it shown
-    { src: 'assets/works/CORE_16.jpg', cropped: 'assets/art-5.png', title: 'Habitat', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/works/CORE_15.jpg', cropped: 'assets/art-6.png', title: 'Chamber', alt: 'Two framed panels on black ground' },
-    { src: 'assets/works/CORE_17.jpg', cropped: 'assets/art-7.png', title: 'Core 17', alt: 'Ochre field with green and blue frames' },
-    { src: 'assets/works/CORE_13.jpg', title: 'Conduit', alt: 'Conduit' },
-    { src: 'assets/works/CORE_18.jpg', title: 'Upwelling', alt: 'Upwelling' }
+    { src: 'assets/works/select_brilliance.jpg', title: 'Brilliance', alt: 'Brilliance' }, // first, per Ned
+    { src: 'assets/works/core_symbiosis.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', alt: 'Green field with red, ochre and white forms' },
+    { src: 'assets/works/core_emergence.jpg', cropped: 'assets/art-2.png', title: 'Emergence', alt: 'Chartreuse field with blue-ringed forms' },
+    { src: 'assets/works/core_script.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
+    { src: 'assets/works/core_articulation.jpg', cropped: 'assets/art-4.png', title: 'Articulation', alt: 'Color band study on textured paper', hidden: true }, // Ned does not want it shown
+    { src: 'assets/works/core_habitat.jpg', cropped: 'assets/art-5.png', title: 'Habitat', alt: 'Sunset watercolor with green sprigs' },
+    { src: 'assets/works/core_chamber.jpg', cropped: 'assets/art-6.png', title: 'Chamber', alt: 'Two framed panels on black ground' },
+    { src: 'assets/works/core_affinity.jpg', cropped: 'assets/art-7.png', title: 'Affinity', alt: 'Ochre field with green and blue frames' },
+    { src: 'assets/works/core_conduit.jpg', title: 'Conduit', alt: 'Conduit' },
+    { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', alt: 'Upwelling' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored
@@ -305,12 +305,12 @@ class Component extends DCLogic {
     const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? '100%' : 'min(94vw, ' + smallFit + ')';
     const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)'; // desktop: 5.2% of the image width (tablet 31px, phones 44px)
     const heroH = desk ? 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)' : 'auto'; // 55 = 35px above the image + 20px below the tray; the rest is the tray's overhang (35% of a thumbnail + 10px padding)
-    const heroRatio = desk ? 'auto' : '1.494';
+    const heroRatio = desk ? 'auto' : '1.5';
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
     let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
-    const slot = 'calc((' + thumbH + ') * 1.494 + 16px)'; // scans are 1.494:1; 16px gap
+    const slot = 'calc((' + thumbH + ') * 1.5 + 16px)'; // scans are 3:2; 16px gap
     return {
       cartCount,
       showCartBadge: cartCount > 0,
@@ -363,7 +363,7 @@ class Component extends DCLogic {
       next: () => this.go(1),
       thumbs: shown.map((k, j) => ({
         vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
-        img: React.createElement('img', { src: this.arts[k].src, alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'calc(' + thumbH + ' * 1.494)', objectFit: 'cover', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } }),   // a soft shadow lifts them off the painting
+        img: React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', objectFit: 'cover', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } }),   // a soft shadow lifts them off the painting
         alt: 'Show ' + this.arts[k].alt,
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k)
