@@ -68,7 +68,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(4, auto); justify-items: center; align-items: center; row-gap: 64px; column-gap: 60px; }   /* 12-up: four columns 60px apart, three rows, room under each work for its title */
-.row.grid .art img { object-fit: cover; }   /* 12-up: every landscape shares one 1.492 box, so the few wider works are trimmed a little at the sides to keep the columns aligned */
+.row.grid .art img { object-fit: cover; }   /* 12-up: every landscape shares one 3:2 box, so any scan not exactly 3:2 is trimmed a little at the sides to keep the columns aligned */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
@@ -176,16 +176,16 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 // Works shown in the filmstrip. Generated from Gallery.dc.html (hidden works left out): f = file in assets/works,
 // s = series, t = title, r = width / height. Keep in step with the gallery's list when works change.
 const WORKS = [
-  {"f": "DSC01769.jpg", "s": "", "t": "Brilliance", "r": 1.494},
-  {"f": "CORE_11.jpg", "s": "Core", "t": "Script", "r": 1.494},
-  {"f": "CORE_12.jpg", "s": "Core", "t": "Symbiosis", "r": 1.494},
-  {"f": "CORE_13.jpg", "s": "Core", "t": "Conduit", "r": 1.494},
-  {"f": "CORE_15.jpg", "s": "Core", "t": "Chamber", "r": 1.494},
-  {"f": "CORE_16.jpg", "s": "Core", "t": "Habitat", "r": 1.494},
-  {"f": "CORE_17.jpg", "s": "Core", "t": "Core 17", "r": 1.494},
-  {"f": "CORE_18.jpg", "s": "Core", "t": "Upwelling", "r": 1.494},
-  {"f": "CORE_20.jpg", "s": "Core", "t": "Core 20", "r": 1.494},
-  {"f": "THETURNING_08.jpg", "s": "The Turning", "t": "Passage", "r": 1.494},
+  {"f": "select_brilliance.jpg", "s": "Select", "t": "Brilliance", "r": 1.5},
+  {"f": "core_script.jpg", "s": "Core", "t": "Script", "r": 1.5},
+  {"f": "core_symbiosis.jpg", "s": "Core", "t": "Symbiosis", "r": 1.5},
+  {"f": "core_conduit.jpg", "s": "Core", "t": "Conduit", "r": 1.5},
+  {"f": "core_chamber.jpg", "s": "Core", "t": "Chamber", "r": 1.5},
+  {"f": "core_habitat.jpg", "s": "Core", "t": "Habitat", "r": 1.5},
+  {"f": "core_affinity.jpg", "s": "Core", "t": "Affinity", "r": 1.5},
+  {"f": "core_upwelling.jpg", "s": "Core", "t": "Upwelling", "r": 1.5},
+  {"f": "core_emergence.jpg", "s": "Core", "t": "Emergence", "r": 1.5},
+  {"f": "the-turning_passage.jpg", "s": "The Turning", "t": "Passage", "r": 1.5},
   {"f": "OUTLIERS_01.jpg", "s": "Outliers", "t": "Outliers 1", "r": 1.494},
   {"f": "OUTLIERS_02.jpg", "s": "Outliers", "t": "Outliers 2", "r": 1.494},
   {"f": "OUTLIERS_03.jpg", "s": "Outliers", "t": "Outliers 3", "r": 1.494},
@@ -193,51 +193,52 @@ const WORKS = [
   {"f": "OUTLIERS_05.jpg", "s": "Outliers", "t": "Outliers 5", "r": 1.494},
   {"f": "OUTLIERS_06.jpg", "s": "Outliers", "t": "Outliers 6", "r": 1.494},
   {"f": "OUTLIERS_07.jpg", "s": "Outliers", "t": "Outliers 7", "r": 1.494},
-  {"f": "SELECT_02.jpg", "s": "Select", "t": "Aurora", "r": 1.494},
-  {"f": "SELECT_03.jpg", "s": "Select", "t": "Select 3", "r": 1.494},
-  {"f": "SELECT_04.jpg", "s": "Select", "t": "Select 4", "r": 1.494},
-  {"f": "SELECT_05.jpg", "s": "Select", "t": "Select 5", "r": 1.494},
-  {"f": "SELECT_06.jpg", "s": "Select", "t": "Select 6", "r": 1.494},
-  {"f": "SELECT_07.jpg", "s": "Select", "t": "Select 7", "r": 1.494},
-  {"f": "SELECT_08.jpg", "s": "Select", "t": "Resonance", "r": 1.494},
-  {"f": "SPECTRUM_01.jpg", "s": "Spectrum", "t": "Spectrum 1", "r": 1.494},
-  {"f": "SPECTRUM_02.jpg", "s": "Spectrum", "t": "Spectrum 2", "r": 1.494},
-  {"f": "SPECTRUM_03.jpg", "s": "Spectrum", "t": "Spectrum 3", "r": 1.494},
-  {"f": "SPECTRUM_04.jpg", "s": "Spectrum", "t": "Spectrum 4", "r": 1.494},
-  {"f": "STRUCTURE_01.jpg", "s": "Structure", "t": "Structure 1", "r": 0.667},
-  {"f": "STRUCTURE_02.jpg", "s": "Structure", "t": "Structure 2", "r": 0.667},
-  {"f": "STRUCTURE_03.jpg", "s": "Structure", "t": "Structure 3", "r": 0.667},
-  {"f": "STRUCTURE_04.jpg", "s": "Structure", "t": "Crossings", "r": 0.667},
-  {"f": "STRUCTURE_05.jpg", "s": "Structure", "t": "Structure 5", "r": 0.667},
-  {"f": "THETURNING_01.jpg", "s": "The Turning", "t": "The Turning 1", "r": 1.494},
-  {"f": "THETURNING_02.jpg", "s": "The Turning", "t": "The Turning 2", "r": 1.494},
-  {"f": "THETURNING_03.jpg", "s": "The Turning", "t": "The Turning 3", "r": 1.494},
-  {"f": "THETURNING_04.jpg", "s": "The Turning", "t": "The Turning 4", "r": 1.494},
-  {"f": "THETURNING_05.jpg", "s": "The Turning", "t": "The Turning 5", "r": 1.494},
-  {"f": "THETURNING_07.jpg", "s": "The Turning", "t": "The Turning 7", "r": 1.494},
+  {"f": "select_aurora.jpg", "s": "Select", "t": "Aurora", "r": 1.5},
+  {"f": "select_confluence.jpg", "s": "Select", "t": "Confluence", "r": 1.5},
+  {"f": "select_emanation.jpg", "s": "Select", "t": "Emanation", "r": 1.5},
+  {"f": "select_singularity.jpg", "s": "Select", "t": "Singularity", "r": 1.5},
+  {"f": "select_grove.jpg", "s": "Select", "t": "Grove", "r": 1.5},
+  {"f": "select_meridian.jpg", "s": "Select", "t": "Meridian", "r": 1.5},
+  {"f": "select_resonance.jpg", "s": "Select", "t": "Resonance", "r": 1.5},
+  {"f": "spectrum_biome.jpg", "s": "Spectrum", "t": "Biome", "r": 1.5},
+  {"f": "spectrum_archipelago.jpg", "s": "Spectrum", "t": "Archipelago", "r": 1.5},
+  {"f": "spectrum_opalescence.jpg", "s": "Spectrum", "t": "Opalescence", "r": 1.5},
+  {"f": "spectrum_chroma.jpg", "s": "Spectrum", "t": "Chroma", "r": 1.5},
+  {"f": "structure_cubicle.jpg", "s": "Structure", "t": "Cubicle", "r": 0.667},
+  {"f": "structure_within.jpg", "s": "Structure", "t": "Within", "r": 0.667},
+  {"f": "structure_cadence.jpg", "s": "Structure", "t": "Cadence", "r": 0.667},
+  {"f": "structure_crossings.jpg", "s": "Structure", "t": "Crossings", "r": 0.667},
+  {"f": "structure_framework.jpg", "s": "Structure", "t": "Framework", "r": 0.667},
+  {"f": "the-turning_character.jpg", "s": "The Turning", "t": "Character", "r": 1.5},
+  {"f": "the-turning_discovery.jpg", "s": "The Turning", "t": "Discovery", "r": 1.5},
+  {"f": "the-turning_momentum.jpg", "s": "The Turning", "t": "Momentum", "r": 1.5},
+  {"f": "the-turning_the-calling.jpg", "s": "The Turning", "t": "The Calling", "r": 1.5},
+  {"f": "the-turning_horizon.jpg", "s": "The Turning", "t": "Horizon", "r": 1.5},
+  {"f": "the-turning_revelation.jpg", "s": "The Turning", "t": "Revelation", "r": 1.5},
   {"f": "THETURNING_06.jpg", "s": "The Turning", "t": "The Turning 6", "r": 1.494},
-  {"f": "TONAL_01.jpg", "s": "Tonal", "t": "Tonal 1", "r": 1.494},
-  {"f": "TONAL_02.jpg", "s": "Tonal", "t": "Tonal 2", "r": 1.494},
-  {"f": "TONAL_03.jpg", "s": "Tonal", "t": "Tonal 3", "r": 1.494},
-  {"f": "TONAL_04.jpg", "s": "Tonal", "t": "Tonal 4", "r": 1.494},
-  {"f": "b2c3e2d8842e37fb32c496a173ac7e739c46a632.jpg", "s": "", "t": "Untitled", "r": 1.494},
-  {"f": "4d6ce21130edbf551ac6b7727cb65ae339472c34.jpg", "s": "", "t": "Untitled", "r": 1.494},
-  {"f": "1b27d6c6022f7046a2dab5e82a0ce017b584e750.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "tonal_current.jpg", "s": "Tonal", "t": "Current", "r": 1.5},
+  {"f": "tonal_firelight.jpg", "s": "Tonal", "t": "Firelight", "r": 1.5},
+  {"f": "tonal_vesper-2.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "tonal_vesper-1.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "convergence_counterform.jpg", "s": "Convergence", "t": "Counterform", "r": 1.5},
+  {"f": "convergence_synthesis.jpg", "s": "Convergence", "t": "Synthesis", "r": 1.5},
+  {"f": "convergence_counterline.jpg", "s": "Convergence", "t": "Counterline", "r": 1.5},
   {"f": "CONVERGENCE_06.jpg", "s": "Convergence", "t": "Convergence 6", "r": 1.494},
-  {"f": "CONVERGENCE_03.jpg", "s": "Convergence", "t": "Convergence 3", "r": 1.494},
-  {"f": "c4097402c30a2418da22b00140585fe9acb78350.jpg", "s": "", "t": "Untitled", "r": 1.494},
+  {"f": "convergence_counterpart.jpg", "s": "Convergence", "t": "Counterpart", "r": 1.5},
+  {"f": "convergence_counterpoint.jpg", "s": "Convergence", "t": "Counterpoint", "r": 1.5},
   {"f": "CONVERGENCE_07.jpg", "s": "Convergence", "t": "Convergence 7", "r": 1.494},
   {"f": "ASCENT_01_0c7e78cf-a7b1-4e63-b33d-2cf3be45b291.jpg", "s": "Ascent", "t": "Ascent 1", "r": 0.667},
-  {"f": "ASCENT_12_1fbebbf4-835a-4fb1-a4a5-40a3d8b1a8fe.jpg", "s": "Ascent", "t": "Ascent 12", "r": 0.667},
-  {"f": "ASCENT_13_0204696a-f577-48c5-a3c2-3c8f12a9d6fa.jpg", "s": "Ascent", "t": "Ascent 13", "r": 0.667},
-  {"f": "ASCENT_03_a1250a1b-76ce-4d44-9640-59e606473398.jpg", "s": "Ascent", "t": "Ascent 3", "r": 0.667},
-  {"f": "ASCENT_04_cc0af23a-5580-4a9f-ad8f-de1c0a7122a4.jpg", "s": "Ascent", "t": "Ascent 4", "r": 0.667},
-  {"f": "ASCENT_05_3b6eae9f-57ba-4c04-8234-a9ce2c335c98.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667},
-  {"f": "ASCENT_06_88b2cbea-2e1b-4c87-b957-481676147cc0.jpg", "s": "Ascent", "t": "Ascent 6", "r": 0.667},
-  {"f": "ASCENT_07_ba0414ef-80d6-4940-8b36-0b8bebb7486f.jpg", "s": "Ascent", "t": "Ascent 7", "r": 0.667},
-  {"f": "ASCENT_08_bb8b8ee5-af4c-4cc3-826f-a46218ea5940.jpg", "s": "Ascent", "t": "Ascent 8", "r": 0.667},
-  {"f": "ASCENT_09_415da3c4-59af-4e88-b149-81033125ed05.jpg", "s": "Ascent", "t": "Ascent 9", "r": 0.667},
-  {"f": "DSC01754.jpg", "s": "", "t": "Canopy", "r": 1.494}
+  {"f": "ascent_artifact.jpg", "s": "Ascent", "t": "Artifact", "r": 0.667},
+  {"f": "ascent_canyons.jpg", "s": "Ascent", "t": "Canyons", "r": 0.667},
+  {"f": "ascent_verdance.jpg", "s": "Ascent", "t": "Verdance", "r": 0.667},
+  {"f": "ascent_living-current.jpg", "s": "Ascent", "t": "Living Current", "r": 0.667},
+  {"f": "ascent_coastal-silence.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667},
+  {"f": "ascent_shared-orbit.jpg", "s": "Ascent", "t": "Shared Orbit", "r": 0.667},
+  {"f": "ascent_inner-eclipse.jpg", "s": "Ascent", "t": "Inner Eclipse", "r": 0.667},
+  {"f": "ascent_origin.jpg", "s": "Ascent", "t": "Origin", "r": 0.667},
+  {"f": "ascent_koi.jpg", "s": "Ascent", "t": "Koi", "r": 0.667},
+  {"f": "ascent_overlook.jpg", "s": "Ascent", "t": "Overlook", "r": 0.667},
+  {"f": "tonal_canopy.jpg", "s": "Tonal", "t": "Canopy", "r": 1.5}
 ];
 
 const $ = id => document.getElementById(id);
@@ -277,8 +278,8 @@ function fit() {
   const step = $('prev').offsetWidth, gap = count === 12 ? 60 : count > 1 ? 28 : 0, rowGap = count === 12 ? 64 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
   const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (nc - 1);
-  // 12-up: every landscape gets the same 1.492 box (the common proportion) so the columns line up; portraits keep their own
-  const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.492 : WORKS[s.idx].r;
+  // 12-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
+  const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.5 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
   const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(R)), 0);
   const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 : 0.8075);   // three-up 85%, one-up 86% and twelve-up about 81% of the space, for more room around them

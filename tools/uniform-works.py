@@ -1,6 +1,6 @@
 """Make every artwork image on the site the same size.
 
-Landscape works become WORK_L (1.494:1), portrait works WORK_P (2:3). An image whose shape differs is
+Landscape works become WORK_L (3:2), portrait works WORK_P (2:3). An image whose shape differs is
 centre-cropped to the target shape first (on the current scans this only trims plain paper margin),
 then resized. Thumbnails in assets/thumbs are rebuilt from the result at THUMB_H pixels tall.
 
@@ -15,7 +15,7 @@ from PIL import Image
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else 'assets/works'
 WIDTH = int(sys.argv[2]) if len(sys.argv) > 2 else 832
-RATIO_L, RATIO_P, THUMB_H = 1.494, 2 / 3, 260
+RATIO_L, RATIO_P, THUMB_H = 3 / 2, 2 / 3, 260
 
 def fit(im):
     w, h = im.size
