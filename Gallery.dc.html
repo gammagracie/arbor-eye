@@ -429,8 +429,8 @@ class Component extends DCLogic {
   measureDetail() {
     const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
     const text = img && img.parentElement.nextElementSibling;
-    // desktop / tablet: the text block sits 120px to the right of the artwork, and the framing dots centre under the artwork
-    const GAP = 120;
+    // the text block sits 105px to the right of the artwork on desktop (120px on tablet), and the framing dots centre under the artwork
+    const GAP = this.state.tablet ? 120 : 105;
     let x = 0, dots = '100%';
     if (img && text && !this.state.mobile) { x = Math.max(0, text.offsetLeft - (img.parentElement.offsetLeft + img.offsetLeft + img.offsetWidth + GAP)); dots = img.offsetWidth + 'px'; }
     if (Math.abs(x - this.state.detailShift) > 0.5 || dots !== this.state.detailDotsW) this.setState({ detailShift: x, detailDotsW: dots });
