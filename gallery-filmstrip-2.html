@@ -68,7 +68,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(4, auto); justify-items: center; align-items: center; row-gap: 64px; column-gap: 60px; }   /* 12-up: four columns 60px apart, three rows, room under each work for its title */
-.row.grid .art img { object-fit: cover; }   /* 12-up: every landscape shares one 3:2 box, so any scan not exactly 3:2 is trimmed a little at the sides to keep the columns aligned */
+.row.grid .art img { object-fit: contain; }   /* 12-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
