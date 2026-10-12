@@ -326,11 +326,11 @@ class Component extends DCLogic {
       // never so tall that the photo with its arrows and dots runs under the pinned tab row (56px section padding and 48px
       // above it; 64px of arrows and dots and 51px down to the tab row below); stacked, centred and at most 600px wide
       bioPhotoW: stack ? 'min(100%, 600px)' : 'min(calc(100% - 44.6px), calc((100vh - var(--header-h) - 56px - 48px - 64px - 51px) * 0.75))',
-      bioPhotoNudge: stack ? '0' : '44.6px',   // desktop: the photo's left edge lines up with the B of ARBOR in the logo (44.6px in from the logo's left edge)
+      bioPhotoNudge: stack ? '0' : '74.6px',   // desktop: the photo's left edge 74.6px in from the logo's left edge (30px right of the B of ARBOR)
       bioPhotoJustify: stack ? 'center' : 'start',
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
-      bioTextShift: stack ? '0' : '-40px',   // desktop: the copy sits 40px left of its column, keeping its width
+      bioTextShift: stack ? '0' : '-70px',   // desktop: the copy sits 70px left of its column, keeping its width
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 24px 0',
