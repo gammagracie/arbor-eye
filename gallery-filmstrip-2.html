@@ -275,7 +275,10 @@ function fit() {
   const nc = cols(), nr = rows();
   const step = $('prev').offsetWidth, gap = count === 12 ? 60 : count > 1 ? 28 : 0, rowGap = count === 12 ? 64 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
-  const W = (count > 1 ? document.documentElement.clientWidth - 2 * sidePad : stage.clientWidth - 2 * step) - gap * (nc - 1);
+  // the arrows sit in one place in every view: where the three-up row puts them, just outside a row 85% of the content
+  // width (logo to bag icon). One-up never grows past them.
+  const contentW = document.documentElement.clientWidth - 2 * sidePad, span = 0.85 * (contentW - 2 * 28) + 2 * 28;
+  const W = (count > 1 ? contentW : Math.min(stage.clientWidth - 2 * step, span / 0.86)) - gap * (nc - 1);
   // 12-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
   const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.5 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
@@ -291,7 +294,7 @@ function fit() {
   row.style.gridTemplateColumns = count === 12 ? 'repeat(4, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
   const total = h3 * sumR + gapX * (nc - 1), rowH = h3 * nr + rowGap * (nr - 1);
-  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : Math.max(0, (stage.clientWidth - total) / 2 - step - (count === 12 ? 48 : 0)) + 'px';   // the grid's arrows sit a further 48px out   // phones: on the side padding, level with the logo and the menu button
+  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : Math.max(0, (stage.clientWidth - span) / 2 - step) + 'px';   // phones: on the side padding, level with the logo and the menu button
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
   capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + 25 - (capH - 18) / 2 - sb;
