@@ -234,7 +234,7 @@ html { scrollbar-gutter: stable; }
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;stickyImages&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;},
-  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
+  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '', sent: false };
@@ -260,7 +260,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide); }
   renderVals() {
-    const cartCount = this.props.cartCount ?? 1;
+    const cartCount = this.props.cartCount ?? 0;
     const m = this.state.mobile, wide = this.state.wide;
     const tab = this.state.tab;
     return {

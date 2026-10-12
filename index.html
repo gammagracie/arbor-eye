@@ -141,7 +141,7 @@ html { scrollbar-gutter: stable; }
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;autoplay&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Carousel&quot;},
-  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
+  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
@@ -240,7 +240,7 @@ class Component extends DCLogic {
     clearTimeout(this.introTimer);
   }
   renderVals() {
-    const cartCount = this.props.cartCount ?? 1;
+    const cartCount = this.props.cartCount ?? 0;
     const m = this.state.mobile, mp = m && this.state.portrait;
     const i = this.state.index;
     const n = this.arts.length;
