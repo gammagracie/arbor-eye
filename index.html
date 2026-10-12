@@ -247,7 +247,9 @@ class Component extends DCLogic {
     // exceeding the content width (tablet may run out to 94% of the screen).
     const desk = !m && !this.state.tablet;
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + this.state.ratio.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + this.state.ratio.toFixed(4) + ')';
-    const thumbH = m ? '44px' : this.state.tablet ? '31px' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)'; // desktop: 5.2% of the image width (tablet 31px, phones 44px)
+    // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
+    // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
+    const thumbH = m ? '44px' : this.state.tablet ? 'calc(44px + (100vw - 768px) * 0.0176)' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)';
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px)
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
     // tighter, the content width (logo to bag icon) or the height left on screen
@@ -284,11 +286,11 @@ class Component extends DCLogic {
       railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
       railAlign: mp ? 'flex-end' : 'center', // arrows centred on the thumbnails (portrait phones: on their baseline)
       arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
-      railJustify: m ? 'space-between' : 'center', // phones: arrows pushed out to the image's edges, thumbnails centred between them
+      railJustify: 'center', // arrows sit beside the thumbnails, the set centred
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
-      railGap: m ? '4px' : this.state.tablet ? '40px' : '18px',   // desktop: chevrons sit close to the thumbnails
-      prevMargin: m ? '-10px' : '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line; phones pull the left one out to the image edge
+      railGap: m ? '10px' : this.state.tablet ? '40px' : '18px',   // chevrons close to the thumbnails (phones 10px, desktop 18px)
+      prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
       heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
