@@ -283,8 +283,11 @@ function fit() {
   const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 : 0.8075);   // three-up 85%, one-up 86% and twelve-up about 81% of the space, for more room around them
   const lift = count === 1 ? 14 : 0;   // one-up sits 14px above centre, so the title below it has more room
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
-  slots.forEach(s => { s.a.style.width = h * R(s) + 'px'; s.a.style.height = h + 'px'; });
-  const total = h * sumR + gap * (nc - 1), rowH = h * nr + rowGap * (nr - 1);
+  // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
+  const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
+  row.style.columnGap = count === 3 ? gapX + 'px' : '';
+  slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
+  const total = h3 * sumR + gapX * (nc - 1), rowH = h3 * nr + rowGap * (nr - 1);
   $('prev').style.left = $('next').style.right = phone.matches ? '0px' : Math.max(0, (stage.clientWidth - total) / 2 - step - (count === 12 ? 48 : 0)) + 'px';   // the grid's arrows sit a further 48px out   // phones: on the side padding, level with the logo and the menu button
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
@@ -486,6 +489,22 @@ addEventListener('resize', fit);
 new ResizeObserver(fit).observe(stage);
 
 $('prev').addEventListener('click', () => stepBy(-1, 'y'));
+// scrolling up or down over the works moves through them like the arrows: down brings the next set up from below, up
+// brings the previous set down from above. One set per gesture: after a step, further wheel events are ignored until the
+// wheel has rested for 200ms (trackpad momentum included) and the slide has run its course.
+let wheelAcc = 0, wheelLocked = false, wheelAt = 0, wheelQuiet;
+stage.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  e.preventDefault();
+  clearTimeout(wheelQuiet); wheelQuiet = setTimeout(() => { wheelLocked = false; wheelAcc = 0; }, 200);
+  if (wheelLocked || performance.now() - wheelAt < 950) return;
+  wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) < 40) return;
+  const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
+  if (count > 1 && (d > 0 ? first + count >= WORKS.length : first <= 0)) return;   // wider windows stop at the ends
+  wheelLocked = true; wheelAt = performance.now();
+  stepBy(d, 'y');
+}, { passive: false });
 $('next').addEventListener('click', () => stepBy(1, 'y'));
 
 // drag anywhere on the stage (mouse or finger), including the white space around the works: the row follows the
@@ -495,12 +514,11 @@ let drag = null, swallowClick = false;
 stage.addEventListener('pointerdown', e => {
   if (e.button !== 0 || e.target.closest('.step')) return;
   drag = { id: e.pointerId, x: e.clientX, moved: false };
-  stage.setPointerCapture(e.pointerId);
 });
 stage.addEventListener('pointermove', e => {
   if (!drag || e.pointerId !== drag.id) return;
   const dx = e.clientX - drag.x;
-  if (Math.abs(dx) > 4) drag.moved = true;
+  if (Math.abs(dx) > 4 && !drag.moved) { drag.moved = true; stage.setPointerCapture(e.pointerId); }   // capture only once it is a drag: capturing on press would take the click away from the work's link
   if (drag.moved) busy(600);
   if (drag.moved) { row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) translateX(' + dx + 'px)'; }
 });
