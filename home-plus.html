@@ -150,15 +150,15 @@ class Component extends DCLogic {
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/works/select_brilliance.jpg', title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
-    { src: 'assets/works/core_symbiosis.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
-    { src: 'assets/works/core_emergence.jpg', cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
-    { src: 'assets/works/core_script.jpg', cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
-    { src: 'assets/works/core_articulation.jpg', cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
-    { src: 'assets/works/core_habitat.jpg', cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
-    { src: 'assets/works/core_chamber.jpg', cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
-    { src: 'assets/works/core_affinity.jpg', cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
-    { src: 'assets/works/core_conduit.jpg', title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
+    { src: 'assets/works/select_brilliance.jpg', fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
+    { src: 'assets/works/core_symbiosis.jpg', fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
+    { src: 'assets/works/core_emergence.jpg', fit: [0.117, 0.882, 0.172, 0.907], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/works/core_script.jpg', fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
+    { src: 'assets/works/core_articulation.jpg', fit: [0.165, 0.800, 0.323, 0.632], cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
+    { src: 'assets/works/core_habitat.jpg', fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
+    { src: 'assets/works/core_chamber.jpg', fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
+    { src: 'assets/works/core_affinity.jpg', fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
+    { src: 'assets/works/core_conduit.jpg', fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
     { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
@@ -196,6 +196,17 @@ class Component extends DCLogic {
     }, 700);
   }
   // Fallback if an artwork file is missing: a light green box.
+  // Homepage only: each scan is zoomed about its painting so its paper border shrinks to about 35% of the scan's own (on the
+  // tighter side; the other side shrinks in proportion), the painting centred in the frame, never past the scan's edge and
+  // never trimmed. fit = the painting's left, right, top and bottom on the scan as fractions (Emergence includes its
+  // dedication). Upwelling has no fit: its narrower border is kept as it is.
+  heroZoom(a) {
+    if (!a.fit) return 'none';
+    const [x0, x1, y0, y1] = a.fit, w = x1 - x0, h = y1 - y0, K = 0.65;   // K: share of the border the painting grows into
+    const s = Math.min((w + (1 - w) * K) / w, (h + (1 - h) * K) / h);
+    const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
+    return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
+  }
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
@@ -250,7 +261,9 @@ class Component extends DCLogic {
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px)
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
     // tighter, the content width (logo to bag icon) or the height left on screen
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(100%, calc((' + deskH + ') * 1.5))' : 'min(94vw, ' + smallFit + ')';
+    // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
+    // edge) and its right edge sits the same distance in from the bag icon, unless the height left on screen limits it first
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(calc(100% - 83.2px), calc((' + deskH + ') * 1.5))' : 'min(94vw, ' + smallFit + ')';
     const heroH = 'auto';
     const heroRatio = '1.5';
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
@@ -290,7 +303,7 @@ class Component extends DCLogic {
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { filter: 'saturate(1.12)', position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
+      heroImg: React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }, React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { filter: 'saturate(1.12)', position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', transformOrigin: '0 0', transform: this.heroZoom(this.arts[i]) } })),
       // the image's alt text, centred on the frame (title in italic capitals, a colon, the tagline): shown only if the image has
       // not loaded within 0.8s or fails, so it never flashes during the crossfade between works (those images are preloaded)
       heroAltTitle: this.arts[i].title, heroAltTag: this.arts[i].tag,
