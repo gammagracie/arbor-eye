@@ -96,6 +96,7 @@ html:not(.touch) .scroller { cursor: grab; }
 /* the whole painting always shows (frames share the scans' own proportions, so nothing is cropped) */
 .work .win { position: absolute; inset: 0; }
 .work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
+html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
 html:not(.touch) .work:hover { --s: 1.2; z-index: 100; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
@@ -310,6 +311,7 @@ const GAP = 60;
 works.forEach((w, i) => {
   w.addEventListener('mouseenter', () => {
     if (document.documentElement.classList.contains('touch')) return;
+    works.forEach(x => x.classList.toggle('last', x === w));
     const r = w.getBoundingClientRect(), grow = r.height * 0.1;
     const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top);
     const up = above.length ? Math.min(0, (r.top - grow - GAP) - Math.max(...above)) : 0;
