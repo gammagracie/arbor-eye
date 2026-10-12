@@ -96,7 +96,7 @@ html:not(.touch) .scroller { cursor: grab; }
 /* the whole painting always shows (frames share the scans' own proportions, so nothing is cropped) */
 .work .win { position: absolute; inset: 0; }
 .work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
-html:not(.touch) .work:hover { --s: 1.2; z-index: 50; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
+html:not(.touch) .work:hover { --s: 1.2; z-index: 100; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
@@ -111,7 +111,7 @@ html:not(.touch) .work:hover .side { opacity: 1; }
   .work { width: calc(var(--col) * var(--kp)); margin-top: calc(-0.084 * var(--col) * var(--kp) / var(--r)); }
   .work:first-child { margin-top: 0; }
   .work .side { display: none; }
-  .work.tapped { z-index: 60; }
+  .work.tapped { z-index: 100; }
   .work.r.tapped .side, .work.l.tapped .side { display: flex; opacity: 1; left: 50%; right: auto; top: calc(100% + 8px); transform: translateX(-50%); align-items: center; background: rgba(253,253,251,0.94); padding: 6px 10px; }
 }
 /* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
@@ -245,8 +245,9 @@ const $ = id => document.getElementById(id);
 const scroller = $('scroller'), col = $('col'), sb = $('sb'), bar = $('sbThumb');
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 
-// ---- Layout: one centred stack. Widths cycle through a set of fractions of the column so the sizes keep changing
-// (portraits come out narrower still, from their own proportions); each work overlaps the previous one by --lap.
+// ---- Layout: one centred stack. The SIZES rhythm sets each work's parallax depth and stacking; its drawn size varies
+// far less (landscapes 82-100% of the column width, portraits the same area as a landscape of that step), so the works
+// read as a fairly even set; each work overlaps the previous one by --lap.
 const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
 // Order: Brilliance opens and Canopy closes (as in the grid); between them the portraits are dealt out through the
 // landscapes one at a time after runs of 2, 3 or 4 landscapes (a fixed irregular rhythm), so neither orientation
@@ -270,11 +271,12 @@ order.forEach((w, i) => {
     history.replaceState(null, '', '#' + encodeURIComponent(w.f));   // coming back from the detail view lands on this work
   });
   a.style.setProperty('--r', w.r);
-  const k = (w.r < 1 ? 0.78 : 1) * SIZES[i % SIZES.length];
+  const sz = SIZES[i % SIZES.length], depthK = (w.r < 1 ? 0.78 : 1) * sz;   // depthK: the rhythm for parallax and stacking
+  const k = (w.r < 1 ? 0.667 : 1) * (0.82 + 0.18 * (sz - 0.6) / 0.4);   // drawn width: 82-100% (portraits x 0.667, equal area)
   a.style.setProperty('--kp', ((0.8 + 0.2 * (SIZES[i % SIZES.length] - 0.6) / 0.4) * (w.r < 1 ? 0.667 : 1)).toFixed(3));   // phones: 80 - 100% of the column
   a.style.setProperty('--k', k);
-  a.dataset.depth = (0.10 + (1 - k) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
-  a.style.setProperty('--z', Math.round((1.2 - k) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
+  a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
+  a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span><small>View details</small></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
   a.querySelector('img').alt = w.t;
@@ -303,8 +305,8 @@ function parallaxTick(now) {
 function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
 scroller.addEventListener('scroll', parallax, { passive: true });
 
-// ---- Hover (mouse): the work grows to 120% and the works above and below draw back to leave 25px clear around it
-const GAP = 25;
+// ---- Hover (mouse): the work comes to the front, grows to 120%, and the works above and below draw back to leave 60px clear around it
+const GAP = 60;
 works.forEach((w, i) => {
   w.addEventListener('mouseenter', () => {
     if (document.documentElement.classList.contains('touch')) return;
