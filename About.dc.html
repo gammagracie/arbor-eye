@@ -249,7 +249,7 @@ html { scrollbar-gutter: stable; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
-  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
+  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'tree', bio: 0, proc: 0, stu: 0 };
@@ -288,7 +288,7 @@ class Component extends DCLogic {
     return out;
   }
   renderVals() {
-    const cartCount = this.props.cartCount ?? 1;
+    const cartCount = this.props.cartCount ?? 0;
     const m = this.state.mobile, stack = this.state.stack;
     return {
       cartCount,
