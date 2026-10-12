@@ -97,7 +97,7 @@ html { scrollbar-gutter: stable; }
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
-      <span aria-hidden="true" style="position: absolute; inset: 0; background: url(uploads/arbor-mark.png) center / auto 49.7% no-repeat; opacity: 0.25; pointer-events: none"></span>
+      <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: 0.25; pointer-events: none">
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 54%; max-width: 675px; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">
