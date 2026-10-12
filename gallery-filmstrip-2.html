@@ -279,13 +279,16 @@ function fit() {
   // 12-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
   const R = s => count === 12 && WORKS[s.idx].r >= 1 ? 1.5 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid each column is as wide as its widest work
-  const sumR = [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(R)), 0);
+  // (12-up: every column is the 3:2 landscape box wide whatever is in it, so portraits sit centred in the same four columns
+  // and the grid, and so the arrows, keep one size and position whatever the mix of orientations)
+  const sumR = count === 12 ? nc * 1.5 : [...Array(nc).keys()].reduce((t, c) => t + Math.max(...slots.filter((s, i) => i % nc === c).map(R)), 0);
   const h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 : 0.8075);   // three-up 85%, one-up 86% and twelve-up about 81% of the space, for more room around them
   const lift = count === 1 ? 14 : 0;   // one-up sits 14px above centre, so the title below it has more room
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
+  row.style.gridTemplateColumns = count === 12 ? 'repeat(4, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
   const total = h3 * sumR + gapX * (nc - 1), rowH = h3 * nr + rowGap * (nr - 1);
   $('prev').style.left = $('next').style.right = phone.matches ? '0px' : Math.max(0, (stage.clientWidth - total) / 2 - step - (count === 12 ? 48 : 0)) + 'px';   // the grid's arrows sit a further 48px out   // phones: on the side padding, level with the logo and the menu button
@@ -334,11 +337,11 @@ async function slideTo(ks, d, axis) {
   const from = vert ? 'translateY(' + (d * dist) + 'px)' : 'translateX(' + (-d * dist) + 'px)', to = vert ? 'translateY(' + (-d * dist) + 'px)' : 'translateX(' + (d * dist) + 'px)';
   row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) ' + from;
   void row.offsetWidth;
-  const ease = 'transform 0.95s cubic-bezier(0.6, 0, 0.2, 1)';   // slow start and finish, brisk in the middle
+  const ease = 'transform 1.3s cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
   row.style.transition = ease; out.style.transition = ease;
   row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
-  busy(1100);
-  setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1000);
+  busy(1450);
+  setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1350);
 }
 
 // feature the works from f onward (the window never runs past the end of the list); moving the window slides the row,
@@ -498,7 +501,7 @@ stage.addEventListener('wheel', e => {
   if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
   e.preventDefault();
   clearTimeout(wheelQuiet); wheelQuiet = setTimeout(() => { wheelLocked = false; wheelAcc = 0; }, 200);
-  if (wheelLocked || performance.now() - wheelAt < 950) return;
+  if (wheelLocked || performance.now() - wheelAt < 1300) return;
   wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) < 40) return;
   const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
