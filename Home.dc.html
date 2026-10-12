@@ -260,8 +260,9 @@ class Component extends DCLogic {
     // footer follows below the fold. Tablet / phones: the image keeps the scans' own proportion, fitting the height and never
     // exceeding the content width (tablet may run out to 94% of the screen).
     const desk = !m && !this.state.tablet;
-    // the frame: the scans' 3:2 with a fifth of the top and bottom paper trimmed away (2.05% of the height off each edge)
-    const TRIM = 0.0205, FRAME = 1.5 / (1 - 2 * TRIM);
+    // the frame: the scans' 3:2 with the top and bottom paper trimmed (a fifth, then a further 15% of what was left: 3.28% of
+    // the height off each edge, the same for every work so nothing jumps)
+    const TRIM = 0.0328, FRAME = 1.5 / (1 - 2 * TRIM);
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + FRAME.toFixed(4) + ')';
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
