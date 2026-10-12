@@ -104,7 +104,7 @@ html { scrollbar-gutter: stable; }
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
   <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; min-height: {{ bioMinH }}; display: grid; grid-template-columns: {{ bioCols }}; grid-template-rows: {{ bioRows }}; gap: {{ bioGap }}; align-items: {{ bioAlign }}; align-content: {{ bioAlign }}">
     <div style="display: {{ bioSideDisplay }}; grid-column: {{ col1 }}"></div>
-    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: start; padding-top: {{ bioTop }}; width: {{ bioPhotoW }}; justify-self: {{ bioPhotoJustify }}">
+    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: start; padding-top: {{ bioTop }}; width: {{ bioPhotoW }}; justify-self: {{ bioPhotoJustify }}; margin-left: {{ bioPhotoNudge }}">
       <div onClick="{{ bioTap }}" onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/ned-window.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block"></div>
@@ -119,7 +119,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <div style="position: relative; grid-column: {{ col4 }}; grid-row: {{ bioSpan }}; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 0 0 auto; padding: {{ bioTextPad }}">
+    <div style="position: relative; left: {{ bioTextShift }}; grid-column: {{ col4 }}; grid-row: {{ bioSpan }}; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 0 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
         <p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
@@ -325,10 +325,12 @@ class Component extends DCLogic {
       // the portraits (3:4): desktop, the photo's top level with the copy's first line, as wide as the photo column allows but
       // never so tall that the photo with its arrows and dots runs under the pinned tab row (56px section padding and 48px
       // above it; 64px of arrows and dots and 51px down to the tab row below); stacked, centred and at most 600px wide
-      bioPhotoW: stack ? 'min(100%, 600px)' : 'min(100%, calc((100vh - var(--header-h) - 56px - 48px - 64px - 51px) * 0.75))',
+      bioPhotoW: stack ? 'min(100%, 600px)' : 'min(calc(100% - 44.6px), calc((100vh - var(--header-h) - 56px - 48px - 64px - 51px) * 0.75))',
+      bioPhotoNudge: stack ? '0' : '44.6px',   // desktop: the photo's left edge lines up with the B of ARBOR in the logo (44.6px in from the logo's left edge)
       bioPhotoJustify: stack ? 'center' : 'start',
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
+      bioTextShift: stack ? '0' : '-40px',   // desktop: the copy sits 40px left of its column, keeping its width
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 24px 0',
