@@ -160,20 +160,22 @@ class Component extends DCLogic {
     { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
-  // Hover (mouse only): just the thumbnail under the cursor grows, to 130%, lifting 4px; its neighbours stay as they are.
+  // Hover (mouse only): just the thumbnail under the cursor grows, to 121%, evenly from its centre in all four directions,
+  // easing in slowly and softly; its neighbours stay as they are.
   dockMove(e) {
     if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;   // mouse only: a tap must not leave thumbnails magnified
     const on = e.target.closest('button');
     Array.from(e.currentTarget.children).forEach(btn => {
       const grow = btn === on;
-      btn.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';
-      btn.style.transform = grow ? 'translateY(-4px) scale(1.3)' : '';
+      btn.style.transition = 'transform 0.7s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transformOrigin = 'center center';
+      btn.style.transform = grow ? 'scale(1.21)' : '';
       btn.style.zIndex = grow ? '2' : '';
     });
   }
   dockLeave(e) {
     Array.from(e.currentTarget.children).forEach(btn => {
-      btn.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transition = 'transform 0.7s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back as softly
       btn.style.transform = ''; btn.style.zIndex = '';
     });
   }
