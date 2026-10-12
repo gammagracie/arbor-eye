@@ -102,7 +102,7 @@ html { scrollbar-gutter: stable; }
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 54%; max-width: 675px; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">
     </a>
-    <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
+    <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(1px 0 0 #FFFFFF)"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
@@ -118,7 +118,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.04em; padding-left: 0.04em; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -263,11 +263,11 @@ class Component extends DCLogic {
     // the frame: the scans' 3:2 with the top and bottom paper trimmed (a fifth, then a further 15% of what was left: 3.28% of
     // the height off each edge, the same for every work so nothing jumps)
     const TRIM = 0.0328, FRAME = 1.5 / (1 - 2 * TRIM);
-    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 98px) * ' + FRAME.toFixed(4) + ')';
+    const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
     const thumbH = m ? '44px' : this.state.tablet ? 'calc(44px + (100vw - 768px) * 0.0176)' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)';
-    const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 10px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px)
+    const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
@@ -325,7 +325,8 @@ class Component extends DCLogic {
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
-      hoverTitleMargin: mp ? '10px 0 0' : '0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10)
+      railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
+      hoverTitleMargin: mp ? '10px 0 0' : m ? '0' : '-2px 0 0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10); desktop and tablet: 7px lower on screen than before while the tray it hangs from moved 9px
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
