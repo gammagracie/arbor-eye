@@ -97,7 +97,8 @@ html { scrollbar-gutter: stable; }
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
-      <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: 0.25; pointer-events: none">
+      <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
+      <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 15px; line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
       <img src="uploads/intro-logo.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 54%; max-width: 675px; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">
@@ -143,20 +144,20 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre' }; // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/works/select_brilliance.jpg', title: 'Brilliance', alt: 'Brilliance' }, // first, per Ned
-    { src: 'assets/works/core_symbiosis.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', alt: 'Green field with red, ochre and white forms' },
-    { src: 'assets/works/core_emergence.jpg', cropped: 'assets/art-2.png', title: 'Emergence', alt: 'Chartreuse field with blue-ringed forms' },
-    { src: 'assets/works/core_script.jpg', cropped: 'assets/art-3.png', title: 'Script', alt: 'Red, black and yellow strokes on white' },
-    { src: 'assets/works/core_articulation.jpg', cropped: 'assets/art-4.png', title: 'Articulation', alt: 'Color band study on textured paper', hidden: true }, // Ned does not want it shown
-    { src: 'assets/works/core_habitat.jpg', cropped: 'assets/art-5.png', title: 'Habitat', alt: 'Sunset watercolor with green sprigs' },
-    { src: 'assets/works/core_chamber.jpg', cropped: 'assets/art-6.png', title: 'Chamber', alt: 'Two framed panels on black ground' },
-    { src: 'assets/works/core_affinity.jpg', cropped: 'assets/art-7.png', title: 'Affinity', alt: 'Ochre field with green and blue frames' },
-    { src: 'assets/works/core_conduit.jpg', title: 'Conduit', alt: 'Conduit' },
-    { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', alt: 'Upwelling' }
+    { src: 'assets/works/select_brilliance.jpg', title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
+    { src: 'assets/works/core_symbiosis.jpg', cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
+    { src: 'assets/works/core_emergence.jpg', cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/works/core_script.jpg', cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
+    { src: 'assets/works/core_articulation.jpg', cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
+    { src: 'assets/works/core_habitat.jpg', cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
+    { src: 'assets/works/core_chamber.jpg', cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
+    { src: 'assets/works/core_affinity.jpg', cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
+    { src: 'assets/works/core_conduit.jpg', title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
+    { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored
@@ -295,7 +296,13 @@ class Component extends DCLogic {
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
-      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, onError: this.ph(i), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
+      heroImg: React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }),
+      // the image's alt text, centred on the frame (title in italic capitals, a colon, the tagline): shown only if the image has
+      // not loaded within 0.8s or fails, so it never flashes during the crossfade between works (those images are preloaded)
+      heroAltTitle: this.arts[i].title, heroAltTag: this.arts[i].tag,
+      treeOpacity: this.state.heroBad === this.arts[i].src ? 0 : 0.25,   // the faint tree behind the image steps aside when the caption stands in for a failed image
+      heroAltOpacity: this.state.heroOk === this.arts[i].src ? 0 : 1,
+      heroAltTransition: this.state.heroOk === this.arts[i].src ? 'opacity 0.2s ease' : 'opacity 0.4s ease 0.8s',
       heroW, heroH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
@@ -317,7 +324,7 @@ class Component extends DCLogic {
       thumbs: shown.map((k, j) => ({
         vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
         img: React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { display: 'block', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', objectFit: 'cover', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } }),   // a soft shadow lifts them off the painting
-        alt: 'Show ' + this.arts[k].alt,
+        alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k)
       }))
