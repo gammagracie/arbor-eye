@@ -160,25 +160,15 @@ class Component extends DCLogic {
     { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
-  // Dock-style magnification: the thumbnail under the cursor grows most, neighbours less (bell curve), all anchored
-  // at their bottom edge and nudged sideways so they never overlap. Styles are set directly for smooth tracking.
-  dockBase(strip) {
-    this.dock = Array.from(strip.children).map(b => { const r = b.getBoundingClientRect(); return { cx: r.left + r.width / 2, w: r.width }; });
-  }
+  // Hover (mouse only): just the thumbnail under the cursor grows, to 130%, lifting 4px; its neighbours stay as they are.
   dockMove(e) {
     if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;   // mouse only: a tap must not leave thumbnails magnified
-    const strip = e.currentTarget; const btns = Array.from(strip.children);
-    if (!this.dock || this.dock.length !== btns.length) this.dockBase(strip);
-    const base = this.dock; const slot = base.length > 1 ? base[1].cx - base[0].cx : 100;
-    const scales = base.map(b => 1 + 0.3 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.15 * slot), 2)));
-    const extra = scales.map((sc, k) => (sc - 1) * base[k].w);
-    const total = extra.reduce((a, b) => a + b, 0);
-    let acc = 0;
-    btns.forEach((btn, k) => {
-      const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
-      btn.style.transition = 'transform 0.14s ease-out, opacity 0.35s ease, border-color 0.35s ease';
-      btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) translateY(' + (-4 * (scales[k] - 1) / 0.3).toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';   // grows (to 130% under the cursor) and lifts up to 4px
-      btn.style.zIndex = String(Math.round(scales[k] * 100));
+    const on = e.target.closest('button');
+    Array.from(e.currentTarget.children).forEach(btn => {
+      const grow = btn === on;
+      btn.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transform = grow ? 'translateY(-4px) scale(1.3)' : '';
+      btn.style.zIndex = grow ? '2' : '';
     });
   }
   dockLeave(e) {
@@ -186,7 +176,6 @@ class Component extends DCLogic {
       btn.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';
       btn.style.transform = ''; btn.style.zIndex = '';
     });
-    this.dock = null;
   }
   // finger swipe on the image or thumbnails: left = next, right = previous
   touchStart(e) { this.touchX = e.touches[0].clientX; }
