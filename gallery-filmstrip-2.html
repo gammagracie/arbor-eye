@@ -385,11 +385,11 @@ WORKS.forEach((w, k) => {
 // (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
 let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX = null;
 // The cursor (or finger) steers the row: in the middle DEAD share of the page it eases to a stop, and the further
-// left or right of that the faster it drifts that way, up to CRUISE at the page edges.
+// left or right of that the faster it drifts that way (gently at first, the speed building towards the edges), up to CRUISE at the page edges.
 // GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
 // ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
-// BRAKE: ms time constant for coming to rest once the cursor stops moving (stopped within about 2s)
-const GLIDE = 1200, CRUISE = 220, ACCEL = 260, BRAKE = 550, DEAD = 0.10;
+// BRAKE: ms time constant for coming to rest once the cursor stops moving (stopped within about 1s)
+const GLIDE = 1200, CRUISE = 120, ACCEL = 260, BRAKE = 280, DEAD = 0.30;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
@@ -454,9 +454,10 @@ let stillT = 0;
 function follow(x) {
   mouseX = x;
   // the cursor steers only while it moves: once it rests on a thumbnail the row brakes to a stop, so the thumbnail can be clicked
-  clearTimeout(stillT); stillT = setTimeout(() => { if (mouseX !== null) drive = 0; }, 150);
+  clearTimeout(stillT); stillT = setTimeout(() => { if (mouseX !== null) drive = 0; }, 120);
   const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
-  drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08))) * CRUISE / 1000;
+  const reach = Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08)));
+  drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * reach * reach * CRUISE / 1000;   // squared: slow near the still zone, full speed only at the edges
   cap = CRUISE / 1000;
   run();
 }
