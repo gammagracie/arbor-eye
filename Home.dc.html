@@ -118,7 +118,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 17px; font-weight: 300; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 15px; font-weight: 300; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -149,7 +149,7 @@ class Component extends DCLogic {
   arts = [
     { src: 'assets/works/select_brilliance.jpg', fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
     { src: 'assets/works/core_symbiosis.jpg', fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
-    { src: 'assets/works/core_emergence.jpg', fit: [0.117, 0.882, 0.172, 0.907], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/works/core_emergence-no-dedication.jpg', fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
     { src: 'assets/works/core_script.jpg', fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
     { src: 'assets/works/core_articulation.jpg', fit: [0.165, 0.800, 0.323, 0.632], cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
     { src: 'assets/works/core_habitat.jpg', fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
@@ -204,8 +204,8 @@ class Component extends DCLogic {
   // Fallback if an artwork file is missing: a light green box.
   // Homepage only: each scan is zoomed about its painting so its paper border shrinks to about 35% of the scan's own (on the
   // tighter side; the other side shrinks in proportion), the painting centred in the frame, never past the scan's edge and
-  // never trimmed. fit = the painting's left, right, top and bottom on the scan as fractions (Emergence includes its
-  // dedication). Upwelling has no fit: its narrower border is kept as it is.
+  // never trimmed. fit = the painting's left, right, top and bottom on the scan as fractions (the homepage's Emergence is
+  // the scan without its dedication). Upwelling has no fit: its narrower border is kept as it is.
   heroZoom(a) {
     if (!a.fit) return '';
     const [x0, x1, y0, y1] = a.fit, w = x1 - x0, h = y1 - y0, K = 0.65;   // K: share of the border the painting grows into
