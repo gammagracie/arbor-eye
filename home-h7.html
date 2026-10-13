@@ -351,7 +351,7 @@ class Component extends DCLogic {
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '28px' : this.state.tablet ? '55px' : this.state.wide ? 'calc(' + thumbH + ' * 0.45 + 16px)' : '33px',   // chevrons beside the thumbnails (phones 36px clear with the button padding, desktop 33px, tablet 55px; over 2000px 45% of a thumbnail's height + 16px, so the hover magnification, which reaches about 45% of a thumbnail's height past the end ones, never meets them)
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
-      arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
+      arrowW: this.state.wide ? '34px' : desk ? '17px' : '13px', arrowH: this.state.wide ? '94px' : desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere; over 2000px twice that (34 x 94px)
       thumbH,
       heroImg: (() => { const pb = desk ? this.paintBox(this.arts[i], FRAME) : null;   // desktop: the painting alone; tablet and phones keep the framed scan
         return React.createElement('span', { style: Object.assign({ position: 'absolute', inset: 0 }, pb ? pb.box : {}, { display: 'block', overflow: 'hidden', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.14)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' }) },
