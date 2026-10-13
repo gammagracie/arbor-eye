@@ -129,9 +129,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
    Hovering a thumbnail names its series once, centred above the thumbnails, and dims the other rows to 50%; a click opens
    the work full size in G5's one-up view. */
 .page.index { height: auto; min-height: 100vh; }
-:root { --idx-h: clamp(38px, 4.667vw, 179px); }   /* 67px tall on a 1440px screen (20% under the reference's 84px), growing with the screen */
+:root { --idx-h: clamp(42px, 5.133vw, 197px); }   /* 74px tall on a 1440px screen, growing with the screen */
 .idx { padding: 16px var(--side-pad) 96px; }
-.idx-series { margin: 0 0 14px; height: 18px; text-align: center; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; }
+.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; }
 .idx-series.show { opacity: 1; }
 .idx-row { transition: opacity 0.3s ease; }
 .idx.hovering .idx-row { opacity: 0.5; }
