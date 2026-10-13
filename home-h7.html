@@ -348,7 +348,7 @@ class Component extends DCLogic {
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
-      railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
+      railNudge: m ? 'none' : 'translateY(-1px)',   // H7, desktop and tablet: the arrows and thumbnail tray sit 1px higher than their layout place (10px higher than on the homepage), further onto the painting
       hoverTitleMargin: mp ? '10px 0 0' : m ? '0' : '-2px 0 0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10); desktop and tablet: 7px lower on screen than before while the tray it hangs from moved 9px
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
