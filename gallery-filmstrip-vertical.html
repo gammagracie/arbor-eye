@@ -242,7 +242,7 @@ function fit() {
   if (current < 0) return;
   const r = WORKS[current].r, step = $('prev').offsetWidth;
   const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
-  let h = Math.min(H, W / r) * 0.85, w = h * r;   // 85% of the largest the stage allows
+  let h = Math.min(H, W / r) * 0.9775, w = h * r;   // 97.75% of the largest the stage allows (85% enlarged by 15%)
   if (phone.matches) { h = r >= 1 ? Math.min(stage.clientWidth / r, stage.clientHeight - 100) : stage.clientHeight - 100; w = Math.min(h * r, stage.clientWidth); h = w / r; }   // phones: landscapes span the stage (24px page margin each side), portraits leave 50px above and below
   art.style.width = w + 'px'; art.style.height = h + 'px';
   const im = imgs[front]; im.style.width = w + 'px'; im.style.height = h + 'px';
