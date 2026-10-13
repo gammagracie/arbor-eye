@@ -246,9 +246,9 @@ function fit() {
   if (phone.matches) { h = r >= 1 ? Math.min(stage.clientWidth / r, stage.clientHeight - 100) : stage.clientHeight - 100; w = Math.min(h * r, stage.clientWidth); h = w / r; }   // phones: landscapes span the stage (24px page margin each side), portraits leave 50px above and below
   art.style.width = w + 'px'; art.style.height = h + 'px';
   const im = imgs[front]; im.style.width = w + 'px'; im.style.height = h + 'px';
-  art.style.top = phone.matches ? '50%' : 'calc(50% - 28px)';
+  art.style.top = '50%';   // centred in the content area (desktop too since 2026-10-12), so the side arrows sit on its middle
   $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
-  caption.style.top = (phone.matches ? 'calc(50% + ' : 'calc(50% - 28px + ') + (h / 2 + (phone.matches ? 14 : 22)) + 'px)';
+  caption.style.top = 'calc(50% + ' + (h / 2 + (phone.matches ? 14 : 22)) + 'px)';
 }
 
 // show work k: the incoming image is decoded first, then rises in (dir +1, from below) or drops in (dir -1, from above)
