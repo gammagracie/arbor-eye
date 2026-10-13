@@ -218,11 +218,11 @@ html { scrollbar-gutter: stable; }
       <div>
         <button onClick="{{ viewOriginal }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">View original</button>
       </div>
-      <div style="display: grid; grid-template-columns: {{ printCols }}; gap: {{ printGap }}; align-items: start">
-        <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="order: {{ printMainOrder }}; background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: clamp(24px, 6vw, 96px); box-sizing: border-box; min-height: {{ printStageMin }}; cursor: zoom-in">
+      <div style="display: grid; grid-template-columns: {{ printCols }}; gap: {{ printColGap }}; align-items: {{ printAlign }}; container-type: inline-size">
+        <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="order: {{ printMainOrder }}; background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
           {{ printImg }}
         </div>
-        <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ detailInfoPad }}">
+        <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
           <p style="margin: 0; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: {{ detailTitleSize }}; letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <p style="margin: 0; font-size: 16px; letter-spacing: 0.08em">{{ printPrice }}</p>
@@ -628,16 +628,25 @@ class Component extends DCLogic {
       },
       openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
-      printCols: m ? '1fr' : 'minmax(0, 1fr) clamp(340px, 30vw, 460px)',
+      // buy page, desktop (the same proportions at every screen size): the wall about 61% of the content width and a little taller
+      // than wide, the print filling it inside a 12.5% margin, a 6% gap, then the text column, centred on the wall's height
+      printCols: m ? '1fr' : 'minmax(0, 61fr) minmax(0, 33fr)',
+      printColGap: m ? '28px' : '6%',
+      printAlign: m ? 'start' : 'center',
+      printWallPad: m ? 'clamp(24px, 6vw, 96px)' : '12.5%',
+      // the wall keeps its column's full width (61% of the row) and is a little taller than wide (820:773), but never taller than
+      // the screen leaves under the header and the View original link
+      printWallH: m ? 'auto' : 'min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px))',
+      printInfoPad: '0',
       printGap: m ? '28px' : 'clamp(40px, 4.5vw, 90px)',
       printRailDir: m ? 'row' : 'column',
       printRailOrder: m ? 2 : 0,
       printMainOrder: m ? 1 : 0,
       printInfoOrder: m ? 3 : 0,
       printThumbSize: m ? '72px' : '104px',
-      printStageMin: m ? '320px' : 'min(70vh, 820px)',
+      printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto', display: 'block' }, framed(frame)) }),
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame)) }),   // desktop: the print fills the wall inside its margin
       // frame swatches
       frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
         pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
