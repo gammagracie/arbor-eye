@@ -77,8 +77,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
    the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
 @media (min-width: 768px) {
-  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(20px, 2.7vw, 39px) / 22); }
-  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(20px, 2.7vw, 39px) / 22); }
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
 }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
@@ -93,7 +93,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }   /* 39 x 108px on a 1440px screen, scaling down with the viewport to 20 x 56px */
+.step svg { width: clamp(15px, 2.025vw, 29.25px); height: auto; }   /* 75% of the earlier size: 29 x 81px on a 1440px screen, scaling down with the viewport to 15 x 42px */
 .caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
@@ -280,7 +280,7 @@ function buildSlots(n) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + 25 - (caption.offsetHeight - 18) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (count === 9 ? 12 : 25) - (caption.offsetHeight - 18) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
     a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
     row.appendChild(a); slots.push(slot);
   }
@@ -315,15 +315,34 @@ function fit() {
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
+  // nine-up (desktop): the top row's top level with the top of the SERIES label above the stage, the bottom row's bottom
+  // 34px above the stage's foot (room for its title, 12px under it), the middle row centred between them. Where the grid
+  // would run under the SERIES / YEAR menus (it reaches within 24px of them), the top row starts 16px below the menus instead
+  let gridTop = null;
+  if (grid && !phone.matches) {
+    const st = stage.getBoundingClientRect(), lab = $('fmSeries').querySelector('span'), rg = document.createRange();
+    rg.selectNodeContents(lab); const tr = rg.getBoundingClientRect();
+    const cx = document.createElement('canvas').getContext('2d'), cs = getComputedStyle(lab); cx.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    const mt = cx.measureText('S'), capTop = tr.top + (mt.fontBoundingBoxAscent - mt.actualBoundingBoxAscent) * (tr.height / (mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent));
+    const menus = $('fmSeries').getBoundingClientRect(), gridRight = st.left + st.width / 2 + (h * sumR + gap * (nc - 1)) / 2;
+    gridTop = (gridRight + 24 <= menus.left ? capTop : menus.bottom + 16) - st.top;
+  }
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
   row.style.gridTemplateColumns = grid ? 'repeat(3, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
-  const rowH = h3 * nr + rowGap * (nr - 1);
+  let rowH = h3 * nr + rowGap * (nr - 1);
+  stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the label
+  if (gridTop !== null) {
+    const bottom = H - 34, used = Math.ceil(slots.length / nc), rg2 = used > 1 ? (bottom - gridTop - h3 * used) / (used - 1) : 0;
+    row.style.rowGap = rg2.toFixed(1) + 'px';
+    rowH = h3 * used + rg2 * (used - 1);
+    row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
+  } else row.style.rowGap = '';
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
-  const sb = stage.getBoundingClientRect().bottom, rowBottom = sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
-  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + 25 - (capH - 18) / 2 - sb;
+  const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
+  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? 12 : 25) - (capH - 18) / 2 - sb;
   placeCaption();
 }
 let capDx = 0, capDy = 0;
