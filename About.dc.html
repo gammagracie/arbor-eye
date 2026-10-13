@@ -104,7 +104,7 @@ html { scrollbar-gutter: stable; }
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
   <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; min-height: {{ bioMinH }}; display: grid; grid-template-columns: {{ bioCols }}; grid-template-rows: {{ bioRows }}; gap: {{ bioGap }}; align-items: {{ bioAlign }}; align-content: {{ bioAlign }}">
     <div style="display: {{ bioSideDisplay }}; grid-column: {{ col1 }}"></div>
-    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: start; padding-top: {{ bioTop }}; width: {{ bioPhotoW }}; justify-self: {{ bioPhotoJustify }}; margin-left: {{ bioPhotoNudge }}">
+    <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: {{ bioPair }}; padding-top: {{ bioTop }}; width: {{ bioPhotoW }}; justify-self: {{ bioPhotoJustify }}; margin-left: {{ bioPhotoNudge }}">
       <div onClick="{{ bioTap }}" onTouchStart="{{ bioTouchStart }}" onTouchEnd="{{ bioTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ bioD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ bioD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/ned-window.webp" alt="Ned Church painting with a mouth-held brush at his window" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block"></div>
@@ -119,7 +119,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
-    <div style="position: relative; left: {{ bioTextShift }}; grid-column: {{ col4 }}; grid-row: {{ bioSpan }}; max-width: {{ bioTextMax }}; width: 100%; box-sizing: border-box; margin: 0 0 0 auto; padding: {{ bioTextPad }}">
+    <div style="position: relative; left: {{ bioTextShift }}; grid-column: {{ col4 }}; grid-row: {{ bioSpan }}; align-self: {{ bioPair }}; max-width: {{ bioTextMax }}; width: {{ bioTextW }}; box-sizing: border-box; margin: 0 0 0 auto; padding: {{ bioTextPad }}">
       <h1 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Biography</h1>
       <div class="copy" style="display: grid; font-size: 14px; line-height: 1.75; text-align: left">
         <p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
@@ -188,40 +188,31 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Studio" style="padding: {{ studioTopPad }}">
     <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
-    <div style="max-width: 540px; margin: 0 auto; display: grid; gap: 16px">
+    <!-- a two-slide carousel: the three studio photos side by side, then the film (as tall as the photo row, centred) -->
+    <div style="display: grid; gap: 16px">
       <div onClick="{{ stuTap }}" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
-        <div style="grid-area: 1 / 1; opacity: {{ stuD0 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; opacity: {{ stuD1 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; opacity: {{ stuD2 }}; transition: opacity 0.7s ease; aspect-ratio: 3 / 4"><img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-      </div>
-      <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
-        <button onClick="{{ stuPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
-        <div style="display: flex; gap: 9px; align-items: center">
-          <sc-for list="{{ stuDots }}" as="d" hint-placeholder-count="3">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
-          </sc-for>
+        <div style="grid-area: 1 / 1; opacity: {{ stuD0 }}; transition: opacity 0.7s ease; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: {{ studioGap }}">
+          <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+          <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+          <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
         </div>
-        <button onClick="{{ stuNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
-      </div>
-    </div>
-  </section>
-  <!-- TRIAL: Studio version B (the three photos side by side), shown under version A for comparison; keep one, delete the other -->
-  <section data-screen-label="About — Studio (version B)" style="padding: {{ sectionPad }}; border-top: 1px dashed #D9D5CC">
-    <p style="margin: 0 0 24px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E; text-align: center">Version B · side by side</p>
-    <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: {{ headingSize }}; letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Studio</h2>
-    <div style="display: grid; grid-template-columns: {{ studioBCols }}; gap: 25px">
-      <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
-      <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
-      <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
-    </div>
-  </section>
-  <section data-screen-label="About — Film" style="padding: {{ studioPad }}">
-    <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden">
+        <div style="grid-area: 1 / 1; opacity: {{ stuD1 }}; transition: opacity 0.7s ease; justify-self: center; align-self: center; position: relative; width: {{ studioFilmW }}; aspect-ratio: 16 / 9; overflow: hidden">
       <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
       <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
         <span style="width: 76px; height: 76px; border-radius: 50%; background: rgba(253,253,251,0.82); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(20,20,20,0.18)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="#141414"><path d="M8 5.5v13l11-6.5z"></path></svg>
         </span>
+      </div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
+        <button onClick="{{ stuPrev }}" aria-label="Previous slide" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+        <div style="display: flex; gap: 9px; align-items: center">
+          <sc-for list="{{ stuDots }}" as="d" hint-placeholder-count="2">
+            <button onClick="{{ d.go }}" aria-label="Go to slide" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+          </sc-for>
+        </div>
+        <button onClick="{{ stuNext }}" aria-label="Next slide" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
       </div>
     </div>
   </section>
@@ -248,7 +239,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'tree', bio: 0, proc: 0, stu: 0 };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'tree', bio: 0, proc: 0, stu: 0, bioFits: true };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -267,8 +258,21 @@ class Component extends DCLogic {
     this.onMqStack = () => this.setState({ stack: this.mqStack.matches });
     this.mqStack.addEventListener('change', this.onMqStack);
     this.setState({ stack: this.mqStack.matches });
+    this.onResize = () => this.measureBio(); window.addEventListener('resize', this.onResize);
+    if (document.fonts) document.fonts.ready.then(() => this.measureBio());
   }
-  componentWillUnmount() { window.removeEventListener('hashchange', this.onHash); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
+  componentDidUpdate() { this.measureBio(); }
+  // Biography opener: the heading and copy are centred on the photo unless they are more than 80px taller than it; then
+  // (shorter, narrower screens) the two line up at the top instead, so the photo is not pushed down under the pinned tabs
+  measureBio() {
+    const img = document.querySelector('img[src="uploads/about/ned-portrait.webp"]'), copy = document.querySelector('.copy');
+    if (!img || !copy) return;
+    const photoH = img.parentElement.getBoundingClientRect().height, h1 = copy.parentElement.querySelector('h1');
+    const textH = copy.getBoundingClientRect().bottom - h1.getBoundingClientRect().top;
+    const fits = textH <= photoH + 80;   // up to 80px taller still centres (the photo moves down at most 40px, staying clear of the tabs)
+    if (fits !== this.state.bioFits) this.setState({ bioFits: fits });
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('hashchange', this.onHash); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
   car(key, n) {
     const i = this.state[key];
     const out = {};
@@ -330,10 +334,12 @@ class Component extends DCLogic {
       bioPhotoJustify: stack ? 'center' : 'start',
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
-      bioTextShift: stack ? '0' : '-70px',   // desktop: the copy sits 70px left of its column, keeping its width
+      bioPair: stack ? 'start' : this.state.bioFits ? 'center' : 'start',
+      bioTextShift: stack ? '0' : '-70px',   // desktop: the copy starts 70px left of its column ...
+      bioTextW: stack ? '100%' : 'calc(100% + 70px)',   // ... and still runs to the bag icon's line, so it is 70px wider than the column
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
-      bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 24px 0',
+      bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 64px 0',   // desktop: the same 48px above and 64px below as the photo column (above the photo; its arrows and dots below), so with both centred in the row the copy is centred on the photo itself
       twoColGap: m ? '28px' : '80px',
       procImgOrder: m ? 0 : 2, // desktop: text on the left, photos on the right
       procTextLift: m ? '0' : '52px', // desktop: the copy is centred on the photo itself, not on photo plus the arrows-and-dots row beneath it (16px gap + 36px)
@@ -341,7 +347,9 @@ class Component extends DCLogic {
       sectionPad: m ? '40px 0' : '72px 0',
       treePad: m ? '40px 0' : '37px 0 72px',   // desktop: Tree of Life tab content sits 35px higher
       studioTopPad: m ? '40px 0' : '32px 0 72px',   // desktop: Studio tab content sits 40px higher
-      studioBCols: m ? '1fr' : 'repeat(3, minmax(0, 1fr))',
+      studioGap: m ? '10px' : '25px',
+      // the film slide is exactly as tall as the photo row: a photo's height (its column width x 4/3) x 16/9
+      studioFilmW: m ? 'calc((100% - 20px) / 3 * 4 / 3 * 16 / 9)' : 'calc((100% - 50px) / 3 * 4 / 3 * 16 / 9)',
       // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
       // desktop: left-justified under a hairline rule, as on the Contact page
       tabsPad: m ? '8px 0 0' : stack ? '32px 0 0' : '22px 0 20px',
@@ -356,7 +364,6 @@ class Component extends DCLogic {
       })),
       tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
       quotePad: stack ? (m ? '28px 0' : '28px 0 0') : '24px 0 0',
-      studioPad: m ? '40px 0 64px' : '72px 0 104px',
       quoteSize: m ? '20px' : '18px',
       quoteMax: m ? '1080px' : '100%', // desktop: the photo's width, so the two balanced lines sit under the photo with the marks against the text
       quoteInset: m ? '20px calc(clamp(32px, 8.7vw, 125px) + 6px)' : '10px 0', // phones: text sits between the two marks; desktop has no marks
@@ -367,7 +374,7 @@ class Component extends DCLogic {
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 2),
       ...this.car('proc', 2),
-      ...this.car('stu', 3)
+      ...this.car('stu', 2)
     };
   }
 }
