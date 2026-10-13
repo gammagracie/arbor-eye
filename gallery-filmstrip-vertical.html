@@ -67,7 +67,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
-.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
 
@@ -144,7 +144,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <a class="art" id="art" href="#" aria-label="View work details"><img alt=""><img alt=""></a>
       <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
       <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
-      <p class="caption" id="caption"><span id="capTitle"></span><small>View details</small></p>
+      <p class="caption" id="caption"><span id="capTitle"></span></p>
     </div>
     <div class="rail">
       <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"><span class="marker" id="marker" aria-hidden="true"></span></div></div>

@@ -99,7 +99,7 @@ html:not(.touch) .scroller { cursor: grab; }
 html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
 html:not(.touch) .work:hover { --s: 1.2; z-index: 100; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
-.work .side { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.work .side { position: absolute; top: 50%; margin-top: -1.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
 .work.l .side { right: calc(100% + 56px); align-items: flex-end; }
 .work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
@@ -278,7 +278,7 @@ order.forEach((w, i) => {
   a.style.setProperty('--k', k);
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
-  a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span><small>View details</small></span>';
+  a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
   a.querySelector('img').src = 'assets/works/' + w.f;
   a.querySelector('img').alt = w.t;
   a.querySelector('.side span').textContent = w.t;
