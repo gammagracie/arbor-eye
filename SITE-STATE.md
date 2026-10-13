@@ -126,6 +126,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Buy page ("Print")
 
+- **Layout** (desktop, since 2026-10-13, the same proportions at every screen size, 4K included): the wall takes 61% of the row, starting on the logo's line; a 6% gap; then the text column (the rest, ending on the bag icon's line). The wall keeps its column's full width and is a little taller than wide (820:773), but never taller than the screen leaves under the header and the View original link; the framed print fills it inside a 12.5% margin. The text column is centred vertically on the wall. Phones stack as before.
 - Print shown on an off-white wall (`#F0F2EF`) with a soft shadow; clicking it opens a **lightbox carousel** (dark overlay) of the three framing views with dots, hover arrows, tap zones, swipe, arrow keys and Escape.
 - Italic title, then the price for the selected size: 8x12″ $225 · 16x24″ $595 · 24x36″ $1,195. Size buttons, then **Choose Your Frame Color** (this line and the Frame / Mount lines are 14px regular weight): white and black swatches (thin 100 x 12px slivers) plus "Unframed", caret under the selection; picking one redraws the print and updates the "Frame: …" / "Mount: …" lines.
 - Add to cart button (solid black with white text and a hairline border). **CTA hover** (shared with the contact form's Send button): a pale fill sweeps in from the left edge over 0.45s while the text darkens; on leaving, the fill withdraws out through the right edge and the button returns to black.
