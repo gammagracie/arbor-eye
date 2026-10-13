@@ -109,7 +109,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(1px 0 0 #FFFFFF)"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 0; flex: none">
+      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 64px; margin: 0 -64px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
             <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
@@ -201,7 +201,7 @@ class Component extends DCLogic {
     this.setState({ fade: true });
     setTimeout(() => {
       this.setState({ index: k, fade: false, animate: true });
-      setTimeout(() => this.setState({ railBase: k, animate: false }), 1000);
+      setTimeout(() => this.setState({ railBase: k, animate: false }), 1650);   // after the 1.6s glide
     }, 700);
   }
   // Fallback if an artwork file is missing: a light green box.
@@ -354,8 +354,11 @@ class Component extends DCLogic {
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
       railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
-      railTransition: this.state.animate ? 'transform 0.95s cubic-bezier(0.55, 0, 0.1, 1)' : 'none',
+      railTransition: this.state.animate ? 'transform 1.6s cubic-bezier(0.45, 0.05, 0.25, 1)' : 'none',   // a slow, soft glide
       railClip: this.state.animate ? 'inset(-120px 0 -20px 0)' : 'inset(-120px -60px -20px -60px)',
+      // while the tray slides, its thumbnails feather in and out over 64px at each side (the tray box reaches 64px past the
+      // visible thumbnails for this, so at rest nothing is faded)
+      railMask: this.state.animate ? 'linear-gradient(90deg, transparent, #000 64px, #000 calc(100% - 64px), transparent)' : 'none',
       dockMove: (e) => this.dockMove(e),
       dockLeave: (e) => this.dockLeave(e),
       swipeStart: (e) => this.touchStart(e),
