@@ -124,7 +124,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: 15px; font-weight: 300; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-style: italic; font-size: {{ hoverTitleSize }}; font-weight: 300; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #8A8680; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -312,7 +312,7 @@ class Component extends DCLogic {
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
     // edge) and its right edge sits the same distance in from the bag icon, unless the height left on screen limits it first
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' : 'min(94vw, ' + smallFit + ')';
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? (this.state.wide ? 'calc(0.92 * ' : '') + 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' + (this.state.wide ? ')' : '') : 'min(94vw, ' + smallFit + ')';
     const heroH = 'auto';
     const heroRatio = FRAME.toFixed(4);
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
@@ -369,6 +369,7 @@ class Component extends DCLogic {
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(-1px)',   // H7, desktop and tablet: the arrows and thumbnail tray sit 1px higher than their layout place (10px higher than on the homepage), further onto the painting
+      hoverTitleSize: this.state.wide ? '18px' : '15px',   // the hover title, 3px larger over 2000px
       hoverTitleMargin: mp ? '10px 0 0' : m ? '0' : '-2px 0 0', // portrait phones: 20px clear between thumbnails and title (10 tray padding + 10); desktop and tablet: 7px lower on screen than before while the tray it hangs from moved 9px
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
