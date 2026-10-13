@@ -253,12 +253,16 @@ class Component extends DCLogic {
     this.onMqTablet = () => this.setState({ tablet: this.mqTablet.matches });
     this.mqTablet.addEventListener('change', this.onMqTablet);
     this.setState({ tablet: this.mqTablet.matches });
+    this.mqWide = window.matchMedia('(min-width: 2001px)');   // very large screens (over 2000px)
+    this.onMqWide = () => this.setState({ wide: this.mqWide.matches });
+    this.mqWide.addEventListener('change', this.onMqWide);
+    this.setState({ wide: this.mqWide.matches });
     this.onKey = (e) => { if (e.key === 'ArrowLeft') this.go(-1); if (e.key === 'ArrowRight') this.go(1); };
     window.addEventListener('keydown', this.onKey);
     this.timer = setInterval(() => { if (this.props.autoplay) this.go(1); }, 5000);
   }
   componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait);
-    if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet);
+    if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide);
     window.removeEventListener('keydown', this.onKey);
     clearInterval(this.timer);
     clearTimeout(this.introTimer);
@@ -317,12 +321,12 @@ class Component extends DCLogic {
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
       railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
-      railAlign: mp ? 'flex-end' : 'center', // arrows centred on the thumbnails (portrait phones: on their baseline)
+      railAlign: mp || this.state.wide ? 'flex-end' : 'center', // arrows centred on the thumbnails (portrait phones and screens over 2000px: their bottoms on the thumbnails' bottom edge)
       arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
       railJustify: 'center', // arrows sit beside the thumbnails, the set centred
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
-      railGap: m ? '28px' : this.state.tablet ? '55px' : '33px',   // chevrons beside the thumbnails (phones 36px clear with the button padding, desktop 33px, tablet 55px)
+      railGap: m ? '28px' : this.state.tablet ? '55px' : this.state.wide ? 'calc(' + thumbH + ' * 0.45 + 16px)' : '33px',   // chevrons beside the thumbnails (phones 36px clear with the button padding, desktop 33px, tablet 55px; over 2000px 45% of a thumbnail's height + 16px, so the hover magnification, which reaches about 45% of a thumbnail's height past the end ones, never meets them)
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: desk ? '17px' : '13px', arrowH: desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere
       thumbH,
