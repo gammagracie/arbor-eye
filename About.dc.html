@@ -335,8 +335,8 @@ class Component extends DCLogic {
       bioSideDisplay: stack ? 'none' : 'block',
       bioGap: stack ? '28px' : '0',
       bioPair: stack ? 'start' : this.state.bioFits ? 'center' : 'start',
-      bioTextShift: stack ? '0' : '-70px',   // desktop: the copy starts 70px left of its column ...
-      bioTextW: stack ? '100%' : 'calc(100% + 70px)',   // ... and still runs to the bag icon's line, so it is 70px wider than the column
+      bioTextShift: stack ? '0' : '-100px',   // desktop: the copy starts 100px left of its column ...
+      bioTextW: stack ? '100%' : 'calc(100% + 70px)',   // ... and is 70px wider than the column, so its right edge sits 30px in from the bag icon's line
       bioTextMax: 'none', // the copy fills its column, from the gutter to the bag icon's line
       _oldTextMax: stack ? 'none' : 'calc(480px + var(--side-pad))', // desktop: a 480px measure (about 66 characters a line) ending on the bag icon's line; the extra is the block's right padding
       bioTextPad: stack ? '0 var(--side-pad)' : '48px var(--side-pad) 64px 0',   // desktop: the same 48px above and 64px below as the photo column (above the photo; its arrows and dots below), so with both centred in the row the copy is centred on the photo itself
