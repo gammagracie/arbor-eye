@@ -385,8 +385,10 @@ class Component extends DCLogic {
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
       thumbs: shown.map((k, j) => ({
-        vis: !this.state.animate && Math.abs(j - (n + base + shift)) > half ? 'hidden' : 'visible',   // at rest only the five around the current work show
-        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } },   // a soft shadow lifts them off the painting
+        // only thumbnails that are on show at the start or the end of a glide are ever present: the five around the new work stay
+        // put, the ones being left behind fade away as they slide off, and none beyond them peeks in at the feathered edges
+        vis: Math.abs(j - (n + base + shift)) <= half || (this.state.animate && Math.abs(j - (n + base)) <= half) ? 'visible' : 'hidden',
+        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } },   // a soft shadow lifts them off the painting
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
