@@ -126,7 +126,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 
 /* ---- Index: every work as a small thumbnail, one row per series in Ned's deck order (Series 1, Ascent to Series 8, Tonal,
    then the Outliers); the thumbnails touch, each at its own shape and one height, and the rows sit directly on one another.
-   Hovering a thumbnail names its series once, centred above the thumbnails, and dims the other rows to 50%; a click opens
+   Hovering a thumbnail enlarges it (120%, from its centre), names its series once, centred above the thumbnails, and dims the other rows to 50%; a click opens
    the work full size in G5's one-up view. */
 .page.index { height: auto; min-height: 100vh; }
 :root { --idx-h: clamp(42px, 5.133vw, 197px); }   /* 74px tall on a 1440px screen, growing with the screen */
@@ -137,9 +137,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.hovering .idx-row { opacity: 0.5; }
 .idx.hovering .idx-row.on { opacity: 1; }
 .idx-row { display: flex; flex-wrap: wrap; }
-.idx-item { position: relative; display: block; flex: none; height: var(--idx-h); }
+.idx-item { position: relative; display: block; flex: none; height: var(--idx-h); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease; }
+.idx-item:hover { transform: scale(1.2); z-index: 2; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }   /* the hovered piece grows from its centre, over its neighbours */
 .idx-item img { display: block; height: 100%; width: auto; }
-.idx-item:hover img { opacity: 0.85; }
 </style>
 </head>
 <body>
