@@ -171,6 +171,8 @@ class Component extends DCLogic {
   }
   dockMove(e) {
     if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;   // mouse only: a tap must not leave thumbnails magnified
+    this.dockStrip = e.currentTarget; this.dockX = e.clientX;
+    if (this.state.animate) return;   // not while the tray glides
     const strip = e.currentTarget; const btns = Array.from(strip.children);
     if (!this.dock || this.dock.length !== btns.length) this.dockBase(strip);
     const base = this.dock; const slot = base.length > 1 ? base[1].cx - base[0].cx : 100;
@@ -186,7 +188,17 @@ class Component extends DCLogic {
       btn.style.zIndex = String(Math.round(scales[k] * 100));
     });
   }
+  // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
+  relaxDock() {
+    if (this.dockStrip) Array.from(this.dockStrip.children).forEach(btn => { btn.style.transition = 'none'; btn.style.transform = ''; btn.style.zIndex = ''; });
+    this.dock = null;
+  }
+  redock() {
+    this.relaxDock();
+    if (this.dockStrip && this.dockX != null) { void this.dockStrip.offsetWidth; this.dockMove({ currentTarget: this.dockStrip, clientX: this.dockX }); }
+  }
   dockLeave(e) {
+    this.dockX = null;
     Array.from(e.currentTarget.children).forEach(btn => {
       btn.style.transition = 'transform 0.7s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back as softly
       btn.style.transform = ''; btn.style.zIndex = '';
@@ -202,8 +214,9 @@ class Component extends DCLogic {
     if (k === this.state.index || this.state.fade || this.state.animate) return;
     this.setState({ fade: true });
     setTimeout(() => {
+      this.relaxDock();   // the hover magnification rests while the tray glides
       this.setState({ index: k, fade: false, animate: true });
-      setTimeout(() => this.setState({ railBase: k, animate: false }), 1650);   // after the 1.6s glide
+      setTimeout(() => this.setState({ railBase: k, animate: false }, () => this.redock()), 1650);   // after the 1.6s glide
     }, 700);
   }
   // Fallback if an artwork file is missing: a light green box.
@@ -294,7 +307,7 @@ class Component extends DCLogic {
     const heroRatio = FRAME.toFixed(4);
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
-    const shown = Array.from({ length: 2 * half + 3 }, (_, j) => (base + j - half - 1 + n) % n); // one extra each side, off-stage
+    const shown = Array.from({ length: 3 * n }, (_, j) => j % n); // the whole run of works three times over: the tray only ever slides, so no thumbnail is swapped or reloaded
     let shift = (i - base + n) % n; if (shift > n / 2) shift -= n; // signed slots between the strip's centre and the selected work
     const slot = 'calc((' + thumbH + ') * 1.5 + 16px)'; // scans are 3:2; 16px gap
     return {
@@ -348,7 +361,7 @@ class Component extends DCLogic {
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
-      railShift: 'translateX(calc(' + (-(1 + shift)) + ' * ' + slot + '))',
+      railShift: 'translateX(calc(' + (-(n + base + shift - half)) + ' * ' + slot + '))',   // the current work at the centre of the middle run (a glide past either end settles one run along: identical thumbnails, no visible step)
       railTransition: this.state.animate ? 'transform 1.6s cubic-bezier(0.45, 0.05, 0.25, 1)' : 'none',   // a slow, soft glide
       railClip: this.state.animate ? 'inset(-120px 0 -20px 0)' : 'inset(-120px -60px -20px -60px)',
       // while the tray slides, its thumbnails feather in and out over 64px at each side (the tray box reaches 64px past the
@@ -360,7 +373,7 @@ class Component extends DCLogic {
       swipeEnd: (e) => this.touchEnd(e),
       next: () => this.go(1),
       thumbs: shown.map((k, j) => ({
-        vis: (j === 0 || j === shown.length - 1) && !this.state.animate ? 'hidden' : 'visible',
+        vis: !this.state.animate && Math.abs(j - (n + base + shift)) > half ? 'hidden' : 'visible',   // at rest only the five around the current work show
         img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } },   // a soft shadow lifts them off the painting
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
