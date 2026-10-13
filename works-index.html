@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor &amp; Eye | Index</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px; }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* stage: the selected work, as large as the space allows */
+/* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
+/* view switch (top left, lined up with the logo like the grid gallery's switcher): 1 work, 3 in a row, or 9 in three rows of three; phones are always one-up */
+.tools { flex: none; display: flex; justify-content: flex-start; align-items: center; gap: 14px; padding: 14px var(--side-pad) 0; position: relative; z-index: 6; }
+/* filter menus (top right, on the bag icon's line, as on the grid gallery): Series and Year */
+.filters { margin-left: auto; display: flex; gap: 48px; }
+.filter-menu { position: relative; }
+.fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
+.fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
+.filter-menu.open .fm-list { display: grid; }
+.fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
+.fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #8A867E; }
+.fm-list .fm-note { padding: 8px 32px 2px; font-size: 11px; letter-spacing: 0.1em; color: #ADA9A2; }
+@media (max-width: 767px) { .tools { display: none; } }
+.count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
+.count:hover { color: #6E6B66; } .count.on { color: #141414; }
+.count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
+@media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
+/* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
+   the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
+@media (min-width: 768px) {
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+}
+/* the featured works sit in a centred row, all the same height, a gap apart */
+.row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
+.row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
+.row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
+.stage { touch-action: pan-y; }
+.art img.on { opacity: 1; }
+/* previous / next chevrons either side of the work (placed by fit()) */
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: clamp(15px, 2.025vw, 29.25px); height: auto; }   /* 75% of the earlier size: 29 x 81px on a 1440px screen, scaling down with the viewport to 15 x 42px */
+.caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.page.hovering .caption { opacity: 1; }
+html.touch .caption { opacity: 1; }
+/* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
+html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
+
+/* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
+   eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
+.strip { overflow: visible; padding: 6px 0; }
+.track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease; }
+.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); transition: box-shadow 0.35s ease; }
+.thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.38); }   /* the works featured in the main area: a deeper shadow */
+html.touch .track { touch-action: none; }
+
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+
+/* ---- Index: every work as a small thumbnail, one row per series in Ned's deck order (Series 1, Ascent to Series 8, Tonal,
+   then the Outliers); the thumbnails touch, each at its own shape and one height, and the rows sit directly on one another.
+   Hovering a row labels each of its works with the series; a click opens the work's detail view. */
+.page.index { height: auto; min-height: 100vh; }
+:root { --idx-h: clamp(48px, 5.833vw, 224px); }   /* 84px tall on a 1440px screen, growing with the screen */
+.idx { padding: 32px var(--side-pad) 96px; }
+.idx-row { display: flex; flex-wrap: wrap; }
+.idx-item { position: relative; display: block; flex: none; height: var(--idx-h); }
+.idx-item img { display: block; height: 100%; width: auto; }
+.idx-label { position: absolute; left: 6px; bottom: 4px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; white-space: nowrap; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+.idx-row:hover .idx-label { opacity: 1; }
+.idx-item:hover img { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="page index" id="page">
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <div class="right">
+        <nav class="main">
+          <a href="home-h7.html">H7</a>
+          <a href="gallery-filmstrip-2.html">G5</a>
+          <a href="gallery-editorial.html">G6</a>
+          <a href="gallery-filmstrip-vertical.html">G7</a>
+          <a class="on" href="works-index.html">Index</a>
+          <a href="About.dc.html">About</a>
+          <a href="Contact-tabs.dc.html">Contact</a>
+        </nav>
+        <div class="icons">
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="home-h7.html">H7</a>
+    <a href="gallery-filmstrip-2.html">G5</a>
+    <a href="gallery-editorial.html">G6</a>
+    <a href="gallery-filmstrip-vertical.html">G7</a>
+    <a href="works-index.html" style="font-weight: 600">Index</a>
+    <a href="About.dc.html">About</a>
+    <a href="Contact-tabs.dc.html">Contact</a>
+    <a href="Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="Contact-tabs.dc.html#returns">Returns &amp; Exchanges</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></span>Shopping Cart</a>
+  </nav>
+
+  <main class="idx" aria-label="Index of works by series">
+    <section class="idx-row" aria-label="Series 1, Ascent">
+      <a class="idx-item" href="Gallery.dc.html#ascent_living-current.jpg" title="Living Current"><img src="assets/thumbs/ascent_living-current.jpg" style="aspect-ratio: 2 / 3" alt="Living Current"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_coastal-silence.jpg" title="Coastal Silence"><img src="assets/thumbs/ascent_coastal-silence.jpg" style="aspect-ratio: 2 / 3" alt="Coastal Silence"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_inner-eclipse.jpg" title="Inner Eclipse"><img src="assets/thumbs/ascent_inner-eclipse.jpg" style="aspect-ratio: 2 / 3" alt="Inner Eclipse"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_shared-orbit.jpg" title="Shared Orbit"><img src="assets/thumbs/ascent_shared-orbit.jpg" style="aspect-ratio: 2 / 3" alt="Shared Orbit"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_origin.jpg" title="Origin"><img src="assets/thumbs/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_canyons.jpg" title="Canyons"><img src="assets/thumbs/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_koi.jpg" title="Koi"><img src="assets/thumbs/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_artifact.jpg" title="Artifact"><img src="assets/thumbs/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_overlook.jpg" title="Overlook"><img src="assets/thumbs/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_verdance.jpg" title="Verdance"><img src="assets/thumbs/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance"><span class="idx-label">Series 1, Ascent</span></a>
+      <a class="idx-item" href="Gallery.dc.html#ascent_ascent-1.jpg" title="Ascent 1"><img src="assets/thumbs/ascent_ascent-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent 1"><span class="idx-label">Series 1, Ascent</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 2, Convergence">
+      <a class="idx-item" href="Gallery.dc.html#convergence_synthesis.jpg" title="Synthesis"><img src="assets/thumbs/convergence_synthesis.jpg" style="aspect-ratio: 3 / 2" alt="Synthesis"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_counterpoint.jpg" title="Counterpoint"><img src="assets/thumbs/convergence_counterpoint.jpg" style="aspect-ratio: 3 / 2" alt="Counterpoint"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_counterline.jpg" title="Counterline"><img src="assets/thumbs/convergence_counterline.jpg" style="aspect-ratio: 3 / 2" alt="Counterline"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_counterpart.jpg" title="Counterpart"><img src="assets/thumbs/convergence_counterpart.jpg" style="aspect-ratio: 3 / 2" alt="Counterpart"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_counterform.jpg" title="Counterform"><img src="assets/thumbs/convergence_counterform.jpg" style="aspect-ratio: 3 / 2" alt="Counterform"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_convergence-6.jpg" title="Convergence 6"><img src="assets/thumbs/convergence_convergence-6.jpg" style="aspect-ratio: 3 / 2" alt="Convergence 6"><span class="idx-label">Series 2, Convergence</span></a>
+      <a class="idx-item" href="Gallery.dc.html#convergence_convergence-7.jpg" title="Convergence 7"><img src="assets/thumbs/convergence_convergence-7.jpg" style="aspect-ratio: 3 / 2" alt="Convergence 7"><span class="idx-label">Series 2, Convergence</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 3, Core">
+      <a class="idx-item" href="Gallery.dc.html#core_script.jpg" title="Script"><img src="assets/thumbs/core_script.jpg" style="aspect-ratio: 3 / 2" alt="Script"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_symbiosis.jpg" title="Symbiosis"><img src="assets/thumbs/core_symbiosis.jpg" style="aspect-ratio: 3 / 2" alt="Symbiosis"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_conduit.jpg" title="Conduit"><img src="assets/thumbs/core_conduit.jpg" style="aspect-ratio: 3 / 2" alt="Conduit"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_chamber.jpg" title="Chamber"><img src="assets/thumbs/core_chamber.jpg" style="aspect-ratio: 3 / 2" alt="Chamber"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_habitat.jpg" title="Habitat"><img src="assets/thumbs/core_habitat.jpg" style="aspect-ratio: 3 / 2" alt="Habitat"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_affinity.jpg" title="Affinity"><img src="assets/thumbs/core_affinity.jpg" style="aspect-ratio: 3 / 2" alt="Affinity"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_upwelling.jpg" title="Upwelling"><img src="assets/thumbs/core_upwelling.jpg" style="aspect-ratio: 3 / 2" alt="Upwelling"><span class="idx-label">Series 3, Core</span></a>
+      <a class="idx-item" href="Gallery.dc.html#core_emergence.jpg" title="Emergence"><img src="assets/thumbs/core_emergence.jpg" style="aspect-ratio: 3 / 2" alt="Emergence"><span class="idx-label">Series 3, Core</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 4, Select">
+      <a class="idx-item" href="Gallery.dc.html#select_brilliance.jpg" title="Brilliance"><img src="assets/thumbs/select_brilliance.jpg" style="aspect-ratio: 3 / 2" alt="Brilliance"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_meridian.jpg" title="Meridian"><img src="assets/thumbs/select_meridian.jpg" style="aspect-ratio: 3 / 2" alt="Meridian"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_grove.jpg" title="Grove"><img src="assets/thumbs/select_grove.jpg" style="aspect-ratio: 3 / 2" alt="Grove"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_singularity.jpg" title="Singularity"><img src="assets/thumbs/select_singularity.jpg" style="aspect-ratio: 3 / 2" alt="Singularity"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_resonance.jpg" title="Resonance"><img src="assets/thumbs/select_resonance.jpg" style="aspect-ratio: 3 / 2" alt="Resonance"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_confluence.jpg" title="Confluence"><img src="assets/thumbs/select_confluence.jpg" style="aspect-ratio: 3 / 2" alt="Confluence"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_emanation.jpg" title="Emanation"><img src="assets/thumbs/select_emanation.jpg" style="aspect-ratio: 3 / 2" alt="Emanation"><span class="idx-label">Series 4, Select</span></a>
+      <a class="idx-item" href="Gallery.dc.html#select_aurora.jpg" title="Aurora"><img src="assets/thumbs/select_aurora.jpg" style="aspect-ratio: 3 / 2" alt="Aurora"><span class="idx-label">Series 4, Select</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 5, Spectrum">
+      <a class="idx-item" href="Gallery.dc.html#spectrum_chroma.jpg" title="Chroma"><img src="assets/thumbs/spectrum_chroma.jpg" style="aspect-ratio: 3 / 2" alt="Chroma"><span class="idx-label">Series 5, Spectrum</span></a>
+      <a class="idx-item" href="Gallery.dc.html#spectrum_opalescence.jpg" title="Opalescence"><img src="assets/thumbs/spectrum_opalescence.jpg" style="aspect-ratio: 3 / 2" alt="Opalescence"><span class="idx-label">Series 5, Spectrum</span></a>
+      <a class="idx-item" href="Gallery.dc.html#spectrum_biome.jpg" title="Biome"><img src="assets/thumbs/spectrum_biome.jpg" style="aspect-ratio: 3 / 2" alt="Biome"><span class="idx-label">Series 5, Spectrum</span></a>
+      <a class="idx-item" href="Gallery.dc.html#spectrum_archipelago.jpg" title="Archipelago"><img src="assets/thumbs/spectrum_archipelago.jpg" style="aspect-ratio: 3 / 2" alt="Archipelago"><span class="idx-label">Series 5, Spectrum</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 6, Structure">
+      <a class="idx-item" href="Gallery.dc.html#structure_framework.jpg" title="Framework"><img src="assets/thumbs/structure_framework.jpg" style="aspect-ratio: 2 / 3" alt="Framework"><span class="idx-label">Series 6, Structure</span></a>
+      <a class="idx-item" href="Gallery.dc.html#structure_cadence.jpg" title="Cadence"><img src="assets/thumbs/structure_cadence.jpg" style="aspect-ratio: 2 / 3" alt="Cadence"><span class="idx-label">Series 6, Structure</span></a>
+      <a class="idx-item" href="Gallery.dc.html#structure_crossings.jpg" title="Crossings"><img src="assets/thumbs/structure_crossings.jpg" style="aspect-ratio: 2 / 3" alt="Crossings"><span class="idx-label">Series 6, Structure</span></a>
+      <a class="idx-item" href="Gallery.dc.html#structure_within.jpg" title="Within"><img src="assets/thumbs/structure_within.jpg" style="aspect-ratio: 2 / 3" alt="Within"><span class="idx-label">Series 6, Structure</span></a>
+      <a class="idx-item" href="Gallery.dc.html#structure_cubicle.jpg" title="Cubicle"><img src="assets/thumbs/structure_cubicle.jpg" style="aspect-ratio: 2 / 3" alt="Cubicle"><span class="idx-label">Series 6, Structure</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 7, The Turning">
+      <a class="idx-item" href="Gallery.dc.html#the-turning_revelation.jpg" title="Revelation"><img src="assets/thumbs/the-turning_revelation.jpg" style="aspect-ratio: 3 / 2" alt="Revelation"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_the-calling.jpg" title="The Calling"><img src="assets/thumbs/the-turning_the-calling.jpg" style="aspect-ratio: 3 / 2" alt="The Calling"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_passage.jpg" title="Passage"><img src="assets/thumbs/the-turning_passage.jpg" style="aspect-ratio: 3 / 2" alt="Passage"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_momentum.jpg" title="Momentum"><img src="assets/thumbs/the-turning_momentum.jpg" style="aspect-ratio: 3 / 2" alt="Momentum"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_character.jpg" title="Character"><img src="assets/thumbs/the-turning_character.jpg" style="aspect-ratio: 3 / 2" alt="Character"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_discovery.jpg" title="Discovery"><img src="assets/thumbs/the-turning_discovery.jpg" style="aspect-ratio: 3 / 2" alt="Discovery"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_horizon.jpg" title="Horizon"><img src="assets/thumbs/the-turning_horizon.jpg" style="aspect-ratio: 3 / 2" alt="Horizon"><span class="idx-label">Series 7, The Turning</span></a>
+      <a class="idx-item" href="Gallery.dc.html#the-turning_the-turning-6.jpg" title="The Turning 6"><img src="assets/thumbs/the-turning_the-turning-6.jpg" style="aspect-ratio: 3 / 2" alt="The Turning 6"><span class="idx-label">Series 7, The Turning</span></a>
+    </section>
+    <section class="idx-row" aria-label="Series 8, Tonal">
+      <a class="idx-item" href="Gallery.dc.html#tonal_firelight.jpg" title="Firelight"><img src="assets/thumbs/tonal_firelight.jpg" style="aspect-ratio: 3 / 2" alt="Firelight"><span class="idx-label">Series 8, Tonal</span></a>
+      <a class="idx-item" href="Gallery.dc.html#tonal_canopy.jpg" title="Canopy"><img src="assets/thumbs/tonal_canopy.jpg" style="aspect-ratio: 3 / 2" alt="Canopy"><span class="idx-label">Series 8, Tonal</span></a>
+      <a class="idx-item" href="Gallery.dc.html#tonal_current.jpg" title="Current"><img src="assets/thumbs/tonal_current.jpg" style="aspect-ratio: 3 / 2" alt="Current"><span class="idx-label">Series 8, Tonal</span></a>
+      <a class="idx-item" href="Gallery.dc.html#tonal_vesper-2.jpg" title="Vesper"><img src="assets/thumbs/tonal_vesper-2.jpg" style="aspect-ratio: 3 / 2" alt="Vesper"><span class="idx-label">Series 8, Tonal</span></a>
+      <a class="idx-item" href="Gallery.dc.html#tonal_vesper-1.jpg" title="Vesper"><img src="assets/thumbs/tonal_vesper-1.jpg" style="aspect-ratio: 3 / 2" alt="Vesper"><span class="idx-label">Series 8, Tonal</span></a>
+    </section>
+    <section class="idx-row" aria-label="Outliers">
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-1.jpg" title="Outliers 1"><img src="assets/thumbs/outliers_outliers-1.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 1"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-2.jpg" title="Outliers 2"><img src="assets/thumbs/outliers_outliers-2.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 2"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-3.jpg" title="Outliers 3"><img src="assets/thumbs/outliers_outliers-3.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 3"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-4.jpg" title="Outliers 4"><img src="assets/thumbs/outliers_outliers-4.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 4"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-5.jpg" title="Outliers 5"><img src="assets/thumbs/outliers_outliers-5.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 5"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-6.jpg" title="Outliers 6"><img src="assets/thumbs/outliers_outliers-6.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 6"><span class="idx-label">Outliers</span></a>
+      <a class="idx-item" href="Gallery.dc.html#outliers_outliers-7.jpg" title="Outliers 7"><img src="assets/thumbs/outliers_outliers-7.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 7"><span class="idx-label">Outliers</span></a>
+    </section>
+  </main>
+</div>
+
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
+      </div>
+    </div>
+</footer>
+<script>
+// mobile menu
+document.getElementById('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+</script>
+</body>
+</html>
