@@ -74,9 +74,15 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
+/* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
+   the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
+@media (min-width: 768px) {
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(20px, 2.7vw, 39px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(20px, 2.7vw, 39px) / 22); }
+}
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
-.row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 64px; column-gap: 60px; }   /* 9-up: three columns 60px apart, three rows, room under each work for its title */
+.row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
@@ -287,14 +293,13 @@ function buildSlots(n) {
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
   const nc = cols(), nr = rows(), grid = count === 9;
-  const step = $('prev').offsetWidth, gap = grid ? 60 : count > 1 ? 28 : 0, rowGap = grid ? 64 : gap, H = stage.clientHeight;
+  const step = $('prev').offsetWidth, gap = grid ? 60 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
   const contentW = document.documentElement.clientWidth - 2 * sidePad;
-  // the arrows, in every view: the left chevron's point on the logo's left edge, the right one's on the bag icon's right
-  // edge (phones: on the side padding, level with the logo and the menu button)
-  const sv = $('prev').querySelector('svg').getBoundingClientRect(), pb = $('prev').getBoundingClientRect();
-  const tip = sv.left - pb.left + sv.width / 22;   // the chevron's point, measured from its button's outer edge
-  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : (sidePad - stage.getBoundingClientRect().left - tip).toFixed(1) + 'px';
+  // the arrows are locked in the stylesheet on desktop and tablet (points on the logo's and the bag icon's outer edges);
+  // phones: on the side padding, level with the logo and the menu button
+  const sv = $('prev').querySelector('svg').getBoundingClientRect();
+  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : '';
   // the works always stay clear of the arrows: within the content width less each chevron and 24px
   const inner = contentW - 2 * (sv.width + 24);
   // 9-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
@@ -303,12 +308,12 @@ function fit() {
   // whatever is in it, so portraits sit centred in the same three columns and the grid keeps one size
   const sumR = grid ? nc * 1.5 : [...Array(nc).keys()].reduce((t, c) => t + Math.max(0, ...slots.filter((s, i) => i % nc === c).map(R)), 0);
   const W = (count === 3 ? contentW : inner) - gap * (nc - 1);
-  // three-up 85% of the space; one-up 86% enlarged by 18%; nine-up 95%
-  let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 * 1.18 : 0.95);
+  // three-up 85% of the space; one-up 86% enlarged by 18%; nine-up all of it (within the arrows and its title room)
+  let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 * 1.18 : 1);
   h = Math.min(h, (inner - gap * (nc - 1)) / sumR);   // never under the arrows
-  const lift = count === 1 ? 14 : 0;   // one-up sits 14px above centre, so the title below it has more room
+  const lift = count === 1 ? 14 : grid ? 15 : 0;   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
-  if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 80) / nr);   // nine-up: 40px clear above and below the grid, so the bottom row's titles stay on the stage
+  if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
