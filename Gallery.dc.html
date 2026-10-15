@@ -174,7 +174,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
       </div>
       <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: center">
-        <div style="grid-column: 1; grid-row: 1; position: relative">
+        <div onDoubleClick="{{ detailDblClick }}" style="grid-column: 1; grid-row: 1; position: relative; cursor: {{ detailCursor }}">
           {{ detailImg }}
           <div style="position: absolute; top: 100%; left: {{ detailDotsL }}; width: {{ detailDotsW }}; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
             <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 6px" style-hover="color: #6E6B66">
@@ -675,6 +675,9 @@ class Component extends DCLogic {
       })),
       addToCart: () => this.setState(s => ({ added: s.added + 1 })),
       toggleZoom: () => this.setZoom(true),
+      // double-clicking the artwork opens the magnified view too (desktop and tablet, where the zoom button shows)
+      detailDblClick: () => { if (!this.state.mobile) this.setZoom(true); },
+      detailCursor: m ? 'default' : 'zoom-in',
       zoomLabel: 'Enlarge artwork',
       // magnified view: white lightbox with the framing dots; double-click steps the zoom 1x -> 2x -> 3x -> 1x, option-click steps it down
       zoomOpen: this.state.zoom,
