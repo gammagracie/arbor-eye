@@ -283,7 +283,7 @@ order.forEach((w, i) => {
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
-  a.querySelector('img').src = 'assets/works/' + w.f;
+  a.querySelector('img').src = 'assets/works-m70/' + w.f;
   a.querySelector('img').alt = w.t;
   a.querySelector('.side span').textContent = w.t;
   col.appendChild(a);
