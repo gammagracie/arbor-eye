@@ -106,6 +106,15 @@ html { scrollbar-gutter: stable; }
 </nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
+  <div id="tabs-anchor" aria-hidden="true"></div>
+  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}; position: {{ tabsPos }}; bottom: 0; z-index: 10; background: #FDFDFB">
+    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: {{ tabJustify }}; scroll-margin-top: 40px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </section>
+  <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
   <section data-screen-label="About — Biography" style="margin: 0 calc(50% - 50vw); padding: {{ sectionPadFirst }}; min-height: {{ bioMinH }}; display: grid; grid-template-columns: {{ bioCols }}; grid-template-rows: {{ bioRows }}; gap: {{ bioGap }}; align-items: {{ bioAlign }}; align-content: {{ bioAlign }}">
     <div style="display: {{ bioSideDisplay }}; grid-column: {{ col1 }}"></div>
     <div style="grid-column: {{ col2 }}; grid-row: {{ row1 }}; display: grid; gap: 16px; align-self: {{ bioPair }}; padding-top: {{ bioTop }}; width: {{ bioPhotoW }}; justify-self: {{ bioPhotoJustify }}; margin-left: {{ bioPhotoNudge }}">
@@ -140,14 +149,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
 
-  <div id="tabs-anchor" aria-hidden="true"></div>
-  <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}; position: {{ tabsPos }}; bottom: 0; z-index: 10; background: #FDFDFB">
-    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: {{ tabJustify }}; scroll-margin-top: 40px">
-      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
-      </sc-for>
-    </div>
-  </section>
+  </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ true }}">
   <section data-screen-label="About — Tree of Life" style="padding: {{ treePad }}; display: grid; grid-template-columns: {{ treeCols }}; gap: {{ twoColGap }}; align-items: center">
     <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
@@ -243,7 +245,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'tree', bio: 0, proc: 0, stu: 0, bioFits: true };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'bio', bio: 0, proc: 0, stu: 0, bioFits: true };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -251,8 +253,8 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
-    // #tree / #process / #studio deep links open that tab
-    const pick = () => { const h = location.hash.slice(1); if (['tree', 'process', 'studio'].includes(h)) this.setState({ tab: h }); };
+    // #biography / #tree / #process / #studio deep links open that tab (Biography is the one on landing)
+    const pick = () => { const h = location.hash.slice(1); if (h === 'biography') this.setState({ tab: 'bio' }); else if (['tree', 'process', 'studio'].includes(h)) this.setState({ tab: h }); };
     pick(); this.onHash = pick; window.addEventListener('hashchange', this.onHash);
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
@@ -323,7 +325,7 @@ class Component extends DCLogic {
       // desktop: photo, Tree of Life and copy are centred on one another, and the opener fills the screen down to the tab row,
       // so the pinned tabs keep exactly the same place on load
       bioAlign: stack ? 'start' : 'center',
-      bioMinH: stack ? '0' : 'calc(100vh - var(--header-h) - 64px)',
+      bioMinH: stack ? '0' : 'calc(100vh - var(--header-h) - 50px)',   // the opener fills the screen under the tab row
       bioRows: 'none',
       bioSpan: stack ? 'auto' : '1',
       col1: stack ? 'auto' : '1', col2: stack ? 'auto' : '2', col3: stack ? 'auto' : '3', col4: stack ? 'auto' : '4', row1: stack ? 'auto' : '1',   // every item placed by hand (items with a set row would otherwise be placed before the others)
@@ -354,19 +356,18 @@ class Component extends DCLogic {
       studioGap: m ? '10px' : '25px',
       // the film slide is exactly as tall as the photo row: a photo's height (its column width x 4/3) x 16/9
       studioFilmW: m ? 'calc((100% - 20px) / 3 * 4 / 3 * 16 / 9)' : 'calc((100% - 50px) / 3 * 4 / 3 * 16 / 9)',
-      // tabs under the quote: Tree of Life (default) | Process | Studio (the studio film sits with Studio)
-      // desktop: left-justified under a hairline rule, as on the Contact page
-      tabsPad: m ? '8px 0 0' : stack ? '32px 0 0' : '22px 0 20px',
-      // desktop: the tab row is pinned to the foot of the screen until the page scrolls down to it, so it is always in view on load
-      tabsPos: stack ? 'static' : 'sticky',
-      tabsRule: m ? 'none' : '1px solid #E7E4DE',
+      // tabs at the top of the page, above the photo of Ned (since 2026-10-15): Biography (on landing) | Tree of Life | Process | Studio;
+      // each shows its own section in place of the others; desktop left-justified on the logo's line, as on the Contact page
+      tabsPad: m ? '20px 0 0' : '28px 0 0',
+      tabsPos: 'static',
+      tabsRule: 'none',
       tabJustify: m ? 'center' : 'flex-start',
       tabGap: m ? '24px' : '40px',
-      tabs: [['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
-        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + k); if (!this.state.stack) { const a = document.getElementById('tabs-anchor'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); } },   // desktop: bring the tabs and the chosen section up into view
+      tabs: [['bio', 'Biography'], ['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
+        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); if (!this.state.stack) { const a = document.getElementById('tabs-anchor'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); } },   // desktop: bring the tabs and the chosen section up into view
         weight: this.state.tab === k ? 600 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
-      tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
+      tabBio: this.state.tab === 'bio', tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
       quotePad: stack ? (m ? '28px 0' : '28px 0 0') : '24px 0 0',
       quoteSize: m ? '20px' : '18px',
       quoteMax: m ? '1080px' : '100%', // desktop: the photo's width, so the two balanced lines sit under the photo with the marks against the text
