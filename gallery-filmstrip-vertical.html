@@ -70,6 +70,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
+@media (min-width: 1760px) and (max-width: 3300px) { .caption { font-size: 19px; } }   /* screens 1760-3300px wide: the hover title 3px larger */
 
 /* the strip: small thumbnails in one column (28px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
 .rail { flex: none; width: 58px; position: relative; }
