@@ -97,7 +97,9 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
-.page.multi .caption { transition: none; }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
+.page.multi .caption { transition: none; }
+/* one-up on screens 1760-3300px wide: the hover title 3px larger */
+@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px); } }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
 html.touch .caption { opacity: 1; }
 /* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
 html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
