@@ -366,7 +366,7 @@ function assign(slot, k) {
   busy(1000);
   const swap = () => { if (turn !== slot.turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); slot.front = 1 - slot.front; };
   next.alt = w.t;
-  next.src = 'assets/works/' + w.f;
+  next.src = 'assets/works-m70/' + w.f;
   Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
   slot.a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
 }
@@ -380,11 +380,11 @@ async function slideTo(ks, d, axis) {
   if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
   const outW = row.getBoundingClientRect().width;
   const out = row.cloneNode(true); out.id = ''; out.style.transition = 'none'; out.style.transform = ''; stage.appendChild(out); outRow = out;
-  await Promise.all(ks.map(k => { const im = new Image(); im.src = 'assets/works/' + WORKS[k].f; return Promise.race([im.decode ? im.decode().catch(() => {}) : Promise.resolve(), new Promise(r => setTimeout(r, 800))]); }));
+  await Promise.all(ks.map(k => { const im = new Image(); im.src = 'assets/works-m70/' + WORKS[k].f; return Promise.race([im.decode ? im.decode().catch(() => {}) : Promise.resolve(), new Promise(r => setTimeout(r, 800))]); }));
   if (outRow !== out) return;   // superseded by a later move
   slots.forEach((s, i) => {
     const k = ks[i], w = WORKS[k], im = s.imgs[s.front]; s.idx = k; s.turns++;
-    im.src = 'assets/works/' + w.f; im.alt = w.t; im.classList.add('on'); s.imgs[1 - s.front].classList.remove('on');
+    im.src = 'assets/works-m70/' + w.f; im.alt = w.t; im.classList.add('on'); s.imgs[1 - s.front].classList.remove('on');
     s.a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
   });
   fit();
@@ -415,7 +415,7 @@ function setWindow(f, scrollIntoView, dir, axis) {
   // the filmstrip moves only under the cursor on desktop: a new set no longer glides the strip along (touch screens, with no
   // hover, still bring the featured thumbnails into view); on first load the strip is simply placed on the featured work
   if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[f + Math.floor((count - 1) / 2)], !stripReady);
-  [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works/' + WORKS[n].f; });   // neighbours ready for the arrows
+  [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works-m70/' + WORKS[n].f; });   // neighbours ready for the arrows
   history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
 }
 // arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
@@ -437,7 +437,7 @@ function buildStrip() { track.innerHTML = ''; WORKS.forEach((w, k) => {
   const b = document.createElement('button');
   b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
   const im = document.createElement('img');
-  im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
+  im.src = 'assets/thumbs-m70/' + w.f; im.alt = ''; im.loading = 'lazy';
   im.style.aspectRatio = w.r >= 1 ? '3 / 2' : '2 / 3';   // its width is known before it loads, so the strip can be placed straight away
   b.appendChild(im);
   b.addEventListener('click', () => show(k, false));

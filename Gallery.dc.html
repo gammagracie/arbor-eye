@@ -384,7 +384,7 @@ class Component extends DCLogic {
   ].map(([f, s, t, tag, vertical, hidden]) => ({
     hidden: !!hidden,
     orient: vertical ? 'Vertical' : 'Horizontal',
-    src: 'assets/works/' + f,
+    src: 'assets/works-m70/' + f,
     title: t,
     series: s,
     avail: 'Available',
@@ -614,7 +614,7 @@ class Component extends DCLogic {
       cards: filtered.map(({ a, k }) => ({
         title: a.title, src: a.src,
         aria: 'View ' + a.title,
-        img: React.createElement('img', { src: a.src.replace('assets/works/', 'assets/thumbs/'), alt: a.title, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),   // every work fills its cell (landscapes the full width, portraits the full height), whatever the thumbnail file's own pixel size
+        img: React.createElement('img', { src: a.src.replace('assets/works-m70/', 'assets/thumbs-m70/'), alt: a.title, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),   // every work fills its cell (landscapes the full width, portraits the full height), whatever the thumbnail file's own pixel size
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       // back: to the gallery version the visitor came from (G5, G6, G7, the homepage...), at the work they left, when they

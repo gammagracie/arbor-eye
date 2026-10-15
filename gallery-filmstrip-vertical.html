@@ -264,7 +264,7 @@ function show(k, dir) {
   const first = current < 0;
   current = k;
   const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], t = ++turn;
-  next.src = 'assets/works/' + w.f; next.alt = w.t;
+  next.src = 'assets/works-m70/' + w.f; next.alt = w.t;
   art.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
   $('capTitle').textContent = w.t;
   // a plain crossfade: the incoming image fades in over the outgoing one, each at its own size, nothing moves
@@ -275,7 +275,7 @@ function show(k, dir) {
     next.classList.add('on'); prev.classList.remove('on');
   };
   Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);
-  [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works/' + m.f; });   // neighbours ready
+  [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works-m70/' + m.f; });   // neighbours ready
   [...track.querySelectorAll('.thumb')].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
   placeMarker(first);
   history.replaceState(null, '', '#' + encodeURIComponent(w.f));
@@ -296,7 +296,7 @@ function placeMarker(instant) {
 WORKS.forEach((w, k) => {
   const b = document.createElement('button');
   b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
-  const im = document.createElement('img'); im.src = 'assets/thumbs/' + w.f; im.alt = ''; im.loading = 'lazy';
+  const im = document.createElement('img'); im.src = 'assets/thumbs-m70/' + w.f; im.alt = ''; im.loading = 'lazy';
   b.appendChild(im); b.addEventListener('click', () => show(k));
   track.appendChild(b);
 });
