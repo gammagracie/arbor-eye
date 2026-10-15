@@ -94,9 +94,10 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(15px, 2.025vw, 29.25px); height: auto; }   /* 75% of the earlier size: 29 x 81px on a 1440px screen, scaling down with the viewport to 15 x 42px */
-.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
+.page.multi .caption { transition: none; }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
 html.touch .caption { opacity: 1; }
 /* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
 html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
@@ -280,12 +281,12 @@ let deskCount = [1, 3, 9].includes(askedView) ? askedView : 3, count = phone.mat
 const cols = () => count === 9 ? 3 : count, rows = () => count / cols();
 const slots = [];
 function buildSlots(n) {
-  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', count === 9);
+  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', count === 9); page.classList.toggle('multi', count > 1);
   for (let i = 0; i < n; i++) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (count === 9 ? 12 : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (count === 9 ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
     a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
     row.appendChild(a); slots.push(slot);
   }
@@ -336,19 +337,22 @@ function fit() {
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
   row.style.gridTemplateColumns = grid ? 'repeat(3, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
-  slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
+  // nine-up on screens 2800px and wider: each work 88% of its cell, shrinking about the cell's centre, so the gaps between
+  // works grow while the columns, the top row's top and the bottom row's bottom stay put
+  const big = grid && document.documentElement.clientWidth >= 2800, aw = big ? h3 * 0.88 : h3;
+  slots.forEach(s => { s.a.style.width = aw * R(s) + 'px'; s.a.style.height = aw + 'px'; });
   let rowH = h3 * nr + rowGap * (nr - 1);
   stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the label
   if (gridTop !== null) {
     // room under the bottom row for its title (12px gap + the title, which grows with the screen)
-    const bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), used = Math.ceil(slots.length / nc), rg2 = used > 1 ? (bottom - gridTop - h3 * used) / (used - 1) : 0;
+    const bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), used = Math.ceil(slots.length / nc), rg2 = used > 1 ? (bottom - gridTop - aw * used) / (used - 1) : 0;
     row.style.rowGap = rg2.toFixed(1) + 'px';
-    rowH = h3 * used + rg2 * (used - 1);
+    rowH = aw * used + rg2 * (used - 1);
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
   } else row.style.rowGap = '';
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
-  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? 12 : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;
+  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;
   placeCaption();
 }
 let capDx = 0, capDy = 0;
