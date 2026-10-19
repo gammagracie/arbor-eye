@@ -11,6 +11,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
 /* Shared site tokens: header/footer heights and side padding match the other pages */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
 @media (min-width: 768px) { :root { --thumb-h: 30px; } }
@@ -36,16 +41,16 @@ header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; posi
 .logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
 .right, .icons { display: flex; align-items: baseline; }
 .right { gap: 40px; } .icons { gap: 20px; }
-nav.main { display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main { display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; }
 nav.main .on { font-weight: 600; }
 .icons a { display: flex; position: relative; }
-.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs)); }
 .burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
 .burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
 body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 body.menu-open .burger span:nth-child(2) { opacity: 0; }
 body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
 body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
 .menu a:last-child { border-bottom: none; }
@@ -64,12 +69,12 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* 9-up, where the grid needs the room: the two menus stack at the top right, on the bag icon's line (out of the flow, so the toolbar keeps its height) */
 .filters.stacked { position: absolute; right: var(--side-pad); top: 14px; flex-direction: column; align-items: flex-end; gap: 10px; }
 .filter-menu { position: relative; }
-.fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
+.fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
 .fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
 .filter-menu.open .fm-list { display: grid; }
-.fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
+.fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #8A867E; }
-.fm-list .fm-note { padding: 8px 32px 2px; font-size: 11px; letter-spacing: 0.1em; color: #ADA9A2; }
+.fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -86,7 +91,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .li { display: grid; justify-items: center; gap: 14px; color: #141414; }
 .li img { display: block; width: 100%; height: auto; box-shadow: 0 6px 16px rgba(20,20,20,0.14); }
 .li.v img { width: auto; max-width: 100%; max-height: 72vh; }   /* portraits: full width unless that would make them taller than 72% of the screen */
-.li span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+.li span { font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(16px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
@@ -109,12 +114,12 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(9.75px, 1.31625vw, 19.0125px); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
-.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
-.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs)); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 .page.multi .caption { transition: none; }
 /* one-up on screens 1760-3300px wide: the hover title 3px larger */
-@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px); } }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
+@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px) * var(--fs)); } }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
 html.touch .caption { opacity: 1; }
 /* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
 html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
@@ -133,14 +138,14 @@ html.touch .track { touch-action: none; }
 
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
-.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F; }
 .foot p { margin: 0; }
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
-@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 </style>
 </head>
 <body>

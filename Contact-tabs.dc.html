@@ -20,6 +20,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: #141414; text-decoration: none; }
@@ -37,8 +42,8 @@ html { scrollbar-gutter: stable; }
 .contact-form input:focus, .contact-form textarea:focus { background: #EAEAEA !important; }
 .contact-form input, .contact-form textarea { transition: background 0.2s ease; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
-@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 /* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
@@ -56,7 +61,7 @@ html { scrollbar-gutter: stable; }
     <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-        <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
+        <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
           <a href="home-0.html">H0</a>
           <a href="home-1a.html">H1A</a>
           <a href="home-1b.html">H1B</a>
@@ -79,7 +84,7 @@ html { scrollbar-gutter: stable; }
         <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg>
           <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ true }}">
-            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
+            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span>
           </sc-if>
         </a>
         </div>
@@ -94,7 +99,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </div>
 </header>
-<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H0</a>
   <a href="home-1a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
@@ -112,20 +117,21 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
-      <span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span></span>
+      <span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span></span>
       Shopping Cart
     </a>
   </sc-if>
 </nav>
 
 <main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
+  <sc-if value="{{ narrowLayout }}" hint-placeholder-val="{{ false }}">
   <section style="padding-top: 48px">
     <picture>
       <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
       <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="(min-width: 1024px) 80vw, 100vw">
       <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
     </picture>
-    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 32px; padding: 20px 0; border-bottom: 1px solid #E7E4DE; font-size: 13px; flex-wrap: wrap">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 32px; padding: 20px 0; border-bottom: 1px solid #E7E4DE; font-size: calc(13px * var(--fs)); flex-wrap: wrap">
       <div style="display: flex; gap: 16px 40px; color: #6E6B66; flex-wrap: wrap">
         <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
         <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
@@ -133,33 +139,33 @@ html { scrollbar-gutter: stable; }
     </div>
     <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; padding: 32px 0 0; scroll-margin-top: 40px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
+        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
       </sc-for>
     </div>
   </section>
 
-  <sc-if value="{{ tabContact }}" hint-placeholder-val="{{ true }}">
+  <sc-if value="{{ tabContact }}" hint-placeholder-val="{{ false }}">
   <section style="display: grid; grid-template-columns: {{ formCols }}; gap: 28px {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Contact form">
     <div style="grid-column: 1; grid-row: 1; display: flex; flex-direction: column; min-width: 0">
-      <h2 style="margin: 0 0 16px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Get in touch</h2>
-      <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
+      <h2 style="margin: 0 0 16px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(40px * var(--fs)); line-height: 1.1">Get in touch</h2>
+      <p style="margin: 0 0 40px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 52ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
       <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
       <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 560px; min-height: 240px" data-screen-label="Contact — Thank you">
-        <p style="margin: 0; font-family: 'EB Garamond', serif; font-size: 26px; line-height: 1.4; color: #141414; text-wrap: balance">Thank you for reaching out. We will be in contact very soon.</p>
+        <p style="margin: 0; font-family: 'EB Garamond', serif; font-size: calc(26px * var(--fs)); line-height: 1.4; color: #141414; text-wrap: balance">Thank you for reaching out. We will be in contact very soon.</p>
       </div>
       </sc-if>
       <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ true }}">
       <div class="contact-form" style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
-        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
-        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0"></label>
-        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: 15px; color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
       </div>
       </sc-if>
     </div>
     <div style="grid-column: 1; grid-row: 2; display: {{ sendDisplay }}">
         <div style="position: relative; display: grid; justify-items: start">
-          <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
-          <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: 13px; color: #8A867E">{{ formNote }}</p>
+          <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
+          <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: calc(13px * var(--fs)); color: #8A867E">{{ formNote }}</p>
         </div>
     </div>
     <div style="grid-column: {{ formImgCol }}; grid-row: {{ formImgRow }}; max-width: {{ formImgMax }}">
@@ -171,25 +177,25 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ tabShipping }}" hint-placeholder-val="{{ false }}">
   <section style="display: grid; grid-template-columns: {{ shippingCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Shipping Policy">
     <div>
-      <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Shipping Policy</h2>
-      <p style="margin: 0 0 36px; font-size: 15px; line-height: 1.7; color: #2A2A28; max-width: 52ch">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
+      <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(40px * var(--fs)); line-height: 1.1">Shipping Policy</h2>
+      <p style="margin: 0 0 36px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 52ch">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
       <div style="margin-bottom: 48px">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
           <span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
           <span>United States</span><span style="color: #6E6B66">3–5 business days</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
           <span>Europe</span><span style="color: #6E6B66">5–7 business days</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE; font-size: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
           <span>Production time</span><span style="color: #6E6B66">3–6 working days</span>
         </div>
       </div>
-      <p style="margin: 0 0 40px; font-size: 15px; line-height: 1.7; color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
-      <p style="margin: 0 0 20px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
-      <div style="display: grid; gap: 20px; font-size: 14px; line-height: 1.7; color: #55524C">
+      <p style="margin: 0 0 40px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
+      <p style="margin: 0 0 20px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+      <div style="display: grid; gap: 20px; font-size: calc(14px * var(--fs)); line-height: 1.7; color: #55524C">
         <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
         <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
         <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
@@ -209,28 +215,129 @@ html { scrollbar-gutter: stable; }
       <img src="assets/box.png" alt="Packaged order on a woven rug" style="display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; position: {{ imagePosition }}; top: 40px">
     </div>
     <div>
-      <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: 40px; line-height: 1.1">Returns &amp; Exchanges</h2>
+      <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(40px * var(--fs)); line-height: 1.1">Returns &amp; Exchanges</h2>
       <div style="display: grid; gap: 0">
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
-          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
         </div>
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
-          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
         </div>
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
-          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #55524C">Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
         </div>
       </div>
     </div>
   </section>
   </sc-if>
+  </sc-if>
+
+  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph as wide as the screen allows (24px from each edge, 2:1)
+       while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one
+       baseline, lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
+       box in columns; the open link again brings the photograph back. -->
+  <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
+  <section style="padding-top: 32px; margin: 0 calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
+    <div style="width: min(calc(100vw - 48px), calc((100vh - var(--header-h) - 32px - 66px) * 2)); max-width: 3792px">
+      <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
+      <picture>
+        <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
+        <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="100vw">
+        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
+      </picture>
+      </sc-if>
+
+      <sc-if value="{{ deskContact }}" hint-placeholder-val="{{ false }}">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center" data-screen-label="Contact — Get in touch">
+        <div>
+          <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(56px * var(--fs)); line-height: 1.1">Get in touch</h2>
+          <p style="margin: 0; font-size: calc(17px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 34ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
+        </div>
+        <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center" data-screen-label="Contact — Thank you">
+          <p style="margin: 0; font-family: 'EB Garamond', serif; font-size: calc(28px * var(--fs)); line-height: 1.4; color: #141414; text-wrap: balance">Thank you for reaching out. We will be in contact very soon.</p>
+        </div>
+        </sc-if>
+        <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ true }}">
+        <div class="contact-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px">
+          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+          <label style="display: block; grid-column: 1 / -1"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; height: 170px"></textarea></label>
+          <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 24px">
+            <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
+            <p style="margin: 0; font-size: calc(13px * var(--fs)); color: #8A867E">{{ formNote }}</p>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
+        <div>
+          <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
+          <p style="margin: 0 0 24px; font-size: calc(15px * var(--fs)); color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
+          <div style="color: #141414">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United States</span><span style="color: #6E6B66">3–5 business days</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>Europe</span><span style="color: #6E6B66">5–7 business days</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2; border-bottom: 1px solid #DEDAD2"><span>Production time</span><span style="color: #6E6B66">3–6 working days</span></div>
+          </div>
+        </div>
+        <div style="display: grid; gap: 16px; align-content: start; padding-top: 68px">
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
+          <p style="margin: 8px 0 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+          <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
+          <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
+        </div>
+        <div style="display: grid; gap: 16px; align-content: start; padding-top: 68px">
+          <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
+          <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
+          <p style="margin: 0">Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</p>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ deskReturns }}" hint-placeholder-val="{{ false }}">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center" data-screen-label="Returns &amp; Exchanges">
+        <h2 style="grid-column: 1 / -1; margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1">Returns &amp; Exchanges</h2>
+        <div style="padding: 24px 0 0; border-top: 1px solid #DEDAD2">
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
+        </div>
+        <div style="padding: 24px 0 0; border-top: 1px solid #DEDAD2">
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
+        </div>
+        <div style="padding: 24px 0 0; border-top: 1px solid #DEDAD2">
+          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
+        </div>
+      </div>
+      </sc-if>
+
+      <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">
+        <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); padding-bottom: 6px">
+          <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
+          <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div style="height: 64px"></div>
+  </sc-if>
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -249,8 +356,8 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', name: '', email: '', message: '', note: '', sent: false };
-  goTab(tab) { this.setMenu(false); this.setState({ tab }); }
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, wide: typeof window !== 'undefined' && window.innerWidth >= 1100, menuOpen: false, tab: 'contact', deskTab: null, name: '', email: '', message: '', note: '', sent: false };
+  goTab(tab) { this.setMenu(false); this.setState({ tab, deskTab: tab }); }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -260,7 +367,8 @@ class Component extends DCLogic {
   componentDidMount() {
     // #shipping / #returns deep links open that tab
     const h = location.hash.slice(1);
-    if (h === 'shipping' || h === 'returns') this.setState({ tab: h });
+    if (h === 'shipping' || h === 'returns') this.setState({ tab: h, deskTab: h });
+    if (h === 'contact') this.setState({ deskTab: 'contact' });
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
@@ -309,13 +417,18 @@ class Component extends DCLogic {
       panelPad: m ? '48px 0 88px' : '72px 0 140px',
       tabGap: m ? '24px' : '40px',
       // tabs: Contact (default) | Shipping | Returns & Exchanges
-      tabs: [['contact', 'Contact'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
+      tabs: [['contact', 'Get in touch'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
         label, selected: tab === k, pick: () => this.setState({ tab: k }),
+        // desktop: a link swaps the photograph for its section; the open link again brings the photograph back
+        toggle: () => this.setState({ deskTab: this.state.deskTab === k ? null : k }), deskSelected: this.state.deskTab === k,
+        deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#8A867E', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
         weight: tab === k ? 600 : 400, color: tab === k ? '#141414' : '#8A867E', border: tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       tabContact: tab === 'contact',
       tabShipping: tab === 'shipping',
       tabReturns: tab === 'returns',
+      narrowLayout: !wide, wideLayout: wide,   // desktop layout from 1100px (wide); tablets and phones keep the stacked one
+      deskImage: !this.state.deskTab, deskContact: this.state.deskTab === 'contact', deskShipping: this.state.deskTab === 'shipping', deskReturns: this.state.deskTab === 'returns',
       goContact: () => this.goTab('contact'),
       goShipping: () => this.goTab('shipping'),
       goReturns: () => this.goTab('returns'),
