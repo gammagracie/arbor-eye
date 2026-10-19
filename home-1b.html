@@ -352,14 +352,14 @@ class Component extends DCLogic {
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
       railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
-      railAlign: mp || this.state.wide ? 'flex-end' : 'center', // arrows centred on the thumbnails (portrait phones and screens over 2000px: their bottoms on the thumbnails' bottom edge)
-      arrowPadBottom: m ? '8px' : '10px', // tray padding (10px) puts the chevron on the thumbnail baseline
+      railAlign: 'flex-end',   // the chevrons' bottoms on the thumbnails' bottom edge, at every size
+      arrowPadBottom: '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
       railJustify: 'center', // arrows sit beside the thumbnails, the set centred
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
       railGap: m ? '28px' : this.state.tablet ? '55px' : this.state.wide ? 'calc(' + thumbH + ' * 0.45 + 16px)' : '33px',   // chevrons beside the thumbnails (phones 36px clear with the button padding, desktop 33px, tablet 55px; over 2000px 45% of a thumbnail's height + 16px, so the hover magnification, which reaches about 45% of a thumbnail's height past the end ones, never meets them)
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
-      arrowW: this.state.wide ? '34px' : desk ? '17px' : '13px', arrowH: this.state.wide ? '94px' : desk ? '47px' : '36px',   // desktop chevrons 130% of the 13 x 36px used elsewhere; over 2000px twice that (34 x 94px)
+      arrowW: this.state.wide ? '20.4px' : desk ? '10.2px' : '7.8px', arrowH: this.state.wide ? '56.4px' : desk ? '28.2px' : '21.6px',   // 60% of the earlier chevrons (since 2026-10-19): 10.2 x 28.2px on desktop, 20.4 x 56.4px over 2000px, 7.8 x 21.6px on tablet and phones
       thumbH,
       heroImg: VF ? (() => { const a = this.arts[i], [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = 1.5 * pw / ph;
         // a box the painting's shape covering the frame (cropping what overflows), the scan placed so the painting fills that box
