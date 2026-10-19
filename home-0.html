@@ -119,8 +119,8 @@ html { scrollbar-gutter: stable; }
       <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 4.2% 8.92%; background: rgba(0, 0, 0, 0.25); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
-      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(1px 0 0 #FFFFFF)"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
+      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterL }}"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 64px; margin: 0 -64px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
@@ -131,8 +131,8 @@ html { scrollbar-gutter: stable; }
           </sc-for>
         </div>
       </div>
-      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
+      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
       <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: {{ hoverTitleSize }}; font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
@@ -223,7 +223,7 @@ class Component extends DCLogic {
   // whole strip by the slots travelled (0.95s ease), then re-centres it on the new work without a visible change.
   show(k) {
     if (k === this.state.index || this.state.fade || this.state.animate) return;
-    this.autoAt = Date.now();   // H0: any change of work restarts the 6s autoplay wait
+    this.autoAt = Date.now();   // H0: any change of work restarts the 9s autoplay wait
     if (!this.state.mobile && !this.state.tablet) {   // H0 desktop: the strip slides the shortest way round to the new work, the tray glides with it
       const n = this.arts.length; let st = (k - this.state.index + n) % n; if (st > n / 2) st -= n;
       this.relaxDock();
@@ -291,10 +291,10 @@ class Component extends DCLogic {
     this.setState({ wide: this.mqWide.matches });
     this.onKey = (e) => { if (e.key === 'ArrowLeft') this.go(-1); if (e.key === 'ArrowRight') this.go(1); };
     window.addEventListener('keydown', this.onKey);
-    // H0 desktop autoplay (as on gagosian.com): the next work every 6s once the intro has finished, waiting while the pointer is on
+    // H0 desktop autoplay (as on gagosian.com): the next work every 9s once the intro has finished, waiting while the pointer is on
     // the thumbnails or arrows; any change of work restarts the wait
     this.autoAt = Date.now();
-    this.timer = setInterval(() => { if (!this.state.intro && !this.railHover && !this.state.mobile && !this.state.tablet && !document.hidden && Date.now() - this.autoAt >= 6000) this.go(1); }, 250);
+    this.timer = setInterval(() => { if (!this.state.intro && !this.railHover && !this.state.mobile && !this.state.tablet && !document.hidden && Date.now() - this.autoAt >= 9000) this.go(1); }, 250);
   }
   componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait);
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide);
@@ -371,8 +371,8 @@ class Component extends DCLogic {
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
       railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : VF ? 'calc(-1 * ' + thumbH + ' - 5px)' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // H0 desktop: the thumbnails' bottom 14px below the painting   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
-      railAlign: 'flex-end',   // the chevrons' bottoms on the thumbnails' bottom edge, at every size
-      arrowPadBottom: '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
+      railAlign: desk ? 'center' : 'flex-end',   // H0 desktop: the chevrons centred on the thumbnails, over the painting; elsewhere their bottoms on the thumbnails' bottom edge
+      arrowPadBottom: desk ? '8px' : '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
       railJustify: 'center', // arrows sit beside the thumbnails, the set centred
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
@@ -401,11 +401,16 @@ class Component extends DCLogic {
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
-      railEnter: () => { this.railHover = true; }, railLeave: () => { this.railHover = false; },
+      railEnter: () => { this.railHover = true; this.setState({ railHover: true }); }, railLeave: () => { this.railHover = false; this.setState({ railHover: false }); },
+      arrowOpacity: !desk || this.state.railHover ? 1 : 0,
+      // H0 desktop: the chevrons sit on the painting, so they are white with a soft dark shadow (elsewhere grey with a 1px white edge)
+      arrowColor: desk ? '#FFFFFF' : '#ADA9A2',
+      arrowFilterL: desk ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(1px 0 0 #FFFFFF)',
+      arrowFilterR: desk ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
-      hoverTitleSize: this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // the galleries' hover title size, 1px smaller over 2000px
+      hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 24px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 24px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
       hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-8px 0 0' : '5px 0 0',   // H0 desktop: 2px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
@@ -425,7 +430,7 @@ class Component extends DCLogic {
         // only thumbnails that are on show at the start or the end of a glide are ever present: the five around the new work stay
         // put, the ones being left behind fade away as they slide off, and none beyond them peeks in at the feathered edges
         vis: Math.abs(j - (n + base + shift)) <= half || (this.state.animate && Math.abs(j - (n + base)) <= half) ? 'visible' : 'hidden',
-        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 4px 14px rgba(20,20,20,0.22)' } },   // a soft shadow lifts them off the painting
+        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 6px 20px rgba(10,10,10,0.55)' } },   // a soft shadow lifts them off the painting
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
