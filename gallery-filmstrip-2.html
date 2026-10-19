@@ -74,6 +74,19 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
 .count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+/* view icons by screen size (since 2026-10-19): desktop (1280px and wider) 1 / 3 in a row / 3 x 3; small desktop and tablet
+   (768-1279px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
+.count[data-n="2"] { display: none; }
+@media (min-width: 768px) and (max-width: 1279px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
+/* phones: every work in one scrolling column, full content width, its title under it; a tap opens the detail view */
+.list { display: none; }
+.page.listmode { height: auto; }
+.page.listmode .stage, .page.listmode .caption, .page.listmode .strip-wrap { display: none; }
+.page.listmode .list { display: grid; gap: 44px; padding: 28px var(--side-pad) 52px; }
+.li { display: grid; justify-items: center; gap: 14px; color: #141414; }
+.li img { display: block; width: 100%; height: auto; box-shadow: 0 6px 16px rgba(20,20,20,0.14); }
+.li.v img { width: auto; max-width: 100%; max-height: 72vh; }   /* portraits: full width unless that would make them taller than 72% of the screen */
+.li span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
@@ -181,6 +194,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <button class="count" data-n="1" aria-label="1 work at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="18.00" height="18"></rect></svg></button>
     <button class="count" data-n="3" aria-label="3 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="4.67" height="18"></rect><rect x="6.67" y="0" width="4.67" height="18"></rect><rect x="13.33" y="0" width="4.67" height="18"></rect></svg></button>
     <button class="count" data-n="9" aria-label="9 works at a time"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="4.67" height="4.67"></rect><rect x="6.67" y="0" width="4.67" height="4.67"></rect><rect x="13.33" y="0" width="4.67" height="4.67"></rect><rect x="0" y="6.67" width="4.67" height="4.67"></rect><rect x="6.67" y="6.67" width="4.67" height="4.67"></rect><rect x="13.33" y="6.67" width="4.67" height="4.67"></rect><rect x="0" y="13.33" width="4.67" height="4.67"></rect><rect x="6.67" y="13.33" width="4.67" height="4.67"></rect><rect x="13.33" y="13.33" width="4.67" height="4.67"></rect></svg></button>
+    <button class="count" data-n="2" aria-label="2 columns of works"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg></button>
     <div class="filters">
       <div class="filter-menu" id="fmSeries"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Series</span></button><div class="fm-list" role="listbox" aria-label="Series"></div></div>
       <div class="filter-menu" id="fmYear"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Year</span></button><div class="fm-list" role="listbox" aria-label="Year"></div></div>
@@ -193,6 +207,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
   </main>
   <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span></p>
+
+  <section class="list" id="list" aria-label="All works"></section>
 
   <div class="strip-wrap" id="stripWrap">
     <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"></div></div>
@@ -289,18 +305,31 @@ const stage = $('stage'), row = $('row'), strip = $('strip'), track = $('track')
 let lastTouch = 0, touching = false, stripReady = false;
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 // A window of `count` works starting at `first` is featured in the row (1, 3, or 9 as three rows of three); each slot crossfades between two images.
-const phone = matchMedia('(max-width: 767px)');
-const askedView = +new URLSearchParams(location.search).get('view');   // ?view=1 / 3 / 9 opens in that view (the Index links open one-up)
-let deskCount = [1, 3, 9].includes(askedView) ? askedView : 3, count = phone.matches ? 1 : deskCount, first = 0, current = 0;
-const cols = () => count === 9 ? 3 : count, rows = () => count / cols();
+// Views by screen size (since 2026-10-19): desktop (1280px and wider) 1, 3 in a row or 9 (three rows of three); small desktop and
+// tablet (768-1279px) 1 or a 2-column grid (view 2: two to four rows, as many as fit without making the works much smaller); phones a one-column
+// list of every work (the featured row is not used there). Each size remembers its own choice.
+const phone = matchMedia('(max-width: 767px)'), tab = matchMedia('(min-width: 768px) and (max-width: 1279px)');
+const askedView = +new URLSearchParams(location.search).get('view');   // ?view=1 / 3 / 9 / 2 opens in that view (the Index links open one-up)
+let deskView = [1, 3, 9].includes(askedView) ? askedView : 3, tabView = askedView === 1 ? 1 : 2;
+// 2-column grid: as many rows (2 to 4) as fit while the works stay within 8% of the largest size two rows would give
+// (the height allowed for here assumes the grid starts below the filter menus, as it does on most tablets)
+const tabRows = () => {
+  const pad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft), inner = document.documentElement.clientWidth - 2 * pad - 2 * (($('prev').querySelector('svg').getBoundingClientRect().width || 15) + 24);
+  const byW = (inner - 60) / 3, V = stage.clientHeight - 100, size = r => Math.min(byW, (V - 60 * (r - 1)) / r);
+  return [4, 3, 2].find(r => size(r) >= 0.92 * size(2)) || 2; };
+const modeView = () => phone.matches ? 1 : tab.matches ? tabView : deskView;
+const countOf = v => v === 2 ? 2 * tabRows() : v;
+let view = modeView(), count = countOf(view), first = 0, current = 0;
+const isGrid = () => view === 9 || view === 2;
+const cols = () => view === 9 ? 3 : view === 2 ? 2 : count, rows = () => count / cols();
 const slots = [];
 function buildSlots(n) {
-  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', count === 9); page.classList.toggle('multi', count > 1);
+  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', isGrid()); page.classList.toggle('multi', count > 1);
   for (let i = 0; i < n; i++) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (count === 9 ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
     a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
     row.appendChild(a); slots.push(slot);
   }
@@ -312,7 +341,7 @@ function buildSlots(n) {
 // Twelve-up: three rows of four, all one height, as wide as the content width or as tall as the stage allows.
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
-  const nc = cols(), nr = rows(), grid = count === 9;
+  const nc = cols(), nr = rows(), grid = isGrid();
   const step = $('prev').offsetWidth, gap = grid ? 60 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
   const contentW = document.documentElement.clientWidth - 2 * sidePad;
@@ -338,7 +367,7 @@ function fit() {
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
-  row.style.gridTemplateColumns = grid ? 'repeat(3, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
+  row.style.gridTemplateColumns = grid ? 'repeat(' + nc + ', ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
   let rowH = h3 * nr + rowGap * (nr - 1), gridTop = null;
   const filters = document.querySelector('.filters'); filters.classList.remove('stacked');
@@ -351,26 +380,34 @@ function fit() {
   if (grid && !phone.matches) {
     const st = stage.getBoundingClientRect(), iconTop = $('tools').querySelector('.count svg').getBoundingClientRect().top;
     gridTop = iconTop - st.top;
-    const used = Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), V = bottom - gridTop;
+    const used = Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
+    let V = bottom - gridTop;
     const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
-    const sizeFor = maxW => {
+    const sizeFor = (maxW, V) => {
       const byH = wideGaps && V / (used + (used - 1) / 4) / 4 >= 60 ? V / (used + (used - 1) / 4) : (V - 60 * (used - 1)) / used;
       const byW = wideGaps && maxW / (1.5 * nc + (nc - 1) / 4) / 4 >= 60 ? maxW / (1.5 * nc + (nc - 1) / 4) : (maxW - 60 * (nc - 1)) / (1.5 * nc);
       return Math.min(byH, byW); };
     const gridW = a => 1.5 * nc * a + G(a) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
-    let a = sizeFor(inner);
+    let a = sizeFor(inner, V);
     if (cx + gridW(a) / 2 + 24 > fs.left) {
       filters.classList.add('stacked');
       const stackLeft = fy.right - Math.max(fs.width, fy.width);
-      if (cx + gridW(a) / 2 + 24 > stackLeft) a = sizeFor(2 * (stackLeft - 24 - cx));
+      if (cx + gridW(a) / 2 + 24 > stackLeft) {
+        // still in the way: either narrow the grid to clear the menus, or start it 16px below them at full width,
+        // whichever leaves the works larger (narrow screens, such as tablets, usually gain by starting lower)
+        const aNarrow = sizeFor(2 * (stackLeft - 24 - cx), V);
+        const topBelow = $('fmYear').getBoundingClientRect().bottom + 16 - st.top, aBelow = sizeFor(inner, bottom - topBelow);
+        if (aBelow > aNarrow) { gridTop = topBelow; V = bottom - topBelow; a = aBelow; } else a = aNarrow;
+      }
     }
     const g = G(a);
-    row.style.gridTemplateColumns = 'repeat(3, ' + (a * 1.5).toFixed(2) + 'px)';
+    row.style.gridTemplateColumns = 'repeat(' + nc + ', ' + (a * 1.5).toFixed(2) + 'px)';
     row.style.columnGap = row.style.rowGap = g.toFixed(1) + 'px';
     slots.forEach(s => { s.a.style.width = a * R(s) + 'px'; s.a.style.height = a + 'px'; });
     rowH = a * used + g * (used - 1);
+    if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
   } else row.style.rowGap = '';
   stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons
@@ -446,16 +483,33 @@ function setWindow(f, scrollIntoView, dir, axis) {
 // arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
 function stepBy(d, axis) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d * count, true, d, axis); }
 // change how many works show at once, keeping the current first work ("extend from current")
-function setCount(n) {
-  count = n;
-  if (!phone.matches) deskCount = n;
-  [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === n));
-  buildSlots(Math.min(n, WORKS.length));
+function setCount(v) {
+  view = v; count = countOf(v);
+  if (tab.matches) tabView = v; else if (!phone.matches) deskView = v;
+  [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === v));
+  buildSlots(Math.min(count, WORKS.length));
   setWindow(first, false);
 }
 [...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
-phone.addEventListener('change', () => setCount(phone.matches ? 1 : deskCount));
+// crossing a breakpoint switches to that size's view (and the phone list); a tablet turning between landscape and portrait
+// re-rows the 2-column grid
+const mode = () => phone.matches ? 'phone' : tab.matches ? 'tab' : 'desk';
+let lastMode = mode();
+function setMode() { lastMode = mode(); page.classList.toggle('listmode', phone.matches); setCount(modeView()); if (phone.matches) buildList(); }
+phone.addEventListener('change', setMode); tab.addEventListener('change', setMode);
+addEventListener('resize', () => { if (mode() !== lastMode) setMode(); else if (view === 2 && countOf(2) !== count) setCount(2); });   // (resize as well: media-query change events are not always delivered)
 function show(k, scrollIntoView) { setWindow(k, scrollIntoView, k > first ? 1 : -1, 'y'); }   // thumbnail tap: vertical like the arrows (a later work: the row goes up; an earlier one: down)   // thumbnail click: a work to the right slides the row left (it arrives from the right); a work to the left slides it right
+
+// phones: the one-column list (rebuilt when a filter changes the list); each work opens its detail view
+function buildList() {
+  const L = $('list'); L.innerHTML = '';
+  WORKS.forEach(w => {
+    const a = document.createElement('a'); a.className = 'li' + (w.r < 1 ? ' v' : ''); a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.id = 'li-' + w.f;
+    const im = document.createElement('img'); im.src = 'assets/works-m70/' + w.f; im.alt = w.t; im.loading = 'lazy'; im.style.aspectRatio = w.r >= 1 ? '3 / 2' : '2 / 3';
+    const t = document.createElement('span'); t.textContent = w.t;
+    a.append(im, t); L.appendChild(a);
+  });
+}
 
 // build the strip (rebuilt when a filter changes the list)
 function buildStrip() { track.innerHTML = ''; WORKS.forEach((w, k) => {
@@ -640,6 +694,7 @@ function applyFilter() {
   WORKS.length = 0; WORKS.push(...list);
   buildStrip(); pos = target = vel = 0; track.style.transform = 'translate3d(0px,0,0)';
   first = current = 0; buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
+  if (phone.matches) buildList();
 }
 function menu(id, label, opts, get, set) {
   const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
@@ -662,10 +717,11 @@ addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 // start on the work named in the URL, else the first work
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
-[...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === count));
+[...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
 buildSlots(Math.min(count, WORKS.length));
 setWindow(start >= 0 ? start : 0, start > 0);
 stripReady = true;
+if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 </script>
 </body>
 </html>
