@@ -122,7 +122,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterL }}"><polyline points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 64px; margin: 0 -64px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
+      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 64px 40px; margin: 0 -64px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
             <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
@@ -410,8 +410,8 @@ class Component extends DCLogic {
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
-      hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 24px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 24px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-8px 0 0' : '5px 0 0',   // H0 desktop: 2px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-2px 0 0' : '5px 0 0',   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',

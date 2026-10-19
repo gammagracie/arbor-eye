@@ -66,7 +66,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .stage:hover .step, .step:focus-visible { opacity: 1; }   /* the arrows appear while the pointer is over the work area */
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
+.step svg { width: clamp(13px, 1.755vw, 25.35px); height: auto; }   /* 65% of the earlier size since 2026-10-19 */
 .caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }

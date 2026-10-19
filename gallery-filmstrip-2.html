@@ -79,8 +79,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
    the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
 @media (min-width: 768px) {
-  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
-  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
 }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
@@ -95,7 +95,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: clamp(15px, 2.025vw, 29.25px); height: auto; }   /* 75% of the earlier size: 29 x 81px on a 1440px screen, scaling down with the viewport to 15 x 42px */
+.step svg { width: clamp(9.75px, 1.31625vw, 19.0125px); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
 .caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
