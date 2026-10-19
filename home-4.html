@@ -51,7 +51,7 @@ html { scrollbar-gutter: stable; }
           <a href="home-1b.html">H1B</a>
           <a href="home-2.html">H2</a>
           <a href="home-3.html">H3</a>
-          <a href="home-4.html">H4</a>
+          <a style="font-weight: 700; color: #141414" href="home-4.html">H4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="gallery-filmstrip-vertical.html">G7</a>
@@ -88,7 +88,7 @@ html { scrollbar-gutter: stable; }
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
   <a href="home-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
   <a href="home-3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
-  <a href="home-4.html" style="font-weight: 600; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H4</a>
+  <a href="home-4.html" style="font-weight: 700; color: #141414; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="gallery-filmstrip-vertical.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G7</a>
@@ -320,7 +320,7 @@ class Component extends DCLogic {
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
     // edge) and its right edge sits the same distance in from the bag icon, unless the height left on screen limits it first
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? (this.state.wide ? 'calc(0.92 * ' : '') + 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' + (this.state.wide ? ')' : '') : 'min(94vw, ' + smallFit + ')';
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(calc(100vw - 48px), calc(1.15 * ' + (this.state.wide ? 'calc(0.92 * ' : '') + 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' + (this.state.wide ? ')' : '') + '))' : 'min(94vw, ' + smallFit + ')';   // H4: the image 15% larger than the homepage rule (at most the screen less 24px each side)
     const heroH = 'auto';
     const heroRatio = FRAME.toFixed(4);
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
@@ -378,7 +378,7 @@ class Component extends DCLogic {
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(-1px)',   // H7, desktop and tablet: the arrows and thumbnail tray sit 1px higher than their layout place (10px higher than on the homepage), further onto the painting
       hoverTitleSize: this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '12px 0 0' : m ? '2px 0 0' : '0', // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : '5px 0 0',   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',

@@ -47,7 +47,7 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
-          <a class="on" href="home-1a.html">H1A</a>
+          <a style="font-weight: 700; color: #141414" href="home-1a.html">H1A</a>
           <a href="home-1b.html">H1B</a>
           <a href="home-2.html">H2</a>
           <a href="home-3.html">H3</a>
@@ -84,7 +84,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="home-1a.html" style="font-weight: 600; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
+  <a href="home-1a.html" style="font-weight: 700; color: #141414; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
   <a href="home-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
   <a href="home-3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
@@ -310,7 +310,7 @@ class Component extends DCLogic {
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
-    const VF = !desk ? null : VARIANT === '1A' ? { w: '100%', h: 'auto', ratio: '1.75', pad: '35px 0 20px', inset: 0 }
+    const VF = !desk ? null : VARIANT === '1A' ? { w: '100%', h: 'auto', ratio: '1.75', pad: '20px 0 20px', inset: 0 }
       : VARIANT === '1B' ? { w: 'calc(100% - 83.2px)', h: 'auto', ratio: '1.75', pad: '35px 0 20px', inset: 0 }
       // H2 and H4 fill the height left on screen, keeping room under the frame for the part of the thumbnail tray that hangs below
       // it (35% of a thumbnail + 19px) and the hover title (40px), so both stay on screen
@@ -347,7 +347,8 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroLift: desk && !VF ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
+      // H1A: the block (image, thumbnails and the hover title under them) is centred on the screen as a whole: lifted by half the title's band
+      heroLift: VF ? 'translateY(calc(-4.5px - 0.5 * (5px + 1.2 * ' + (this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)') + ')))' : desk ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
       heroPad: VF ? VF.pad : mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
@@ -381,7 +382,7 @@ class Component extends DCLogic {
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '12px 0 0' : m ? '2px 0 0' : '0', // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : '5px 0 0',   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
