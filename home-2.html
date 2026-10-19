@@ -50,8 +50,8 @@ html { scrollbar-gutter: stable; }
           <a href="home-1a.html">H1A</a>
           <a href="home-1b.html">H1B</a>
           <a class="on" href="home-2.html">H2</a>
+          <a href="home-3.html">H3</a>
           <a href="home-4.html">H4</a>
-          <a href="home-h7.html">H7</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="gallery-filmstrip-vertical.html">G7</a>
@@ -87,8 +87,8 @@ html { scrollbar-gutter: stable; }
   <a href="home-1a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
   <a href="home-2.html" style="font-weight: 600; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
+  <a href="home-3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
   <a href="home-4.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H4</a>
-  <a href="home-h7.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H7</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="gallery-filmstrip-vertical.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G7</a>
@@ -113,8 +113,8 @@ html { scrollbar-gutter: stable; }
       <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 15px; line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
-      <!-- intro wordmark (since 2026-10-19 at 75% of its earlier size, 48.5% of the image's width) on a 25% black panel; the panel's padding scales with the image (4.2% of its width above and below, 45px on a 1440px screen) and reaches a further 15% of its width beyond the lettering at each side; the panel fades with the wordmark -->
-      <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 4.2% 12.74%; background: rgba(0, 0, 0, 0.25); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
+      <!-- intro wordmark (since 2026-10-19 at 75% of its earlier size, 48.5% of the image's width) on a 25% black panel; the panel's padding scales with the image (4.2% of its width above and below, 45px on a 1440px screen) its sides reaching 8.92% of the image's width beyond the lettering (70% of the earlier reach, since 2026-10-19); the panel fades with the wordmark -->
+      <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 4.2% 8.92%; background: rgba(0, 0, 0, 0.25); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
