@@ -61,6 +61,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .tools { flex: none; display: flex; justify-content: flex-start; align-items: center; gap: 14px; padding: 14px var(--side-pad) 0; position: relative; z-index: 6; }
 /* filter menus (top right, on the bag icon's line, as on the grid gallery): Series and Year */
 .filters { margin-left: auto; display: flex; gap: 48px; }
+/* 9-up, where the grid needs the room: the two menus stack at the top right, on the bag icon's line (out of the flow, so the toolbar keeps its height) */
+.filters.stacked { position: absolute; right: var(--side-pad); top: 14px; flex-direction: column; align-items: flex-end; gap: 10px; }
 .filter-menu { position: relative; }
 .fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
 .fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
@@ -331,35 +333,46 @@ function fit() {
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
-  // nine-up (desktop): the top row's top level with the top of the SERIES label above the stage, the bottom row's bottom
-  // far enough above the stage's foot for its title (12px under it, at least 34px), the middle row centred between them. Where the grid
-  // would run under the SERIES / YEAR menus (it reaches within 24px of them), the top row starts 16px below the menus instead
-  let gridTop = null;
-  if (grid && !phone.matches) {
-    const st = stage.getBoundingClientRect(), lab = $('fmSeries').querySelector('span'), rg = document.createRange();
-    rg.selectNodeContents(lab); const tr = rg.getBoundingClientRect();
-    const cx = document.createElement('canvas').getContext('2d'), cs = getComputedStyle(lab); cx.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-    const mt = cx.measureText('S'), capTop = tr.top + (mt.fontBoundingBoxAscent - mt.actualBoundingBoxAscent) * (tr.height / (mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent));
-    const menus = $('fmSeries').getBoundingClientRect(), gridRight = st.left + st.width / 2 + (h * sumR + gap * (nc - 1)) / 2;
-    gridTop = (gridRight + 24 <= menus.left ? capTop : menus.bottom + 16) - st.top;
-  }
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
   row.style.gridTemplateColumns = grid ? 'repeat(3, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
-  // nine-up on screens 2800px and wider: each work 88% of its cell, shrinking about the cell's centre, so the gaps between
-  // works grow while the columns, the top row's top and the bottom row's bottom stay put
-  const big = grid && document.documentElement.clientWidth >= 2800, aw = big ? h3 * 0.88 : h3;
-  slots.forEach(s => { s.a.style.width = aw * R(s) + 'px'; s.a.style.height = aw + 'px'; });
-  let rowH = h3 * nr + rowGap * (nr - 1);
-  stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the label
-  if (gridTop !== null) {
-    // room under the bottom row for its title (12px gap + the title, which grows with the screen)
-    const bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), used = Math.ceil(slots.length / nc), rg2 = used > 1 ? (bottom - gridTop - aw * used) / (used - 1) : 0;
-    row.style.rowGap = rg2.toFixed(1) + 'px';
-    rowH = aw * used + rg2 * (used - 1);
+  slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
+  let rowH = h3 * nr + rowGap * (nr - 1), gridTop = null;
+  const filters = document.querySelector('.filters'); filters.classList.remove('stacked');
+  // nine-up (desktop, since 2026-10-19): the top row's top level with the top of the view icons (top left of the content area),
+  // the bottom row's bottom far enough above the stage's foot for its title (12px under it, at least 34px), and the grid even:
+  // the space between rows the same as between columns (60px; on screens 2800px and wider a quarter of a work's height, at
+  // least 60px, so the gaps grow with the works). The works take the largest size that fills that height, within the arrows.
+  // Where the top-right work would run under the SERIES / YEAR menus (within 24px of them), the two menus stack at the top
+  // right, on the bag icon's line; only if it still reaches them do the works shrink to clear them.
+  if (grid && !phone.matches) {
+    const st = stage.getBoundingClientRect(), iconTop = $('tools').querySelector('.count svg').getBoundingClientRect().top;
+    gridTop = iconTop - st.top;
+    const used = Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), V = bottom - gridTop;
+    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
+    // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
+    const sizeFor = maxW => {
+      const byH = wideGaps && V / (used + (used - 1) / 4) / 4 >= 60 ? V / (used + (used - 1) / 4) : (V - 60 * (used - 1)) / used;
+      const byW = wideGaps && maxW / (1.5 * nc + (nc - 1) / 4) / 4 >= 60 ? maxW / (1.5 * nc + (nc - 1) / 4) : (maxW - 60 * (nc - 1)) / (1.5 * nc);
+      return Math.min(byH, byW); };
+    const gridW = a => 1.5 * nc * a + G(a) * (nc - 1);
+    const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
+    let a = sizeFor(inner);
+    if (cx + gridW(a) / 2 + 24 > fs.left) {
+      filters.classList.add('stacked');
+      const stackLeft = fy.right - Math.max(fs.width, fy.width);
+      if (cx + gridW(a) / 2 + 24 > stackLeft) a = sizeFor(2 * (stackLeft - 24 - cx));
+    }
+    const g = G(a);
+    row.style.gridTemplateColumns = 'repeat(3, ' + (a * 1.5).toFixed(2) + 'px)';
+    row.style.columnGap = row.style.rowGap = g.toFixed(1) + 'px';
+    slots.forEach(s => { s.a.style.width = a * R(s) + 'px'; s.a.style.height = a + 'px'; });
+    rowH = a * used + g * (used - 1);
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
   } else row.style.rowGap = '';
+  stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons
+  const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
   capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;

@@ -108,7 +108,7 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
-    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
+    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; max-height: {{ heroMaxH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
       <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 15px; line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
@@ -248,14 +248,14 @@ class Component extends DCLogic {
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
   }
-  // H7, desktop: the main image is the painting alone, no paper: the frame's box holds a window exactly the painting's shape,
-  // as large as the frame allows and centred, with the scan placed so the painting fills it (fit / paint = the painting's
-  // left, right, top and bottom on the scan)
-  paintBox(a, F) {
-    const [x0, x1, y0, y1] = a.paint || a.fit, w = x1 - x0, h = y1 - y0, P = 1.5 * w / h;
-    const bw = P >= F ? 100 : P / F * 100, bh = P >= F ? F / P * 100 : 100;
-    return { box: { left: (100 - bw) / 2 + '%', top: (100 - bh) / 2 + '%', width: bw + '%', height: bh + '%' },
-             img: { left: -x0 / w * 100 + '%', top: -y0 / h * 100 + '%', width: 100 / w + '%', height: 100 / h + '%' } };
+  // H4, desktop: the frame runs from the gap between the R and the B of the logo to the same distance in from the bag icon and
+  // takes the painting's own shape (fit / paint = the painting's left, right, top and bottom on the scan), so the painting shows
+  // whole with no paper; where the screen is too short for that shape the frame keeps its width, the painting fills its height
+  // (never cropped) and the scan's own paper shows at the sides
+  paintBox(a) {
+    const [x0, x1, y0, y1] = a.paint || a.fit, w = x1 - x0, h = y1 - y0;
+    return { ratio: (1.5 * w / h).toFixed(4),
+             img: { top: -y0 / h * 100 + '%', height: 100 / h + '%', width: 'auto', aspectRatio: '3 / 2', left: '50%', transform: 'translateX(' + -(x0 + x1) / 2 * 100 + '%)' } };
   }
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
@@ -320,9 +320,10 @@ class Component extends DCLogic {
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
     // edge) and its right edge sits the same distance in from the bag icon, unless the height left on screen limits it first
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'min(calc(100vw - 48px), calc(1.15 * ' + (this.state.wide ? 'calc(0.92 * ' : '') + 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' + (this.state.wide ? ')' : '') + '))' : 'min(94vw, ' + smallFit + ')';   // H4: the image 15% larger than the homepage rule (at most the screen less 24px each side)
+    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'calc(100% - 83.2px)' : 'min(94vw, ' + smallFit + ')';   // H4 desktop: always R-and-B to the same distance in from the bag icon, at every width (never past the nav)
     const heroH = 'auto';
-    const heroRatio = FRAME.toFixed(4);
+    const heroRatio = desk ? this.paintBox(this.arts[i]).ratio : FRAME.toFixed(4);
+    const heroMaxH = desk ? deskH : 'none';   // H4 desktop: the frame takes the painting's shape up to the height left on screen
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 3 * n }, (_, j) => j % n); // the whole run of works three times over: the tray only ever slides, so no thumbnail is swapped or reloaded
@@ -361,8 +362,8 @@ class Component extends DCLogic {
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: this.state.wide ? '20.4px' : desk ? '10.2px' : '7.8px', arrowH: this.state.wide ? '56.4px' : desk ? '28.2px' : '21.6px',   // 60% of the earlier chevrons (since 2026-10-19): 10.2 x 28.2px on desktop, 20.4 x 56.4px over 2000px, 7.8 x 21.6px on tablet and phones
       thumbH,
-      heroImg: (() => { const pb = desk ? this.paintBox(this.arts[i], FRAME) : null;   // desktop: the painting alone; tablet and phones keep the framed scan
-        return React.createElement('span', { style: Object.assign({ position: 'absolute', inset: 0 }, pb ? pb.box : {}, { display: 'block', overflow: 'hidden', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' }) },
+      heroImg: (() => { const pb = desk ? this.paintBox(this.arts[i]) : null;   // desktop: the painting alone; tablet and phones keep the framed scan
+        return React.createElement('span', { style: Object.assign({ position: 'absolute', inset: 0 }, { display: 'block', overflow: 'hidden', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' }) },
         React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: Object.assign({ filter: 'saturate(1.12)', position: 'absolute', display: 'block', touchAction: 'pan-y', color: 'transparent', objectFit: 'fill' }, pb ? pb.img : { left: 0, top: '50%', width: '100%', height: 'auto', aspectRatio: '3 / 2', transformOrigin: '0 0', transform: 'translateY(-50%) ' + this.heroZoom(this.arts[i]) }) })); })(),
       // the image's alt text, centred on the frame (title in italic capitals, a colon, the tagline): shown only if the image has
       // not loaded within 0.8s or fails, so it never flashes during the crossfade between works (those images are preloaded)
@@ -370,7 +371,7 @@ class Component extends DCLogic {
       treeOpacity: this.state.heroBad === this.arts[i].src ? 0 : 0.25,   // the faint tree behind the image steps aside when the caption stands in for a failed image
       heroAltOpacity: this.state.heroOk === this.arts[i].src ? 0 : 1,
       heroAltTransition: this.state.heroOk === this.arts[i].src ? 'opacity 0.2s ease' : 'opacity 0.4s ease 0.8s',
-      heroW, heroH, heroRatio, desk,
+      heroW, heroH, heroMaxH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
