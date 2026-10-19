@@ -18,6 +18,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: #141414; text-decoration: none; }
@@ -32,8 +37,8 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html { scrollbar-gutter: stable; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
-@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 </style>
@@ -46,7 +51,7 @@ html { scrollbar-gutter: stable; }
     <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-        <nav style="display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase">
+        <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
           <a href="home-0.html">H0</a>
           <a href="home-1a.html">H1A</a>
           <a href="home-1b.html">H1B</a>
@@ -69,7 +74,7 @@ html { scrollbar-gutter: stable; }
         <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg>
           <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ true }}">
-            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span>
+            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span>
           </sc-if>
         </a>
         </div>
@@ -84,7 +89,7 @@ html { scrollbar-gutter: stable; }
     </div>
   </div>
 </header>
-<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H0</a>
   <a href="home-1a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
@@ -102,7 +107,7 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
-      <span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px">{{ cartCount }}</span></span>
+      <span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span></span>
       Shopping Cart
     </a>
   </sc-if>
@@ -112,7 +117,7 @@ html { scrollbar-gutter: stable; }
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; max-height: {{ heroMaxH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
-      <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 15px; line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
+      <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: calc(15px * var(--fs)); line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(19px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
       <!-- intro wordmark (since 2026-10-19 at 75% of its earlier size, 48.5% of the image's width) on a 25% black panel; the panel's padding scales with the image (4.2% of its width above and below, 45px on a 1440px screen) its sides reaching 8.92% of the image's width beyond the lettering (70% of the earlier reach, since 2026-10-19); the panel fades with the wordmark -->
@@ -134,13 +139,13 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: {{ hoverTitleSize }}; font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc({{ hoverTitleSize }} * var(--fs)); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -380,7 +385,7 @@ class Component extends DCLogic {
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(-1px)',   // H7, desktop and tablet: the arrows and thumbnail tray sit 1px higher than their layout place (10px higher than on the homepage), further onto the painting
-      hoverTitleSize: this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // the galleries' hover title size, 1px smaller over 2000px
+      hoverTitleSize: !m && !this.state.tablet ? 'calc((' + (this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)') + ' + min(calc(' + thumbH + ' * 0.23), 22px)) / 2)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // desktop (since 2026-10-19): halfway between the galleries' hover title size (1px smaller over 2000px) and H0's (23% of a thumbnail's height, at most 22px); tablet and phones keep the galleries' size
       hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : '5px 0 0',   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
