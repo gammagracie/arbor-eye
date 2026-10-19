@@ -50,7 +50,7 @@ html { scrollbar-gutter: stable; }
           <a href="home-1a.html">H1A</a>
           <a href="home-1b.html">H1B</a>
           <a href="home-2.html">H2</a>
-          <a class="on" href="home-3.html">H3</a>
+          <a style="font-weight: 700; color: #141414" href="home-3.html">H3</a>
           <a href="home-4.html">H4</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
@@ -87,7 +87,7 @@ html { scrollbar-gutter: stable; }
   <a href="home-1a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1A</a>
   <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1B</a>
   <a href="home-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
-  <a href="home-3.html" style="font-weight: 600; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
+  <a href="home-3.html" style="font-weight: 700; color: #141414; padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
   <a href="home-4.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H4</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
@@ -315,7 +315,8 @@ class Component extends DCLogic {
       // H2 and H4 fill the height left on screen, keeping room under the frame for the part of the thumbnail tray that hangs below
       // it (35% of a thumbnail + 19px) and the hover title (40px), so both stay on screen
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
-      : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
+      // H3: nav edge to nav edge and the painting shown whole: the frame takes each painting's own shape (no cropping), 8px under the nav
+      : { w: '100%', h: 'auto', ratio: (() => { const [x0, x1, y0, y1] = this.arts[i].paint || this.arts[i].fit; return (1.5 * (x1 - x0) / (y1 - y0)).toFixed(4); })(), pad: '8px 0 40px', inset: 0 };
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
@@ -381,7 +382,7 @@ class Component extends DCLogic {
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '12px 0 0' : m ? '2px 0 0' : '0', // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : '5px 0 0',   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
