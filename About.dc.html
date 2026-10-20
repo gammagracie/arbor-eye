@@ -8,6 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
+<script src="alt-text.js" data-auto></script>
 </head>
 <body>
 <x-dc>
@@ -213,9 +214,9 @@ html { scrollbar-gutter: stable; }
     <div style="display: grid; gap: 16px">
       <div onClick="{{ stuTap }}" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ stuD0 }}; transition: opacity 0.7s ease; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: {{ studioGap }}">
-          <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
-          <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
-          <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+          <div style="position: relative"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
+          <div style="position: relative"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
+          <div style="position: relative"><img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
         </div>
         <div style="grid-area: 1 / 1; opacity: {{ stuD1 }}; transition: opacity 0.7s ease; justify-self: center; align-self: center; position: relative; width: {{ studioFilmW }}; aspect-ratio: 16 / 9; overflow: hidden">
       <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
