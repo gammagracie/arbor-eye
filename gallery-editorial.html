@@ -69,7 +69,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
 .social img { display: block; width: 27.5px; height: 27.5px; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
-@media (min-width: 768px) and (max-width: 1439px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* G6: editorial column. The gallery is its own scroll area under the fixed header; wheel and drag glide it,
    a thin scrollbar shows on the right while the pointer is over it. The footer ends the column. */
@@ -95,7 +95,7 @@ html:not(.touch) .scroller { cursor: grab; }
 /* every work about the same width (87-100% of the column; since 2026-10-20 portraits too, so they are simply taller), a portrait
    never taller than the screen allows (header + 120px kept clear); each overlaps the one before by 8% of its width (12% of a
    landscape's height), whatever its orientation */
-.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--k))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 6px rgba(20,20,20,0.22), 0 14px 34px rgba(20,20,20,0.30); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--k))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
 .work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1), --hy 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
@@ -105,7 +105,7 @@ html:not(.touch) .scroller { cursor: grab; }
 .work .win { position: absolute; inset: 0; }
 .work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
 html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
-html:not(.touch) .work:hover { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 8px rgba(20,20,20,0.22), 0 22px 52px rgba(20,20,20,0.34); }
+html:not(.touch) .work:hover { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 9px rgba(20,20,20,0.30), 0 24px 56px rgba(20,20,20,0.42); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; margin-top: -1.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
@@ -143,7 +143,10 @@ footer { flex: none; }
       <div class="right">
         <nav class="main">
           <a href="home-0.html">H0</a>
+          <a href="home-0-alt1.html">H0-alt1</a>
+          <a href="home-0-alt2.html">H0-alt2</a>
           <a href="home-1a.html">H1A</a>
+          <a href="home-1a-alt.html">H1A-alt</a>
           <a href="home-1b.html">H1B</a>
           <a href="home-2.html">H2</a>
           <a href="home-3.html">H3</a>
@@ -165,7 +168,10 @@ footer { flex: none; }
   </header>
   <nav class="menu" aria-label="Mobile menu">
     <a href="home-0.html">H0</a>
+    <a href="home-0-alt1.html">H0-alt1</a>
+    <a href="home-0-alt2.html">H0-alt2</a>
     <a href="home-1a.html">H1A</a>
+    <a href="home-1a-alt.html">H1A-alt</a>
     <a href="home-1b.html">H1B</a>
     <a href="home-2.html">H2</a>
     <a href="home-3.html">H3</a>
@@ -296,7 +302,7 @@ order.forEach((w, i) => {
   });
   a.style.setProperty('--r', w.r);
   const sz = SIZES[i % SIZES.length], depthK = sz;   // depthK: the rhythm for parallax and stacking (portraits treated as landscapes)
-  const kw = 0.87 + 0.13 * (sz - 0.6) / 0.4, k = 0.75 * kw;   // drawn width: 87-100% of the column, whatever the orientation, drawn at 75% on desktop (since 2026-10-20)
+  const kw = 0.87 + 0.13 * (sz - 0.6) / 0.4, k = 0.5625 * kw;   // drawn width: 87-100% of the column, whatever the orientation, drawn at 56% on desktop (75% of 75%, since 2026-10-20)
   a.style.setProperty('--kp', kw.toFixed(3));   // phones: 87-100% of the column (full size)
   a.style.setProperty('--k', k);
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
