@@ -51,6 +51,7 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="home-0.html">00</a>
           <a href="home-0-alt1.html">1b</a>
           <a href="home-0-alt2.html">1c</a>
           <a href="home-0-alt3.html">1d</a>
@@ -89,6 +90,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">00</a>
   <a href="home-0-alt1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1b</a>
   <a href="home-0-alt2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1c</a>
   <a href="home-0-alt3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1d</a>
@@ -176,7 +178,7 @@ class Component extends DCLogic {
     { src: 'assets/works/core_chamber.jpg', fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
     { src: 'assets/works/core_affinity.jpg', fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
     { src: 'assets/works/core_conduit.jpg', fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
-    { src: 'assets/works/core_upwelling.jpg', title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
+    { src: 'assets/works/core_upwelling.jpg', paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification, the "genie": the thumbnail under the cursor grows most (130%), neighbours less
@@ -255,12 +257,21 @@ class Component extends DCLogic {
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
   }
-  // the scan placed so the painting sits whole inside the frame with Ned's own paper round it: the painting as large as fits
-  // within the frame less the margin M on every side, centred (cq units: the frame is the size container)
-  paperImg(a, M) {
-    const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = 1.5 * pw / ph;
-    const PW = 'min(calc(100cqw - 2 * ' + M + '), calc((100cqh - 2 * ' + M + ') * ' + P.toFixed(4) + '))', SW = 'calc(' + PW + ' / ' + pw.toFixed(4) + ')';
-    return { width: SW, height: 'auto', aspectRatio: '3 / 2', left: 'calc(50cqw - ' + ((x0 + x1) / 2).toFixed(4) + ' * ' + SW + ')', top: 'calc(50cqh - ' + ((y0 + y1) / 2).toFixed(4) + ' * ' + SW + ' / 1.5)' };
+  // bordered versions (since 2026-10-20): Ned's paper the same width B on every side of the frame. The scan is placed so the
+  // painting fills the opening inside that border: shown whole, natural uneven edges and all, when its shape is within 3% of the
+  // opening's (the scan's own paper making up the difference, so no seam), and otherwise enlarged just enough to come within 1%,
+  // the excess cut off at the opening's edge on that side only (cq units: the frame is the size container; Ned's paper texture
+  // shows in the border wherever a scan's own paper is cut away or runs short)
+  paperImg(a, B) {
+    const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = (1.5 * pw / ph).toFixed(4);
+    const IW = 'calc(100cqw - 2 * ' + B + ')', IH = 'calc(100cqh - 2 * ' + B + ')';
+    const PW = 'max(min(' + IW + ', calc(' + IH + ' * ' + P + ')), calc(max(' + IW + ', calc(' + IH + ' * ' + P + ')) / 1.01))', PH = 'calc(' + PW + ' / ' + P + ')';
+    const SW = 'calc(' + PW + ' / ' + pw.toFixed(4) + ')', SH = 'calc(' + SW + ' / 1.5)';
+    const L = 'calc(50cqw - ' + ((x0 + x1) / 2).toFixed(4) + ' * ' + SW + ')', T = 'calc(50cqh - ' + ((y0 + y1) / 2).toFixed(4) + ' * ' + SH + ')';
+    const onlyIf = (cut, over) => 'min(calc(' + cut + '), max(0px, calc((' + over + ') * 1000)))';   // the cut, where the painting overflows that way
+    const oy = PH + ' - ' + IH, ox = PW + ' - ' + IW;
+    return { width: SW, height: 'auto', aspectRatio: '3 / 2', left: L, top: T,
+      clipPath: 'inset(' + onlyIf(B + ' - ' + T, oy) + ' ' + onlyIf(L + ' + ' + SW + ' - 100cqw + ' + B, ox) + ' ' + onlyIf(T + ' + ' + SH + ' - 100cqh + ' + B, oy) + ' ' + onlyIf(B + ' - ' + L, ox) + ')' };
   }
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
@@ -338,9 +349,9 @@ class Component extends DCLogic {
     const heroMaxH = desk ? deskH : 'none';
     // desktop (since 2026-10-20): the whole painting always fits the frame with at least 2.5% of the frame's width of Ned's paper
     // round it (never cropped, even where the frame is shortened); Upwelling, with no painting bounds, keeps the scan as it is
-    const pb = desk && this.arts[i].fit ? this.paperImg(this.arts[i], '2.5cqw') : null;
+    const pb = desk && (this.arts[i].fit || this.arts[i].paint) ? this.paperImg(this.arts[i], '4.5cqw') : null;
     const heroH = 'auto';
-    const heroRatio = FRAME.toFixed(4);
+    const heroRatio = desk ? '1.655' : FRAME.toFixed(4);   // desktop since 2026-10-20: 1.655:1, so a 4.5% border leaves a 1.77:1 opening
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 3 * n }, (_, j) => j % n); // the whole run of works three times over: the tray only ever slides, so no thumbnail is swapped or reloaded

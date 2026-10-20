@@ -52,6 +52,7 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="home-0.html">00</a>
           <a href="home-0-alt1.html">1b</a>
           <a style="font-weight: 700; color: #141414" href="home-0-alt2.html">1c</a>
           <a href="home-0-alt3.html">1d</a>
@@ -90,6 +91,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">00</a>
   <a href="home-0-alt1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1b</a>
   <a href="home-0-alt2.html" style="font-weight: 700; color: #141414; padding: 28px 0; border-bottom: 1px solid #F0EDE7">1c</a>
   <a href="home-0-alt3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1d</a>
@@ -263,13 +265,21 @@ class Component extends DCLogic {
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
   }
-  // paper versions (H0-alt1, H0-alt2, H1A, H1A-alt; since 2026-10-20): the scan placed so the painting sits whole inside the frame
-  // with Ned's own paper round it: the painting as large as fits within the frame less the margin M on every side, centred,
-  // the rest of the scan's paper filling the frame (cq units: the frame is the size container)
-  paperImg(a, M) {
-    const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = 1.5 * pw / ph;
-    const PW = 'min(calc(100cqw - 2 * ' + M + '), calc((100cqh - 2 * ' + M + ') * ' + P.toFixed(4) + '))', SW = 'calc(' + PW + ' / ' + pw.toFixed(4) + ')';
-    return { width: SW, height: 'auto', aspectRatio: '3 / 2', left: 'calc(50cqw - ' + ((x0 + x1) / 2).toFixed(4) + ' * ' + SW + ')', top: 'calc(50cqh - ' + ((y0 + y1) / 2).toFixed(4) + ' * ' + SW + ' / 1.5)' };
+  // bordered versions (since 2026-10-20): Ned's paper the same width B on every side of the frame. The scan is placed so the
+  // painting fills the opening inside that border: shown whole, natural uneven edges and all, when its shape is within 3% of the
+  // opening's (the scan's own paper making up the difference, so no seam), and otherwise enlarged just enough to come within 1%,
+  // the excess cut off at the opening's edge on that side only (cq units: the frame is the size container; Ned's paper texture
+  // shows in the border wherever a scan's own paper is cut away or runs short)
+  paperImg(a, B) {
+    const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = (1.5 * pw / ph).toFixed(4);
+    const IW = 'calc(100cqw - 2 * ' + B + ')', IH = 'calc(100cqh - 2 * ' + B + ')';
+    const PW = 'max(min(' + IW + ', calc(' + IH + ' * ' + P + ')), calc(max(' + IW + ', calc(' + IH + ' * ' + P + ')) / 1.01))', PH = 'calc(' + PW + ' / ' + P + ')';
+    const SW = 'calc(' + PW + ' / ' + pw.toFixed(4) + ')', SH = 'calc(' + SW + ' / 1.5)';
+    const L = 'calc(50cqw - ' + ((x0 + x1) / 2).toFixed(4) + ' * ' + SW + ')', T = 'calc(50cqh - ' + ((y0 + y1) / 2).toFixed(4) + ' * ' + SH + ')';
+    const onlyIf = (cut, over) => 'min(calc(' + cut + '), max(0px, calc((' + over + ') * 1000)))';   // the cut, where the painting overflows that way
+    const oy = PH + ' - ' + IH, ox = PW + ' - ' + IW;
+    return { width: SW, height: 'auto', aspectRatio: '3 / 2', left: L, top: T,
+      clipPath: 'inset(' + onlyIf(B + ' - ' + T, oy) + ' ' + onlyIf(L + ' + ' + SW + ' - 100cqw + ' + B, ox) + ' ' + onlyIf(T + ' + ' + SH + ' - 100cqh + ' + B, oy) + ' ' + onlyIf(B + ' - ' + L, ox) + ')' };
   }
   ph(k) { return e => { e.currentTarget.src = 'assets/placeholder-landscape.svg'; }; }
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
@@ -346,7 +356,7 @@ class Component extends DCLogic {
       // since 2026-10-20: 40px of white above the painting and 90px below it (the thumbnails hang into it, the title under them);
       // H0 runs the full width of the screen; H0-alt1 spans the logo's left edge to the bag icon's right edge and H0-alt2 the gap
       // between the R and the B to the same distance in from the bag icon, both showing the whole painting on Ned's paper
-      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: 'calc(100vh - var(--header-h) - 130px)', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '3.5cqw' }
+      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
       : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
