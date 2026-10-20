@@ -51,13 +51,10 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="home-0.html">1a</a>
           <a href="home-0-alt1.html">1b</a>
           <a href="home-0-alt2.html">1c</a>
           <a href="home-0-alt3.html">1d</a>
-          <a href="home-2.html">2a</a>
           <a href="home-1a-alt.html">2b</a>
-          <a href="home-1b.html">2c</a>
           <a href="home-3.html">3a</a>
           <a href="home-4.html">3b</a>
           <a href="gallery-filmstrip-2.html">G5</a>
@@ -92,13 +89,10 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1a</a>
   <a href="home-0-alt1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1b</a>
   <a href="home-0-alt2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1c</a>
   <a href="home-0-alt3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1d</a>
-  <a href="home-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">2a</a>
   <a href="home-1a-alt.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">2b</a>
-  <a href="home-1b.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">2c</a>
   <a href="home-3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">3a</a>
   <a href="home-4.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">3b</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
@@ -233,12 +227,13 @@ class Component extends DCLogic {
   // whole strip by the slots travelled (0.95s ease), then re-centres it on the new work without a visible change.
   show(k) {
     if (k === this.state.index || this.state.fade || this.state.animate) return;
+    this.autoAt = Date.now();   // any change of work restarts the 7s wait before the next automatic one
     this.setState({ fade: true });
     setTimeout(() => {
       this.relaxDock();   // the hover magnification rests while the tray glides
       this.setState({ index: k, fade: false, animate: true });
       setTimeout(() => this.setState({ railBase: k, animate: false }, () => this.redock()), 1650);   // after the 1.6s glide
-    }, 700);
+    }, 1200);   // (since 2026-10-20 a soft change of work: 1.2s out and 1.2s in on a gentle sine curve; was 0.7s each way)
   }
   // Fallback if an artwork file is missing: a light green box.
   // Homepage only: each scan is zoomed about its painting so its paper border shrinks to about 35% of the scan's own (on the
@@ -300,7 +295,13 @@ class Component extends DCLogic {
     this.setState({ wide: this.mqWide.matches });
     this.onKey = (e) => { if (e.key === 'ArrowLeft') this.go(-1); if (e.key === 'ArrowRight') this.go(1); };
     window.addEventListener('keydown', this.onKey);
-    this.timer = setInterval(() => { if (this.props.autoplay) this.go(1); }, 5000);
+    // autoplay (since 2026-10-20): the next work fades in every 7s once the intro has finished, waiting while the pointer is on the
+    // thumbnails or arrows or the tab is hidden; any change of work restarts the wait
+    this.autoAt = Date.now();
+    this.timer = setInterval(() => {
+      if (this.state.intro || this.state.railHover || document.hidden) { if (this.state.intro) this.autoAt = Date.now(); return; }
+      if (Date.now() - this.autoAt >= 7000) this.go(1);
+    }, 250);
   }
   componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait);
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide);
@@ -378,7 +379,7 @@ class Component extends DCLogic {
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: this.state.wide ? '20.4px' : desk ? '10.2px' : '7.8px', arrowH: this.state.wide ? '56.4px' : desk ? '28.2px' : '21.6px',   // 60% of the earlier chevrons (since 2026-10-19): 10.2 x 28.2px on desktop, 20.4 x 56.4px over 2000px, 7.8 x 21.6px on tablet and phones
       thumbH,
-      heroImg: React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', containerType: pb ? 'size' : 'normal', background: pb ? '#ECE9E3 url(uploads/paper-edge.jpg) center / 300px auto repeat' : 'none', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }, React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: pb ? Object.assign({ filter: 'saturate(1.12)', position: 'absolute', display: 'block', maxWidth: 'none', touchAction: 'pan-y', color: 'transparent' }, pb) : { filter: 'saturate(1.12)', position: 'absolute', left: 0, top: '50%', width: '100%', height: 'auto', aspectRatio: '3 / 2', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', transformOrigin: '0 0', transform: 'translateY(-50%) ' + this.heroZoom(this.arts[i]) } })),
+      heroImg: React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', containerType: pb ? 'size' : 'normal', background: pb ? '#ECE9E3 url(uploads/paper-edge.jpg) center / 300px auto repeat' : 'none', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 1.2s cubic-bezier(0.45, 0, 0.55, 1)' } }, React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: pb ? Object.assign({ filter: 'saturate(1.12)', position: 'absolute', display: 'block', maxWidth: 'none', touchAction: 'pan-y', color: 'transparent' }, pb) : { filter: 'saturate(1.12)', position: 'absolute', left: 0, top: '50%', width: '100%', height: 'auto', aspectRatio: '3 / 2', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', transformOrigin: '0 0', transform: 'translateY(-50%) ' + this.heroZoom(this.arts[i]) } })),
       // the image's alt text, centred on the frame (title in italic capitals, a colon, the tagline): shown only if the image has
       // not loaded within 0.8s or fails, so it never flashes during the crossfade between works (those images are preloaded)
       heroAltTitle: this.arts[i].title, heroAltTag: this.arts[i].tag,
