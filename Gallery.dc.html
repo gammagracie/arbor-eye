@@ -8,6 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
+<script src="alt-text.js"></script>
 </head>
 <body>
 <x-dc>
@@ -629,7 +630,7 @@ class Component extends DCLogic {
       cards: filtered.map(({ a, k }) => ({
         title: a.title, src: a.src,
         aria: 'View ' + a.title,
-        img: React.createElement('img', { src: a.src.replace('assets/works-m70/', 'assets/thumbs-m70/'), alt: a.title, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),   // every work fills its cell (landscapes the full width, portraits the full height), whatever the thumbnail file's own pixel size
+        img: React.createElement('img', { src: a.src.replace('assets/works-m70/', 'assets/thumbs-m70/'), alt: a.title, 'data-alt-title': a.title, 'data-alt-tag': a.desc, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),   // every work fills its cell (landscapes the full width, portraits the full height), whatever the thumbnail file's own pixel size
         open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
       })),
       // back: to the gallery version the visitor came from (G5, G6, G7, the homepage...), at the work they left, when they
@@ -661,7 +662,7 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame)) }),   // desktop: the print fills the wall inside its margin
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame)) }),   // desktop: the print fills the wall inside its margin
       // frame swatches
       frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
         pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
@@ -679,7 +680,7 @@ class Component extends DCLogic {
       lbDots: views.map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
       lbLabel: views[this.state.lbIndex][1],
       // sized from the image's own ratio so it fills the overlay without distortion
-      lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + this.side(e)) % 3 })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + 3) % 3 }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
+      lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + this.side(e)) % 3 })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + 3) % 3 }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
       hasDesc: !!(d && d.desc),
       printPrice: ['$225', '$595', '$1,195'][this.state.size],
       sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
@@ -698,7 +699,7 @@ class Component extends DCLogic {
       zoomOpen: this.state.zoom,
       closeZoom: () => this.setZoom(false),
       zoomHint: this.state.zoomLevel > 1 ? this.state.zoomLevel + 'x \u00b7 option-click to zoom out \u00b7 esc to close' : 'double-click to zoom in \u00b7 esc to close',
-      zoomImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+      zoomImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : this.state.zoomLevel + 1),
         onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, this.state.zoomLevel - 1)); },
         
@@ -718,7 +719,7 @@ class Component extends DCLogic {
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
-      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         style: Object.assign({ width: 'calc(' + (m ? 1 : 0.88) + ' * min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px)))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed(views[this.state.detailView][0])) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
       detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailDotsW: this.state.detailDotsW,
