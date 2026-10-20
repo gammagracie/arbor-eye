@@ -86,7 +86,7 @@ html:not(.touch) .scroller { cursor: grab; }
 .scroller.dragging { cursor: grabbing; user-select: none; }
 .scroller.dragging .work { pointer-events: none; }
 
-:root { --col: min(560px, 44vw); --lap: calc(var(--col) * 0.045); }
+:root { --col: max(min(560px, 44vw), 38.9vw); --lap: calc(var(--col) * 0.045); }   /* the column: 560px at 1440px wide, growing with the screen beyond (1494px at 3840; since 2026-10-20) */
 @media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
 /* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
@@ -105,7 +105,7 @@ html:not(.touch) .scroller { cursor: grab; }
 .work .win { position: absolute; inset: 0; }
 .work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
 html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
-html:not(.touch) .work:hover { --s: 1.2; z-index: 100; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
+html:not(.touch) .work:hover { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 16px 40px rgba(20,20,20,0.22); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; margin-top: -1.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
@@ -329,13 +329,20 @@ function parallaxTick(now) {
 function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
 scroller.addEventListener('scroll', parallax, { passive: true });
 
-// ---- Hover (mouse): the work comes to the front, grows to 120%, and the works above and below draw back to leave 60px clear around it
+// ---- Hover (mouse): the work comes to the front and grows to one shared size, the same for every work whatever its size at
+// rest: its long side becomes 1.4 times the column width, or the screen's height less the header and 40px if that is less, so a
+// landscape and a portrait reach the same dimensions turned (6 x 4 / 4 x 6) and a portrait always fits on screen (since
+// 2026-10-20; it was 120% of each work's own size). The works above and below draw back to leave 60px clear around it.
 const GAP = 60;
 works.forEach((w, i) => {
   w.addEventListener('mouseenter', () => {
     if (document.documentElement.classList.contains('touch')) return;
     works.forEach(x => x.classList.toggle('last', x === w));
-    const r = w.getBoundingClientRect(), grow = r.height * 0.1;
+    const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape, never height-limited)
+    const T = Math.min(1.4 * colPx, innerHeight - $('scroller').getBoundingClientRect().top - 40);
+    const sh = T / (w.offsetWidth >= w.offsetHeight ? w.offsetWidth : w.offsetHeight);
+    w.style.setProperty('--sh', sh.toFixed(4));
+    const r = w.getBoundingClientRect(), grow = r.height * (sh - 1) / 2;
     const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top);
     const up = above.length ? Math.min(0, (r.top - grow - GAP) - Math.max(...above)) : 0;
     const down = below.length ? Math.max(0, (r.bottom + grow + GAP) - Math.min(...below)) : 0;
