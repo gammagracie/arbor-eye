@@ -331,7 +331,7 @@ class Component extends DCLogic {
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
-    const VF = !desk ? null : VARIANT === '1A' || VARIANT === '1Aalt' ? { w: VARIANT === '1Aalt' ? 'calc(100% - 83.2px)' : '100%', h: 'auto', ratio: '1.75', pad: '20px 0 20px', inset: 0, paper: '5cqw' }   // since 2026-10-20 the whole painting on Ned's paper (H1A-alt: from the gap between the R and the B)
+    const VF = !desk ? null : VARIANT === '1A' || VARIANT === '1Aalt' ? { w: VARIANT === '1Aalt' ? 'calc(100% - 83.2px)' : '100%', h: 'auto', ratio: '1.75', pad: '20px 0 20px', inset: 0, paper: '3.5cqw' }   // since 2026-10-20 the whole painting on Ned's paper (H1A-alt: from the gap between the R and the B)
       : VARIANT === '1B' ? { w: 'calc(100% - 83.2px)', h: 'auto', ratio: '1.75', pad: '35px 0 20px', inset: 0 }
       // H2 and H4 fill the height left on screen, keeping room under the frame for the part of the thumbnail tray that hangs below
       // it (35% of a thumbnail + 19px) and the hover title (40px), so both stay on screen

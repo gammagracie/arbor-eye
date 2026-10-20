@@ -352,7 +352,7 @@ class Component extends DCLogic {
       // since 2026-10-20: 40px of white above the painting and 90px below it (the thumbnails hang into it, the title under them);
       // H0 runs the full width of the screen; H0-alt1 spans the logo's left edge to the bag icon's right edge and H0-alt2 the gap
       // between the R and the B to the same distance in from the bag icon, both showing the whole painting on Ned's paper
-      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: 'calc(100vh - var(--header-h) - 130px)', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '5cqw' }
+      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: 'calc(100vh - var(--header-h) - 130px)', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '3.5cqw' }
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
       : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
