@@ -92,7 +92,10 @@ html:not(.touch) .scroller { cursor: grab; }
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
 .col { box-sizing: border-box; padding: 49px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }   /* desktop: the first work and its title start 49px under the header (15px higher since 2026-10-12) */
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
-.work { position: relative; z-index: var(--z); display: block; flex: none; width: calc(var(--col) * var(--k)); aspect-ratio: var(--r); margin-top: calc(-0.12 * var(--col) * var(--k) / var(--r)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+/* every work about the same width (87-100% of the column; since 2026-10-20 portraits too, so they are simply taller), a portrait
+   never taller than the screen allows (header + 120px kept clear); each overlaps the one before by 8% of its width (12% of a
+   landscape's height), whatever its orientation */
+.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--k))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 10px 28px rgba(20,20,20,0.18); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
 .work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1), --hy 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
@@ -110,11 +113,11 @@ html:not(.touch) .work:hover { --s: 1.2; z-index: 100; box-shadow: 0 16px 40px r
 .work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(16px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 html:not(.touch) .work:hover .side { opacity: 1; }
-/* phones: widths range only from 80% to 100% of the column (portraits at two thirds of that, for the same area), so no work
-   is more than 25% larger or smaller than another; overlap 70% of desktop's (8.4% of each work's height). A tap shows the
+/* phones: widths 87-100% of the column for every work (portraits as wide, so taller, never taller than the screen allows);
+   overlap 70% of desktop's (5.6% of each work's width). A tap shows the
    title under the work, a second tap opens it. */
 @media (max-width: 767px) {
-  .work { width: calc(var(--col) * var(--kp)); margin-top: calc(-0.084 * var(--col) * var(--kp) / var(--r)); }
+  .work { width: min(calc(var(--col) * var(--kp)), calc((100vh - var(--header-h) - 160px) * var(--r) * var(--kp))); margin-top: calc(-0.056 * var(--col) * var(--kp)); }
   .work:first-child { margin-top: 0; }
   .work .side { display: none; }
   .work.tapped { z-index: 100; }
@@ -267,8 +270,8 @@ const scroller = $('scroller'), col = $('col'), sb = $('sb'), bar = $('sbThumb')
 document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
 
 // ---- Layout: one centred stack. The SIZES rhythm sets each work's parallax depth and stacking; its drawn size varies
-// far less (landscapes 82-100% of the column width, portraits the same area as a landscape of that step), so the works
-// read as a fairly even set; each work overlaps the previous one by --lap.
+// far less (every work, landscape or portrait, 87-100% of the column width; since 2026-10-20), so the works read as one even
+// set, a 13% variation emphasising some; each work overlaps the previous one by --lap.
 const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
 // Order: Brilliance opens and Canopy closes (as in the grid); between them the portraits are dealt out through the
 // landscapes one at a time after runs of 2, 3 or 4 landscapes (a fixed irregular rhythm), so neither orientation
@@ -292,9 +295,9 @@ order.forEach((w, i) => {
     history.replaceState(null, '', '#' + encodeURIComponent(w.f));   // coming back from the detail view lands on this work
   });
   a.style.setProperty('--r', w.r);
-  const sz = SIZES[i % SIZES.length], depthK = (w.r < 1 ? 0.78 : 1) * sz;   // depthK: the rhythm for parallax and stacking
-  const k = (w.r < 1 ? 0.667 : 1) * (0.82 + 0.18 * (sz - 0.6) / 0.4);   // drawn width: 82-100% (portraits x 0.667, equal area)
-  a.style.setProperty('--kp', ((0.8 + 0.2 * (SIZES[i % SIZES.length] - 0.6) / 0.4) * (w.r < 1 ? 0.667 : 1)).toFixed(3));   // phones: 80 - 100% of the column
+  const sz = SIZES[i % SIZES.length], depthK = sz;   // depthK: the rhythm for parallax and stacking (portraits treated as landscapes)
+  const k = 0.87 + 0.13 * (sz - 0.6) / 0.4;   // drawn width: 87-100% of the column, whatever the orientation
+  a.style.setProperty('--kp', k.toFixed(3));   // phones the same
   a.style.setProperty('--k', k);
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
