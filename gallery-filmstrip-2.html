@@ -486,22 +486,40 @@ async function slideTo(ks, d, axis) {
 
 // feature the works from f onward (the window never runs past the end of the list); moving the window slides the row,
 // changing the count (same first work) crossfades the slots in place
+// three-up sets (since 2026-10-20): the three works shown together are always of one orientation. Landscapes are taken three
+// at a time in gallery order, and portraits likewise; each set takes the place of its first work in the gallery, so the sets of
+// the two orientations interleave and every work appears. An orientation's last set, if it comes up short, is filled with the
+// works of that orientation just before it; an orientation with fewer than three works (after a filter) shows them all.
+let PAGES = [];
+function buildPages() {
+  PAGES = [];
+  [false, true].forEach(portrait => {
+    const ks = WORKS.map((w, k) => k).filter(k => (WORKS[k].r < 1) === portrait);
+    for (let j = 0; j < ks.length; j += 3) PAGES.push(ks.length >= 3 && j + 3 > ks.length ? ks.slice(ks.length - 3) : ks.slice(j, j + 3));
+  });
+  PAGES.sort((a, b) => a[0] - b[0]);
+}
+const pageIdx = k => { const i = PAGES.findIndex(p => p[0] === k); return i >= 0 ? i : Math.max(0, PAGES.findIndex(p => p.includes(k))); };
+const sets = () => count === 3 && PAGES.length > 0;
+// whether the arrows, keys, swipes or wheel can move on (one-up wraps round; wider windows stop at the ends)
+function canStep(d) { if (count === 1) return true; if (sets()) { const n = pageIdx(first) + d; return n >= 0 && n < PAGES.length; } return d > 0 ? first + count < WORKS.length : first > 0; }
 function setWindow(f, scrollIntoView, dir, axis) {
-  f = Math.max(0, Math.min(WORKS.length - slots.length, f));
-  const ks = slots.map((s, i) => f + i);
+  let ks;
+  if (sets()) { ks = PAGES[pageIdx(f)]; f = ks[0]; if (ks.length !== slots.length) buildSlots(ks.length); }
+  else { f = Math.max(0, Math.min(WORKS.length - slots.length, f)); ks = slots.map((s, i) => f + i); }
   const moving = slots[0].idx >= 0 && f !== first;
   first = current = f;
   if (moving) slideTo(ks, dir || (f > slots[0].idx ? 1 : -1), axis); else slots.forEach((s, i) => assign(s, ks[i]));
-  [...track.children].forEach((b, i) => { const on = i >= f && i < f + count; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  [...track.children].forEach((b, i) => { const on = ks.includes(i); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
   $('capTitle').textContent = WORKS[f].t; capDx = 0; placeCaption();
   // the filmstrip moves only under the cursor on desktop: a new set no longer glides the strip along (touch screens, with no
   // hover, still bring the featured thumbnails into view); on first load the strip is simply placed on the featured work
-  if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[f + Math.floor((count - 1) / 2)], !stripReady);
-  [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works-m70/' + WORKS[n].f; });   // neighbours ready for the arrows
+  if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[ks[Math.floor((ks.length - 1) / 2)]], !stripReady);
+  (sets() ? [...(PAGES[pageIdx(f) - 1] || []), ...(PAGES[pageIdx(f) + 1] || [])] : [f - 1, f + count]).forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works-m70/' + WORKS[n].f; });   // neighbours ready for the arrows
   history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
 }
 // arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
-function stepBy(d, axis) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d * count, true, d, axis); }
+function stepBy(d, axis) { if (!canStep(d)) return; setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : sets() ? PAGES[pageIdx(first) + d][0] : first + d * count, true, d, axis); }
 // change how many works show at once, keeping the current first work ("extend from current")
 function setCount(v) {
   view = v; count = countOf(v);
@@ -669,7 +687,7 @@ stage.addEventListener('wheel', e => {
   wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) < 40) return;
   const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
-  if (count > 1 && (d > 0 ? first + count >= WORKS.length : first <= 0)) return;   // wider windows stop at the ends
+  if (!canStep(d)) return;   // wider windows stop at the ends
   wheelLocked = true; wheelAt = performance.now();
   stepBy(d, 'y');
 }, { passive: false });
@@ -695,7 +713,7 @@ stage.addEventListener('pointermove', e => {
   const dx = e.clientX - drag.x, d = drag; drag = null;
   if (!d.moved) return;
   swallowClick = true;
-  if (Math.abs(dx) > 40 && (count === 1 || (dx > 0 ? first + count < WORKS.length : first > 0))) { row.style.transition = ''; row.style.transform = ''; stepBy(dx > 0 ? 1 : -1); }
+  if (Math.abs(dx) > 40 && canStep(dx > 0 ? 1 : -1)) { row.style.transition = ''; row.style.transform = ''; stepBy(dx > 0 ? 1 : -1); }
   else { row.style.transition = 'transform 0.4s cubic-bezier(0.3, 0, 0.2, 1)'; row.style.transform = 'translate(-50%, -50%)'; setTimeout(() => { row.style.transition = ''; }, 450); }
 }));
 stage.addEventListener('click', e => { if (swallowClick) { e.preventDefault(); e.stopPropagation(); swallowClick = false; } }, true);
@@ -715,7 +733,7 @@ function applyFilter() {
   if (!list.length) return;
   WORKS.length = 0; WORKS.push(...list);
   buildStrip(); pos = target = vel = 0; track.style.transform = 'translate3d(0px,0,0)';
-  first = current = 0; buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
+  first = current = 0; buildPages(); buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
   if (phone.matches) buildList();
 }
 function menu(id, label, opts, get, set) {
@@ -740,6 +758,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
 [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
+buildPages();
 buildSlots(Math.min(count, WORKS.length));
 setWindow(start >= 0 ? start : 0, start > 0);
 stripReady = true;
