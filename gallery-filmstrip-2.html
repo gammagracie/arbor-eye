@@ -354,7 +354,7 @@ function buildSlots(n) {
 function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
   const nc = cols(), nr = rows(), grid = isGrid();
-  const step = $('prev').offsetWidth, gap = grid ? 60 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
+  const step = $('prev').offsetWidth, gap = grid ? 60 : count === 3 ? 40 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
   const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
   const contentW = document.documentElement.clientWidth - 2 * sidePad;
   // the arrows are locked in the stylesheet on desktop and tablet (points on the logo's and the bag icon's outer edges);
@@ -368,16 +368,24 @@ function fit() {
   // width needed per unit of height: the ratios across the row; in the grid every column is the 3:2 landscape box wide
   // whatever is in it, so portraits sit centred in the same three columns and the grid keeps one size
   const sumR = grid ? nc * 1.5 : [...Array(nc).keys()].reduce((t, c) => t + Math.max(0, ...slots.filter((s, i) => i % nc === c).map(R)), 0);
-  const W = (count === 3 ? contentW : inner) - gap * (nc - 1);
+  const W = inner - gap * (nc - 1);   // (three-up, since 2026-10-20: the full width within the arrows, 40px gaps; it was 85% of the content width)
   // three-up 85% of the space; one-up 86% enlarged by 18%; nine-up all of it (within the arrows and its title room)
-  let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 * 1.18 : 1);
+  let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 1 ? 0.86 * 1.18 : 1);
   h = Math.min(h, (inner - gap * (nc - 1)) / sumR);   // never under the arrows
-  const lift = count === 1 ? 14 : grid ? 15 : 0;   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
+  const lift = count === 1 ? 14 : grid ? 15 : count === 3 ? -Math.round(0.05 * H) : 0;   // three-up: 5% of the stage below centre (since 2026-10-20)   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
+  // one-up portraits (desktop, since 2026-10-20): taller, the top level with the top of the view icons above the stage, the
+  // bottom (and so the title under it) where it was
+  let tallPortrait = false, tallBottom = 0;
+  if (count === 1 && !phone.matches && slots[0] && slots[0].idx >= 0 && WORKS[slots[0].idx].r < 1) {
+    const st = stage.getBoundingClientRect(), iconTop = $('tools').querySelector('.count svg').getBoundingClientRect().top;
+    const bottom = st.top + H / 2 - lift + h / 2, hP = bottom - iconTop;
+    if (hP > h && hP * WORKS[slots[0].idx].r <= inner) { h = hP; row.style.top = ((iconTop + bottom) / 2 - st.top).toFixed(1) + 'px'; tallPortrait = true; tallBottom = bottom; }
+  }
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
-  const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
+  const h3 = h, gapX = gap;
   row.style.columnGap = count === 3 ? gapX + 'px' : '';
   row.style.gridTemplateColumns = grid ? 'repeat(' + nc + ', ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
@@ -422,10 +430,10 @@ function fit() {
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
   } else row.style.rowGap = '';
-  stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons
+  stage.style.overflow = gridTop !== null || tallPortrait ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : tallPortrait ? 'inset(-200px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons
   const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
-  const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
+  const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : tallPortrait ? tallBottom : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
   capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;
   placeCaption();
 }
