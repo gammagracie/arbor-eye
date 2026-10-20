@@ -313,7 +313,7 @@ class Component extends DCLogic {
     // H0 desktop autoplay (as on gagosian.com): the next work every 9s once the intro has finished, waiting while the pointer is on
     // the thumbnails or arrows; any change of work restarts the wait
     this.autoAt = Date.now();
-    this.timer = setInterval(() => { if (!this.state.intro && !this.railHover && !this.state.mobile && !this.state.tablet && !document.hidden && Date.now() - this.autoAt >= 9000) this.go(1); }, 250);
+    this.timer = null;   // 1c / 1d (since 2026-10-20): no autoplay; the work changes only when a thumbnail (or an arrow) is used
   }
   componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait);
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide);
