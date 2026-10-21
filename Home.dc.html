@@ -401,7 +401,7 @@ class Component extends DCLogic {
       heroAltTitle: this.arts[i].title, heroAltTag: this.arts[i].tag,
       treeOpacity: this.state.heroBad === this.arts[i].src ? 0 : 0.25,   // the faint tree behind the image steps aside when the caption stands in for a failed image
       heroAltOpacity: this.state.heroOk === this.arts[i].src ? 0 : 1,
-      heroAltTransition: this.state.heroOk === this.arts[i].src ? 'opacity 0.2s ease' : 'opacity 0.4s ease 0.8s',
+      heroAltTransition: this.state.heroOk === this.arts[i].src ? 'opacity 0.2s ease' : 'opacity 0.3s ease',   // (since 2026-10-21) the alt text shows straight away until the image has loaded (it waited 0.8s)
       heroW, heroH, heroMaxH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
