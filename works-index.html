@@ -148,6 +148,11 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-item { position: relative; display: block; flex: none; height: var(--idx-h); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease; }
 .idx-item:hover { transform: scale(1.2); z-index: 2; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }   /* the hovered piece grows from its centre, over its neighbours */
 .idx-item img { display: block; height: 100%; width: auto; }
+/* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
+   (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
+.idx { position: relative; }
+.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.idx-title.show { opacity: 1; }
 </style>
 <script src="alt-text.js"></script>
 </head>
@@ -202,6 +207,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 
   <main class="idx" id="idx" aria-label="Index of works by series">
     <p class="idx-series" id="idxSeries" aria-live="polite"></p>
+    <p class="idx-title" id="idxTitle" aria-hidden="true"></p>
     <section class="idx-row" aria-label="Series 1, Ascent">
       <a class="idx-item" href="gallery-filmstrip-2.html?view=1#ascent_living-current.jpg"><img src="assets/thumbs-m70/ascent_living-current.jpg" style="aspect-ratio: 2 / 3" alt="Living Current" data-alt-title="Living Current" data-alt-size="s"></a>
       <a class="idx-item" href="gallery-filmstrip-2.html?view=1#ascent_coastal-silence.jpg"><img src="assets/thumbs-m70/ascent_coastal-silence.jpg" style="aspect-ratio: 2 / 3" alt="Coastal Silence" data-alt-title="Coastal Silence" data-alt-size="s"></a>
@@ -298,15 +304,22 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 <script>
 // mobile menu
 document.getElementById('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
-// hovering a thumbnail: its series named above the thumbnails, the other rows dimmed
-const idx = document.getElementById('idx'), label = document.getElementById('idxSeries');
+// hovering a thumbnail: its series named above the thumbnails, its title to the right of its row, the other rows dimmed
+const idx = document.getElementById('idx'), label = document.getElementById('idxSeries'), title = document.getElementById('idxTitle');
+function placeTitle(row) {
+  const items = row.querySelectorAll('.idx-item'), last = items[items.length - 1].getBoundingClientRect(), box = idx.getBoundingClientRect();
+  const pad = parseFloat(getComputedStyle(idx).paddingRight), y = (last.top + last.bottom) / 2 - box.top - title.offsetHeight / 2;
+  const x = Math.min(last.right + 24 - box.left, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  title.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+}
 document.querySelectorAll('.idx-row').forEach(row => {
   row.querySelectorAll('.idx-item').forEach(item => item.addEventListener('mouseenter', () => {
     document.querySelectorAll('.idx-row.on').forEach(r => r.classList.remove('on'));
     row.classList.add('on'); idx.classList.add('hovering');
     label.textContent = row.getAttribute('aria-label'); label.classList.add('show');
+    title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show');
   }));
-  row.addEventListener('mouseleave', () => { row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); });
+  row.addEventListener('mouseleave', () => { row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
 });
 </script>
 </body>

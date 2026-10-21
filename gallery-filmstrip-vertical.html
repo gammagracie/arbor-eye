@@ -30,6 +30,8 @@ button { font-family: inherit; }
 
 /* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
 .page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* screens over 2000px (since 2026-10-21): the footer always on screen at the bottom and the page held still (nothing scrolls) */
+@media (min-width: 2001px) { html, body { overflow: hidden; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
 /* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
 
