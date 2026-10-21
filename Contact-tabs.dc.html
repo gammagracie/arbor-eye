@@ -238,15 +238,15 @@ html { scrollbar-gutter: stable; }
   </sc-if>
   </sc-if>
 
-  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph from the B of the logo (41.6px in from its left edge) to the same
-       distance in from the bag icon, 2:1 (since 2026-10-20; it ran to 24px from the screen's edges), or smaller and centred
+  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph the full width of the top nav, the logo's left edge to the bag
+       icon's right edge (since 2026-10-21; it started at the B), 2:1, or smaller and centred
        while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one
-       baseline, lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
+       baseline (the links 14px, since 2026-10-21), lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
        box in columns, each column centred top to bottom in the box (since 2026-10-20); the open link again brings the photograph
        back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
   <section style="padding-top: 32px; margin: 0 calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
-    <div style="width: min(calc(100vw - 2 * var(--side-pad) - 83.2px), calc((100vh - var(--header-h) - 32px - 66px) * 2))">
+    <div style="width: min(calc(100vw - 2 * var(--side-pad)), calc((100vh - var(--header-h) - 32px - 68px) * 2))">
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
@@ -327,7 +327,7 @@ html { scrollbar-gutter: stable; }
       <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">
         <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
           <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-            <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
+            <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
           </sc-for>
         </div>
         <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); padding-bottom: 6px">
