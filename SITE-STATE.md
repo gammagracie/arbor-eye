@@ -86,7 +86,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
   - Spectrum (4): 1 page of 2 x 2.
   - Structure (5 portraits): 3 over 2, the bottom two centred; the works 30% larger than in the plain grid (182 x 273px at 1440, was 140 x 210).
   - Tonal (5): 2 x 3, the last work centred on the bottom row (273 x 182px at 1440, the height being the limit).
-  - Vertical (16 portraits): 4 pages of 2 x 2, the works 80% larger than in the plain grid where the screen allows (202 x 303px at 1440, 66% larger, the height being the limit; was 121 x 182).
+  - Vertical (16 portraits): 2 pages of 3 across by 3 down (9 and 7, the last work centred on the bottom row), in portrait-shaped boxes (121 x 182px at 1440 x 900, 156 x 234 at 1920); for part of 2026-10-20 it was 4 pages of 2 x 2.
   - Horizontal, All Series and the one-up and three-up views are unchanged. The arrows step a page at a time; a thumbnail opens the page holding that work. Config: `SERIES_LAYOUT` in the page script.
 - **Filmstrip centred** (since 2026-10-20): a strip shorter than the page (a filtered series) is centred on the page; a full strip starts at the left as before.
 - **Hover title stays under the work** (since 2026-10-20): when the layout is redone while a work is under the pointer (an image finishing loading), the title stays under that work; it used to drop to below the grid's bottom row, far from the work on pages with an empty last row.
