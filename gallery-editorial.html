@@ -151,7 +151,6 @@ footer { flex: none; }
           <a href="home-4.html">3b</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a style="font-weight: 700; color: #141414" href="gallery-editorial.html">G6</a>
-          <a href="gallery-filmstrip-vertical.html">G7</a>
           <a href="works-index.html">Index</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
@@ -174,7 +173,6 @@ footer { flex: none; }
     <a href="home-4.html">3b</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html" style="font-weight: 700; color: #141414">G6</a>
-    <a href="gallery-filmstrip-vertical.html">G7</a>
     <a href="works-index.html">Index</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
@@ -490,15 +488,16 @@ const hit = WORKS.find(w => w.f === want || w.t === want);
 if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit.f).offsetTop - 40); trail.fill(scroller.scrollTop); });   // arrive at rest, without a drift
 
 // ---- Opening (desktop and tablet; skipped when the URL names a work, on phones, and for reduced motion). The first twelve
-// works appear one by one as small dark tiles spread evenly across the screen in a row, well apart; the row turns 90
-// degrees clockwise into an evenly spaced column; the tiles then grow toward the viewer into their places in the stack
-// (only now do they overlap) and turn into the paintings. A click anywhere skips to the end. One timeline (ms).
+// works appear one by one, top to bottom, as small dark tiles in an evenly spaced column down the middle of the screen, well
+// apart (since 2026-10-21; they used to appear in a row across the screen that then turned 90 degrees into the column); the
+// tiles then grow toward the viewer into their places in the stack (only now do they overlap) and turn into the paintings.
+// A click anywhere skips to the end. One timeline (ms).
 (function intro() {
   if (hit || matchMedia('(max-width: 767px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const shown = works.slice(0, 12), n = shown.length;
   const rects = shown.map(w => w.getBoundingClientRect());
   const cx = innerWidth / 2, mid = (scroller.getBoundingClientRect().top + innerHeight) / 2;
-  const span = innerWidth * 0.8, slot = span / n;                                    // the row runs across 80% of the screen
+  const span = (innerHeight - scroller.getBoundingClientRect().top) * 0.86, slot = span / n;   // the column runs down 86% of the visible height
   const sR = Math.min(...rects.map(r => slot * 0.6 / r.height));                     // tiles fill 60% of their slot: clear gaps between
   const layer = document.createElement('div'), stack = document.createElement('div');
   layer.className = 'intro'; stack.className = 'intro-stack'; stack.style.transformOrigin = cx + 'px ' + mid + 'px';
@@ -514,13 +513,12 @@ if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit
   scroller.style.opacity = '0';
   const clamp01 = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (t, a, d) => clamp01((t - a) / d);
   const inOut = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2, out = p => 1 - Math.pow(1 - p, 4);
-  const END = 3550;
+  const END = 2750;
   let t0 = performance.now(), skip = false, done = false;
   const frame = now => {
     const t = skip ? END : now - t0;
-    stack.style.transform = 'rotate(' + (-90 + 90 * inOut(seg(t, 1000, 1000))).toFixed(2) + 'deg)';   // turn 90 degrees clockwise (1.0 - 2.0s)
-    const g = out(seg(t, 2000, 1200));                                                                 // grow into place (2.0 - 3.2s)
-    const f = inOut(seg(t, 2900, 600)).toFixed(3);                                                     // become the paintings (2.9 - 3.5s)
+    const g = out(seg(t, 1200, 1200));                                                                 // grow into place (1.2 - 2.4s)
+    const f = inOut(seg(t, 2100, 600)).toFixed(3);                                                     // become the paintings (2.1 - 2.7s)
     tiles.forEach((x, i) => {
       const p = out(seg(t, 120 + i * 70, 380));                                                        // appear, one by one
       x.t.style.opacity = p;

@@ -146,12 +146,14 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.hovering .idx-row.on { opacity: 1; }
 .idx-row { display: flex; flex-wrap: wrap; }
 .idx-item { position: relative; display: block; flex: none; height: var(--idx-h); transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
-.idx-item:hover { transform: scale(1.2); z-index: 2; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }   /* the hovered piece grows from its centre, over its neighbours */
+/* (since 2026-10-21) the genie, as on the homepage trays: the thumbnail under the cursor swells most (120%), its neighbours less
+   along a bell curve, each from its own centre and nudged sideways so they never overlap (set by the script below) */
+.idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }
 .idx-item img { display: block; height: 100%; width: auto; }
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
-.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
 .idx-title.show { opacity: 1; }
 </style>
 <script src="alt-text.js?v=4"></script>
@@ -172,7 +174,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
           <a href="home-4.html">3b</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
-          <a href="gallery-filmstrip-vertical.html">G7</a>
           <a style="font-weight: 700; color: #141414" href="works-index.html">Index</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
@@ -195,7 +196,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="home-4.html">3b</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html">G6</a>
-    <a href="gallery-filmstrip-vertical.html">G7</a>
     <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
@@ -307,12 +307,43 @@ document.getElementById('burger').addEventListener('click', () => document.body.
 // hovering a thumbnail: its series named above the thumbnails, its title to the right of its row, the other rows dimmed
 const idx = document.getElementById('idx'), label = document.getElementById('idxSeries'), title = document.getElementById('idxTitle');
 function placeTitle(row) {
-  const items = row.querySelectorAll('.idx-item'), last = items[items.length - 1].getBoundingClientRect(), box = idx.getBoundingClientRect();
-  const pad = parseFloat(getComputedStyle(idx).paddingRight), y = (last.top + last.bottom) / 2 - box.top - title.offsetHeight / 2;
-  const x = Math.min(last.right + 24 - box.left, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  const items = row.querySelectorAll('.idx-item'), last = items[items.length - 1], box = idx.getBoundingClientRect();   // (its resting place, plus the genie's push)
+  const pad = parseFloat(getComputedStyle(idx).paddingRight), y = last.offsetTop + last.offsetHeight / 2 - title.offsetHeight / 2;
+  const x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
+  if (jump) title.style.transition = 'none';
   title.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+  if (jump) { void title.offsetWidth; title.style.transition = ''; }
 }
+// the genie: the thumbnails on the cursor's line of its row swell along a bell curve centred on the cursor (120% at its peak,
+// about a thumbnail and a half wide), each nudged sideways so they never overlap, following the cursor softly; leaving the row
+// lets them settle back (0.9s)
+const PEAK = 0.2;
+function genie(row, x, item) {
+  const box = idx.getBoundingClientRect(), line = [...row.querySelectorAll('.idx-item')].filter(it => it.offsetTop === item.offsetTop);
+  const base = line.map(it => ({ cx: box.left + it.offsetLeft + it.offsetWidth / 2, w: it.offsetWidth }));
+  const slot = base.reduce((t, b) => t + b.w, 0) / base.length;
+  const sc = base.map(b => 1 + PEAK * Math.exp(-Math.pow((x - b.cx) / (1.15 * slot), 2)));
+  const extra = sc.map((v, k) => (v - 1) * base[k].w), total = extra.reduce((a, b) => a + b, 0);
+  let acc = 0;
+  line.forEach((it, k) => {
+    const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
+    it.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.45s ease';
+    it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
+    it.style.zIndex = String(Math.round(sc[k] * 100));
+  });
+  // the row's last thumbnail ends up half the whole swell further right: the title keeps clear of it
+  const all = row.querySelectorAll('.idx-item');
+  row._titleShift = line.includes(all[all.length - 1]) ? total / 2 : 0;
+  placeTitle(row);
+}
+function settle(row) {
+  row.querySelectorAll('.idx-item').forEach(it => { it.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
+}
+const fine = matchMedia('(hover: hover) and (pointer: fine)');
 document.querySelectorAll('.idx-row').forEach(row => {
+  row.addEventListener('mousemove', e => { if (!fine.matches) return; const it = e.target.closest('.idx-item'); if (it) { genie(row, e.clientX, it); row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot'); } });
+  row.addEventListener('mouseleave', () => { settle(row); row._titleShift = 0; });
   row.querySelectorAll('.idx-item').forEach(item => item.addEventListener('mouseenter', () => {
     document.querySelectorAll('.idx-row.on').forEach(r => r.classList.remove('on'));
     row.classList.add('on'); idx.classList.add('hovering');
