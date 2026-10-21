@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="../">
+<meta name="robots" content="noindex">
+<!-- a frozen copy of this page as it stood at the end of 16 October 2026, for reference (see index101626.html); its links stay among the frozen copies, its images are the site's current files -->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16 Oct · Arbor &amp; Eye | Gallery</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px; }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* ---- G7: the selected work on the left, a vertical filmstrip down the right; a Tree of Life beside the strip marks the
+   active work. Header, work and strip fill the screen; the footer sits below the fold. */
+.body { flex: 1; min-height: 0; display: flex; gap: 40px; padding: 0 var(--side-pad); }
+.stage { flex: 1; min-width: 0; position: relative; }
+.art { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; }
+.art img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: block; opacity: 0; box-shadow: 0 6px 16px rgba(20,20,20,0.14); transition: opacity 0.8s ease-in-out; -webkit-user-drag: none; user-select: none; }
+.art img.on { opacity: 1; }
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: clamp(32px, 4vw, 64px); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; opacity: 0; transition: color 0.2s ease, opacity 0.3s ease; }
+.stage:hover .step, .step:focus-visible { opacity: 1; }   /* the arrows appear while the pointer is over the work area */
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: clamp(20px, 2.7vw, 39px); height: auto; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: 16px; font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: #ADA9A2; }
+.stage.hovering .caption, html.touch .caption { opacity: 1; }
+@media (min-width: 1760px) and (max-width: 3300px) { .caption { font-size: 19px; } }   /* screens 1760-3300px wide: the hover title 3px larger */
+
+/* the strip: small thumbnails in one column (28px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
+.rail { flex: none; width: 58px; position: relative; }
+.strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
+.strip::-webkit-scrollbar { display: none; }
+.track { position: relative; display: grid; gap: 7px; padding: 24px 6px; justify-content: start; }   /* 6px each side leaves room for a thumbnail growing on hover */
+.thumb { width: 28px; height: 19px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.thumb img { display: block; height: 19px; width: auto; max-width: 28px; box-shadow: 0 1px 4px rgba(20,20,20,0.16); }
+html:not(.touch) .thumb:hover { transform: scale(1.18); }
+.marker { position: absolute; left: 44px; width: 14px; height: 28px; background: url(uploads/tol-v3.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* phones: the strip runs along the bottom instead, the active thumbnail underlined (no Tree of Life) */
+@media (max-width: 767px) {
+  .body { flex-direction: column; gap: 16px; padding-bottom: 14px; }
+  .rail { width: auto; height: 52px; }
+  .strip { overflow-x: auto; overflow-y: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .track { grid-auto-flow: column; padding: 4px 24px; width: max-content; }
+  .thumb { border-bottom: 1.5px solid transparent; width: 56px; height: 44px; }
+  .thumb img { height: 38px; max-width: 56px; }   /* phones keep the larger thumbnails, easier to tap */
+  .thumb.on { border-bottom-color: #141414; }
+  .marker { display: none; }
+}
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <header>
+    <div class="bar">
+      <a class="logo" href="101626/index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <div class="right">
+        <nav class="main">
+          <a href="101626/home-h7.html">H7</a>
+          <a href="101626/gallery-filmstrip-2.html">G5</a>
+          <a href="101626/gallery-editorial.html">G6</a>
+          <a class="on" href="101626/gallery-filmstrip-vertical.html">G7</a>
+          <a href="101626/works-index.html">Index</a>
+          <a href="101626/About.dc.html">About</a>
+          <a href="101626/Contact-tabs.dc.html">Contact</a>
+        </nav>
+        <div class="icons">
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="101626/home-h7.html">H7</a>
+    <a href="101626/gallery-filmstrip-2.html">G5</a>
+    <a href="101626/gallery-editorial.html">G6</a>
+    <a href="101626/gallery-filmstrip-vertical.html" style="font-weight: 600">G7</a>
+    <a href="101626/works-index.html">Index</a>
+    <a href="101626/About.dc.html">About</a>
+    <a href="101626/Contact-tabs.dc.html">Contact</a>
+    <a href="101626/Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="101626/Contact-tabs.dc.html#returns">Returns &amp; Exchanges</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></span>Shopping Cart</a>
+  </nav>
+
+  <main class="body" id="body">
+    <div class="stage" id="stage">
+      <a class="art" id="art" href="#" aria-label="View work details"><img alt=""><img alt=""></a>
+      <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
+      <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
+      <p class="caption" id="caption"><span id="capTitle"></span></p>
+    </div>
+    <div class="rail">
+      <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"><span class="marker" id="marker" aria-hidden="true"></span></div></div>
+    </div>
+  </main>
+</div>
+
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
+      </div>
+    </div>
+</footer>
+
+<script>
+// Works shown in the filmstrip. Generated from 101626/Gallery.dc.html (hidden works left out): f = file in assets/works,
+// s = series, t = title, r = width / height. Keep in step with the gallery's list when works change.
+const WORKS = [
+  {"f": "select_brilliance.jpg", "s": "Select", "t": "Brilliance", "r": 1.5},
+  {"f": "core_script.jpg", "s": "Core", "t": "Script", "r": 1.5},
+  {"f": "core_symbiosis.jpg", "s": "Core", "t": "Symbiosis", "r": 1.5},
+  {"f": "core_conduit.jpg", "s": "Core", "t": "Conduit", "r": 1.5},
+  {"f": "core_chamber.jpg", "s": "Core", "t": "Chamber", "r": 1.5},
+  {"f": "core_habitat.jpg", "s": "Core", "t": "Habitat", "r": 1.5},
+  {"f": "core_affinity.jpg", "s": "Core", "t": "Affinity", "r": 1.5},
+  {"f": "core_upwelling.jpg", "s": "Core", "t": "Upwelling", "r": 1.5},
+  {"f": "core_emergence.jpg", "s": "Core", "t": "Emergence", "r": 1.5},
+  {"f": "the-turning_passage.jpg", "s": "The Turning", "t": "Passage", "r": 1.5},
+  {"f": "outliers_outliers-1.jpg", "s": "Outliers", "t": "Outliers 1", "r": 1.5},
+  {"f": "outliers_outliers-2.jpg", "s": "Outliers", "t": "Outliers 2", "r": 1.5},
+  {"f": "outliers_outliers-3.jpg", "s": "Outliers", "t": "Outliers 3", "r": 1.5},
+  {"f": "outliers_outliers-4.jpg", "s": "Outliers", "t": "Outliers 4", "r": 1.5},
+  {"f": "outliers_outliers-5.jpg", "s": "Outliers", "t": "Outliers 5", "r": 1.5},
+  {"f": "outliers_outliers-6.jpg", "s": "Outliers", "t": "Outliers 6", "r": 1.5},
+  {"f": "outliers_outliers-7.jpg", "s": "Outliers", "t": "Outliers 7", "r": 1.5},
+  {"f": "select_aurora.jpg", "s": "Select", "t": "Aurora", "r": 1.5},
+  {"f": "select_confluence.jpg", "s": "Select", "t": "Confluence", "r": 1.5},
+  {"f": "select_emanation.jpg", "s": "Select", "t": "Emanation", "r": 1.5},
+  {"f": "select_singularity.jpg", "s": "Select", "t": "Singularity", "r": 1.5},
+  {"f": "select_grove.jpg", "s": "Select", "t": "Grove", "r": 1.5},
+  {"f": "select_meridian.jpg", "s": "Select", "t": "Meridian", "r": 1.5},
+  {"f": "select_resonance.jpg", "s": "Select", "t": "Resonance", "r": 1.5},
+  {"f": "spectrum_biome.jpg", "s": "Spectrum", "t": "Biome", "r": 1.5},
+  {"f": "spectrum_archipelago.jpg", "s": "Spectrum", "t": "Archipelago", "r": 1.5},
+  {"f": "spectrum_opalescence.jpg", "s": "Spectrum", "t": "Opalescence", "r": 1.5},
+  {"f": "spectrum_chroma.jpg", "s": "Spectrum", "t": "Chroma", "r": 1.5},
+  {"f": "structure_cubicle.jpg", "s": "Structure", "t": "Cubicle", "r": 0.667},
+  {"f": "structure_within.jpg", "s": "Structure", "t": "Within", "r": 0.667},
+  {"f": "structure_cadence.jpg", "s": "Structure", "t": "Cadence", "r": 0.667},
+  {"f": "structure_crossings.jpg", "s": "Structure", "t": "Crossings", "r": 0.667},
+  {"f": "structure_framework.jpg", "s": "Structure", "t": "Framework", "r": 0.667},
+  {"f": "the-turning_character.jpg", "s": "The Turning", "t": "Character", "r": 1.5},
+  {"f": "the-turning_discovery.jpg", "s": "The Turning", "t": "Discovery", "r": 1.5},
+  {"f": "the-turning_momentum.jpg", "s": "The Turning", "t": "Momentum", "r": 1.5},
+  {"f": "the-turning_the-calling.jpg", "s": "The Turning", "t": "The Calling", "r": 1.5},
+  {"f": "the-turning_horizon.jpg", "s": "The Turning", "t": "Horizon", "r": 1.5},
+  {"f": "the-turning_revelation.jpg", "s": "The Turning", "t": "Revelation", "r": 1.5},
+  {"f": "the-turning_the-turning-6.jpg", "s": "The Turning", "t": "The Turning 6", "r": 1.5},
+  {"f": "tonal_current.jpg", "s": "Tonal", "t": "Current", "r": 1.5},
+  {"f": "tonal_firelight.jpg", "s": "Tonal", "t": "Firelight", "r": 1.5},
+  {"f": "tonal_vesper-2.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "tonal_vesper-1.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "convergence_counterform.jpg", "s": "Convergence", "t": "Counterform", "r": 1.5},
+  {"f": "convergence_synthesis.jpg", "s": "Convergence", "t": "Synthesis", "r": 1.5},
+  {"f": "convergence_counterline.jpg", "s": "Convergence", "t": "Counterline", "r": 1.5},
+  {"f": "convergence_convergence-6.jpg", "s": "Convergence", "t": "Convergence 6", "r": 1.5},
+  {"f": "convergence_counterpart.jpg", "s": "Convergence", "t": "Counterpart", "r": 1.5},
+  {"f": "convergence_counterpoint.jpg", "s": "Convergence", "t": "Counterpoint", "r": 1.5},
+  {"f": "convergence_convergence-7.jpg", "s": "Convergence", "t": "Convergence 7", "r": 1.5},
+  {"f": "ascent_ascent-1.jpg", "s": "Ascent", "t": "Ascent 1", "r": 0.667},
+  {"f": "ascent_artifact.jpg", "s": "Ascent", "t": "Artifact", "r": 0.667},
+  {"f": "ascent_canyons.jpg", "s": "Ascent", "t": "Canyons", "r": 0.667},
+  {"f": "ascent_verdance.jpg", "s": "Ascent", "t": "Verdance", "r": 0.667},
+  {"f": "ascent_living-current.jpg", "s": "Ascent", "t": "Living Current", "r": 0.667},
+  {"f": "ascent_coastal-silence.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667},
+  {"f": "ascent_shared-orbit.jpg", "s": "Ascent", "t": "Shared Orbit", "r": 0.667},
+  {"f": "ascent_inner-eclipse.jpg", "s": "Ascent", "t": "Inner Eclipse", "r": 0.667},
+  {"f": "ascent_origin.jpg", "s": "Ascent", "t": "Origin", "r": 0.667},
+  {"f": "ascent_koi.jpg", "s": "Ascent", "t": "Koi", "r": 0.667},
+  {"f": "ascent_overlook.jpg", "s": "Ascent", "t": "Overlook", "r": 0.667},
+  {"f": "tonal_canopy.jpg", "s": "Tonal", "t": "Canopy", "r": 1.5}
+];
+const $ = id => document.getElementById(id);
+const stage = $('stage'), art = $('art'), strip = $('strip'), track = $('track'), marker = $('marker'), caption = $('caption');
+document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
+const phone = matchMedia('(max-width: 767px)');
+const imgs = [...art.querySelectorAll('img')];
+let current = -1, front = 0, turn = 0;
+
+// the work: as large as the stage allows, leaving room for the chevrons either side and the title below
+function fit() {
+  if (current < 0) return;
+  const r = WORKS[current].r, step = $('prev').offsetWidth;
+  const W = stage.clientWidth - 2 * step - 24, H = stage.clientHeight - 112;   // 112 = space above the work + the title's band below it
+  let h = Math.min(H, W / r) * 0.9775, w = h * r;   // 97.75% of the largest the stage allows (85% enlarged by 15%)
+  if (phone.matches) { h = r >= 1 ? Math.min(stage.clientWidth / r, stage.clientHeight - 100) : stage.clientHeight - 100; w = Math.min(h * r, stage.clientWidth); h = w / r; }   // phones: landscapes span the stage (24px page margin each side), portraits leave 50px above and below
+  art.style.width = w + 'px'; art.style.height = h + 'px';
+  const im = imgs[front]; im.style.width = w + 'px'; im.style.height = h + 'px';
+  art.style.top = '50%';   // centred in the content area (desktop too since 2026-10-12), so the side arrows sit on its middle
+  $('prev').style.left = $('next').style.right = Math.max(0, (stage.clientWidth - w) / 2 - step - 12) + 'px';
+  caption.style.top = 'calc(50% + ' + (h / 2 + (phone.matches ? 14 : 22)) + 'px)';
+}
+
+// show work k: the incoming image is decoded first, then rises in (dir +1, from below) or drops in (dir -1, from above)
+// over the outgoing one, which fades away the other way
+function show(k, dir) {
+  k = (k + WORKS.length) % WORKS.length;
+  if (k === current) return;
+  dir = dir || (k > current ? 1 : -1);
+  const first = current < 0;
+  current = k;
+  const w = WORKS[k], next = imgs[1 - front], prev = imgs[front], t = ++turn;
+  next.src = 'assets/works-m70/' + w.f; next.alt = w.t;
+  art.href = '101626/Gallery.dc.html#' + encodeURIComponent(w.f);
+  $('capTitle').textContent = w.t;
+  // a plain crossfade: the incoming image fades in over the outgoing one, each at its own size, nothing moves
+  const swap = () => {
+    if (t !== turn) return;
+    front = 1 - front;
+    fit();
+    next.classList.add('on'); prev.classList.remove('on');
+  };
+  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);
+  [k - 1, k + 1].forEach(n => { const m = WORKS[(n + WORKS.length) % WORKS.length]; new Image().src = 'assets/works-m70/' + m.f; });   // neighbours ready
+  [...track.querySelectorAll('.thumb')].forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-selected', i === k); });
+  placeMarker(first);
+  history.replaceState(null, '', '#' + encodeURIComponent(w.f));
+}
+
+// the Tree of Life sits beside the active thumbnail, and the strip glides to keep that thumbnail in the middle
+function placeMarker(instant) {
+  const b = track.querySelectorAll('.thumb')[current];
+  if (!b) return;
+  if (instant) marker.style.transition = 'none';
+  marker.style.top = (b.offsetTop + b.offsetHeight / 2 - marker.offsetHeight / 2) + 'px';
+  if (instant) { void marker.offsetWidth; marker.style.transition = ''; }
+  if (phone.matches) strip.scrollTo({ left: b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2, behavior: instant ? 'auto' : 'smooth' });
+  else strip.scrollTo({ top: b.offsetTop + b.offsetHeight / 2 - strip.clientHeight / 2, behavior: instant ? 'auto' : 'smooth' });
+}
+
+// build the strip
+WORKS.forEach((w, k) => {
+  const b = document.createElement('button');
+  b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
+  const im = document.createElement('img'); im.src = 'assets/thumbs-m70/' + w.f; im.alt = ''; im.loading = 'lazy';
+  b.appendChild(im); b.addEventListener('click', () => show(k));
+  track.appendChild(b);
+});
+
+// arrows, keys (left / up = previous, right / down = next), hover title
+$('prev').addEventListener('click', () => show(current - 1, -1));
+$('next').addEventListener('click', () => show(current + 1, 1));
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1, 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1, -1); }
+});
+art.addEventListener('mouseenter', () => stage.classList.add('hovering'));
+art.addEventListener('mouseleave', () => stage.classList.remove('hovering'));
+// finger swipe on the work: up / left = next, down / right = previous
+let touch0 = null;
+art.addEventListener('touchstart', e => { touch0 = e.touches[0]; }, { passive: true });
+art.addEventListener('touchend', e => {
+  if (!touch0) return; const t = e.changedTouches[0], dx = t.clientX - touch0.clientX, dy = t.clientY - touch0.clientY; touch0 = null;
+  const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (Math.abs(d) > 40) { e.preventDefault(); show(current + (d < 0 ? 1 : -1), d < 0 ? 1 : -1); }
+});
+addEventListener('resize', () => { fit(); placeMarker(true); });
+new ResizeObserver(fit).observe(stage);
+phone.addEventListener('change', () => placeMarker(true));
+
+// mobile menu
+$('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+
+// start on the work named in the URL, else the first
+const want = decodeURIComponent(location.hash.slice(1));
+const start = WORKS.findIndex(w => w.f === want || w.t === want);
+show(start >= 0 ? start : 0);
+</script>
+</body>
+</html>

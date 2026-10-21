@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="../">
+<meta name="robots" content="noindex">
+<!-- a frozen copy of this page as it stood at the end of 16 October 2026, for reference (see index101626.html); its links stay among the frozen copies, its images are the site's current files -->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16 Oct · Arbor &amp; Eye | Gallery</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: 9px; }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* stage: the selected work, as large as the space allows */
+/* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
+/* view switch (top left, lined up with the logo like the grid gallery's switcher): 1 work, 3 in a row, or 9 in three rows of three; phones are always one-up */
+.tools { flex: none; display: flex; justify-content: flex-start; align-items: center; gap: 14px; padding: 14px var(--side-pad) 0; position: relative; z-index: 6; }
+/* filter menus (top right, on the bag icon's line, as on the grid gallery): Series and Year */
+.filters { margin-left: auto; display: flex; gap: 48px; }
+.filter-menu { position: relative; }
+.fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
+.fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
+.filter-menu.open .fm-list { display: grid; }
+.fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
+.fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #8A867E; }
+.fm-list .fm-note { padding: 8px 32px 2px; font-size: 11px; letter-spacing: 0.1em; color: #ADA9A2; }
+@media (max-width: 767px) { .tools { display: none; } }
+.count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
+.count:hover { color: #6E6B66; } .count.on { color: #141414; }
+.count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
+@media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
+/* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
+   the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
+@media (min-width: 768px) {
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(15px, 2.025vw, 29.25px) / 22); }
+}
+/* the featured works sit in a centred row, all the same height, a gap apart */
+.row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
+.row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
+.row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
+.stage { touch-action: pan-y; }
+.art img.on { opacity: 1; }
+/* previous / next chevrons either side of the work (placed by fit()) */
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: clamp(15px, 2.025vw, 29.25px); height: auto; }   /* 75% of the earlier size: 29 x 81px on a 1440px screen, scaling down with the viewport to 15 x 42px */
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: clamp(16px, calc(1.12vw + 4.8px), 27.2px); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.page.hovering .caption { opacity: 1; }
+.page.multi .caption { transition: none; }
+/* one-up on screens 1760-3300px wide: the hover title 3px larger */
+@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px); } }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
+html.touch .caption { opacity: 1; }
+/* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
+html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
+
+/* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
+   eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
+.strip { overflow: visible; padding: 6px 0; }
+.track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease; }
+.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); transition: box-shadow 0.35s ease; }
+.thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.38); }   /* the works featured in the main area: a deeper shadow */
+html.touch .track { touch-action: none; }
+
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 12px; color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1279px) { header nav { gap: 16px !important; font-size: 12px !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: 11px !important; letter-spacing: 0.03em !important; } }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <header>
+    <div class="bar">
+      <a class="logo" href="101626/index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <div class="right">
+        <nav class="main">
+          <a href="101626/home-h7.html">H7</a>
+          <a class="on" href="101626/gallery-filmstrip-2.html">G5</a>
+          <a href="101626/gallery-editorial.html">G6</a>
+          <a href="101626/gallery-filmstrip-vertical.html">G7</a>
+          <a href="101626/works-index.html">Index</a>
+          <a href="101626/About.dc.html">About</a>
+          <a href="101626/Contact-tabs.dc.html">Contact</a>
+        </nav>
+        <div class="icons">
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="101626/home-h7.html">H7</a>
+    <a href="101626/gallery-filmstrip-2.html" style="font-weight: 600">G5</a>
+    <a href="101626/gallery-editorial.html">G6</a>
+    <a href="101626/gallery-filmstrip-vertical.html">G7</a>
+    <a href="101626/works-index.html">Index</a>
+    <a href="101626/About.dc.html">About</a>
+    <a href="101626/Contact-tabs.dc.html">Contact</a>
+    <a href="101626/Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="101626/Contact-tabs.dc.html#returns">Returns &amp; Exchanges</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></span>Shopping Cart</a>
+  </nav>
+
+  <div class="tools" id="tools" role="group" aria-label="Works shown at once">
+    <button class="count" data-n="1" aria-label="1 work at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="18.00" height="18"></rect></svg></button>
+    <button class="count" data-n="3" aria-label="3 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="4.67" height="18"></rect><rect x="6.67" y="0" width="4.67" height="18"></rect><rect x="13.33" y="0" width="4.67" height="18"></rect></svg></button>
+    <button class="count" data-n="9" aria-label="9 works at a time"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="4.67" height="4.67"></rect><rect x="6.67" y="0" width="4.67" height="4.67"></rect><rect x="13.33" y="0" width="4.67" height="4.67"></rect><rect x="0" y="6.67" width="4.67" height="4.67"></rect><rect x="6.67" y="6.67" width="4.67" height="4.67"></rect><rect x="13.33" y="6.67" width="4.67" height="4.67"></rect><rect x="0" y="13.33" width="4.67" height="4.67"></rect><rect x="6.67" y="13.33" width="4.67" height="4.67"></rect><rect x="13.33" y="13.33" width="4.67" height="4.67"></rect></svg></button>
+    <div class="filters">
+      <div class="filter-menu" id="fmSeries"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Series</span></button><div class="fm-list" role="listbox" aria-label="Series"></div></div>
+      <div class="filter-menu" id="fmYear"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Year</span></button><div class="fm-list" role="listbox" aria-label="Year"></div></div>
+    </div>
+  </div>
+
+  <main class="stage" id="stage">
+    <div class="row" id="row"></div>
+    <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
+    <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
+  </main>
+  <p class="caption" id="caption" style="margin: 0"><span id="capTitle"></span></p>
+
+  <div class="strip-wrap" id="stripWrap">
+    <div class="strip" id="strip" role="listbox" aria-label="All works"><div class="track" id="track"></div></div>
+  </div>
+</div>
+
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
+      </div>
+    </div>
+</footer>
+
+<script>
+// Works shown in the filmstrip. Generated from 101626/Gallery.dc.html (hidden works left out): f = file in assets/works,
+// s = series, t = title, r = width / height. Keep in step with the gallery's list when works change.
+const WORKS = [
+  {"f": "select_brilliance.jpg", "s": "Select", "t": "Brilliance", "r": 1.5},
+  {"f": "core_script.jpg", "s": "Core", "t": "Script", "r": 1.5},
+  {"f": "core_symbiosis.jpg", "s": "Core", "t": "Symbiosis", "r": 1.5},
+  {"f": "core_conduit.jpg", "s": "Core", "t": "Conduit", "r": 1.5},
+  {"f": "core_chamber.jpg", "s": "Core", "t": "Chamber", "r": 1.5},
+  {"f": "core_habitat.jpg", "s": "Core", "t": "Habitat", "r": 1.5},
+  {"f": "core_affinity.jpg", "s": "Core", "t": "Affinity", "r": 1.5},
+  {"f": "core_upwelling.jpg", "s": "Core", "t": "Upwelling", "r": 1.5},
+  {"f": "core_emergence.jpg", "s": "Core", "t": "Emergence", "r": 1.5},
+  {"f": "the-turning_passage.jpg", "s": "The Turning", "t": "Passage", "r": 1.5},
+  {"f": "outliers_outliers-1.jpg", "s": "Outliers", "t": "Outliers 1", "r": 1.5},
+  {"f": "outliers_outliers-2.jpg", "s": "Outliers", "t": "Outliers 2", "r": 1.5},
+  {"f": "outliers_outliers-3.jpg", "s": "Outliers", "t": "Outliers 3", "r": 1.5},
+  {"f": "outliers_outliers-4.jpg", "s": "Outliers", "t": "Outliers 4", "r": 1.5},
+  {"f": "outliers_outliers-5.jpg", "s": "Outliers", "t": "Outliers 5", "r": 1.5},
+  {"f": "outliers_outliers-6.jpg", "s": "Outliers", "t": "Outliers 6", "r": 1.5},
+  {"f": "outliers_outliers-7.jpg", "s": "Outliers", "t": "Outliers 7", "r": 1.5},
+  {"f": "select_aurora.jpg", "s": "Select", "t": "Aurora", "r": 1.5},
+  {"f": "select_confluence.jpg", "s": "Select", "t": "Confluence", "r": 1.5},
+  {"f": "select_emanation.jpg", "s": "Select", "t": "Emanation", "r": 1.5},
+  {"f": "select_singularity.jpg", "s": "Select", "t": "Singularity", "r": 1.5},
+  {"f": "select_grove.jpg", "s": "Select", "t": "Grove", "r": 1.5},
+  {"f": "select_meridian.jpg", "s": "Select", "t": "Meridian", "r": 1.5},
+  {"f": "select_resonance.jpg", "s": "Select", "t": "Resonance", "r": 1.5},
+  {"f": "spectrum_biome.jpg", "s": "Spectrum", "t": "Biome", "r": 1.5},
+  {"f": "spectrum_archipelago.jpg", "s": "Spectrum", "t": "Archipelago", "r": 1.5},
+  {"f": "spectrum_opalescence.jpg", "s": "Spectrum", "t": "Opalescence", "r": 1.5},
+  {"f": "spectrum_chroma.jpg", "s": "Spectrum", "t": "Chroma", "r": 1.5},
+  {"f": "structure_cubicle.jpg", "s": "Structure", "t": "Cubicle", "r": 0.667},
+  {"f": "structure_within.jpg", "s": "Structure", "t": "Within", "r": 0.667},
+  {"f": "structure_cadence.jpg", "s": "Structure", "t": "Cadence", "r": 0.667},
+  {"f": "structure_crossings.jpg", "s": "Structure", "t": "Crossings", "r": 0.667},
+  {"f": "structure_framework.jpg", "s": "Structure", "t": "Framework", "r": 0.667},
+  {"f": "the-turning_character.jpg", "s": "The Turning", "t": "Character", "r": 1.5},
+  {"f": "the-turning_discovery.jpg", "s": "The Turning", "t": "Discovery", "r": 1.5},
+  {"f": "the-turning_momentum.jpg", "s": "The Turning", "t": "Momentum", "r": 1.5},
+  {"f": "the-turning_the-calling.jpg", "s": "The Turning", "t": "The Calling", "r": 1.5},
+  {"f": "the-turning_horizon.jpg", "s": "The Turning", "t": "Horizon", "r": 1.5},
+  {"f": "the-turning_revelation.jpg", "s": "The Turning", "t": "Revelation", "r": 1.5},
+  {"f": "the-turning_the-turning-6.jpg", "s": "The Turning", "t": "The Turning 6", "r": 1.5},
+  {"f": "tonal_current.jpg", "s": "Tonal", "t": "Current", "r": 1.5},
+  {"f": "tonal_firelight.jpg", "s": "Tonal", "t": "Firelight", "r": 1.5},
+  {"f": "tonal_vesper-2.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "tonal_vesper-1.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5},
+  {"f": "convergence_counterform.jpg", "s": "Convergence", "t": "Counterform", "r": 1.5},
+  {"f": "convergence_synthesis.jpg", "s": "Convergence", "t": "Synthesis", "r": 1.5},
+  {"f": "convergence_counterline.jpg", "s": "Convergence", "t": "Counterline", "r": 1.5},
+  {"f": "convergence_convergence-6.jpg", "s": "Convergence", "t": "Convergence 6", "r": 1.5},
+  {"f": "convergence_counterpart.jpg", "s": "Convergence", "t": "Counterpart", "r": 1.5},
+  {"f": "convergence_counterpoint.jpg", "s": "Convergence", "t": "Counterpoint", "r": 1.5},
+  {"f": "convergence_convergence-7.jpg", "s": "Convergence", "t": "Convergence 7", "r": 1.5},
+  {"f": "ascent_ascent-1.jpg", "s": "Ascent", "t": "Ascent 1", "r": 0.667},
+  {"f": "ascent_artifact.jpg", "s": "Ascent", "t": "Artifact", "r": 0.667},
+  {"f": "ascent_canyons.jpg", "s": "Ascent", "t": "Canyons", "r": 0.667},
+  {"f": "ascent_verdance.jpg", "s": "Ascent", "t": "Verdance", "r": 0.667},
+  {"f": "ascent_living-current.jpg", "s": "Ascent", "t": "Living Current", "r": 0.667},
+  {"f": "ascent_coastal-silence.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667},
+  {"f": "ascent_shared-orbit.jpg", "s": "Ascent", "t": "Shared Orbit", "r": 0.667},
+  {"f": "ascent_inner-eclipse.jpg", "s": "Ascent", "t": "Inner Eclipse", "r": 0.667},
+  {"f": "ascent_origin.jpg", "s": "Ascent", "t": "Origin", "r": 0.667},
+  {"f": "ascent_koi.jpg", "s": "Ascent", "t": "Koi", "r": 0.667},
+  {"f": "ascent_overlook.jpg", "s": "Ascent", "t": "Overlook", "r": 0.667},
+  {"f": "tonal_canopy.jpg", "s": "Tonal", "t": "Canopy", "r": 1.5}
+];
+
+const $ = id => document.getElementById(id);
+// marks the page as moving for ms milliseconds (extended by each new movement)
+let busyT = 0;
+function busy(ms) { const p = document.getElementById('page'); p.classList.add('moving'); clearTimeout(busyT); busyT = setTimeout(() => p.classList.remove('moving'), ms); }
+addEventListener('scroll', () => busy(500), { passive: true });
+const stage = $('stage'), row = $('row'), strip = $('strip'), track = $('track'), page = $('page'), caption = $('caption');
+// The filmstrip glides and magnifies for both mouse and finger. The "touch" class (title always shown) starts
+// from the media query, then follows the input actually used.
+let lastTouch = 0, touching = false, stripReady = false;
+document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
+// A window of `count` works starting at `first` is featured in the row (1, 3, or 9 as three rows of three); each slot crossfades between two images.
+const phone = matchMedia('(max-width: 767px)');
+const askedView = +new URLSearchParams(location.search).get('view');   // ?view=1 / 3 / 9 opens in that view (the Index links open one-up)
+let deskCount = [1, 3, 9].includes(askedView) ? askedView : 3, count = phone.matches ? 1 : deskCount, first = 0, current = 0;
+const cols = () => count === 9 ? 3 : count, rows = () => count / cols();
+const slots = [];
+function buildSlots(n) {
+  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', count === 9); page.classList.toggle('multi', count > 1);
+  for (let i = 0; i < n; i++) {
+    const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
+    const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
+    const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
+    a.addEventListener('mouseenter', () => { $('capTitle').textContent = WORKS[slot.idx].t; capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2); if (count > 1) capDy = a.getBoundingClientRect().bottom + (count === 9 ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom; placeCaption(); page.classList.add('hovering'); });
+    a.addEventListener('mouseleave', () => page.classList.remove('hovering'));
+    row.appendChild(a); slots.push(slot);
+  }
+}
+
+// size the row: every featured work the same height, chevrons hugging the row. One-up: as large as the stage allows.
+// Several works: the row spans the page's content width exactly, so the first work's left edge lines up with the logo
+// and the last work's right edge with the bag icon (unless the works are so tall that the height limits them first).
+// Twelve-up: three rows of four, all one height, as wide as the content width or as tall as the stage allows.
+function fit() {
+  if (!slots.length || slots.some(s => s.idx < 0)) return;
+  const nc = cols(), nr = rows(), grid = count === 9;
+  const step = $('prev').offsetWidth, gap = grid ? 60 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
+  const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
+  const contentW = document.documentElement.clientWidth - 2 * sidePad;
+  // the arrows are locked in the stylesheet on desktop and tablet (points on the logo's and the bag icon's outer edges);
+  // phones: on the side padding, level with the logo and the menu button
+  const sv = $('prev').querySelector('svg').getBoundingClientRect();
+  $('prev').style.left = $('next').style.right = phone.matches ? '0px' : '';
+  // the works always stay clear of the arrows: within the content width less each chevron and 24px
+  const inner = contentW - 2 * (sv.width + 24);
+  // 9-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
+  const R = s => grid && WORKS[s.idx].r >= 1 ? 1.5 : WORKS[s.idx].r;
+  // width needed per unit of height: the ratios across the row; in the grid every column is the 3:2 landscape box wide
+  // whatever is in it, so portraits sit centred in the same three columns and the grid keeps one size
+  const sumR = grid ? nc * 1.5 : [...Array(nc).keys()].reduce((t, c) => t + Math.max(0, ...slots.filter((s, i) => i % nc === c).map(R)), 0);
+  const W = (count === 3 ? contentW : inner) - gap * (nc - 1);
+  // three-up 85% of the space; one-up 86% enlarged by 18%; nine-up all of it (within the arrows and its title room)
+  let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 3 ? 0.85 : count === 1 ? 0.86 * 1.18 : 1);
+  h = Math.min(h, (inner - gap * (nc - 1)) / sumR);   // never under the arrows
+  const lift = count === 1 ? 14 : grid ? 15 : 0;   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
+  if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
+  if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
+  row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
+  // nine-up (desktop): the top row's top level with the top of the SERIES label above the stage, the bottom row's bottom
+  // far enough above the stage's foot for its title (12px under it, at least 34px), the middle row centred between them. Where the grid
+  // would run under the SERIES / YEAR menus (it reaches within 24px of them), the top row starts 16px below the menus instead
+  let gridTop = null;
+  if (grid && !phone.matches) {
+    const st = stage.getBoundingClientRect(), lab = $('fmSeries').querySelector('span'), rg = document.createRange();
+    rg.selectNodeContents(lab); const tr = rg.getBoundingClientRect();
+    const cx = document.createElement('canvas').getContext('2d'), cs = getComputedStyle(lab); cx.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    const mt = cx.measureText('S'), capTop = tr.top + (mt.fontBoundingBoxAscent - mt.actualBoundingBoxAscent) * (tr.height / (mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent));
+    const menus = $('fmSeries').getBoundingClientRect(), gridRight = st.left + st.width / 2 + (h * sumR + gap * (nc - 1)) / 2;
+    gridTop = (gridRight + 24 <= menus.left ? capTop : menus.bottom + 16) - st.top;
+  }
+  // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
+  const h3 = count === 3 ? h * 0.95 : h, gapX = count === 3 ? gap + (h - h3) * sumR / 2 : gap;
+  row.style.columnGap = count === 3 ? gapX + 'px' : '';
+  row.style.gridTemplateColumns = grid ? 'repeat(3, ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
+  // nine-up on screens 2800px and wider: each work 88% of its cell, shrinking about the cell's centre, so the gaps between
+  // works grow while the columns, the top row's top and the bottom row's bottom stay put
+  const big = grid && document.documentElement.clientWidth >= 2800, aw = big ? h3 * 0.88 : h3;
+  slots.forEach(s => { s.a.style.width = aw * R(s) + 'px'; s.a.style.height = aw + 'px'; });
+  let rowH = h3 * nr + rowGap * (nr - 1);
+  stage.style.overflow = gridTop !== null ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + Math.min(0, gridTop).toFixed(1) + 'px 0 0 0)' : '';   // the grid may rise above the stage, up to the label
+  if (gridTop !== null) {
+    // room under the bottom row for its title (12px gap + the title, which grows with the screen)
+    const bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight), used = Math.ceil(slots.length / nc), rg2 = used > 1 ? (bottom - gridTop - aw * used) / (used - 1) : 0;
+    row.style.rowGap = rg2.toFixed(1) + 'px';
+    rowH = aw * used + rg2 * (used - 1);
+    row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
+  } else row.style.rowGap = '';
+  // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
+  const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
+  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;
+  placeCaption();
+}
+let capDx = 0, capDy = 0;
+function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + capDy.toFixed(1) + 'px)'; }
+
+// put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
+function assign(slot, k) {
+  if (slot.idx === k) return;
+  slot.idx = k;
+  const w = WORKS[k], next = slot.imgs[1 - slot.front], prev = slot.imgs[slot.front], turn = ++slot.turns;
+  busy(1000);
+  const swap = () => { if (turn !== slot.turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); slot.front = 1 - slot.front; };
+  next.alt = w.t;
+  next.src = 'assets/works-m70/' + w.f;
+  Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
+  slot.a.href = '101626/Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
+}
+
+// slide the row: the current works glide out one way while the new set glides in from the other, moving together
+// like a belt. d = +1 for the right arrow (the works travel to the right, the new set arriving from the left),
+// -1 for the left arrow; the incoming images are decoded before anything moves
+let outRow = null;
+async function slideTo(ks, d, axis) {
+  busy(1900);   // from the moment of the request, through loading and the slide
+  if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
+  const outW = row.getBoundingClientRect().width;
+  const out = row.cloneNode(true); out.id = ''; out.style.transition = 'none'; out.style.transform = ''; stage.appendChild(out); outRow = out;
+  await Promise.all(ks.map(k => { const im = new Image(); im.src = 'assets/works-m70/' + WORKS[k].f; return Promise.race([im.decode ? im.decode().catch(() => {}) : Promise.resolve(), new Promise(r => setTimeout(r, 800))]); }));
+  if (outRow !== out) return;   // superseded by a later move
+  slots.forEach((s, i) => {
+    const k = ks[i], w = WORKS[k], im = s.imgs[s.front]; s.idx = k; s.turns++;
+    im.src = 'assets/works-m70/' + w.f; im.alt = w.t; im.classList.add('on'); s.imgs[1 - s.front].classList.remove('on');
+    s.a.href = '101626/Gallery.dc.html#' + encodeURIComponent(w.f);
+  });
+  fit();
+  // arrows and arrow keys move vertically: next set rises from the bottom (right arrow), previous drops in from the top (left arrow);
+  // thumbnail clicks and drags move sideways
+  const vert = axis === 'y', outH = out.getBoundingClientRect().height;
+  const dist = vert ? outH / 2 + 28 + row.getBoundingClientRect().height / 2 : outW / 2 + 28 + row.getBoundingClientRect().width / 2;
+  const from = vert ? 'translateY(' + (d * dist) + 'px)' : 'translateX(' + (-d * dist) + 'px)', to = vert ? 'translateY(' + (-d * dist) + 'px)' : 'translateX(' + (d * dist) + 'px)';
+  row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) ' + from;
+  void row.offsetWidth;
+  const ease = 'transform 1.3s cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
+  row.style.transition = ease; out.style.transition = ease;
+  row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
+  busy(1450);
+  setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1350);
+}
+
+// feature the works from f onward (the window never runs past the end of the list); moving the window slides the row,
+// changing the count (same first work) crossfades the slots in place
+function setWindow(f, scrollIntoView, dir, axis) {
+  f = Math.max(0, Math.min(WORKS.length - slots.length, f));
+  const ks = slots.map((s, i) => f + i);
+  const moving = slots[0].idx >= 0 && f !== first;
+  first = current = f;
+  if (moving) slideTo(ks, dir || (f > slots[0].idx ? 1 : -1), axis); else slots.forEach((s, i) => assign(s, ks[i]));
+  [...track.children].forEach((b, i) => { const on = i >= f && i < f + count; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  $('capTitle').textContent = WORKS[f].t; capDx = 0; placeCaption();
+  // the filmstrip moves only under the cursor on desktop: a new set no longer glides the strip along (touch screens, with no
+  // hover, still bring the featured thumbnails into view); on first load the strip is simply placed on the featured work
+  if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[f + Math.floor((count - 1) / 2)], !stripReady);
+  [f - 1, f + count].forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = 'assets/works-m70/' + WORKS[n].f; });   // neighbours ready for the arrows
+  history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
+}
+// arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
+function stepBy(d, axis) { setWindow(count === 1 ? (first + d + WORKS.length) % WORKS.length : first + d * count, true, d, axis); }
+// change how many works show at once, keeping the current first work ("extend from current")
+function setCount(n) {
+  count = n;
+  if (!phone.matches) deskCount = n;
+  [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === n));
+  buildSlots(Math.min(n, WORKS.length));
+  setWindow(first, false);
+}
+[...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
+phone.addEventListener('change', () => setCount(phone.matches ? 1 : deskCount));
+function show(k, scrollIntoView) { setWindow(k, scrollIntoView, k > first ? 1 : -1, 'y'); }   // thumbnail tap: vertical like the arrows (a later work: the row goes up; an earlier one: down)   // thumbnail click: a work to the right slides the row left (it arrives from the right); a work to the left slides it right
+
+// build the strip (rebuilt when a filter changes the list)
+function buildStrip() { track.innerHTML = ''; WORKS.forEach((w, k) => {
+  const b = document.createElement('button');
+  b.className = 'thumb'; b.setAttribute('role', 'option'); b.setAttribute('aria-label', w.t); b.title = w.t;
+  const im = document.createElement('img');
+  im.src = 'assets/thumbs-m70/' + w.f; im.alt = ''; im.loading = 'lazy';
+  im.style.aspectRatio = w.r >= 1 ? '3 / 2' : '2 / 3';   // its width is known before it loads, so the strip can be placed straight away
+  b.appendChild(im);
+  b.addEventListener('click', () => show(k, false));
+  track.appendChild(b);
+}); }
+buildStrip();
+
+// ---- Filmstrip motion (mouse devices)
+// The row is a track moved with translate3d. The mouse position across the screen sets where the row should be
+// (left edge = start, right edge = end) and the track eases toward it every frame, so it glides rather than steps.
+let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX = null;
+// The cursor (or finger) steers the row: in the middle DEAD share of the page it eases to a stop, and the further
+// left or right of that the faster it drifts that way (gently at first, the speed building towards the edges), up to CRUISE at the page edges.
+// GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
+// ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
+// BRAKE: ms time constant for coming to rest once the cursor stops moving (stopped within about 1s)
+const GLIDE = 1200, CRUISE = 120, ACCEL = 260, BRAKE = 280, DEAD = 0.30;
+const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
+function run() {
+  if (running) return; running = true;
+  let last = performance.now();
+  const step = now => {
+    // time-based so the speed is the same on 60Hz and 120Hz screens: the row eases up to a capped cruising
+    // speed, drifts, then eases to rest
+    const dt = Math.min(64, now - last); last = now;
+    const d = target - pos;
+    if (drive !== null) {   // steering: ease toward the speed the cursor asks for, stopping at either end
+      vel += (drive - vel) * (1 - Math.exp(-dt / (drive === 0 ? BRAKE : ACCEL)));
+      pos = Math.max(0, Math.min(maxPan(), pos + vel * dt));
+      if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.01)) vel = 0;
+      target = pos;
+    }
+    else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
+    else {
+      const want = Math.max(-cap, Math.min(cap, d / GLIDE));   // px per ms
+      vel += (want - vel) * (1 - Math.exp(-dt / ACCEL));
+      if (Math.abs(d) < 0.3 && Math.abs(vel) < 0.01) { pos = target; vel = 0; } else pos += vel * dt;
+    }
+    track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)';
+    if (mouseX !== null) magnify(mouseX);
+    if (pos !== target || mouseX !== null) requestAnimationFrame(step); else running = false;
+  };
+  requestAnimationFrame(step);
+}
+function centreOn(b, instant) {
+  target = Math.max(0, Math.min(maxPan(), b.offsetLeft + b.offsetWidth / 2 - strip.clientWidth / 2));
+  if (instant) { pos = target; vel = 0; track.style.transform = 'translate3d(' + (-pos).toFixed(2) + 'px,0,0)'; return; }
+  cap = CRUISE / 1000; drive = null;
+  run();
+}
+
+// Dock-style magnification: thumbnails swell under the cursor (bell curve), growing up from the baseline;
+// neighbours slide aside, and the thumbnail under the cursor stays under it.
+const PEAK = 0.5;              // +50% at the cursor
+function magnify(x) {
+  const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
+  const btns = [...track.children];
+  const geo = btns.map(b => ({ l: left + b.offsetLeft, w: b.offsetWidth }));
+  const sigma = 1.7 * (geo[0].w + 6);
+  const bell = geo.map(g => Math.exp(-Math.pow((x - (g.l + g.w / 2)) / sigma, 2)));
+  const extra = geo.map((g, k) => PEAK * bell[k] * g.w);
+  let cursorExtra = 0;          // growth that sits to the left of the cursor
+  geo.forEach((g, k) => { cursorExtra += extra[k] * Math.max(0, Math.min(1, (x - g.l) / g.w)); });
+  let acc = 0;
+  btns.forEach((b, k) => {
+    const shift = acc + extra[k] / 2 - cursorExtra; acc += extra[k];
+    b.style.transform = bell[k] < 0.002 && Math.abs(shift) < 0.5 ? '' : 'translateX(' + shift.toFixed(1) + 'px) scale(' + (1 + PEAK * bell[k]).toFixed(3) + ')';
+    b.style.zIndex = Math.round(bell[k] * 100);
+  });
+}
+function relax() {
+  mouseX = null; drive = null;
+  if (cap !== Infinity) target = Math.max(0, Math.min(maxPan(), pos + vel * GLIDE * 0.5));   // coast to a stop rather than drifting on to the old target
+  [...track.children].forEach(b => { b.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; b.style.transform = ''; b.style.opacity = ''; b.style.zIndex = ''; });
+  setTimeout(() => [...track.children].forEach(b => { b.style.transition = ''; }), 520);
+}
+// the row only moves while the pointer is on the thumbnails: the row itself, or a magnified thumbnail rising above it
+const inBand = (y, el) => { const band = track.getBoundingClientRect(); return (y >= band.top - 4 && y <= band.bottom + 4) || !!(el && el.closest && el.closest('.thumb')); };
+let stillT = 0;
+function follow(x) {
+  mouseX = x;
+  // the cursor steers only while it moves: once it rests on a thumbnail the row brakes to a stop, so the thumbnail can be clicked
+  clearTimeout(stillT); stillT = setTimeout(() => { if (mouseX !== null) drive = 0; }, 120);
+  const half = innerWidth / 2, dead = innerWidth * DEAD / 2, off = x - half;
+  const reach = Math.min(1, (Math.abs(off) - dead) / (half - dead - Math.min(120, innerWidth * 0.08)));
+  drive = Math.abs(off) <= dead ? 0 : Math.sign(off) * reach * reach * CRUISE / 1000;   // squared: slow near the still zone, full speed only at the edges
+  cap = CRUISE / 1000;
+  run();
+}
+function halt() { relax(); target = pos; vel = 0; }
+// finger: the row glides and magnifies only while a finger is on the filmstrip, coasts to rest when it lifts,
+// and a touch anywhere else on the page stops it dead
+addEventListener('touchstart', e => {
+  lastTouch = Date.now();
+  document.documentElement.classList.add('touch');
+  const t = e.touches[0];
+  touching = inBand(t.clientY, e.target);
+  if (touching) follow(t.clientX); else halt();
+}, { passive: true, capture: true });
+addEventListener('touchmove', e => { lastTouch = Date.now(); busy(600); if (touching) follow(e.touches[0].clientX); }, { passive: true });
+['touchend', 'touchcancel'].forEach(n => addEventListener(n, () => { lastTouch = Date.now(); if (touching) { touching = false; relax(); } }, { passive: true }));
+{
+  addEventListener('mousemove', e => {
+    if (Date.now() - lastTouch < 1200) return;   // mouse events synthesised from a tap
+    document.documentElement.classList.remove('touch');
+    if (!inBand(e.clientY, e.target)) { if (mouseX !== null) relax(); return; }
+    follow(e.clientX);
+  });
+  document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; drive = null; run(); }, { passive: false });
+}
+
+// keyboard, resize
+addEventListener('keydown', e => { if (e.key === 'ArrowRight') stepBy(1, 'y'); if (e.key === 'ArrowLeft') stepBy(-1, 'y'); });
+addEventListener('resize', fit);
+new ResizeObserver(fit).observe(stage);
+
+$('prev').addEventListener('click', () => stepBy(-1, 'y'));
+// scrolling up or down over the works moves through them like the arrows: down brings the next set up from below, up
+// brings the previous set down from above. One set per gesture: after a step, further wheel events are ignored until the
+// wheel has rested for 200ms (trackpad momentum included) and the slide has run its course.
+let wheelAcc = 0, wheelLocked = false, wheelAt = 0, wheelQuiet;
+stage.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  e.preventDefault();
+  clearTimeout(wheelQuiet); wheelQuiet = setTimeout(() => { wheelLocked = false; wheelAcc = 0; }, 200);
+  if (wheelLocked || performance.now() - wheelAt < 1300) return;
+  wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) < 40) return;
+  const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
+  if (count > 1 && (d > 0 ? first + count >= WORKS.length : first <= 0)) return;   // wider windows stop at the ends
+  wheelLocked = true; wheelAt = performance.now();
+  stepBy(d, 'y');
+}, { passive: false });
+$('next').addEventListener('click', () => stepBy(1, 'y'));
+
+// drag anywhere on the stage (mouse or finger), including the white space around the works: the row follows the
+// pointer, and on release a pull of more than 40px slides on in that direction (pull right = right arrow); a short
+// pull springs back. A click on a work still opens it unless it was dragged.
+let drag = null, swallowClick = false;
+stage.addEventListener('pointerdown', e => {
+  if (e.button !== 0 || e.target.closest('.step')) return;
+  drag = { id: e.pointerId, x: e.clientX, moved: false };
+});
+stage.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x;
+  if (Math.abs(dx) > 4 && !drag.moved) { drag.moved = true; stage.setPointerCapture(e.pointerId); }   // capture only once it is a drag: capturing on press would take the click away from the work's link
+  if (drag.moved) busy(600);
+  if (drag.moved) { row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) translateX(' + dx + 'px)'; }
+});
+['pointerup', 'pointercancel'].forEach(n => stage.addEventListener(n, e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x, d = drag; drag = null;
+  if (!d.moved) return;
+  swallowClick = true;
+  if (Math.abs(dx) > 40 && (count === 1 || (dx > 0 ? first + count < WORKS.length : first > 0))) { row.style.transition = ''; row.style.transform = ''; stepBy(dx > 0 ? 1 : -1); }
+  else { row.style.transition = 'transform 0.4s cubic-bezier(0.3, 0, 0.2, 1)'; row.style.transform = 'translate(-50%, -50%)'; setTimeout(() => { row.style.transition = ''; }, 450); }
+}));
+stage.addEventListener('click', e => { if (swallowClick) { e.preventDefault(); e.stopPropagation(); swallowClick = false; } }, true);
+
+// mobile menu
+$('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+
+// ---- Filters: Series (each series, or horizontal / vertical works) and Year. Picking one narrows the featured window and
+// the filmstrip to the matching works and starts again from the first of them. Years are read from each work's "y" when
+// the list carries them (none yet).
+const ALL = WORKS.slice();
+let fSeries = 'All', fYear = 'All';
+const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Outliers'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']];
+function yearOpts() { return [['All', 'All Years']].concat([...new Set(ALL.map(w => w.y).filter(Boolean))].sort((a, b) => b - a).map(y => [String(y)])); }
+function applyFilter() {
+  const list = ALL.filter(w => (fSeries === 'All' || w.s === fSeries || (fSeries === 'Horizontal' && w.r >= 1) || (fSeries === 'Vertical' && w.r < 1)) && (fYear === 'All' || String(w.y) === fYear));
+  if (!list.length) return;
+  WORKS.length = 0; WORKS.push(...list);
+  buildStrip(); pos = target = vel = 0; track.style.transform = 'translate3d(0px,0,0)';
+  first = current = 0; buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
+}
+function menu(id, label, opts, get, set) {
+  const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
+  const render = () => {
+    btn.querySelector('span').textContent = get() === 'All' ? label : get();
+    list.innerHTML = '';
+    opts().forEach(([v, l]) => { const o = document.createElement('button'); o.setAttribute('role', 'option'); o.textContent = l || v; o.classList.toggle('on', get() === v); o.setAttribute('aria-selected', get() === v);
+      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); render(); applyFilter(); }); list.appendChild(o); });
+    if (id === 'fmYear' && opts().length === 1) { const n = document.createElement('p'); n.className = 'fm-note'; n.style.margin = '0'; n.textContent = 'Years to be added'; list.appendChild(n); }
+  };
+  btn.addEventListener('click', e => { e.stopPropagation(); const open = !m.classList.contains('open'); close(); m.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); });
+  render();
+}
+function close() { document.querySelectorAll('.filter-menu.open').forEach(x => { x.classList.remove('open'); x.querySelector('.fm-btn').setAttribute('aria-expanded', 'false'); }); }
+menu('fmSeries', 'Series', () => SERIES_OPTS, () => fSeries, v => { fSeries = v; });
+menu('fmYear', 'Year', yearOpts, () => fYear, v => { fYear = v; });
+document.addEventListener('click', e => { if (!e.target.closest('.filter-menu')) close(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+// start on the work named in the URL, else the first work
+const want = decodeURIComponent(location.hash.slice(1));
+const start = WORKS.findIndex(w => w.f === want || w.t === want);
+[...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === count));
+buildSlots(Math.min(count, WORKS.length));
+setWindow(start >= 0 ? start : 0, start > 0);
+stripReady = true;
+</script>
+</body>
+</html>
