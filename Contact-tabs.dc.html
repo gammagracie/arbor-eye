@@ -45,6 +45,8 @@ html { scrollbar-gutter: stable; }
 /* (since 2026-10-21) desktop: the photograph (or the open section) and the row under it centred top to bottom between the header
    and the footer, at least 32px from each */
 @media (min-width: 1100px) { .ct-main { display: flex; flex-direction: column; } }
+/* (since 2026-10-21) Shipping on screens over 2000px: its paragraphs 21px on a 31px line (the Good to know label keeps its size) */
+@media (min-width: 2001px) { .ship-desk p:not(.ship-label) { font-size: 21px !important; line-height: 31px !important; } }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
@@ -285,7 +287,7 @@ html { scrollbar-gutter: stable; }
       </sc-if>
 
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; align-items: start; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; align-items: start; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" class="ship-desk" data-screen-label="Shipping Policy">
         <!-- the heading across the top, so the three columns under it start level (since 2026-10-21) -->
         <h2 style="grid-column: 1 / -1; margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
         <div>
@@ -299,7 +301,7 @@ html { scrollbar-gutter: stable; }
           <p style="margin: 24px 0 0; font-size: calc(15px * var(--fs)); color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
         </div>
         <div style="display: grid; gap: 16px; align-content: start">
-          <p style="margin: 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+          <p class="ship-label" style="margin: 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
           <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
           <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
         </div>
