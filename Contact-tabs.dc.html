@@ -126,7 +126,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </nav>
 
-<main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
   <sc-if value="{{ narrowLayout }}" hint-placeholder-val="{{ false }}">
   <section style="padding-top: 48px">
     <picture>
@@ -238,13 +238,14 @@ html { scrollbar-gutter: stable; }
   </sc-if>
   </sc-if>
 
-  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph as wide as the screen allows (24px from each edge, 2:1)
+  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph from the B of the logo (41.6px in from its left edge) to the same
+       distance in from the bag icon, 2:1 (since 2026-10-20; it ran to 24px from the screen's edges), or smaller and centred
        while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one
        baseline, lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
        box in columns; the open link again brings the photograph back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
   <section style="padding-top: 32px; margin: 0 calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
-    <div style="width: min(calc(100vw - 48px), calc((100vh - var(--header-h) - 32px - 66px) * 2)); max-width: 3792px">
+    <div style="width: min(calc(100vw - 2 * var(--side-pad) - 83.2px), calc((100vh - var(--header-h) - 32px - 66px) * 2))">
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
