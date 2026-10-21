@@ -17,8 +17,8 @@
 @media (min-width: 2001px) { :root { --fs: 1.25; } }
 
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
-@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31.25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 768px) { :root { --thumb-h: 37.5px; } }   /* filmstrip thumbnails 25% larger since 2026-10-21 (were 30px, 25px on phones) */
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
 html, body { height: 100%; margin: 0; }
@@ -131,7 +131,7 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
 
 /* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
    eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
-.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 29px; pointer-events: none;   /* 29px under the strip: 15px higher since 2026-10-21 */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; display: flex; justify-content: safe center; }   /* (since 2026-10-20) a strip shorter than the page is centred on it */
