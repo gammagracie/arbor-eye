@@ -336,9 +336,8 @@ scroller.addEventListener('scroll', parallax, { passive: true });
 // landscape and a portrait reach the same dimensions turned (6 x 4 / 4 x 6) and a portrait always fits on screen (since
 // 2026-10-20; it was 120% of each work's own size). The works above and below draw back to leave 60px clear around it.
 const GAP = 60, EDGE = 24;
-// (since 2026-10-21) the hovered work moves to the middle of the visible part of the column (between the header and the bottom
-// of the screen, or the footer once it is in view) and is never cut by either: its enlarged size is also capped at that height
-// less 24px above and below. As it moves away from where the pointer first was, it stays enlarged while the pointer is on its
+// (since 2026-10-21) the hovered work moves to the vertical middle of the screen and is never cut by the header or the footer
+// (once it is in view): its enlarged size is capped so it fits, centred there, with 24px clear of both. As it moves away from where the pointer first was, it stays enlarged while the pointer is on its
 // enlarged size or its resting place, so it never flickers; the pointer leaving both (or moving onto another work) lets it go.
 const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
 let active = null, activeBox = null, px = -1, py = -1;
@@ -349,9 +348,9 @@ function activate(w) {
   active = w;
   const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape, never height-limited)
   const sc = scroller.getBoundingClientRect(), foot = scroller.querySelector('footer').getBoundingClientRect();
-  const top = sc.top, bottom = Math.min(sc.bottom, foot.top), mid = (top + bottom) / 2;
+  const top = sc.top, bottom = Math.min(sc.bottom, foot.top), mid = innerHeight / 2;   // the middle of the screen (since 2026-10-21)
   const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
-  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, bottom - top - 2 * EDGE));   // the shared long side: a portrait's height (and so every work) fits
+  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, 2 * Math.min(mid - top, bottom - mid) - 2 * EDGE));   // the shared long side: a portrait's height (and so every work) fits, centred on the screen
   const sh = T / Math.max(bw, bh);
   w.style.setProperty('--sh', sh.toFixed(4));
   const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
