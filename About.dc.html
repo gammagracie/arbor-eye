@@ -34,6 +34,8 @@
   .ab-cols p { margin: 0 0 1.1em !important; }
   .ab-cols p:last-child { margin-bottom: 0 !important; }
 }
+/* Biography on screens 2001-2350px wide (since 2026-10-21): the paragraphs 3px smaller (21px rather than 24px) */
+@media (min-width: 2001px) and (max-width: 2350px) { .ab-copy.ab-cols p { font-size: calc(14.5px * var(--fs) + 3px); } }
 /* (since 2026-10-21) each desktop tab (its box and the tab bar under it) centred top to bottom between the header and the footer,
    at least 32px from each */
 @media (min-width: 1000px) { .ab-main { display: flex; flex-direction: column; } }
