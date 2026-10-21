@@ -378,7 +378,7 @@ function fit() {
   // three-up 85% of the space; one-up 86% enlarged by 18%; nine-up all of it (within the arrows and its title room)
   let h = Math.min((H - rowGap * (nr - 1)) / nr, W / sumR) * (count === 1 ? 0.86 * 1.18 : 1);
   h = Math.min(h, (inner - gap * (nc - 1)) / sumR);   // never under the arrows
-  const lift = count === 1 ? 14 : grid ? 15 : count === 3 ? -Math.round(0.05 * H) : 0;   // three-up: 5% of the stage below centre (since 2026-10-20)   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
+  const lift = count === 1 ? 14 : grid ? 15 : 0;   // three-up: centred on the stage, so the works' middle is level with the arrows (it sat 5% lower for part of 2026-10-20)   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
