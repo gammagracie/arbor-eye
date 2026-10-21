@@ -18,12 +18,22 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 /* About, desktop (1000px and wider, since 2026-10-20): drawn for Ned's 3840 x 2160 screen and scaling with the screen's width
-   (type twice the earlier size at 3840, and since 2026-10-20 the body 6px larger again over 2000px: 41px at 3840; headings 75px).
-   The copy's block is about 50 characters of body type wide (was 34). --ab-h: the height of the box every tab sits in. */
+   (headings 75px at 3840; the paragraphs keep the site's paragraph size, plus 6px over 2000px since 2026-10-20: 24px). The copy's
+   block is 50 x --ab-body wide (2028px at 3840). --ab-h: the height of the box every tab sits in. */
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
   --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(30px, 1.95vw, 100px); --ab-measure: calc(var(--ab-body) * 50);
   --ab-h: min(calc((100vw - 2 * var(--side-pad) - 83.2px) / 2), calc(100vh - var(--header-h) - 32px - 66px)); }   /* the box: as tall as Contact's photo */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
+/* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
+   22px padding above its labels, less 50px), and the copy runs in two columns */
+.ab-portrait { height: calc(var(--ab-h) * 0.8); }
+@media (min-width: 2001px) {
+  .ab-portrait { height: calc(var(--ab-h) - 28px); }
+  .ab-copy.ab-cols { display: block; column-count: 2; column-gap: var(--ab-gap); }
+  .ab-copy p { font-size: calc(14.5px * var(--fs) + 6px); line-height: 1.75; }
+  .ab-cols p { margin: 0 0 1.1em !important; }
+  .ab-cols p:last-child { margin-bottom: 0 !important; }
+}
 .ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
 .ab-copy p { margin: 0; }
 .ab-head { margin: 0 0 calc(var(--ab-head) * 0.55); font-family: 'EB Garamond', serif; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; }
@@ -263,13 +273,13 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
   <section data-screen-label="About — Biography (desktop)" style="padding: 32px 41.6px 0">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
-        <!-- Biography: the portrait (3:4, 80% of the box's height) at the box's top-left corner, its left edge in the gap between the R
+        <!-- Biography: the portrait (3:4, 80% of the box's height; over 2000px down to 50px above the tab labels) at the box's top-left corner, its left edge in the gap between the R
              and the B of the logo, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="align-self: start; display: block; height: calc(var(--ab-h) * 0.8); width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
+          <img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="align-self: start; display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h1 class="ab-head">Biography</h1>
-            <div class="ab-copy"><p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
+            <div class="ab-copy ab-cols"><p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
         <p style="margin: 0">Working with 4 x 6–inch formats, my paintings explore the tension between control and acceptance. Watercolor is a medium that moves on its own terms — bleeding, pooling, and surprising the brush that guides it. The more I work with the medium, the more I recognize a rhythm that feels both familiar and instructive. Over time, I’ve realized that this process — one of discovery and adjustment — has brought me closer to my father’s approach: beginning with a vision, guided by intuition, and allowing the painting to reveal itself. In his words: “The work will tell you what it wants; you just have to be patient enough to listen.” I’ve come to recognize that his words speak more than just painting; they reflect a way of living. They are a reminder that patience and persistence can shape not only the creative process but also the way we meet what life places before us.</p>
         <p style="margin: 0">My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p></div>
           </div>
