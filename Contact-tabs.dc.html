@@ -242,7 +242,8 @@ html { scrollbar-gutter: stable; }
        distance in from the bag icon, 2:1 (since 2026-10-20; it ran to 24px from the screen's edges), or smaller and centred
        while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one
        baseline, lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
-       box in columns; the open link again brings the photograph back. -->
+       box in columns, each column centred top to bottom in the box (since 2026-10-20); the open link again brings the photograph
+       back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
   <section style="padding-top: 32px; margin: 0 calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
     <div style="width: min(calc(100vw - 2 * var(--side-pad) - 83.2px), calc((100vh - var(--header-h) - 32px - 66px) * 2))">
@@ -255,7 +256,7 @@ html { scrollbar-gutter: stable; }
       </sc-if>
 
       <sc-if value="{{ deskContact }}" hint-placeholder-val="{{ false }}">
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center" data-screen-label="Contact — Get in touch">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center; align-items: center" data-screen-label="Contact — Get in touch">
         <div>
           <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(56px * var(--fs)); line-height: 1.1">Get in touch</h2>
           <p style="margin: 0; font-size: calc(17px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 34ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
@@ -280,7 +281,7 @@ html { scrollbar-gutter: stable; }
       </sc-if>
 
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; align-items: center; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
         <div>
           <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
           <p style="margin: 0 0 24px; font-size: calc(15px * var(--fs)); color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
@@ -291,13 +292,13 @@ html { scrollbar-gutter: stable; }
             <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2; border-bottom: 1px solid #DEDAD2"><span>Production time</span><span style="color: #6E6B66">3–6 working days</span></div>
           </div>
         </div>
-        <div style="display: grid; gap: 16px; align-content: start; padding-top: 68px">
+        <div style="display: grid; gap: 16px; align-content: start">
           <p style="margin: 0; font-size: calc(15px * var(--fs)); color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
           <p style="margin: 8px 0 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
           <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
           <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
         </div>
-        <div style="display: grid; gap: 16px; align-content: start; padding-top: 68px">
+        <div style="display: grid; gap: 16px; align-content: start">
           <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
           <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
           <p style="margin: 0">Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</p>
