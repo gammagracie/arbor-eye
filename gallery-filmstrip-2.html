@@ -122,9 +122,9 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs)); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
-.page.multi .caption { transition: none; }
+.page.multi .caption { transition: opacity 0.25s ease; }   /* 3 and 9 views (since 2026-10-21): the title fades in and out too (it used to pop) */
 /* one-up on screens 1760-3300px wide: the hover title 3px larger */
-@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px) * var(--fs)); } }   /* 3 and 9 views: the title never slides or fades between works; it simply shows under the work the cursor is on */
+@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px) * var(--fs)); } }   /* 3 and 9 views: the title never slides between works; it fades out, moves under the work the cursor is on, and fades in */
 html.touch .caption { opacity: 1; }
 /* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
 html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
@@ -352,8 +352,14 @@ function buildSlots(n) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
     const slot = { a, imgs, front: 0, idx: -1, turns: 0 };
-    a.addEventListener('mouseenter', () => { hoverSlot = slot; $('capTitle').textContent = WORKS[slot.idx].t; captionUnder(a); page.classList.add('hovering'); });
-    a.addEventListener('mouseleave', () => { hoverSlot = null; page.classList.remove('hovering'); });
+    // (since 2026-10-21) the title fades in under the work; moving straight on to another work, it first finishes fading out where
+    // it was, then moves and fades in under the new one (it never jumps across while still showing)
+    a.addEventListener('mouseenter', () => {
+      clearTimeout(capSwap); hoverSlot = slot;
+      const show = () => { if (hoverSlot !== slot) return; $('capTitle').textContent = WORKS[slot.idx].t; captionUnder(a); page.classList.add('hovering'); };
+      if (count > 1 && parseFloat(getComputedStyle(caption).opacity) > 0.05 && $('capTitle').textContent !== WORKS[slot.idx].t) capSwap = setTimeout(show, 250); else show();
+    });
+    a.addEventListener('mouseleave', () => { clearTimeout(capSwap); hoverSlot = null; page.classList.remove('hovering'); });
     row.appendChild(a); slots.push(slot);
   }
 }
@@ -467,7 +473,7 @@ function fit() {
   // used to send it down under the bottom row, far from the work on a page with an empty last row)
   if (hoverSlot && count > 1 && slots.includes(hoverSlot)) captionUnder(hoverSlot.a);
 }
-let capDx = 0, capDy = 0, hoverSlot = null;
+let capDx = 0, capDy = 0, hoverSlot = null, capSwap = 0;
 // the hover title under a given work (several works shown), centred on it
 function captionUnder(a) {
   capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2);
