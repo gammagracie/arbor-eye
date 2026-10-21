@@ -335,7 +335,7 @@ const isGrid = () => view === 9 || view === 2;
 // An all-portrait series is laid out in portrait-shaped boxes rather than the grid's landscape columns.
 const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4 }, 'Convergence': { cols: 2, per: 4 }, 'Core': { cols: 2, per: 4 }, 'Outliers': { cols: 2, per: 4 },
   'Select': { cols: 2, per: 4 }, 'The Turning': { cols: 2, per: 4 }, 'Spectrum': { cols: 2, per: 4 }, 'Structure': { cols: 3, per: 5, scale: 1.3 },
-  'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 2, per: 4, scale: 1.8 } };
+  'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 3, per: 9 } };
 const curSeries = () => { try { return fSeries; } catch (e) { return 'All'; } };   // (the filter's state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && SERIES_LAYOUT[curSeries()] || null;
 const viewCount = () => { const L = seriesLayout(); return L ? L.per : countOf(view); };
