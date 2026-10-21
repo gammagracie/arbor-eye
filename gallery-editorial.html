@@ -105,14 +105,14 @@ html:not(.touch) .scroller { cursor: grab; }
 .work .win { position: absolute; inset: 0; }
 .work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
 html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
-html:not(.touch) .work:hover { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 9px rgba(20,20,20,0.30), 0 24px 56px rgba(20,20,20,0.42); }
+.work.hov { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 9px rgba(20,20,20,0.30), 0 24px 56px rgba(20,20,20,0.42); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
 .work .side { position: absolute; top: 50%; margin-top: -1.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
 .work.l .side { right: calc(100% + 56px); align-items: flex-end; }
 .work .side span { font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(16px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
-html:not(.touch) .work:hover .side { opacity: 1; }
+.work.hov .side { opacity: 1; }   /* .hov: set by the script while the pointer is on the work or its enlarged size (mouse only) */
 /* phones: widths 87-100% of the column for every work (portraits as wide, so taller, never taller than the screen allows);
    overlap 70% of desktop's (5.6% of each work's width). A tap shows the
    title under the work, a second tap opens it. */
@@ -332,30 +332,60 @@ function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAni
 scroller.addEventListener('scroll', parallax, { passive: true });
 
 // ---- Hover (mouse): the work comes to the front and grows to one shared size, the same for every work whatever its size at
-// rest: its long side becomes 1.4 times the column width, or the screen's height less the header and 40px if that is less, so a
+// rest: its long side becomes 1.4 times the column width, or the visible height less 24px above and below if that is less, so a
 // landscape and a portrait reach the same dimensions turned (6 x 4 / 4 x 6) and a portrait always fits on screen (since
 // 2026-10-20; it was 120% of each work's own size). The works above and below draw back to leave 60px clear around it.
-const GAP = 60;
-works.forEach((w, i) => {
-  w.addEventListener('mouseenter', () => {
-    if (document.documentElement.classList.contains('touch')) return;
-    works.forEach(x => x.classList.toggle('last', x === w));
-    const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape, never height-limited)
-    const T = Math.min(1.4 * colPx, innerHeight - $('scroller').getBoundingClientRect().top - 40);
-    const sh = T / (w.offsetWidth >= w.offsetHeight ? w.offsetWidth : w.offsetHeight);
-    w.style.setProperty('--sh', sh.toFixed(4));
-    const r = w.getBoundingClientRect(), grow = r.height * (sh - 1) / 2;
-    // (since 2026-10-20) never cut by the edge of the scrolling area: if the enlarged work would run past its top or bottom
-    // (12px clear), it is shifted just enough to show whole, and the neighbours make way for it there
-    const sc = scroller.getBoundingClientRect(), eTop = r.top - grow, eBot = r.bottom + grow;
-    const shift = eTop < sc.top + 12 ? sc.top + 12 - eTop : eBot > sc.bottom - 12 ? sc.bottom - 12 - eBot : 0;
-    const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top);
-    const up = above.length ? Math.min(0, (eTop + shift - GAP) - Math.max(...above)) : 0;
-    const down = below.length ? Math.max(0, (eBot + shift + GAP) - Math.min(...below)) : 0;
-    works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
-  });
-  w.addEventListener('mouseleave', () => works.forEach(x => x.style.setProperty('--hy', '0px')));
+const GAP = 60, EDGE = 24;
+// (since 2026-10-21) the hovered work moves to the middle of the visible part of the column (between the header and the bottom
+// of the screen, or the footer once it is in view) and is never cut by either: its enlarged size is also capped at that height
+// less 24px above and below. As it moves away from where the pointer first was, it stays enlarged while the pointer is on its
+// enlarged size or its resting place, so it never flickers; the pointer leaving both (or moving onto another work) lets it go.
+const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
+let active = null, activeBox = null, px = -1, py = -1;
+const inBox = (b, x, y) => b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+function activate(w) {
+  const i = works.indexOf(w);
+  works.forEach(x => { x.classList.toggle('last', x === w); x.classList.toggle('hov', x === w); });
+  active = w;
+  const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape, never height-limited)
+  const sc = scroller.getBoundingClientRect(), foot = scroller.querySelector('footer').getBoundingClientRect();
+  const top = sc.top, bottom = Math.min(sc.bottom, foot.top), mid = (top + bottom) / 2;
+  const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
+  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, bottom - top - 2 * EDGE));   // the shared long side: a portrait's height (and so every work) fits
+  const sh = T / Math.max(bw, bh);
+  w.style.setProperty('--sh', sh.toFixed(4));
+  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
+  const shift = mid - cy, eTop = mid - bh * sh / 2, eBot = mid + bh * sh / 2;
+  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x));
+  const up = above.length ? Math.min(0, (eTop - GAP) - Math.max(...above)) : 0;
+  const down = below.length ? Math.max(0, (eBot + GAP) - Math.min(...below)) : 0;
+  works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
+  activeBox = { big: { left: cx - bw * sh / 2, right: cx + bw * sh / 2, top: eTop, bottom: eBot }, rest: { left: r.left, right: r.right, top: cy - bh / 2, bottom: cy + bh / 2 } };
+}
+function release() {
+  if (!active) return;
+  active.classList.remove('hov'); active = activeBox = null;
+  works.forEach(x => x.style.setProperty('--hy', '0px'));
+}
+works.forEach(w => w.addEventListener('mouseenter', () => {
+  if (document.documentElement.classList.contains('touch') || scroller.classList.contains('dragging') || w === active) return;
+  if (active && (inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py))) return;   // still on the enlarged work, which covers it
+  activate(w);
+}));
+document.addEventListener('mousemove', e => {
+  px = e.clientX; py = e.clientY;
+  if (!active || inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py)) return;
+  release();
+  const under = document.elementFromPoint(px, py), w = under && under.closest && under.closest('.work');
+  if (w && !document.documentElement.classList.contains('touch')) activate(w);
 });
+document.addEventListener('mouseleave', release);
+// scrolling under a held work: its places move with the column
+let lastTop = scroller.scrollTop;
+scroller.addEventListener('scroll', () => {
+  const d = scroller.scrollTop - lastTop; lastTop = scroller.scrollTop;
+  if (activeBox) ['big', 'rest'].forEach(k => { activeBox[k].top -= d; activeBox[k].bottom -= d; });
+}, { passive: true });
 
 // ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
 // Touch screens keep native scrolling. Keyboard and other native scrolls just re-sync the target.
