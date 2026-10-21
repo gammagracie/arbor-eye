@@ -30,6 +30,8 @@ button { font-family: inherit; }
 
 /* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
 .page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* screens over 2000px (since 2026-10-21): the footer always on screen at the bottom and the page held still (nothing scrolls) */
+@media (min-width: 2001px) { html, body { overflow: hidden; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
 /* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
 
@@ -82,6 +84,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* view icons by screen size (since 2026-10-19): desktop (1280px and wider) 1 / 3 in a row / 3 x 3; small desktop and tablet
    (768-1279px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
 .count[data-n="2"] { display: none; }
+.page.few .count[data-n="9"] { display: none; }   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
 @media (min-width: 768px) and (max-width: 1279px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
 /* phones: every work in one scrolling column, full content width, its title under it; a tap opens the detail view */
 .list { display: none; }
@@ -97,8 +100,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
    the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
 @media (min-width: 768px) {
-  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
-  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
 }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
@@ -113,7 +116,9 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
-.step svg { width: clamp(9.75px, 1.31625vw, 19.0125px); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
+:root { --chev-w: clamp(9.75px, 1.31625vw, 19.0125px); }
+@media (min-width: 2001px) { :root { --chev-w: 28.52px; } }   /* screens over 2000px: the chevrons 150% of that (since 2026-10-21): 28.5 x 78px */
+.step svg { width: var(--chev-w); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
 .caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs)); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
@@ -407,7 +412,7 @@ function fit() {
     const st = stage.getBoundingClientRect(), iconTop = $('tools').querySelector('.count svg').getBoundingClientRect().top;
     gridTop = iconTop - st.top;
     const SL = seriesLayout(), boxR = SL && WORKS.every(w => w.r < 1) ? 0.667 : 1.5;   // the column box: portrait for an all-portrait series
-    const used = SL ? Math.ceil(SL.per / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
+    const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
     const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
@@ -438,16 +443,20 @@ function fit() {
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
       Object.assign(row.style, { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: (gridW(a) + 2).toFixed(1) + 'px', gridTemplateColumns: '' });   // (+2px so rounding never wraps a full row)
     } else {
+      // (since 2026-10-21) the grid in half columns, each work spanning two, so a short last row (the end of a filtered list)
+      // can sit centred under the full rows with the same spacing
       Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' });
-      row.style.gridTemplateColumns = 'repeat(' + nc + ', ' + (a * 1.5).toFixed(2) + 'px)';
+      row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - g) / 2).toFixed(2) + 'px)';
     }
     row.style.columnGap = row.style.rowGap = g.toFixed(1) + 'px';
-    slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : R(s)) + 'px'; s.a.style.height = a + 'px'; });
+    slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : R(s)) + 'px'; s.a.style.height = a + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
+    const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;
+    if (!SL && short < nc && slots[lastStart]) slots[lastStart].a.style.gridColumn = (nc - short + 1) + ' / span 2';
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
     rowH = a * usedNow + g * (usedNow - 1);
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
-  } else { row.style.rowGap = ''; Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' }); }
+  } else { row.style.rowGap = ''; Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' }); slots.forEach(s => { s.a.style.gridColumn = ''; }); }
   stage.style.overflow = gridTop !== null || tallPortrait ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + (Math.min(0, gridTop) - 24).toFixed(1) + 'px 0 0 0)' : tallPortrait ? 'inset(-200px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons (and 24px more, so a hovered top-row work is never cut)
   const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
@@ -522,6 +531,8 @@ function buildPages() {
   PAGES = [];
   const L = seriesLayout();
   if (L) { for (let j = 0; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
+  // the plain grid (since 2026-10-21): pages of a full grid in order, the last one holding what is left (its short last row centred)
+  if (isGrid() && !phone.matches && WORKS.length > count) { for (let j = 0; j < WORKS.length; j += count) PAGES.push(WORKS.slice(j, j + count).map((w, i) => j + i)); return; }
   if (view !== 3) return;
   [false, true].forEach(portrait => {
     const ks = WORKS.map((w, k) => k).filter(k => (WORKS[k].r < 1) === portrait);
@@ -530,7 +541,7 @@ function buildPages() {
   PAGES.sort((a, b) => a[0] - b[0]);
 }
 const pageIdx = k => { const i = PAGES.findIndex(p => p[0] === k); return i >= 0 ? i : Math.max(0, PAGES.findIndex(p => p.includes(k))); };
-const sets = () => (view === 3 || !!seriesLayout()) && PAGES.length > 0;
+const sets = () => (view === 3 || isGrid()) && PAGES.length > 0;
 // whether the arrows, keys, swipes or wheel can move on (one-up wraps round; wider windows stop at the ends)
 function canStep(d) { if (count === 1) return true; if (sets()) { const n = pageIdx(first) + d; return n >= 0 && n < PAGES.length; } return d > 0 ? first + count < WORKS.length : first > 0; }
 function setWindow(f, scrollIntoView, dir, axis) {
@@ -558,7 +569,7 @@ function setCount(v) {
   buildSlots(Math.min(count, WORKS.length));
   setWindow(first, false);
 }
-[...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => setCount(+b.dataset.n)));
+[...document.querySelectorAll('.count')].forEach(b => b.addEventListener('click', () => { gridWas = false; setCount(+b.dataset.n); }));
 // crossing a breakpoint switches to that size's view (and the phone list); a tablet turning between landscape and portrait
 // re-rows the 2-column grid
 const mode = () => phone.matches ? 'phone' : tab.matches ? 'tab' : 'desk';
@@ -700,21 +711,21 @@ addEventListener('touchmove', e => { lastTouch = Date.now(); busy(600); if (touc
 }
 
 // keyboard, resize
-addEventListener('keydown', e => { if (e.key === 'ArrowRight') stepBy(1, 'y'); if (e.key === 'ArrowLeft') stepBy(-1, 'y'); });
+addEventListener('keydown', e => { if (e.target.closest && e.target.closest('input, textarea, select')) return; const d = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1 }[e.key]; if (d && !phone.matches) { e.preventDefault(); stepBy(d, 'y'); } });   // left / right, up / down and page keys (up / down since 2026-10-21)
 addEventListener('resize', fit);
 new ResizeObserver(fit).observe(stage);
 
 $('prev').addEventListener('click', () => stepBy(-1, 'y'));
-// scrolling up or down over the works moves through them like the arrows: down brings the next set up from below, up
-// brings the previous set down from above. One set per gesture: after a step, further wheel events are ignored until the
+// scrolling over the works (mouse wheel, or a trackpad either way) moves through them like the arrows: down (or right) brings the
+// next set up from below, up (or left) brings the previous set down from above. One set per gesture: after a step, further wheel events are ignored until the
 // wheel has rested for 200ms (trackpad momentum included) and the slide has run its course.
 let wheelAcc = 0, wheelLocked = false, wheelAt = 0, wheelQuiet;
 stage.addEventListener('wheel', e => {
-  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  const dl = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
   e.preventDefault();
   clearTimeout(wheelQuiet); wheelQuiet = setTimeout(() => { wheelLocked = false; wheelAcc = 0; }, 200);
   if (wheelLocked || performance.now() - wheelAt < 1300) return;
-  wheelAcc += e.deltaY;
+  wheelAcc += dl;
   if (Math.abs(wheelAcc) < 40) return;
   const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
   if (!canStep(d)) return;   // wider windows stop at the ends
@@ -756,13 +767,20 @@ $('burger').addEventListener('click', () => document.body.classList.toggle('menu
 // (since 2026-10-21: Core 2003, its Upwelling and Emergence 1994; Select 2004; The Turning, Convergence and Tonal 2024; the
 // other series have no year yet and show only under All Years).
 const ALL = WORKS.slice();
-let fSeries = 'All', fYear = 'All';
+let fSeries = 'All', fYear = 'All', gridWas = false;
 const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Outliers'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']];
 function yearOpts() { return [['All', 'All Years']].concat([...new Set(ALL.map(w => w.y).filter(Boolean))].sort((a, b) => b - a).map(y => [String(y)])); }
 function applyFilter() {
   const list = ALL.filter(w => (fSeries === 'All' || w.s === fSeries || (fSeries === 'Horizontal' && w.r >= 1) || (fSeries === 'Vertical' && w.r < 1)) && (fYear === 'All' || String(w.y) === fYear));
   if (!list.length) return;
   WORKS.length = 0; WORKS.push(...list);
+  // (since 2026-10-21) 3 works or fewer: the 3 x 3 icon goes and a desktop grid becomes the 3-up row (back to the grid once the
+  // filter shows more again, if it was the grid that was left)
+  const few = list.length <= 3; page.classList.toggle('few', few);
+  if (!tab.matches && !phone.matches) {
+    if (few && view === 9) { view = deskView = 3; gridWas = true; } else if (!few && gridWas) { view = deskView = 9; gridWas = false; }
+    [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
+  }
   buildStrip(); pos = target = vel = 0; track.style.transform = 'translate3d(0px,0,0)';
   first = current = 0; count = viewCount(); buildPages(); buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
   if (phone.matches) buildList();
