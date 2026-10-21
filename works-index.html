@@ -133,9 +133,12 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
    then the Outliers); the thumbnails touch, each at its own shape and one height, and the rows sit directly on one another.
    Hovering a thumbnail enlarges it (120%, from its centre), names its series once, centred above the thumbnails, and dims the other rows to 50%; a click opens
    the work full size in G5's one-up view. */
-.page.index { height: auto; min-height: 100vh; }
+/* (since 2026-10-20) the page fills the screen less the footer, so the footer is on screen on load whenever the index fits (as on
+   Ned's 3840 x 2160 screen); the spare height is shared out as equal space around each row, so the rows sit vertically centred */
+.page.index { height: auto; min-height: calc(100vh - var(--footer-h)); min-height: calc(100dvh - var(--footer-h)); }
 :root { --idx-h: clamp(42px, 5.133vw, 197px); }   /* 74px tall on a 1440px screen, growing with the screen */
-.idx { padding: 16px var(--side-pad) 96px; }
+.idx { flex: 1; display: flex; flex-direction: column; padding: 16px var(--side-pad) 50px; }   /* 50px under the rows = the 16px and the series label's 34px above them */
+.idx > .idx-row { margin-block: auto; }
 .idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(13px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; }
 .idx-series.show { opacity: 1; }
 .idx-row { transition: opacity 0.3s ease; }
