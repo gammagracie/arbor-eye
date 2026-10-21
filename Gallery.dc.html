@@ -571,7 +571,8 @@ class Component extends DCLogic {
     const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
     // both states share numeric border/padding values so switching frames animates smoothly
     const ease = { boxSizing: 'border-box', transition: 'border 0.5s ease, padding 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease' };
-    const framed = f => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: wallShadow } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + wallShadow });
+    const framed = (f, sh = wallShadow) => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: sh } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + sh });
+    const printShadow = '0 18px 72px rgba(20,20,20,0.60)';   // the buy (print) page: three times the wall shadow (since 2026-10-21)
     const d = sel != null ? this.arts[sel] : null;
     const vertical = this.state.series === 'Vertical';
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
@@ -664,7 +665,7 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame)) }),   // desktop: the print fills the wall inside its margin
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame, printShadow)) }),   // desktop: the print fills the wall inside its margin
       // frame swatches
       frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
         pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
