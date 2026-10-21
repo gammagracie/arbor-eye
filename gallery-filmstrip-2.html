@@ -786,21 +786,24 @@ function applyFilter() {
   first = current = 0; count = viewCount(); buildPages(); buildSlots(Math.min(count, WORKS.length)); setWindow(0, false);
   if (phone.matches) buildList();
 }
+const menuRenders = [];
 function menu(id, label, opts, get, set) {
   const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
   const render = () => {
     btn.querySelector('span').textContent = get() === 'All' ? label : get();
     list.innerHTML = '';
     opts().forEach(([v, l]) => { const o = document.createElement('button'); o.setAttribute('role', 'option'); o.textContent = l || v; o.classList.toggle('on', get() === v); o.setAttribute('aria-selected', get() === v);
-      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); render(); applyFilter(); }); list.appendChild(o); });
+      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); menuRenders.forEach(r => r()); applyFilter(); }); list.appendChild(o); });
     if (id === 'fmYear' && opts().length === 1) { const n = document.createElement('p'); n.className = 'fm-note'; n.style.margin = '0'; n.textContent = 'Years to be added'; list.appendChild(n); }
   };
   btn.addEventListener('click', e => { e.stopPropagation(); const open = !m.classList.contains('open'); close(); m.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); });
-  render();
+  render(); menuRenders.push(render);
 }
 function close() { document.querySelectorAll('.filter-menu.open').forEach(x => { x.classList.remove('open'); x.querySelector('.fm-btn').setAttribute('aria-expanded', 'false'); }); }
-menu('fmSeries', 'Series', () => SERIES_OPTS, () => fSeries, v => { fSeries = v; });
-menu('fmYear', 'Year', yearOpts, () => fYear, v => { fYear = v; });
+// one filter at a time (since 2026-10-21): choosing a series sets the Year menu back to "Year" (all years), and choosing a year
+// sets the Series menu back to "Series" (all series)
+menu('fmSeries', 'Series', () => SERIES_OPTS, () => fSeries, v => { fSeries = v; if (v !== 'All') fYear = 'All'; });
+menu('fmYear', 'Year', yearOpts, () => fYear, v => { fYear = v; if (v !== 'All') fSeries = 'All'; });
 document.addEventListener('click', e => { if (!e.target.closest('.filter-menu')) close(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
