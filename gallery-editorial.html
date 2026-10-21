@@ -345,10 +345,14 @@ works.forEach((w, i) => {
     const sh = T / (w.offsetWidth >= w.offsetHeight ? w.offsetWidth : w.offsetHeight);
     w.style.setProperty('--sh', sh.toFixed(4));
     const r = w.getBoundingClientRect(), grow = r.height * (sh - 1) / 2;
+    // (since 2026-10-20) never cut by the edge of the scrolling area: if the enlarged work would run past its top or bottom
+    // (12px clear), it is shifted just enough to show whole, and the neighbours make way for it there
+    const sc = scroller.getBoundingClientRect(), eTop = r.top - grow, eBot = r.bottom + grow;
+    const shift = eTop < sc.top + 12 ? sc.top + 12 - eTop : eBot > sc.bottom - 12 ? sc.bottom - 12 - eBot : 0;
     const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top);
-    const up = above.length ? Math.min(0, (r.top - grow - GAP) - Math.max(...above)) : 0;
-    const down = below.length ? Math.max(0, (r.bottom + grow + GAP) - Math.min(...below)) : 0;
-    works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : 0).toFixed(1) + 'px'));
+    const up = above.length ? Math.min(0, (eTop + shift - GAP) - Math.max(...above)) : 0;
+    const down = below.length ? Math.max(0, (eBot + shift + GAP) - Math.min(...below)) : 0;
+    works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
   });
   w.addEventListener('mouseleave', () => works.forEach(x => x.style.setProperty('--hy', '0px')));
 });
