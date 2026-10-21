@@ -179,7 +179,7 @@ class Component extends DCLogic {
     { src: 'assets/works/core_chamber.jpg', fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
     { src: 'assets/works/core_affinity.jpg', fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
     { src: 'assets/works/core_conduit.jpg', fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
-    { src: 'assets/works/core_upwelling-ext.jpg', paint: [0.0060, 0.9915, 0.1448, 0.8590],   /* bordered versions (since 2026-10-20): Upwelling with its sides extended by generative fill so it fits the equal-border frames at full height, its natural top and bottom edges kept */ title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
+    { src: 'assets/works/core_upwelling.jpg', paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification, the "genie": the thumbnail under the cursor grows most (130%), neighbours less
