@@ -467,9 +467,11 @@ function fit() {
     if (!SL && short < nc && slots[lastStart]) slots[lastStart].a.style.gridColumn = (nc - short + 1) + ' / span 2';
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
     rowH = a * usedNow + g * (usedNow - 1);
+    // (since 2026-10-21) the arrows level with the grid's middle (the middle row of a 3 x 3), the same on every page of it
+    $('prev').style.top = $('next').style.top = (gridTop + V / 2).toFixed(1) + 'px';
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
-  } else { row.style.rowGap = ''; Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' }); slots.forEach(s => { s.a.style.gridColumn = ''; }); }
+  } else { row.style.rowGap = ''; Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' }); slots.forEach(s => { s.a.style.gridColumn = ''; }); $('prev').style.top = $('next').style.top = ''; }
   stage.style.overflow = gridTop !== null || tallPortrait ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + (Math.min(0, gridTop) - 24).toFixed(1) + 'px 0 0 0)' : tallPortrait ? 'inset(-200px 0 0 0)' : '';   // the grid may rise above the stage, up to the icons (and 24px more, so a hovered top-row work is never cut)
   const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
