@@ -84,7 +84,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* view icons by screen size (since 2026-10-19): desktop (1280px and wider) 1 / 3 in a row / 3 x 3; small desktop and tablet
    (768-1279px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
 .count[data-n="2"] { display: none; }
-.page.few .count[data-n="9"] { display: none; }   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
+.page.few .count[data-n="9"] { display: none; }
+.count svg.g2, .page.vert .count svg.g3 { display: none; } .page.vert .count svg.g2 { display: block; }   /* (since 2026-10-21) the Vertical filter: the grid icon is 2 x 2 */   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
 @media (min-width: 768px) and (max-width: 1279px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
 /* phones: every work in one scrolling column, full content width, its title under it; a tap opens the detail view */
 .list { display: none; }
@@ -206,7 +207,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   <div class="tools" id="tools" role="group" aria-label="Works shown at once">
     <button class="count" data-n="1" aria-label="1 work at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="18.00" height="18"></rect></svg></button>
     <button class="count" data-n="3" aria-label="3 works at a time"><svg viewBox="0 0 18 18"><rect x="0.00" y="0" width="4.67" height="18"></rect><rect x="6.67" y="0" width="4.67" height="18"></rect><rect x="13.33" y="0" width="4.67" height="18"></rect></svg></button>
-    <button class="count" data-n="9" aria-label="9 works at a time"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="4.67" height="4.67"></rect><rect x="6.67" y="0" width="4.67" height="4.67"></rect><rect x="13.33" y="0" width="4.67" height="4.67"></rect><rect x="0" y="6.67" width="4.67" height="4.67"></rect><rect x="6.67" y="6.67" width="4.67" height="4.67"></rect><rect x="13.33" y="6.67" width="4.67" height="4.67"></rect><rect x="0" y="13.33" width="4.67" height="4.67"></rect><rect x="6.67" y="13.33" width="4.67" height="4.67"></rect><rect x="13.33" y="13.33" width="4.67" height="4.67"></rect></svg></button>
+    <button class="count" data-n="9" aria-label="9 works at a time"><svg class="g2" viewBox="0 0 18 18"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg><svg class="g3" viewBox="0 0 18 18"><rect x="0" y="0" width="4.67" height="4.67"></rect><rect x="6.67" y="0" width="4.67" height="4.67"></rect><rect x="13.33" y="0" width="4.67" height="4.67"></rect><rect x="0" y="6.67" width="4.67" height="4.67"></rect><rect x="6.67" y="6.67" width="4.67" height="4.67"></rect><rect x="13.33" y="6.67" width="4.67" height="4.67"></rect><rect x="0" y="13.33" width="4.67" height="4.67"></rect><rect x="6.67" y="13.33" width="4.67" height="4.67"></rect><rect x="13.33" y="13.33" width="4.67" height="4.67"></rect></svg></button>
     <button class="count" data-n="2" aria-label="2 columns of works"><svg viewBox="0 0 18 18"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg></button>
     <div class="filters">
       <div class="filter-menu" id="fmSeries"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Series</span></button><div class="fm-list" role="listbox" aria-label="Series"></div></div>
@@ -340,7 +341,9 @@ const isGrid = () => view === 9 || view === 2;
 // An all-portrait series is laid out in portrait-shaped boxes rather than the grid's landscape columns.
 const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4 }, 'Convergence': { cols: 2, per: 4 }, 'Core': { cols: 2, per: 4 }, 'Outliers': { cols: 2, per: 4 },
   'Select': { cols: 2, per: 4 }, 'The Turning': { cols: 2, per: 4 }, 'Spectrum': { cols: 2, per: 4 }, 'Structure': { cols: 3, per: 5, scale: 1.3 },
-  'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 3, per: 9 } };
+  'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 2, per: 4, mid: true } };
+// mid (since 2026-10-21, Vertical): the desktop grid is 2 x 2, its works halfway in size between the largest a 2 x 2 allows and
+// the 3 x 3 it replaced; the grid icon shows 2 x 2 while that filter is on
 const curSeries = () => { try { return fSeries; } catch (e) { return 'All'; } };   // (the filter's state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && SERIES_LAYOUT[curSeries()] || null;
 const viewCount = () => { const L = seriesLayout(); return L ? L.per : countOf(view); };
@@ -429,6 +432,10 @@ function fit() {
       if (SL && SL.scale) {   // a series with its own size: the plain 3 x 3 grid's size for these works, scaled, never more than fits
         const u0 = Math.ceil(Math.min(9, WORKS.length) / 3), h0 = (V - 60 * (u0 - 1)) / u0, w0 = (inner - 120) / 4.5;
         a = Math.min(a, SL.scale * Math.min(h0, w0));
+      }
+      if (SL && SL.mid && view === 9) {   // halfway between this size and a 3 x 3 grid's
+        const byH3 = wideGaps && V / 3.5 / 4 >= 60 ? V / 3.5 : (V - 120) / 3, byW3 = wideGaps && maxW / (boxR * 3 + 0.5) / 4 >= 60 ? maxW / (boxR * 3 + 0.5) : (maxW - 120) / (boxR * 3);
+        a = (a + Math.min(byH3, byW3)) / 2;
       }
       return a; };
     const gridW = a => boxR * nc * a + G(a) * (nc - 1);
@@ -784,6 +791,7 @@ function applyFilter() {
   // (since 2026-10-21) 3 works or fewer: the 3 x 3 icon goes and a desktop grid becomes the 3-up row (back to the grid once the
   // filter shows more again, if it was the grid that was left)
   const few = list.length <= 3; page.classList.toggle('few', few);
+  page.classList.toggle('vert', fSeries === 'Vertical'); document.querySelector('.count[data-n="9"]').setAttribute('aria-label', fSeries === 'Vertical' ? '4 works at a time' : '9 works at a time');
   if (!tab.matches && !phone.matches) {
     if (few && view === 9) { view = deskView = 3; gridWas = true; } else if (!few && gridWas) { view = deskView = 9; gridWas = false; }
     [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
