@@ -22,7 +22,7 @@
    block is 50 x --ab-body wide (2028px at 3840). --ab-h: the height of the box every tab sits in. */
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
   --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(30px, 1.95vw, 100px); --ab-measure: calc(var(--ab-body) * 50);
-  --ab-h: min(calc((100vw - 2 * var(--side-pad) ) / 2), calc(100vh - var(--header-h) - 32px - 68px)); }   /* the box: as tall as Contact's photo */
+  --ab-h: min(calc((100vw - 2 * var(--side-pad) ) / 2), calc(100vh - var(--header-h) - var(--footer-h) - 64px - 68px)); }   /* the box: as tall as Contact's photo */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
    22px padding above its labels, less 50px), and the copy runs in two columns */
@@ -34,6 +34,9 @@
   .ab-cols p { margin: 0 0 1.1em !important; }
   .ab-cols p:last-child { margin-bottom: 0 !important; }
 }
+/* (since 2026-10-21) each desktop tab (its box and the tab bar under it) centred top to bottom between the header and the footer,
+   at least 32px from each */
+@media (min-width: 1000px) { .ab-main { display: flex; flex-direction: column; } }
 .ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
 .ab-copy p { margin: 0; }
 .ab-head { margin: 0 0 calc(var(--ab-head) * 0.55); font-family: 'EB Garamond', serif; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; }
@@ -144,7 +147,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
+<main class="ab-main" style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
   <div id="tabs-anchor" aria-hidden="true"></div>
   <sc-if value="{{ stackAbout }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}; position: {{ tabsPos }}; bottom: 0; z-index: 10; background: #FDFDFB">
@@ -271,7 +274,7 @@ html { scrollbar-gutter: stable; }
        or less on a short screen), and under it the tab bar exactly where Contact's is; the footer follows (on screen on load) -->
   <sc-if value="{{ wideAbout }}" hint-placeholder-val="{{ true }}">
   <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Biography (desktop)" style="padding: 32px 0 0">
+  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 32px 0">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Biography: the portrait (3:4, 80% of the box's height; over 2000px down to 50px above the tab labels) at the box's top-left corner, on the logo's left edge, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
@@ -291,7 +294,7 @@ html { scrollbar-gutter: stable; }
   </section>
   </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Tree of Life (desktop)" style="padding: 32px 0 0">
+  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 32px 0">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Tree of Life: the fresco photo (49.5% of the screen's width, at most the box's height) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
@@ -311,7 +314,7 @@ html { scrollbar-gutter: stable; }
   </section>
   </sc-if>
   <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Process (desktop)" style="padding: 32px 0 0">
+  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 32px 0">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height) at the box's top-right corner -->
@@ -332,7 +335,7 @@ html { scrollbar-gutter: stable; }
   </section>
   </sc-if>
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Studio (desktop)" style="padding: 32px 0 0">
+  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 32px 0 64px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Studio: the heading, then the three photos side by side across the box, as large as fits in it; the film below the tab bar -->
         <h2 class="ab-head">Studio</h2>
@@ -356,7 +359,6 @@ html { scrollbar-gutter: stable; }
       </div>
   </section>
   </sc-if>
-  <div style="height: 64px"></div>
   </sc-if>
 </main>
 

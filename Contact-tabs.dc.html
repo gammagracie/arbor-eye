@@ -42,6 +42,9 @@ html { scrollbar-gutter: stable; }
 /* contact form: the field being typed in gets a very light grey ground */
 .contact-form input:focus, .contact-form textarea:focus { background: #EAEAEA !important; }
 .contact-form input, .contact-form textarea { transition: background 0.2s ease; }
+/* (since 2026-10-21) desktop: the photograph (or the open section) and the row under it centred top to bottom between the header
+   and the footer, at least 32px from each */
+@media (min-width: 1100px) { .ct-main { display: flex; flex-direction: column; } }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
@@ -126,7 +129,7 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
+<main class="ct-main" style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1" data-screen-label="Contact (tabs)">
   <sc-if value="{{ narrowLayout }}" hint-placeholder-val="{{ false }}">
   <section style="padding-top: 48px">
     <picture>
@@ -245,8 +248,8 @@ html { scrollbar-gutter: stable; }
        box in columns, each column centred top to bottom in the box (since 2026-10-20); the open link again brings the photograph
        back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
-  <section style="padding-top: 32px; margin: 0 calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
-    <div style="width: min(calc(100vw - 2 * var(--side-pad)), calc((100vh - var(--header-h) - 32px - 68px) * 2))">
+  <section style="padding: 32px 0; margin: auto calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
+    <div style="width: min(calc(100vw - 2 * var(--side-pad)), calc((100vh - var(--header-h) - var(--footer-h) - 64px - 68px) * 2))">
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
@@ -337,7 +340,6 @@ html { scrollbar-gutter: stable; }
       </div>
     </div>
   </section>
-  <div style="height: 64px"></div>
   </sc-if>
 </main>
 
