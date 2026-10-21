@@ -74,10 +74,10 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(13px, 1.755vw, 25.35px); height: auto; }   /* 65% of the earlier size since 2026-10-19 */
-.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: calc(16px * var(--fs)); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.caption { position: absolute; left: 50%; transform: translateX(-50%); margin: 7px 0 0; display: flex; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap; font-family: 'EB Garamond', serif; font-size: calc(16px * var(--fs) * 0.85); font-style: italic; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; color: #ADA9A2; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
-@media (min-width: 1760px) and (max-width: 3300px) { .caption { font-size: calc(19px * var(--fs)); } }   /* screens 1760-3300px wide: the hover title 3px larger */
+@media (min-width: 1760px) and (max-width: 3300px) { .caption { font-size: calc(19px * var(--fs) * 0.85); } }   /* screens 1760-3300px wide: the hover title 3px larger */
 
 /* the strip: small thumbnails in one column (39px boxes, 40% larger since 2026-10-21; were 28px), the Tree of Life to their right
    (20 x 39px, 40% larger too), its right edge on the bag icon's line */
