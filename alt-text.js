@@ -1,8 +1,9 @@
 // Alt text on the image's own frame (since 2026-10-20; the homepage carousel has its own version of the same treatment).
 // An image carrying data-alt-title (an artwork's title) and / or data-alt-tag (its tagline, or a photograph's description)
 // gets that text as its alt text ("Title: tagline"), the browser's own alt text is hidden, and the same words are set centred
-// on the image's box: the title in EB Garamond italic capitals, a colon, the tagline in grey. They show only if the image has
-// not loaded within 0.8s or fails to load, so they never flash while images crossfade. data-alt-size="s" sets them small
+// on the image's box: the title in EB Garamond italic capitals, a colon, the tagline in grey. They show (centred on the image's
+// box) from the start until the image has loaded, and stay if it fails to load (since 2026-10-21; they waited 0.8s before), except
+// over another image in the same box that is already showing (a crossfade), so they never flash over a picture. data-alt-size="s" sets them small
 // (thumbnails). The box is the nearest ancestor marked data-alt-box, else the image's parent. On pages whose script tag
 // carries data-auto, every image in <main> with alt text and no data-alt-* is treated as a photograph (its alt text shown).
 (() => {
@@ -34,6 +35,12 @@
     cap.classList.toggle('s', img.getAttribute('data-alt-size') === 's');
     cap.innerHTML = '<span>' + (title ? '<em>' + esc(title) + '</em>' + (tag ? ': ' : '') : '') + esc(tag) + '</span>';
     cap._owner = img;
+    // a box holding more than the image (a photo set straight into a grid beside its text, as on About): the words sit over the
+    // image itself, kept on it as the layout changes
+    const shared = [...box.children].some(c => c !== cap && c !== img && c.tagName !== 'SOURCE');
+    const place = () => { if (shared && cap._owner === img) Object.assign(cap.style, { inset: 'auto', left: img.offsetLeft + 'px', top: img.offsetTop + 'px', width: img.offsetWidth + 'px', height: img.offsetHeight + 'px', boxSizing: 'border-box' }); };
+    place();
+    if (shared && !img._altRO) { img._altRO = new ResizeObserver(place); img._altRO.observe(img); }
     const failed = img._altFailed || /placeholder-(landscape|portrait)\.svg/.test(src);   // a page's own fallback picture stands in for a failed image
     const show = on => { if (cap._owner === img) cap.classList.toggle('on', on); };
     show(failed);
@@ -44,12 +51,13 @@
       img.addEventListener('error', () => { img._altFailed = true; if (img._altCap && img._altCap._owner === img) { img._altCap.classList.add('on'); if (!img.hasAttribute('data-alt-keep')) img.style.visibility = 'hidden'; } });
     }
     if (!img._altFailed) img.style.visibility = '';
-    clearTimeout(img._altT);
-    img._altArm = () => { clearTimeout(img._altT); img._altT = setTimeout(() => { if (!(img.complete && img.naturalWidth)) show(true); }, 800); };
-    // an image that loads only when scrolled near (loading=lazy) starts its 0.8s wait when it reaches the screen
-    if (!failed) { if (img.loading === 'lazy' && !(img.complete && img.naturalWidth)) io.observe(img); else img._altArm(); }
+    // not loaded yet: the words show at once, unless another image in the same box is already showing (a crossfade)
+    const covered = () => { const r = img.getBoundingClientRect(); return [...box.querySelectorAll('img')].some(o => {   // a picture showing in the same place
+      if (o === img || !(o.complete && o.naturalWidth) || parseFloat(getComputedStyle(o).opacity) <= 0.05) return false;
+      const q = o.getBoundingClientRect(), w = Math.min(r.right, q.right) - Math.max(r.left, q.left), h = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top);
+      return w > 0 && h > 0 && w * h > 0.5 * Math.max(1, r.width * r.height); }); };
+    if (!failed && !(img.complete && img.naturalWidth) && !covered()) show(true);
   }
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); if (e.target._altArm) e.target._altArm(); } }));
   const scan = root => { if (root.tagName === 'IMG') setup(root); else if (root.querySelectorAll) root.querySelectorAll('img').forEach(setup); };
   new MutationObserver(list => list.forEach(m => {
     if (m.type === 'attributes') setup(m.target);
