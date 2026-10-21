@@ -17,6 +17,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
+/* About, desktop (1000px and wider, since 2026-10-20): drawn for Ned's 3840 x 2160 screen and scaling with the screen's width
+   (type twice the earlier size at 3840: body 35px, headings 75px; tabs 23px). --ab-imgh: the tallest a photo can be with
+   the gap above it and the tab row under it still on screen. */
+:root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
+  --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(30px, 1.95vw, 100px); --ab-measure: calc(var(--ab-body) * 34);
+  --ab-imgh: calc(100vh - var(--header-h) - var(--ab-top) - var(--ab-tabgap) - var(--ab-tabfs) * 1.2 - 10px - clamp(24px, 2vw, 100px)); }
+.ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
+.ab-copy p { margin: 0; }
+.ab-head { margin: 0 0 calc(var(--ab-head) * 0.55); font-family: 'EB Garamond', serif; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: center; }
+.ab-tabs { display: flex; gap: calc(var(--ab-tabfs) * 3); margin-top: var(--ab-tabgap); justify-self: start; }
+.ab-tabs button { border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--ab-tabfs); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; }
+
 /* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
    logo's hidden text and H0's hover title are left out) */
 :root { --fs: 1; }
@@ -123,8 +135,9 @@ html { scrollbar-gutter: stable; }
   </sc-if>
 </nav>
 
-<main style="max-width: 1920px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1">
   <div id="tabs-anchor" aria-hidden="true"></div>
+  <sc-if value="{{ stackAbout }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Tabs" style="padding: {{ tabsPad }}; border-top: {{ tabsRule }}; position: {{ tabsPos }}; bottom: 0; z-index: 10; background: #FDFDFB">
     <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; justify-content: {{ tabJustify }}; scroll-margin-top: 40px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
@@ -241,6 +254,81 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
 
+  </sc-if>
+  </sc-if>
+
+  <!-- DESKTOP (1000px and wider, since 2026-10-20): one view per tab, the tab row under each tab's main image, starting on its left
+       edge; every view's top 2.2% of the screen's width under the header (85px at 3840, halfway into the earlier white space) -->
+  <sc-if value="{{ wideAbout }}" hint-placeholder-val="{{ true }}">
+  <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
+  <!-- Biography: one portrait (3:4) centred on the page, as tall as the screen allows; the heading and copy to its right, centred on
+       it; the copy keeps at least 520px, the portrait sliding left on narrower screens to make room -->
+  <section data-screen-label="About — Biography (desktop)" style="padding: var(--ab-top) 0 clamp(40px, 3vw, 140px); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(min(520px, 45%), 1fr); column-gap: var(--ab-gap); align-items: center">
+      <img src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="grid-column: 2; grid-row: 1; display: block; height: min(var(--ab-imgh), 46vw); width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
+      <div style="grid-column: 3; grid-row: 1; max-width: var(--ab-measure)">
+        <h1 class="ab-head">Biography</h1>
+        <div class="ab-copy"><p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
+        <p style="margin: 0">Working with 4 x 6–inch formats, my paintings explore the tension between control and acceptance. Watercolor is a medium that moves on its own terms — bleeding, pooling, and surprising the brush that guides it. The more I work with the medium, the more I recognize a rhythm that feels both familiar and instructive. Over time, I’ve realized that this process — one of discovery and adjustment — has brought me closer to my father’s approach: beginning with a vision, guided by intuition, and allowing the painting to reveal itself. In his words: “The work will tell you what it wants; you just have to be patient enough to listen.” I’ve come to recognize that his words speak more than just painting; they reflect a way of living. They are a reminder that patience and persistence can shape not only the creative process but also the way we meet what life places before us.</p>
+        <p style="margin: 0">My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p></div>
+      </div>
+      <div class="ab-tabs" role="tablist" style="grid-column: 2; grid-row: 2">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+      </div>
+  </section>
+  </sc-if>
+  <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
+  <!-- Tree of Life: the fresco photo three times its earlier size (49.5% of the screen's width), its top level with the portrait's
+       on Biography; the copy to its right, centred on it -->
+  <section data-screen-label="About — Tree of Life (desktop)" style="padding: var(--ab-top) 0 clamp(40px, 3vw, 140px); display: grid; grid-template-columns: auto minmax(0, var(--ab-measure)); justify-content: center; column-gap: var(--ab-gap); align-items: center">
+      <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="grid-column: 1; grid-row: 1; display: block; width: min(49.5vw, calc(var(--ab-imgh) * 1.4027), calc(100vw - 2 * var(--side-pad) - var(--ab-gap) - 360px)); height: auto">
+      <div style="grid-column: 2; grid-row: 1">
+        <h2 class="ab-head">Tree of Life</h2>
+        <div class="ab-copy"><p style="margin: 0">The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
+        <p style="margin: 0">The original pin was designed and fabricated by Sharon Church shortly after her nephew Ned was injured in a car accident. Over time, the insignia evolved into the foundation for the name Arbor &amp; Eye and its broader visual identity, gradually coming to embody endurance, renewal, and continuity within Ned Church’s work.</p></div>
+      </div>
+      <div class="ab-tabs" role="tablist" style="grid-column: 1; grid-row: 2">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+      </div>
+  </section>
+  </sc-if>
+  <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
+  <!-- Process: the same, flipped: the copy on the left, the photo on the right (one photo, three times its earlier size) -->
+  <section data-screen-label="About — Process (desktop)" style="padding: var(--ab-top) 0 clamp(40px, 3vw, 140px); display: grid; grid-template-columns: minmax(0, var(--ab-measure)) auto; justify-content: center; column-gap: var(--ab-gap); align-items: center">
+      <div style="grid-column: 1; grid-row: 1">
+        <h2 class="ab-head">Process</h2>
+        <div class="ab-copy"><p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
+        <p style="margin: 0">Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
+        <p style="margin: 0">The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
+      </div>
+      <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="grid-column: 2; grid-row: 1; display: block; width: min(40.9vw, calc(var(--ab-imgh) * 4 / 3), calc(100vw - 2 * var(--side-pad) - var(--ab-gap) - 360px)); aspect-ratio: 4 / 3; object-fit: cover">
+      <div class="ab-tabs" role="tablist" style="grid-column: 2; grid-row: 2">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+      </div>
+  </section>
+  </sc-if>
+  <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
+  <!-- Studio: the three photos side by side across the content width (about 2.7 times their earlier size; the full content width is
+       the limit), the tab row under them, then the film (two thirds of the width, centred) -->
+  <section data-screen-label="About — Studio (desktop)" style="padding: var(--ab-top) 0 clamp(40px, 3vw, 140px); display: grid">
+      <h2 class="ab-head">Studio</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(25px, 1.6vw, 80px)">
+        <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+        <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+        <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+      </div>
+      <div class="ab-tabs" role="tablist" style="grid-column: 1; grid-row: auto">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+      </div>
+      <div style="position: relative; justify-self: center; width: 66.6%; aspect-ratio: 16 / 9; overflow: hidden; margin-top: clamp(48px, 3vw, 140px)">
+        <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+          <span style="width: clamp(76px, 4vw, 180px); height: clamp(76px, 4vw, 180px); border-radius: 50%; background: rgba(253,253,251,0.82); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(20,20,20,0.18)">
+            <svg viewBox="0 0 24 24" fill="#141414" style="width: 34%; height: 34%"><path d="M8 5.5v13l11-6.5z"></path></svg>
+          </span>
+        </div>
+      </div>
+  </section>
+  </sc-if>
   </sc-if>
 </main>
 
@@ -385,6 +473,7 @@ class Component extends DCLogic {
         label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); if (!this.state.stack) { const a = document.getElementById('tabs-anchor'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); } },   // desktop: bring the tabs and the chosen section up into view
         weight: this.state.tab === k ? 600 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
+      stackAbout: stack, wideAbout: !stack,   // under 1000px the stacked layout with carousels; 1000px and wider the desktop views
       tabBio: this.state.tab === 'bio', tabTree: this.state.tab === 'tree', tabProcess: this.state.tab === 'process', tabStudio: this.state.tab === 'studio',
       quotePad: stack ? (m ? '28px 0' : '28px 0 0') : '24px 0 0',
       quoteSize: m ? '20px' : '18px',
