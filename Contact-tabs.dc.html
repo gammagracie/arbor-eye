@@ -245,7 +245,8 @@ html { scrollbar-gutter: stable; }
        icon's right edge (since 2026-10-21; it started at the B), 2:1, or smaller and centred
        while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one
        baseline (the links 14px, since 2026-10-21), lined up with the photograph's edges. A link swaps the photograph for its content, laid out across the same
-       box in columns, each column centred top to bottom in the box (since 2026-10-20); the open link again brings the photograph
+       box in columns, the content centred top to bottom in the box (Get in touch: each column centred on its own; Shipping: the heading
+       across the top and the three columns under it starting level, since 2026-10-21); the open link again brings the photograph
        back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
   <section style="padding: 32px 0; margin: auto calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
@@ -284,9 +285,10 @@ html { scrollbar-gutter: stable; }
       </sc-if>
 
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; align-items: center; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
+      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 4.5% 5%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 5%; align-content: center; align-items: start; font-size: calc(14px * var(--fs)); line-height: 1.65; color: #55524C" data-screen-label="Shipping Policy">
+        <!-- the heading across the top, so the three columns under it start level (since 2026-10-21) -->
+        <h2 style="grid-column: 1 / -1; margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
         <div>
-          <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
           <p style="margin: 0 0 24px; font-size: calc(15px * var(--fs)); color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
           <div style="color: #141414">
             <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span></div>
@@ -294,10 +296,10 @@ html { scrollbar-gutter: stable; }
             <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>Europe</span><span style="color: #6E6B66">5–7 business days</span></div>
             <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2; border-bottom: 1px solid #DEDAD2"><span>Production time</span><span style="color: #6E6B66">3–6 working days</span></div>
           </div>
+          <p style="margin: 24px 0 0; font-size: calc(15px * var(--fs)); color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
         </div>
         <div style="display: grid; gap: 16px; align-content: start">
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
-          <p style="margin: 8px 0 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+          <p style="margin: 0; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
           <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
           <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
         </div>
