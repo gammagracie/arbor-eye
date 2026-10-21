@@ -328,9 +328,27 @@ WORKS.forEach((w, k) => {
 $('prev').addEventListener('click', () => show(current - 1, -1));
 $('next').addEventListener('click', () => show(current + 1, 1));
 addEventListener('keydown', e => {
+  if (e.key === 'PageDown') { e.preventDefault(); show(current + 1, 1); }
+  if (e.key === 'PageUp') { e.preventDefault(); show(current - 1, -1); }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1, 1); }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1, -1); }
 });
+// (since 2026-10-21) scrolling over the work (mouse wheel, or a trackpad either way) moves one work like the arrows: down / right
+// = next, up / left = previous; one work per gesture (further wheel events wait until the wheel has rested for 200ms, trackpad
+// momentum included, and the change has run its course)
+let wheelAcc = 0, wheelLocked = false, wheelAt = 0, wheelQuiet;
+stage.addEventListener('wheel', e => {
+  if (e.ctrlKey) return;   // pinch zoom
+  const dl = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  e.preventDefault();
+  clearTimeout(wheelQuiet); wheelQuiet = setTimeout(() => { wheelLocked = false; wheelAcc = 0; }, 200);
+  if (wheelLocked || performance.now() - wheelAt < 900) return;
+  wheelAcc += dl;
+  if (Math.abs(wheelAcc) < 40) return;
+  const d = wheelAcc > 0 ? 1 : -1; wheelAcc = 0;
+  wheelLocked = true; wheelAt = performance.now();
+  show(current + d, d);
+}, { passive: false });
 art.addEventListener('mouseenter', () => stage.classList.add('hovering'));
 art.addEventListener('mouseleave', () => stage.classList.remove('hovering'));
 // finger swipe on the work: up / left = next, down / right = previous

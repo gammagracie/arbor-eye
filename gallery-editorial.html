@@ -382,6 +382,19 @@ scroller.addEventListener('wheel', e => {
   glide();
 }, { passive: false });
 
+// (since 2026-10-21) the keyboard glides the column too, wherever the focus is: arrows down / up (or right / left) a step,
+// page down / up and the space bar most of a screen, Home / End to the ends
+addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]'))) return;
+  const page = scroller.clientHeight * 0.85, by = { ArrowDown: 160, ArrowRight: 160, ArrowUp: -160, ArrowLeft: -160, PageDown: page, PageUp: -page, ' ': e.shiftKey ? -page : page }[e.key];
+  if (by === undefined && e.key !== 'Home' && e.key !== 'End') return;
+  if (e.key === ' ' && e.target.closest && e.target.closest('button, a')) return;   // the space bar still presses a focused button or link
+  e.preventDefault();
+  if (!gliding) target = scroller.scrollTop;
+  target = e.key === 'Home' ? 0 : e.key === 'End' ? max() : clamp(target + by);
+  glide();
+});
+
 // drag with the mouse: the column follows the pointer, then coasts on release; a drag never opens a work
 let drag = null, moved = false;
 scroller.addEventListener('pointerdown', e => {
