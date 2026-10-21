@@ -116,7 +116,7 @@ html { scrollbar-gutter: stable; }
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 160px 40px; margin: 0 -160px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
-            <button onClick="{{ t.select }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
+            <button onClick="{{ t.select }}" onMouseEnter="{{ t.enter }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
             </button>
           </sc-for>
@@ -125,7 +125,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc({{ hoverTitleSize }} * 0.85); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc({{ hoverTitleSize }} * 0.72); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -200,6 +200,7 @@ class Component extends DCLogic {
     if (this.dockStrip && this.dockX != null) { void this.dockStrip.offsetWidth; this.dockMove({ currentTarget: this.dockStrip, clientX: this.dockX }); }
   }
   dockLeave(e) {
+    this.setState({ tip: null });   // the hover title fades (it keeps the last name while it does)
     this.dockX = null;
     Array.from(e.currentTarget.children).forEach(btn => {
       btn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back slowly and softly (0.9s since 2026-10-21)
@@ -331,7 +332,7 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
-    const thumbH = m ? '44px' : this.state.tablet ? 'calc(44px + (100vw - 768px) * 0.0176)' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)';
+    const thumbH = m ? '39.6px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.9)' : 'calc((100vw - 2 * var(--side-pad)) * 0.0468)';   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
@@ -423,8 +424,9 @@ class Component extends DCLogic {
       arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(1px 0 0 #FFFFFF)',
       arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
       arrowStroke: this.state.wide ? '2.4px' : !this.state.mobile && !this.state.tablet ? '1.7px' : '1.5px',   // the chevrons' line, 1px heavier than before (since 2026-10-20)
-      hoverTitle: this.arts[i].title,
-      hoverTitleOpacity: this.state.hover ? 1 : 0,
+      // (since 2026-10-21) the title shows only while the pointer is on a thumbnail, naming that thumbnail's work (not on the main image)
+      hoverTitle: this.arts[this.state.tip != null ? this.state.tip : this.lastTip != null ? this.lastTip : i].title,
+      hoverTitleOpacity: this.state.tip != null ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
       hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-2px 0 0' : '5px 0 0',   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
@@ -451,7 +453,8 @@ class Component extends DCLogic {
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
-        select: () => this.show(k)
+        select: () => this.show(k),
+        enter: () => { this.lastTip = k; this.setState({ tip: k }); }
       }))
     };
   }
