@@ -97,7 +97,7 @@ html:not(.touch) .scroller { cursor: grab; }
    landscape's height), whatever its orientation */
 .work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--k))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
-.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.45s ease, --s 0.45s cubic-bezier(0.22, 1, 0.36, 1), --hy 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --s 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --hy 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
 @property --hy { syntax: '<length>'; inherits: false; initial-value: 0px; }
 .work:first-child { margin-top: 0; }
