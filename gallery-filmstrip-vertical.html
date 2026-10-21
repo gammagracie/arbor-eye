@@ -79,17 +79,18 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .stage.hovering .caption, html.touch .caption { opacity: 1; }
 @media (min-width: 1760px) and (max-width: 3300px) { .caption { font-size: calc(19px * var(--fs)); } }   /* screens 1760-3300px wide: the hover title 3px larger */
 
-/* the strip: small thumbnails in one column (28px boxes), the Tree of Life to their right, its right edge on the bag icon's line */
-.rail { flex: none; width: 58px; position: relative; }
+/* the strip: small thumbnails in one column (39px boxes, 40% larger since 2026-10-21; were 28px), the Tree of Life to their right
+   (20 x 39px, 40% larger too), its right edge on the bag icon's line */
+.rail { flex: none; width: 77px; position: relative; }
 .strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
 .strip::-webkit-scrollbar { display: none; }
-.track { position: relative; display: grid; gap: 7px; padding: 24px 6px; justify-content: start; }   /* 6px each side leaves room for a thumbnail growing on hover */
-.thumb { width: 28px; height: 19px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
-.thumb img { display: block; height: 19px; width: auto; max-width: 28px; box-shadow: 0 1px 4px rgba(20,20,20,0.16); }
-/* portraits the same size as landscapes, turned upright (since 2026-10-20): 19 x 28px rather than 13 x 19px inside a landscape box */
-.thumb.v { width: 28px; height: 28px; } .thumb.v img { height: 28px; max-width: 19px; }
+.track { position: relative; display: grid; gap: 10px; padding: 24px 8px; justify-content: start; }   /* 8px each side leaves room for a thumbnail growing on hover */
+.thumb { width: 39px; height: 27px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+.thumb img { display: block; height: 27px; width: auto; max-width: 39px; box-shadow: 0 1px 4px rgba(20,20,20,0.16); }
+/* portraits the same size as landscapes, turned upright (since 2026-10-20): 27 x 39px rather than inside a landscape box */
+.thumb.v { width: 39px; height: 39px; } .thumb.v img { height: 39px; max-width: 27px; }
 html:not(.touch) .thumb:hover { transform: scale(1.18); }
-.marker { position: absolute; left: 44px; width: 14px; height: 28px; background: url(uploads/tol-v3.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.marker { position: absolute; left: 57px; width: 20px; height: 39px; background: url(uploads/tol-v3.svg) center / contain no-repeat; opacity: 0.85; pointer-events: none; transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
 /* phones: the strip runs along the bottom instead, the active thumbnail underlined (no Tree of Life) */
 @media (max-width: 767px) {
