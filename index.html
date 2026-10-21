@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Artwork by Ned Church</title>
+<!-- H2 (homepage trial): on desktop, the main image fills the visible area exactly (sides on the nav lines, 25px clear above and below), the painting cropped to that shape inside a thin paper edge; tablet and phones as the homepage -->
 <!-- homepage: the artwork 12% more saturated (main image and thumbnails); Dock-style ("genie") thumbnail magnification, each thumbnail growing from its centre -->
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
@@ -51,13 +52,6 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="home-0.html">00</a>
-          <a href="home-0-alt1.html">1b</a>
-          <a href="home-0-alt2.html">1c</a>
-          <a href="home-0-alt3.html">1d</a>
-          <a href="home-1a-alt.html">2b</a>
-          <a href="home-3.html">3a</a>
-          <a href="home-4.html">3b</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="works-index.html">Index</a>
@@ -89,13 +83,6 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="home-0.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">00</a>
-  <a href="home-0-alt1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1b</a>
-  <a href="home-0-alt2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1c</a>
-  <a href="home-0-alt3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">1d</a>
-  <a href="home-1a-alt.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">2b</a>
-  <a href="home-3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">3a</a>
-  <a href="home-4.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">3b</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
@@ -114,7 +101,7 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
-    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; max-height: {{ heroMaxH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative">
+    <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
       <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: calc(15px * var(--fs)); line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(19px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
@@ -123,8 +110,8 @@ html { scrollbar-gutter: stable; }
       <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 2.87% 2.28%; background: rgba(0, 0, 0, 0.25); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
     <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
-      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(1px 0 0 #FFFFFF)"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
+      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 160px 40px; margin: 0 -160px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
@@ -135,10 +122,10 @@ html { scrollbar-gutter: stable; }
           </sc-for>
         </div>
       </div>
-      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: #ADA9A2; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: drop-shadow(-1px 0 0 #FFFFFF)"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
+      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc({{ hoverTitleSize }} * var(--fs) * 0.85); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc({{ hoverTitleSize }} * 0.85); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -163,7 +150,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, vpos: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -227,13 +214,20 @@ class Component extends DCLogic {
   // whole strip by the slots travelled (0.95s ease), then re-centres it on the new work without a visible change.
   show(k) {
     if (k === this.state.index || this.state.fade || this.state.animate) return;
-    this.autoAt = Date.now();   // any change of work restarts the 7s wait before the next automatic one
+    this.autoAt = Date.now();   // H0: any change of work restarts the 9s autoplay wait
+    if (!this.state.mobile && !this.state.tablet) {   // H0 desktop: the strip slides the shortest way round to the new work, the tray glides with it
+      const n = this.arts.length; let st = (k - this.state.index + n) % n; if (st > n / 2) st -= n;
+      this.relaxDock();
+      this.setState({ index: k, vpos: this.state.vpos + st, animate: true });
+      setTimeout(() => this.setState({ railBase: k, animate: false }, () => this.redock()), 1650);
+      return;
+    }
     this.setState({ fade: true });
     setTimeout(() => {
       this.relaxDock();   // the hover magnification rests while the tray glides
-      this.setState({ index: k, fade: false, animate: true });
+      this.setState({ index: k, vpos: k, fade: false, animate: true });
       setTimeout(() => this.setState({ railBase: k, animate: false }, () => this.redock()), 1650);   // after the 1.6s glide
-    }, 1200);   // (since 2026-10-20 a soft change of work: 1.2s out and 1.2s in on a gentle sine curve; was 0.7s each way)
+    }, 700);
   }
   // Fallback if an artwork file is missing: a light green box.
   // Homepage only: each scan is zoomed about its painting so its paper border shrinks to about 35% of the scan's own (on the
@@ -242,7 +236,7 @@ class Component extends DCLogic {
   // the scan without its dedication). Upwelling has no fit: its narrower border is kept as it is.
   heroZoom(a) {
     if (!a.fit) return '';
-    const [x0, x1, y0, y1] = a.fit, w = x1 - x0, h = y1 - y0, K = 0.8;   // K: share of the border the painting grows into (0.65 until 2026-10-20: the paper is now 20% of the scan's own, was 35%)
+    const [x0, x1, y0, y1] = a.fit, w = x1 - x0, h = y1 - y0, K = 0.65;   // K: share of the border the painting grows into
     const s = Math.min((w + (1 - w) * K) / w, (h + (1 - h) * K) / h);
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
@@ -309,13 +303,10 @@ class Component extends DCLogic {
     this.setState({ wide: this.mqWide.matches });
     this.onKey = (e) => { if (e.key === 'ArrowLeft') this.go(-1); if (e.key === 'ArrowRight') this.go(1); };
     window.addEventListener('keydown', this.onKey);
-    // autoplay (since 2026-10-20): the next work fades in every 7s once the intro has finished, waiting while the pointer is on the
-    // thumbnails or arrows or the tab is hidden; any change of work restarts the wait
+    // H0 desktop autoplay (as on gagosian.com): the next work every 9s once the intro has finished, waiting while the pointer is on
+    // the thumbnails or arrows; any change of work restarts the wait
     this.autoAt = Date.now();
-    this.timer = setInterval(() => {
-      if (this.state.intro || this.state.railHover || document.hidden) { if (this.state.intro) this.autoAt = Date.now(); return; }
-      if (Date.now() - this.autoAt >= 7000) this.go(1);
-    }, 250);
+    this.timer = null;   // 1c / 1d (since 2026-10-20): no autoplay; the work changes only when a thumbnail (or an arrow) is used
   }
   componentWillUnmount() { if (this.mqPortrait) this.mqPortrait.removeEventListener('change', this.onMqPortrait);
     if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqWide) this.mqWide.removeEventListener('change', this.onMqWide);
@@ -336,25 +327,34 @@ class Component extends DCLogic {
     // the frame: the scans' 3:2 with the top and bottom paper trimmed (a fifth, then a further 15% of what was left: 3.28% of
     // the height off each edge, the same for every work so nothing jumps)
     const TRIM = 0.0328, FRAME = 1.5 / (1 - 2 * TRIM);
+    const VARIANT = '0a2';
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
     const thumbH = m ? '44px' : this.state.tablet ? 'calc(44px + (100vw - 768px) * 0.0176)' : 'calc((100vw - 2 * var(--side-pad)) * 0.052)';
-    const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 44px * var(--fs))';   // (7px more room for the title since 2026-10-20; the room grows with the 25% larger type over 2000px) // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
+    const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
+    // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
+    // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
+    const VF = !desk ? null : VARIANT === '1A' ? { w: '100%', h: 'auto', ratio: '1.75', pad: '35px 0 20px', inset: 0 }
+      : VARIANT === '1B' ? { w: 'calc(100% - 83.2px)', h: 'auto', ratio: '1.75', pad: '35px 0 20px', inset: 0 }
+      // H2 and H4 fill the height left on screen, keeping room under the frame for the part of the thumbnail tray that hangs below
+      // it (35% of a thumbnail + 19px) and the hover title (40px), so both stay on screen
+      // H0 (after gagosian.com): the painting runs the full width of the screen, edge to edge, from the header down to 50px
+      // above the bottom of the screen, cropped to cover; the thumbnails straddle its bottom edge and hang into that 50px band,
+      // with the hover title under the middle thumbnail
+      // since 2026-10-20: 40px of white above the painting and 90px below it (the thumbnails hang into it, the title under them);
+      // H0 runs the full width of the screen; H0-alt1 spans the logo's left edge to the bag icon's right edge and H0-alt2 the gap
+      // between the R and the B to the same distance in from the bag icon, both showing the whole painting on Ned's paper
+      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
+      : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
+      : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
     // tighter, the content width (logo to bag icon) or the height left on screen
     // desktop: the image's left edge lines up with the gap between the R and the B of the logo (41.6px in from the logo's left
     // edge) and its right edge sits the same distance in from the bag icon, unless the height left on screen limits it first
-    // desktop (since 2026-10-20): always from the B of the logo (the gap between the R and the B, 41.6px in from the logo's left
-    // edge) to the same distance in from the bag icon, at every width (the 8% reduction over 2000px is gone); where the screen is too
-    // short for the frame's shape it keeps that width and loses paper above and below instead (max-height: the height left on screen)
-    const heroW = m ? 'min(100%, ' + smallFit + ')' : desk ? 'calc(100% - 83.2px)' : 'min(94vw, ' + smallFit + ')';
-    const heroMaxH = desk ? deskH : 'none';
-    // desktop (since 2026-10-20): the whole painting always fits the frame with at least 2.5% of the frame's width of Ned's paper
-    // round it (never cropped, even where the frame is shortened); Upwelling, with no painting bounds, keeps the scan as it is
-    const pb = desk && (this.arts[i].fit || this.arts[i].paint) ? this.paperImg(this.arts[i], '4.5cqw') : null;
-    const heroH = 'auto';
-    const heroRatio = desk ? '1.655' : FRAME.toFixed(4);   // desktop since 2026-10-20: 1.655:1, so a 4.5% border leaves a 1.77:1 opening
+    const heroW = VF ? VF.w : m ? 'min(100%, ' + smallFit + ')' : desk ? (this.state.wide ? 'calc(0.92 * ' : '') + 'min(calc(100% - 83.2px), calc((' + deskH + ') * ' + FRAME.toFixed(4) + '))' + (this.state.wide ? ')' : '') : 'min(94vw, ' + smallFit + ')';
+    const heroH = VF ? VF.h : 'auto';
+    const heroRatio = VF ? VF.ratio : FRAME.toFixed(4);
     const half = m ? 1 : 2; // 3 thumbnails on phones, 5 everywhere else, centred on the current work
     const base = this.state.railBase;
     const shown = Array.from({ length: 3 * n }, (_, j) => j % n); // the whole run of works three times over: the tray only ever slides, so no thumbnail is swapped or reloaded
@@ -379,13 +379,15 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      heroLift: desk ? 'translateY(-15px)' : 'none',   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
-      heroPad: mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
+      heroLift: desk && !VF ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
+      heroPaper: 'none',   // H2: a thin edge of Ned's paper round the cropped painting
+      heroFrameShadow: 'none',
+      heroPad: VF ? VF.pad : mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
-      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
-      railAlign: 'flex-end',   // the chevrons' bottoms on the thumbnails' bottom edge, at every size
-      arrowPadBottom: '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : VF ? 'calc(-1 * ' + thumbH + ' - 5px)' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // H0 desktop: the thumbnails' bottom 14px below the painting   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
+      railAlign: desk ? 'center' : 'flex-end',   // H0 desktop: the chevrons centred on the thumbnails, over the painting; elsewhere their bottoms on the thumbnails' bottom edge
+      arrowPadBottom: desk ? '8px' : '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
       railJustify: 'center', // arrows sit beside the thumbnails, the set centred
       imgW: m ? 'auto' : '100%',
       imgMaxH: m ? '100%' : 'none',
@@ -393,27 +395,39 @@ class Component extends DCLogic {
       prevMargin: '0',   // both arrows padded alike, so the thumbnails (and the title under them) sit exactly on the centre line
       arrowW: this.state.wide ? '20.4px' : desk ? '10.2px' : '7.8px', arrowH: this.state.wide ? '56.4px' : desk ? '28.2px' : '21.6px',   // 60% of the earlier chevrons (since 2026-10-19): 10.2 x 28.2px on desktop, 20.4 x 56.4px over 2000px, 7.8 x 21.6px on tablet and phones
       thumbH,
-      heroImg: React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', containerType: pb ? 'size' : 'normal', background: pb ? '#ECE9E3 url(uploads/paper-edge.jpg) center / 300px auto repeat' : 'none', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 1.2s cubic-bezier(0.45, 0, 0.55, 1)' } }, React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: pb ? Object.assign({ filter: 'saturate(1.12)', position: 'absolute', display: 'block', maxWidth: 'none', touchAction: 'pan-y', color: 'transparent' }, pb) : { filter: 'saturate(1.12)', position: 'absolute', left: 0, top: '50%', width: '100%', height: 'auto', aspectRatio: '3 / 2', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', transformOrigin: '0 0', transform: 'translateY(-50%) ' + this.heroZoom(this.arts[i]) } })),
+      heroImg: VF ? (() => { const n = this.arts.length, vp = this.state.vpos;
+        // H0: every work on its own full-frame panel, placed by its distance from the current position (vpos counts the steps
+        // travelled, so the run loops round seamlessly); panels within two steps glide (1.1s, a soft ease-out, as on gagosian.com),
+        // the rest wait out of sight
+        return React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', boxShadow: VF.paper ? '0 6px 16px rgba(20,20,20,0.175)' : 'none' } }, this.arts.map((a, j) => {
+          let d = ((j - vp) % n + n) % n; if (d >= n / 2) d -= n;
+          const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = 1.5 * pw / ph, cur = j === i, near = Math.abs(d) <= 2;
+          return React.createElement('span', { key: a.src, style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', containerType: 'size', transform: 'translateX(' + d * 100 + '%)', transition: near ? 'transform 1.1s cubic-bezier(0.16, 1, 0.3, 1)' : 'none', visibility: near && this.state.heroBad !== a.src ? 'visible' : 'hidden' } },
+            React.createElement('span', { style: VF.paper ? { position: 'absolute', inset: 0, display: 'block', background: '#ECE9E3 url(uploads/paper-edge.jpg) center / 300px auto repeat' } : { position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', display: 'block', width: 'max(100cqw, calc(100cqh * ' + P.toFixed(4) + '))', aspectRatio: P.toFixed(4) } },
+              React.createElement('img', { src: a.src, alt: cur ? a.alt : '', 'aria-hidden': cur ? undefined : 'true', draggable: false, ref: cur ? el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); } : undefined, onLoad: cur ? e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }) : undefined, onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }),
+                style: Object.assign({ filter: 'saturate(1.12)', position: 'absolute', display: 'block', color: 'transparent', maxWidth: 'none' }, VF.paper ? this.paperImg(a, VF.paper) : { left: (-x0 / pw * 100) + '%', top: (-y0 / ph * 100) + '%', width: (100 / pw) + '%', height: (100 / ph) + '%' }) }))); })); })() : React.createElement('span', { style: { position: 'absolute', inset: 0, display: 'block', overflow: 'hidden', visibility: this.state.heroBad === this.arts[i].src ? 'hidden' : 'visible', boxShadow: '0 6px 16px rgba(20,20,20,0.175)', opacity: this.state.fade ? 0 : 1, transition: 'opacity 0.7s ease-in-out' } }, React.createElement('img', { src: this.arts[i].src, alt: this.arts[i].alt, ref: el => { if (el && el.complete && el.naturalWidth && this.state.heroOk !== el.getAttribute('src')) this.setState({ heroOk: el.getAttribute('src') }); }, onLoad: e => this.setState({ heroOk: e.currentTarget.getAttribute('src') }), onError: e => this.setState({ heroBad: e.currentTarget.getAttribute('src') }), onTouchStart: e => this.touchStart(e), onTouchEnd: e => this.touchEnd(e), onMouseEnter: () => this.setState({ hover: true }), onMouseLeave: () => this.setState({ hover: false }), style: { filter: 'saturate(1.12)', position: 'absolute', left: 0, top: '50%', width: '100%', height: 'auto', aspectRatio: '3 / 2', objectFit: 'contain', display: 'block', touchAction: 'pan-y', color: 'transparent', transformOrigin: '0 0', transform: 'translateY(-50%) ' + this.heroZoom(this.arts[i]) } })),
       // the image's alt text, centred on the frame (title in italic capitals, a colon, the tagline): shown only if the image has
       // not loaded within 0.8s or fails, so it never flashes during the crossfade between works (those images are preloaded)
       heroAltTitle: this.arts[i].title, heroAltTag: this.arts[i].tag,
       treeOpacity: this.state.heroBad === this.arts[i].src ? 0 : 0.25,   // the faint tree behind the image steps aside when the caption stands in for a failed image
       heroAltOpacity: this.state.heroOk === this.arts[i].src ? 0 : 1,
       heroAltTransition: this.state.heroOk === this.arts[i].src ? 'opacity 0.2s ease' : 'opacity 0.3s ease',   // (since 2026-10-21) the alt text shows straight away until the image has loaded (it waited 0.8s)
-      heroW, heroH, heroMaxH, heroRatio, desk,
+      heroW, heroH, heroRatio, desk,
       heroHref: 'Gallery.dc.html#' + encodeURIComponent(this.arts[i].title),
       introTreeOpacity: this.state.intro === 'tree' ? 1 : 0,
       introOpacity: this.state.intro === 'mark' ? 1 : 0,
-      // the chevrons (since 2026-10-20): on desktop they fade in only while the pointer is on the thumbnail row (where they sit too);
-      // tablets and phones, with no hover, always show them
-      railEnter: () => this.setState({ railHover: true }), railLeave: () => this.setState({ railHover: false }),
-      arrowOpacity: this.state.mobile || this.state.tablet || this.state.railHover ? 1 : 0,
+      railEnter: () => { this.railHover = true; this.setState({ railHover: true }); }, railLeave: () => { this.railHover = false; this.setState({ railHover: false }); },
+      arrowOpacity: !desk || this.state.railHover ? 1 : 0,
+      // H0 desktop: the chevrons sit on the painting, so they are white with a soft dark shadow (elsewhere grey with a 1px white edge)
+      arrowColor: desk && !(VF && VF.paper) ? '#FFFFFF' : '#ADA9A2',   // (the paper versions keep the grey chevrons: white would vanish on the paper)
+      arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(1px 0 0 #FFFFFF)',
+      arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
       arrowStroke: this.state.wide ? '2.4px' : !this.state.mobile && !this.state.tablet ? '1.7px' : '1.5px',   // the chevrons' line, 1px heavier than before (since 2026-10-20)
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
-      hoverTitleSize: !m && !this.state.tablet ? 'calc((' + (this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)') + ' + min(calc(' + thumbH + ' * 0.23), 22px)) / 2)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // desktop (since 2026-10-19): halfway between the galleries' hover title size (1px smaller over 2000px) and H0's (23% of a thumbnail's height, at most 22px); tablet and phones keep the galleries' size
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : '5px 0 0',   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-2px 0 0' : '5px 0 0',   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
@@ -433,7 +447,7 @@ class Component extends DCLogic {
         // only thumbnails that are on show at the start or the end of a glide are ever present: the five around the new work stay
         // put, the ones being left behind fade away as they slide off, and none beyond them peeks in at the feathered edges
         vis: Math.abs(j - (n + base + shift)) <= half || (this.state.animate && Math.abs(j - (n + base)) <= half) ? 'visible' : 'hidden',
-        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 6px 18px rgba(20,20,20,0.36)' } },   // a soft shadow lifts them off the painting
+        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 6px 20px rgba(10,10,10,0.55)' } },   // a soft shadow lifts them off the painting
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
