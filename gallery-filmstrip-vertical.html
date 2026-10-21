@@ -84,7 +84,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .strip { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
 .strip::-webkit-scrollbar { display: none; }
 .track { position: relative; display: grid; gap: 7px; padding: 24px 6px; justify-content: start; }   /* 6px each side leaves room for a thumbnail growing on hover */
-.thumb { width: 28px; height: 19px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.thumb { width: 28px; height: 19px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 .thumb img { display: block; height: 19px; width: auto; max-width: 28px; box-shadow: 0 1px 4px rgba(20,20,20,0.16); }
 /* portraits the same size as landscapes, turned upright (since 2026-10-20): 19 x 28px rather than 13 x 19px inside a landscape box */
 .thumb.v { width: 28px; height: 28px; } .thumb.v img { height: 28px; max-width: 19px; }

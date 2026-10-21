@@ -199,7 +199,7 @@ class Component extends DCLogic {
     let acc = 0;
     btns.forEach((btn, k) => {
       const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
-      btn.style.transition = 'transform 0.14s ease-out, opacity 0.35s ease, border-color 0.35s ease';
+      btn.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // (since 2026-10-21) the swell follows the cursor softly (was 0.14s)
       btn.style.transformOrigin = 'center center';
       btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
       btn.style.zIndex = String(Math.round(scales[k] * 100));
@@ -217,7 +217,7 @@ class Component extends DCLogic {
   dockLeave(e) {
     this.dockX = null;
     Array.from(e.currentTarget.children).forEach(btn => {
-      btn.style.transition = 'transform 0.7s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back as softly
+      btn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back slowly and softly (0.9s since 2026-10-21)
       btn.style.transform = ''; btn.style.zIndex = '';
     });
     this.dock = null;
