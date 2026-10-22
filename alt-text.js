@@ -10,7 +10,7 @@
   const css = document.createElement('style');
   css.textContent = '.alt-cap { position: absolute; inset: 0; z-index: 1; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: calc(15px * var(--fs, 1)); line-height: 1.5; color: #6E6B66; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }'
     + ' .alt-cap.on { opacity: 1; transition: opacity 0.4s ease; }'
-    + ' .alt-cap em { font-family: "EB Garamond", serif; font-style: italic; font-size: calc(19px * var(--fs, 1)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }'
+    + ' .alt-cap em { font-family: "EB Garamond", serif; font-style: normal; font-size: calc(19px * var(--fs, 1)); letter-spacing: 0.02em; text-transform: none; color: #141414; }'
     + ' .alt-cap.s { padding: 0 6%; font-size: calc(10px * var(--fs, 1)); line-height: 1.3; } .alt-cap.s em { font-size: calc(11px * var(--fs, 1)); letter-spacing: 0.06em; }';
   document.head.appendChild(css);
   const auto = document.currentScript && document.currentScript.hasAttribute('data-auto');

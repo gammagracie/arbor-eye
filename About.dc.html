@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
-<script src="alt-text.js?v=4" data-auto></script>
+<script src="alt-text.js?v=5" data-auto></script>
 </head>
 <body>
 <x-dc>
@@ -22,25 +22,25 @@
    block is 50 x --ab-body wide (2028px at 3840). --ab-h: the height of the box every tab sits in. */
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
   --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(30px, 1.95vw, 100px); --ab-measure: calc(var(--ab-body) * 50);
-  --ab-h: min(calc((100vw - 2 * var(--side-pad) ) / 2), calc(100vh - var(--header-h) - var(--footer-h) - 64px - 68px)); }   /* the box: as tall as Contact's photo */
+  --ab-h: min(calc((100vw - 2 * var(--side-pad) - 83.2px) / 2), calc(100vh - var(--header-h) - var(--footer-h) - 64px - 68px)); }   /* the box: as tall as Contact's photo */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
-   22px padding above its labels, less 50px), and the copy runs in two columns */
+   22px padding above its labels, less 50px) */
 .ab-portrait { height: calc(var(--ab-h) * 0.8); }
-@media (min-width: 2001px) {
-  .ab-portrait { height: calc(var(--ab-h) - 28px); }
-  .ab-copy.ab-cols { display: block; column-count: 2; column-gap: var(--ab-gap); }
-  .ab-copy p { font-size: calc(14.5px * var(--fs) + 6px); line-height: 1.75; }
-  .ab-cols p { margin: 0 0 1.1em !important; }
-  .ab-cols p:last-child { margin-bottom: 0 !important; }
-}
-/* Biography on screens 2001-2350px wide (since 2026-10-21): the paragraphs 3px smaller (21px rather than 24px) */
-@media (min-width: 2001px) and (max-width: 2350px) { .ab-copy.ab-cols p { font-size: calc(14.5px * var(--fs) + 3px); } }
+@media (min-width: 2001px) { .ab-portrait { height: calc(var(--ab-h) - 28px); } }
+/* the paragraphs of every desktop tab, and of Contact's Shipping and Returns (since 2026-10-22; class bt), styled as Biography's
+   always were: 14.5px on a 1.75 line, 0.99vw apart (19px at 1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px
+   wide), 1.1em apart; one column (Biography ran in two over 2000px on 2026-10-20 and 21) */
+.bt p:not(.lbl), .bt li { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); line-height: 1.75; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1); }
+.bt ul { margin: 0; padding-left: 1.2em; } .bt > :last-child, .bt li:last-child { margin-bottom: 0; }
+@media (min-width: 2001px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 6px); margin-bottom: 1.1em; } }
+@media (min-width: 2001px) and (max-width: 2350px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 3px); } }
 /* (since 2026-10-21) each desktop tab (its box and the tab bar under it) centred top to bottom between the header and the footer,
    at least 32px from each */
 @media (min-width: 1000px) { .ab-main { display: flex; flex-direction: column; } }
 .ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
 .ab-copy p { margin: 0; }
+.ab-copy.bt { display: block; }
 .ab-head { margin: 0 0 calc(var(--ab-head) * 0.55); font-family: 'EB Garamond', serif; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; }
 
 /* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
@@ -255,79 +255,79 @@ html { scrollbar-gutter: stable; }
   </sc-if>
   </sc-if>
 
-  <!-- DESKTOP (1000px and wider, since 2026-10-20): every tab shares Contact's frame: a box the full width of the top nav, the logo's left edge to the bag
-       icon's right edge (since 2026-10-21; it started at the B), 32px under the header, as tall as Contact's photo (half the box's width,
+  <!-- DESKTOP (1000px and wider, since 2026-10-20): every tab shares Contact's frame: a box from the B of the logo (41.6px in, the homepage painting's margins;
+       since 2026-10-22) to the same distance in from the bag icon, 32px under the header, as tall as Contact's photo (half the box's width,
        or less on a short screen), and under it the tab bar exactly where Contact's is; the footer follows (on screen on load) -->
   <sc-if value="{{ wideAbout }}" hint-placeholder-val="{{ true }}">
   <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 32px 0">
+  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Biography: the portrait (3:4, 80% of the box's height; over 2000px down to 50px above the tab labels) at the box's top-left corner, on the logo's left edge, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
           <img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="align-self: start; display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h1 class="ab-head">Biography</h1>
-            <div class="ab-copy ab-cols"><p style="margin: 0">I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
-        <p style="margin: 0">Working with 4 x 6–inch formats, my paintings explore the tension between control and acceptance. Watercolor is a medium that moves on its own terms — bleeding, pooling, and surprising the brush that guides it. The more I work with the medium, the more I recognize a rhythm that feels both familiar and instructive. Over time, I’ve realized that this process — one of discovery and adjustment — has brought me closer to my father’s approach: beginning with a vision, guided by intuition, and allowing the painting to reveal itself. In his words: “The work will tell you what it wants; you just have to be patient enough to listen.” I’ve come to recognize that his words speak more than just painting; they reflect a way of living. They are a reminder that patience and persistence can shape not only the creative process but also the way we meet what life places before us.</p>
-        <p style="margin: 0">My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p></div>
+            <div class="ab-copy bt"><p>I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it forward.</p>
+        <p>Working with 4 x 6–inch formats, my paintings explore the tension between control and acceptance. Watercolor is a medium that moves on its own terms — bleeding, pooling, and surprising the brush that guides it. The more I work with the medium, the more I recognize a rhythm that feels both familiar and instructive. Over time, I’ve realized that this process — one of discovery and adjustment — has brought me closer to my father’s approach: beginning with a vision, guided by intuition, and allowing the painting to reveal itself. In his words: “The work will tell you what it wants; you just have to be patient enough to listen.” I’ve come to recognize that his words speak more than just painting; they reflect a way of living. They are a reminder that patience and persistence can shape not only the creative process but also the way we meet what life places before us.</p>
+        <p>My paintings are less about demonstrating what is seen than about capturing what is felt — a record of time, movement, and response. Each piece becomes both an exploration and a conversation, inviting others to find their own meaning in the shapes and colors that emerge.</p></div>
           </div>
         </div>
       </div>
-      <!-- the tab bar exactly where Contact's is: under the box, the full width of the top nav, the labels 14px -->
+      <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 32px 0">
+  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Tree of Life: the fresco photo (49.5% of the screen's width, at most the box's height) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(49.5vw, calc(var(--ab-h) * 1.4027), calc(100vw - 2 * var(--side-pad)  - var(--ab-gap) - 360px)); height: auto; align-self: start">
+          <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(49.5vw, calc(var(--ab-h) * 1.4027), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)); height: auto; align-self: start">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Tree of Life</h2>
-            <div class="ab-copy"><p style="margin: 0">The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
-        <p style="margin: 0">The original pin was designed and fabricated by Sharon Church shortly after her nephew Ned was injured in a car accident. Over time, the insignia evolved into the foundation for the name Arbor &amp; Eye and its broader visual identity, gradually coming to embody endurance, renewal, and continuity within Ned Church’s work.</p></div>
+            <div class="ab-copy bt"><p>The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
+        <p>The original pin was designed and fabricated by Sharon Church shortly after her nephew Ned was injured in a car accident. Over time, the insignia evolved into the foundation for the name Arbor &amp; Eye and its broader visual identity, gradually coming to embody endurance, renewal, and continuity within Ned Church’s work.</p></div>
           </div>
         </div>
       </div>
-      <!-- the tab bar exactly where Contact's is: under the box, the full width of the top nav, the labels 14px -->
+      <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 32px 0">
+  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height) at the box's top-right corner -->
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Process</h2>
-            <div class="ab-copy"><p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
-        <p style="margin: 0">Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
-        <p style="margin: 0">The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
+            <div class="ab-copy bt"><p>Each painting develops through layering, revision, and response over time.</p>
+        <p>Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
+        <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
-          <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: min(40.9vw, calc(var(--ab-h) * 4 / 3), calc(100vw - 2 * var(--side-pad)  - var(--ab-gap) - 360px)); aspect-ratio: 4 / 3; align-self: start; object-fit: cover">
+          <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: min(40.9vw, calc(var(--ab-h) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)); aspect-ratio: 4 / 3; align-self: start; object-fit: cover">
         </div>
       </div>
-      <!-- the tab bar exactly where Contact's is: under the box, the full width of the top nav, the labels 14px -->
+      <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 32px 0">
+  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Studio (since 2026-10-21): the heading, then a two-slide strip: the three photos side by side across the box, and to their
              right the film (as tall as the photos, centred in the box); two dots under the middle photo, a sideways swipe (finger or
              trackpad) or the left / right arrow keys move between them -->
         <h2 class="ab-head">Studio</h2>
-        <div class="stu-slider" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.65 - 32px), calc((100vw - 2 * var(--side-pad) - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; touch-action: pan-y">
+        <div class="stu-slider" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.65 - 32px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; touch-action: pan-y">
           <div style="display: flex; width: 200%; transform: translateX({{ stuShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
             <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuHide0 }}">
               <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
@@ -352,7 +352,7 @@ html { scrollbar-gutter: stable; }
           </sc-for>
         </div>
       </div>
-      <!-- the tab bar exactly where Contact's is: under the box, the full width of the top nav, the labels 14px -->
+      <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>

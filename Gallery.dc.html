@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
-<script src="alt-text.js?v=4"></script>
+<script src="alt-text.js?v=5"></script>
 </head>
 <body>
 <x-dc>
@@ -164,7 +164,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 21px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 21px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.02em; text-transform: none; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -189,7 +189,7 @@ html { scrollbar-gutter: stable; }
         </div>
         <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}; width: {{ detailTextW }}; max-width: {{ detailTextMax }}; justify-self: {{ detailTextJustify }}">
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">{{ detailSeries }}</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.02em; text-transform: none">{{ detailTitle }}</h1>
           <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: calc(14px * var(--fs)); color: #6E6B66; padding-top: 8px">
             <div style="display: grid; gap: 8px">
               <p style="margin: 0">{{ detailMedium }}</p>
@@ -245,7 +245,7 @@ html { scrollbar-gutter: stable; }
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.02em; text-transform: none">{{ detailTitle }}</h1>
           <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
           <sc-if value="{{ hasDesc }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em">{{ detailDesc }}</p>
@@ -314,25 +314,25 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;},
   &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
 }">
-// Works whose details differ from the default (watercolour on paper, 4 x 6 in)
+// Works whose details differ from the default (watercolour on paper; every original is 4 x 6 in, set by orientation below)
 const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spectrum': 5, 'Structure': 6, 'The Turning': 7, 'Tonal': 8 };
 const DETAILS = {
-  'Script': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Repeated strokes form a visual language.' },
-  'Brilliance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Light reveals what was always there' },
-  'Canopy': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Life surrounds us.' },
-  'Passage': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'The journey continues.' },
-  'Conduit': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Pathways connect a shared structure.' },
-  'Symbiosis': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Distinct forms exist through mutual relationships.' },
-  'Chamber': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Defined spaces establish internal relationships.' },
-  'Upwelling': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Parallel forms organize a living field.' },
-  'Outliers 1': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
-  'Outliers 3': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
-  'Outliers 4': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032' },
-  'Coastal Silence': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Stillness settles as movement comes to rest.' },
-  'Habitat': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Living forms establish a shared environment.' },
-  'Crossings': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Color settles where forms overlap and diverge.' },
-  'Aurora': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Creation unfolds through harmony.' },
-  'Resonance': { medium: 'Acrylic and pastel on canvas', size: '11\u2032\u2032x 24\u2032\u2032', desc: 'Connection amplifies possibility.' }
+  'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
+  'Brilliance': { medium: 'Acrylic and pastel on canvas', desc: 'Light reveals what was always there' },
+  'Canopy': { medium: 'Acrylic and pastel on canvas', desc: 'Life surrounds us.' },
+  'Passage': { medium: 'Acrylic and pastel on canvas', desc: 'The journey continues.' },
+  'Conduit': { medium: 'Acrylic and pastel on canvas', desc: 'Pathways connect a shared structure.' },
+  'Symbiosis': { medium: 'Acrylic and pastel on canvas', desc: 'Distinct forms exist through mutual relationships.' },
+  'Chamber': { medium: 'Acrylic and pastel on canvas', desc: 'Defined spaces establish internal relationships.' },
+  'Upwelling': { medium: 'Acrylic and pastel on canvas', desc: 'Parallel forms organize a living field.' },
+  'Outliers 1': { medium: 'Acrylic and pastel on canvas' },
+  'Outliers 3': { medium: 'Acrylic and pastel on canvas' },
+  'Outliers 4': { medium: 'Acrylic and pastel on canvas' },
+  'Coastal Silence': { medium: 'Acrylic and pastel on canvas', desc: 'Stillness settles as movement comes to rest.' },
+  'Habitat': { medium: 'Acrylic and pastel on canvas', desc: 'Living forms establish a shared environment.' },
+  'Crossings': { medium: 'Acrylic and pastel on canvas', desc: 'Color settles where forms overlap and diverge.' },
+  'Aurora': { medium: 'Acrylic and pastel on canvas', desc: 'Creation unfolds through harmony.' },
+  'Resonance': { medium: 'Acrylic and pastel on canvas', desc: 'Connection amplifies possibility.' }
 };
 class Component extends DCLogic {
   state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, stackDetail: typeof window !== 'undefined' && window.innerWidth < 1330, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailShift: 0, detailDotsW: '100%', detailImgOff: 0, detailTextW: 'auto', detailTextMax: 'none', detailView: 0 };
@@ -410,7 +410,7 @@ class Component extends DCLogic {
     series: s,
     avail: 'Available',
     medium: (DETAILS[t] || {}).medium || 'Watercolor on paper',
-    size: (DETAILS[t] || {}).size || "4\u2032\u2032x 6\u2032\u2032",
+    size: vertical ? '6\u2033 x 4\u2033' : '4\u2033 x 6\u2033',   // (since 2026-10-22) every original: 4" x 6" for horizontals, 6" x 4" for verticals
     desc: tag || (DETAILS[t] || {}).desc || ''
   }));
   setZoom(open) {
