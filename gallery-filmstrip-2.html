@@ -807,6 +807,9 @@ menu('fmYear', 'Year', yearOpts, () => fYear, v => { fYear = v; if (v !== 'All')
 document.addEventListener('click', e => { if (!e.target.closest('.filter-menu')) close(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
+// (since 2026-10-22) ?series=<name> opens with that series chosen in the filter (the detail pages' series links)
+const askedSeries = new URLSearchParams(location.search).get('series');
+if (askedSeries && ALL.some(w => w.s === askedSeries)) { fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); }
 // start on the work named in the URL, else the first work
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
