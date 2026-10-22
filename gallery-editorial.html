@@ -110,7 +110,7 @@ html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in
 .work .side { position: absolute; top: 50%; margin-top: -1.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
 .work.l .side { right: calc(100% + 56px); align-items: flex-end; }
-.work .side span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs) * 0.72); letter-spacing: 0.02em; text-transform: none; color: #141414; }
+.work .side span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .work.hov .side { opacity: 1; }   /* .hov: set by the script while the pointer is on the work or its enlarged size (mouse only) */
 /* phones: widths 87-100% of the column for every work (portraits as wide, so taller, never taller than the screen allows);
@@ -134,7 +134,7 @@ html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in
 html.touch .sb { display: none; }
 footer { flex: none; }
 </style>
-<script src="alt-text.js?v=5"></script>
+<script src="alt-text.js?v=6"></script>
 </head>
 <body>
   <header>
