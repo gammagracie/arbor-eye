@@ -403,8 +403,9 @@ function fit() {
   // right, on the bag icon's line; only if it still reaches them do the works shrink to clear them.
   if (grid && !phone.matches) {
     const st = stage.getBoundingClientRect(), iconTop = $('tools').querySelector('.count svg').getBoundingClientRect().top;
-    gridTop = iconTop - st.top;
     const SL = seriesLayout(), boxR = SL && WORKS.every(w => w.r < 1) ? 0.667 : 1.5;   // the column box: portrait for an all-portrait series
+    // (since 2026-10-22) a series in pages of 2 x 2: the top row starts level with the bottom of the view icons, not their top
+    gridTop = (SL && SL.cols === 2 && SL.per === 4 ? $('tools').querySelector('.count svg').getBoundingClientRect().bottom : iconTop) - st.top;
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
     const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
