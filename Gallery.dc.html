@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
-<script src="alt-text.js?v=5"></script>
+<script src="alt-text.js?v=6"></script>
 </head>
 <body>
 <x-dc>
@@ -164,7 +164,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 21px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.02em; text-transform: none; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 21px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease; pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
@@ -191,7 +191,7 @@ html { scrollbar-gutter: stable; }
           <!-- (since 2026-10-22) in this order: ORIGINAL, the title, the description in quotation marks, the series (a link to G5
                showing that series), medium and size, the edition and certificate lines, then the two links -->
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.02em; text-transform: none">{{ detailTitle }}</h1>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
           <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
@@ -250,7 +250,7 @@ html { scrollbar-gutter: stable; }
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.02em; text-transform: none">{{ detailTitle }}</h1>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
           <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
           <sc-if value="{{ hasDesc }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em">{{ detailDesc }}</p>

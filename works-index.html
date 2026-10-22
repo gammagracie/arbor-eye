@@ -99,7 +99,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 .step:hover { color: #6E6B66; }
 .step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
 .step svg { width: clamp(9.75px, 1.31625vw, 19.0125px); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
-.caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(16px * var(--fs)); font-style: normal; letter-spacing: 0.02em; text-transform: none; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
+.caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(16px * var(--fs)); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 html.touch .caption { opacity: 1; }
@@ -153,10 +153,10 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
-.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.72); letter-spacing: 0.02em; text-transform: none; color: #141414; opacity: 0; transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
+.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
 .idx-title.show { opacity: 1; }
 </style>
-<script src="alt-text.js?v=5"></script>
+<script src="alt-text.js?v=6"></script>
 </head>
 <body>
 <div class="page index" id="page">

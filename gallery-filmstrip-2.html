@@ -95,7 +95,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .li { display: grid; justify-items: center; gap: 14px; color: #141414; }
 .li img { display: block; width: 100%; height: auto; box-shadow: 0 6px 16px rgba(20,20,20,0.14); }
 .li.v img { width: auto; max-width: 100%; max-height: 72vh; }   /* portraits: full width unless that would make them taller than 72% of the screen */
-.li span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs)); letter-spacing: 0.02em; text-transform: none; text-align: center; }
+.li span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
 @media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
@@ -120,7 +120,7 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 :root { --chev-w: clamp(9.75px, 1.31625vw, 19.0125px); }
 @media (min-width: 2001px) { :root { --chev-w: 28.52px; } }   /* screens over 2000px: the chevrons 150% of that (since 2026-10-21): 28.5 x 78px */
 .step svg { width: var(--chev-w); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
-.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs) * 0.72); font-style: normal; letter-spacing: 0.02em; text-transform: none; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs) * 0.72); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 .page.multi .caption { transition: opacity 0.25s ease; }   /* 3 and 9 views (since 2026-10-21): the title fades in and out too (it used to pop) */
@@ -153,7 +153,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 </style>
-<script src="alt-text.js?v=5"></script>
+<script src="alt-text.js?v=6"></script>
 </head>
 <body>
 <div class="page" id="page">
