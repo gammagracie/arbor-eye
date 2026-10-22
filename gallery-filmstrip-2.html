@@ -85,7 +85,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
    (768-1279px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
 .count[data-n="2"] { display: none; }
 .page.few .count[data-n="9"] { display: none; }
-.count svg.g2, .page.vert .count svg.g3 { display: none; } .page.vert .count svg.g2 { display: block; }   /* (since 2026-10-21) the Vertical filter: the grid icon is 2 x 2 */   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
+.count svg.g2, .page.vert .count svg.g3 { display: none; } .page.vert .count svg.g2 { display: block; }   /* (since 2026-10-21 for Vertical, 2026-10-22 for every series in pages of 2 x 2) the grid icon is 2 x 2 */   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
 @media (min-width: 768px) and (max-width: 1279px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
 /* phones: every work in one scrolling column, full content width, its title under it; a tap opens the detail view */
 .list { display: none; }
@@ -777,7 +777,9 @@ function applyFilter() {
   // (since 2026-10-21) 3 works or fewer: the 3 x 3 icon goes and a desktop grid becomes the 3-up row (back to the grid once the
   // filter shows more again, if it was the grid that was left)
   const few = list.length <= 3; page.classList.toggle('few', few);
-  page.classList.toggle('vert', fSeries === 'Vertical'); document.querySelector('.count[data-n="9"]').setAttribute('aria-label', fSeries === 'Vertical' ? '4 works at a time' : '9 works at a time');
+  // a series laid out in pages of 2 x 2 (Ascent, Convergence, Core, Outliers, Select, The Turning, Spectrum, Vertical): the grid icon shows 2 x 2
+  const two = !!(SERIES_LAYOUT[fSeries] && SERIES_LAYOUT[fSeries].cols === 2 && SERIES_LAYOUT[fSeries].per === 4);
+  page.classList.toggle('vert', two); document.querySelector('.count[data-n="9"]').setAttribute('aria-label', two ? '4 works at a time' : '9 works at a time');
   if (!tab.matches && !phone.matches) {
     if (few && view === 9) { view = deskView = 3; gridWas = true; } else if (!few && gridWas) { view = deskView = 9; gridWas = false; }
     [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
