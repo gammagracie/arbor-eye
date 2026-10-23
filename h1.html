@@ -193,7 +193,8 @@ class Component extends DCLogic {
     });
     // (since 2026-10-22) the hover title follows the hovered thumbnail to where the swell is taking it (its resting centre plus
     // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
-    const hov = e.target.closest && e.target.closest('button'), k = btns.indexOf(hov), rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
+    const hov = e.target && e.target.closest ? e.target.closest('button') : null, k = btns.indexOf(hov),   // (the re-application after a glide passes no target: the title then stays put)
+          rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
     if (k >= 0 && rail) {
       let acc2 = 0; for (let j = 0; j < k; j++) acc2 += extra[j];
       const r = rail.getBoundingClientRect();
@@ -475,7 +476,8 @@ class Component extends DCLogic {
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k),
         enter: (e) => {
-          const b = e.currentTarget.getBoundingClientRect(), rail = e.currentTarget.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
+          const el = e && e.currentTarget; if (!el) { this.lastTip = k; this.setState({ tip: k }); return; }
+          const b = el.getBoundingClientRect(), rail = el.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
           this.lastTip = k; if (this.tipX == null) this.tipX = (b.left + b.width / 2) - (r.left + r.width / 2); this.setState({ tip: k });
         }
       }))
