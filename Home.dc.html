@@ -156,16 +156,16 @@ class Component extends DCLogic {
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/works/select_brilliance.jpg', fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
-    { src: 'assets/works/core_symbiosis.jpg', fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
-    { src: 'assets/works/core_emergence-no-dedication.jpg', fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
-    { src: 'assets/works/core_script.jpg', fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
+    { src: 'assets/home-v2/brilliance.jpg', thumb: 'assets/thumbs/select_brilliance.jpg', baked: true, fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
+    { src: 'assets/home-v2/symbiosis.jpg', thumb: 'assets/thumbs/core_symbiosis.jpg', baked: true, fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
+    { src: 'assets/home-v2/emergence.jpg', thumb: 'assets/thumbs/core_emergence-no-dedication.jpg', baked: true, fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/home-v2/script.jpg', thumb: 'assets/thumbs/core_script.jpg', baked: true, fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
     { src: 'assets/works/core_articulation.jpg', fit: [0.165, 0.800, 0.323, 0.632], cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
-    { src: 'assets/works/core_habitat.jpg', fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
-    { src: 'assets/works/core_chamber.jpg', fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
-    { src: 'assets/works/core_affinity.jpg', fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
-    { src: 'assets/works/core_conduit.jpg', fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
-    { src: 'assets/works/core_upwelling.jpg', paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
+    { src: 'assets/home-v2/habitat.jpg', thumb: 'assets/thumbs/core_habitat.jpg', baked: true, fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
+    { src: 'assets/home-v2/chamber.jpg', thumb: 'assets/thumbs/core_chamber.jpg', baked: true, fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
+    { src: 'assets/home-v2/affinity.jpg', thumb: 'assets/thumbs/core_affinity.jpg', baked: true, fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
+    { src: 'assets/home-v2/conduit.jpg', thumb: 'assets/thumbs/core_conduit.jpg', baked: true, fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
+    { src: 'assets/home-v2/upwelling.jpg', thumb: 'assets/thumbs/core_upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification, the "genie": the thumbnail under the cursor grows most (130%), neighbours less
@@ -257,7 +257,7 @@ class Component extends DCLogic {
   // Thumbnails: each scan zoomed about its painting so its white paper border matches Upwelling's (the painting 85.2% of the
   // thumbnail's width, 82% of its height, on its tighter side), the painting centred, never trimmed; Upwelling as scanned.
   thumbZoom(a) {
-    if (!a.fit) return '';
+    if (!a.fit) return '';   // (the thumbnails are the homepage's own, white paper border and all, since 2026-10-22)
     const [x0, x1, y0, y1] = a.fit, s = Math.min(0.852 / (x1 - x0), 0.82 / (y1 - y0));
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
@@ -268,6 +268,7 @@ class Component extends DCLogic {
   // the excess cut off at the opening's edge on that side only (cq units: the frame is the size container; Ned's paper texture
   // shows in the border wherever a scan's own paper is cut away or runs short)
   paperImg(a, B) {
+    if (a.baked) return { left: 0, top: 0, width: '100cqw', height: '100cqh' };   // v2: the picture is the whole frame, border and all
     const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = (1.5 * pw / ph).toFixed(4);
     const IW = 'calc(100cqw - 2 * ' + B + ')', IH = 'calc(100cqh - 2 * ' + B + ')';
     const PW = 'max(min(' + IW + ', calc(' + IH + ' * ' + P + ')), calc(max(' + IW + ', calc(' + IH + ' * ' + P + ')) / 1.01))', PH = 'calc(' + PW + ' / ' + P + ')';
@@ -341,6 +342,10 @@ class Component extends DCLogic {
     // the height off each edge, the same for every work so nothing jumps)
     const TRIM = 0.0328, FRAME = 1.5 / (1 - 2 * TRIM);
     const VARIANT = '0a2';
+    // (since 2026-10-23 the homepage itself, as H1, h1.html, made 2026-10-22): each painting re-made from its full-size scan (assets/home-v2/): brought to the
+    // frame opening's exact proportion by taking low-detail seams out of the painting's interior (its own rough edges untouched)
+    // and cropped from the scan's own paper with the 4.5% border, so the picture fills the frame as is, with no added paper
+    // and no joins; the frame keeps 1.655:1 at every screen size
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
@@ -358,7 +363,7 @@ class Component extends DCLogic {
       // since 2026-10-20: 40px of white above the painting and 90px below it (the thumbnails hang into it, the title under them);
       // H0 runs the full width of the screen; H0-alt1 spans the logo's left edge to the bag icon's right edge and H0-alt2 the gap
       // between the R and the B to the same distance in from the bag icon, both showing the whole painting on Ned's paper
-      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'calc(100% - 83.2px)' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
+      : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
       : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
     // the painting always shows whole, never cropped: the frame keeps the scans' 3:2 shape and scales to whichever is
@@ -466,7 +471,7 @@ class Component extends DCLogic {
         // put, the ones being left behind fade away as they slide off, and none beyond them peeks in at the feathered edges
         vis: Math.abs(j - (n + base + shift)) <= half || (this.state.animate && Math.abs(j - (n + base)) <= half) ? 'visible' : 'hidden',
         img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease, box-shadow 0.45s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : this.state.tip === k ? '0 3px 10px rgba(10,10,10,0.3)' : '0 6px 20px rgba(10,10,10,0.55)' } },   // (since 2026-10-23) the hovered thumbnail's shadow softer   // a soft shadow lifts them off the painting
-          React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
+          React.createElement('img', { src: this.arts[k].thumb || this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k),
