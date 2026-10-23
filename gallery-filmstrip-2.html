@@ -75,7 +75,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
 .filter-menu.open .fm-list { display: grid; }
 .fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
-.fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #8A867E; }
+.fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }   /* the chosen option in black, bold (since 2026-10-23; it was a paler grey) */
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
@@ -832,7 +832,12 @@ addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
 // (since 2026-10-22) ?series=<name> opens with that series chosen in the filter (the detail pages' series links)
 const askedSeries = new URLSearchParams(location.search).get('series');
-if (askedSeries && ALL.some(w => w.s === askedSeries)) { const h = location.hash; fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); history.replaceState(null, '', location.pathname + location.search + h); }   // (the work named after # is still the one opened)
+if (askedSeries && ALL.some(w => w.s === askedSeries)) {
+  const h = location.hash; fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); history.replaceState(null, '', location.pathname + location.search + h);   // (the work named after # is still the one opened)
+  // (since 2026-10-23) arriving this way (the Index, a detail page's series link), the Series menu opens, the series chosen in it;
+  // a click anywhere else closes it as usual
+  const sm = $('fmSeries'); sm.classList.add('open'); sm.querySelector('.fm-btn').setAttribute('aria-expanded', 'true');
+}
 // start on the work named in the URL, else the first work
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);
