@@ -12,7 +12,7 @@
   addEventListener('error', e => { if (e.target.tagName === 'IMG' && !e.target.src.endsWith('placeholder-landscape.svg')) e.target.src = 'assets/placeholder-landscape.svg'; }, true);
 </script>
 <script src="./support.js"></script>
-<script src="alt-text.js?v=6" data-auto></script>
+<script src="alt-text.js?v=7" data-auto></script>
 </head>
 <body>
 <x-dc>
@@ -73,7 +73,7 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="home-v2.html">H22</a>
+          <a href="h1.html">H1</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="works-index.html">Index</a>
@@ -105,7 +105,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="home-v2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H22</a>
+  <a href="h1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
   <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>

@@ -55,7 +55,7 @@
     const covered = () => { const r = img.getBoundingClientRect(); return [...box.querySelectorAll('img')].some(o => {   // a picture showing in the same place
       if (o === img || !(o.complete && o.naturalWidth) || parseFloat(getComputedStyle(o).opacity) <= 0.05) return false;
       const q = o.getBoundingClientRect(), w = Math.min(r.right, q.right) - Math.max(r.left, q.left), h = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top);
-      return w > 0 && h > 0 && w * h > 0.5 * Math.max(1, r.width * r.height); }); };
+      return w > 0 && h > 0 && w * h > 0.5 * Math.max(1, r.width * r.height); }) || getComputedStyle(box).backgroundImage !== 'none'; };   // (or a stand-in picture behind it, since 2026-10-23)
     if (!failed && !(img.complete && img.naturalWidth) && !covered()) show(true);
   }
   const scan = root => { if (root.tagName === 'IMG') setup(root); else if (root.querySelectorAll) root.querySelectorAll('img').forEach(setup); };

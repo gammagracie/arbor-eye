@@ -110,6 +110,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
+.art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
 .art img.on { opacity: 1; }
@@ -153,7 +154,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 </style>
-<script src="alt-text.js?v=6"></script>
+<script src="alt-text.js?v=7"></script>
 </head>
 <body>
 <div class="page" id="page">
@@ -162,7 +163,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
       <div class="right">
         <nav class="main">
-          <a href="home-v2.html">H22</a>
+          <a href="h1.html">H1</a>
           <a style="font-weight: 700; color: #141414" href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="works-index.html">Index</a>
@@ -178,7 +179,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="home-v2.html">H22</a>
+    <a href="h1.html">H1</a>
     <a href="gallery-filmstrip-2.html" style="font-weight: 700; color: #141414">G5</a>
     <a href="gallery-editorial.html">G6</a>
     <a href="works-index.html">Index</a>
@@ -505,6 +506,7 @@ function assign(slot, k) {
   const swap = () => { if (turn !== slot.turns) return; fit(); next.classList.add('on'); prev.classList.remove('on'); slot.front = 1 - slot.front; };
   next.dataset.altTitle = w.t; next.dataset.altTag = w.g || '';   // alt text "Title: tagline", shown on the frame if the image is slow or fails (alt-text.js)
   next.src = workSrc() + w.f;
+  slot.a.style.backgroundImage = "url('assets/thumbs-m70/" + w.f + "')";   // (since 2026-10-23) the small copy, already loaded for the filmstrip, shows at once until the large one arrives
   Promise.race([next.decode ? next.decode() : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(swap, swap);   // decode first, but never wait more than 0.8s (hidden tabs defer decoding)
   slot.a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);   // detail view, matched by file so "Untitled" works resolve correctly
 }
@@ -523,6 +525,7 @@ async function slideTo(ks, d, axis) {
   slots.forEach((s, i) => {
     const k = ks[i], w = WORKS[k], im = s.imgs[s.front]; s.idx = k; s.turns++;
     im.dataset.altTitle = w.t; im.dataset.altTag = w.g || ''; im.src = workSrc() + w.f; im.classList.add('on'); s.imgs[1 - s.front].classList.remove('on');
+    s.a.style.backgroundImage = "url('assets/thumbs-m70/" + w.f + "')";
     s.a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f);
   });
   fit();
