@@ -92,10 +92,11 @@ html:not(.touch) .scroller { cursor: grab; }
    over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
 .col { box-sizing: border-box; padding: 49px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }   /* desktop: the first work and its title start 49px under the header (15px higher since 2026-10-12) */
 @media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
-/* every work about the same width (87-100% of the column; since 2026-10-20 portraits too, so they are simply taller), a portrait
-   never taller than the screen allows (header + 120px kept clear); each overlaps the one before by 8% of its width (12% of a
+/* every work about the same size (87-100% of the column; since 2026-10-22 a portrait is a landscape turned upright, as wide as a
+   landscape is tall, where on 2026-10-20 and 21 it was as wide as a landscape), a portrait never taller than the screen allows
+   (header + 120px kept clear); each overlaps the one before by 8% of its width (12% of a
    landscape's height), whatever its orientation */
-.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--k))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--kh, var(--k)))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
 .work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --s 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --hy 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
@@ -282,9 +283,10 @@ order.forEach((w, i) => {
   });
   a.style.setProperty('--r', w.r);
   const sz = SIZES[i % SIZES.length], depthK = sz;   // depthK: the rhythm for parallax and stacking (portraits treated as landscapes)
-  const kw = 0.87 + 0.13 * (sz - 0.6) / 0.4, k = 0.5625 * kw;   // drawn width: 87-100% of the column, whatever the orientation, drawn at 56% on desktop (75% of 75%, since 2026-10-20)
+  const kw = 0.87 + 0.13 * (sz - 0.6) / 0.4, k = 0.5625 * kw * (w.r < 1 ? w.r : 1);   // drawn width: 87-100% of the column, drawn at 56% on desktop (75% of 75%, since 2026-10-20); a portrait (since 2026-10-22) the same work turned upright: as wide as a landscape of its size is tall
   a.style.setProperty('--kp', kw.toFixed(3));   // phones: 87-100% of the column (full size)
   a.style.setProperty('--k', k);
+  a.style.setProperty('--kh', 0.5625 * kw);   // the height cap's factor (a portrait's turn is already in --k)
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
   a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
