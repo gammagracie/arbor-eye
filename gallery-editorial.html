@@ -98,7 +98,7 @@ html:not(.touch) .scroller { cursor: grab; }
    landscape's height), whatever its orientation */
 .work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--kh, var(--k)))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
-.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --s 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), --hy 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 1.4s cubic-bezier(0.45, 0, 0.2, 1), --s 1.4s cubic-bezier(0.45, 0, 0.2, 1), --hy 1.4s cubic-bezier(0.45, 0, 0.2, 1); }   /* (since 2026-10-23) slower and softer still: 1.4s, easing in gently as well as out */   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
 @property --hy { syntax: '<length>'; inherits: false; initial-value: 0px; }
 .work:first-child { margin-top: 0; }
@@ -293,7 +293,7 @@ order.forEach((w, i) => {
   a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
   a.querySelector('img').dataset.altTitle = w.t; a.querySelector('img').dataset.altTag = w.g || '';   // alt text "Title: tagline" (alt-text.js)
-  a.querySelector('img').src = 'assets/works-m70/' + w.f;
+  a.querySelector('img').src = 'assets/works-m70-2000/' + w.f;   // (since 2026-10-23) the 2000px copies: as sharp as the largest hover needs, a third of the weight
   a.querySelector('.side span').textContent = w.t;
   col.appendChild(a);
 });
@@ -384,7 +384,7 @@ function glide() {
     const dt = Math.min(64, now - last); last = now;
     const cur = scroller.scrollTop, d = target - cur;
     if (Math.abs(d) < 0.5) { scroller.scrollTop = target; gliding = false; return; }
-    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 220));   // a long, soft glide
+    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 340));   // a long, soft glide (slower since 2026-10-23: 340ms, was 220)
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -395,7 +395,7 @@ scroller.addEventListener('wheel', e => {
   e.preventDefault();
   const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? scroller.clientHeight : 1;
   if (!gliding) target = scroller.scrollTop;
-  target = clamp(target + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit);
+  target = clamp(target + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit * 0.6);   // (since 2026-10-23) each wheel step moves the column 60% as far
   glide();
 }, { passive: false });
 
