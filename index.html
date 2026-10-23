@@ -127,7 +127,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -191,6 +191,15 @@ class Component extends DCLogic {
       btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
       btn.style.zIndex = String(Math.round(scales[k] * 100));
     });
+    // (since 2026-10-22) the hover title follows the hovered thumbnail to where the swell is taking it (its resting centre plus
+    // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
+    const hov = e.target.closest && e.target.closest('button'), k = btns.indexOf(hov), rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
+    if (k >= 0 && rail) {
+      let acc2 = 0; for (let j = 0; j < k; j++) acc2 += extra[j];
+      const r = rail.getBoundingClientRect();
+      this.tipX = base[k].cx + acc2 + extra[k] / 2 - total / 2 - (r.left + r.width / 2);
+      if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
+    }
   }
   // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
   relaxDock() {
@@ -431,11 +440,11 @@ class Component extends DCLogic {
       hoverTitleOpacity: this.state.tip != null ? 1 : 0,
       // (since 2026-10-22) the title sits centred under the thumbnail being hovered, at its full size on desktop (it had been
       // scaled to 72% with the other pages' hover titles)
-      tipShift: (this.state.tipX || 0).toFixed(1) + 'px',
+      tipShift: (this.tipX != null ? this.tipX : this.state.tipX || 0).toFixed(1) + 'px',
       hoverTitleScale: desk ? '1' : '0.72',
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? 'calc(3px + 0.15 * ' + thumbH + ') 0 0' : '5px 0 0',   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? 'calc(' + (this.state.wide ? 10 : 3) + 'px + 0.15 * ' + thumbH + ') 0 0' : '5px 0 0',   /* 7px lower again over 2000px (since 2026-10-23) */   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
@@ -455,14 +464,14 @@ class Component extends DCLogic {
         // only thumbnails that are on show at the start or the end of a glide are ever present: the five around the new work stay
         // put, the ones being left behind fade away as they slide off, and none beyond them peeks in at the feathered edges
         vis: Math.abs(j - (n + base + shift)) <= half || (this.state.animate && Math.abs(j - (n + base)) <= half) ? 'visible' : 'hidden',
-        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : '0 6px 20px rgba(10,10,10,0.55)' } },   // a soft shadow lifts them off the painting
+        img: React.createElement('span', { style: { display: 'block', position: 'relative', overflow: 'hidden', opacity: this.state.animate && Math.abs(j - (n + base + shift)) > half ? 0 : 1, transition: 'opacity 1.2s ease, box-shadow 0.45s ease', height: thumbH, width: 'calc(' + thumbH + ' * 1.5)', boxShadow: m ? 'none' : this.state.tip === k ? '0 3px 10px rgba(10,10,10,0.3)' : '0 6px 20px rgba(10,10,10,0.55)' } },   // (since 2026-10-23) the hovered thumbnail's shadow softer   // a soft shadow lifts them off the painting
           React.createElement('img', { src: this.arts[k].src.replace('assets/works/', 'assets/thumbs/'), alt: '', onError: this.ph(k), style: { filter: 'saturate(1.12)', display: 'block', width: '100%', height: '100%', objectFit: 'cover', transformOrigin: '0 0', transform: this.thumbZoom(this.arts[k]) } })),
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k),
         enter: (e) => {
           const b = e.currentTarget.getBoundingClientRect(), rail = e.currentTarget.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
-          this.lastTip = k; this.setState({ tip: k, tipX: (b.left + b.width / 2) - (r.left + r.width / 2) });
+          this.lastTip = k; if (this.tipX == null) this.tipX = (b.left + b.width / 2) - (r.left + r.width / 2); this.setState({ tip: k });
         }
       }))
     };
