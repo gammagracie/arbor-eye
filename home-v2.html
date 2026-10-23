@@ -156,16 +156,16 @@ class Component extends DCLogic {
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/home-v2/brilliance.jpg', thumb: 'assets/home-v2/thumbs/brilliance.jpg', baked: true, fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
-    { src: 'assets/home-v2/symbiosis.jpg', thumb: 'assets/home-v2/thumbs/symbiosis.jpg', baked: true, fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
-    { src: 'assets/home-v2/emergence.jpg', thumb: 'assets/home-v2/thumbs/emergence.jpg', baked: true, fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
-    { src: 'assets/home-v2/script.jpg', thumb: 'assets/home-v2/thumbs/script.jpg', baked: true, fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
+    { src: 'assets/home-v2/brilliance.jpg', thumb: 'assets/thumbs/select_brilliance.jpg', baked: true, fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
+    { src: 'assets/home-v2/symbiosis.jpg', thumb: 'assets/thumbs/core_symbiosis.jpg', baked: true, fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
+    { src: 'assets/home-v2/emergence.jpg', thumb: 'assets/thumbs/core_emergence-no-dedication.jpg', baked: true, fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/home-v2/script.jpg', thumb: 'assets/thumbs/core_script.jpg', baked: true, fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
     { src: 'assets/works/core_articulation.jpg', fit: [0.165, 0.800, 0.323, 0.632], cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
-    { src: 'assets/home-v2/habitat.jpg', thumb: 'assets/home-v2/thumbs/habitat.jpg', baked: true, fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
-    { src: 'assets/home-v2/chamber.jpg', thumb: 'assets/home-v2/thumbs/chamber.jpg', baked: true, fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
-    { src: 'assets/home-v2/affinity.jpg', thumb: 'assets/home-v2/thumbs/affinity.jpg', baked: true, fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
-    { src: 'assets/home-v2/conduit.jpg', thumb: 'assets/home-v2/thumbs/conduit.jpg', baked: true, fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
-    { src: 'assets/home-v2/upwelling.jpg', thumb: 'assets/home-v2/thumbs/upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
+    { src: 'assets/home-v2/habitat.jpg', thumb: 'assets/thumbs/core_habitat.jpg', baked: true, fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
+    { src: 'assets/home-v2/chamber.jpg', thumb: 'assets/thumbs/core_chamber.jpg', baked: true, fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
+    { src: 'assets/home-v2/affinity.jpg', thumb: 'assets/thumbs/core_affinity.jpg', baked: true, fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
+    { src: 'assets/home-v2/conduit.jpg', thumb: 'assets/thumbs/core_conduit.jpg', baked: true, fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
+    { src: 'assets/home-v2/upwelling.jpg', thumb: 'assets/thumbs/core_upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification, the "genie": the thumbnail under the cursor grows most (130%), neighbours less
@@ -247,7 +247,7 @@ class Component extends DCLogic {
   // Thumbnails: each scan zoomed about its painting so its white paper border matches Upwelling's (the painting 85.2% of the
   // thumbnail's width, 82% of its height, on its tighter side), the painting centred, never trimmed; Upwelling as scanned.
   thumbZoom(a) {
-    if (a.baked || !a.fit) return '';
+    if (!a.fit) return '';   // (the thumbnails are the homepage's own, white paper border and all, since 2026-10-22)
     const [x0, x1, y0, y1] = a.fit, s = Math.min(0.852 / (x1 - x0), 0.82 / (y1 - y0));
     const at = (lo, hi) => Math.min(0, Math.max(1 - s, 0.5 - (lo + hi) / 2 * s)) * 100;
     return 'translate(' + at(x0, x1).toFixed(2) + '%, ' + at(y0, y1).toFixed(2) + '%) scale(' + s.toFixed(4) + ')';
