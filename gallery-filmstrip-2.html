@@ -410,8 +410,12 @@ function fit() {
     let V = bottom - gridTop;
     const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
+    // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
+    // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
+    const tall = !SL ? [...Array(Math.ceil(slots.length / nc)).keys()].map(r => slots.slice(r * nc, r * nc + nc).some(x => WORKS[x.idx] && WORKS[x.idx].r < 1) ? 1.5 : 1) : [];
+    const units = SL ? used : tall.reduce((t, f) => t + f, 0) + Math.max(0, used - tall.length);   // rows in heights of a landscape
     const sizeFor = (maxW, V) => {
-      const byH = wideGaps && V / (used + (used - 1) / 4) / 4 >= 60 ? V / (used + (used - 1) / 4) : (V - 60 * (used - 1)) / used;
+      const byH = wideGaps && V / (units + (used - 1) / 4) / 4 >= 60 ? V / (units + (used - 1) / 4) : (V - 60 * (used - 1)) / units;
       const byW = wideGaps && maxW / (boxR * nc + (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + (nc - 1) / 4) : (maxW - 60 * (nc - 1)) / (boxR * nc);
       let a = Math.min(byH, byW);
       if (SL && SL.scale) {   // a series with its own size: the plain 3 x 3 grid's size for these works, scaled, never more than fits
@@ -447,11 +451,12 @@ function fit() {
       row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - g) / 2).toFixed(2) + 'px)';
     }
     row.style.columnGap = row.style.rowGap = g.toFixed(1) + 'px';
-    slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : R(s)) + 'px'; s.a.style.height = a + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
+    const up = s => !SL && WORKS[s.idx] && WORKS[s.idx].r < 1;   // a portrait in the plain grid: the landscape box turned upright
+    slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : up(s) ? 1 : R(s)) + 'px'; s.a.style.height = a * (up(s) ? 1.5 : 1) + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
     const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;
     if (!SL && short < nc && slots[lastStart]) slots[lastStart].a.style.gridColumn = (nc - short + 1) + ' / span 2';
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
-    rowH = a * usedNow + g * (usedNow - 1);
+    rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + g * (usedNow - 1);
     // (since 2026-10-21) the arrows level with the grid's middle (the middle row of a 3 x 3), the same on every page of it
     $('prev').style.top = $('next').style.top = (gridTop + V / 2).toFixed(1) + 'px';
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
@@ -461,7 +466,7 @@ function fit() {
   const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : tallPortrait ? tallBottom : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
-  capDy = count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb;
+  capDy = 5 + (count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb);   // (+5: every hover title 5px lower since 2026-10-22)
   placeCaption();
   // (since 2026-10-20) a work under the pointer keeps the title under it when the layout is redone (an image finishing loading
   // used to send it down under the bottom row, far from the work on a page with an empty last row)
@@ -471,7 +476,7 @@ let capDx = 0, capDy = 0, hoverSlot = null, capSwap = 0;
 // the hover title under a given work (several works shown), centred on it
 function captionUnder(a) {
   capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2);
-  if (count > 1) capDy = a.getBoundingClientRect().bottom + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
+  if (count > 1) capDy = 5 + a.getBoundingClientRect().bottom + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
   placeCaption();
 }
 function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + capDy.toFixed(1) + 'px)'; }
@@ -812,7 +817,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
 // (since 2026-10-22) ?series=<name> opens with that series chosen in the filter (the detail pages' series links)
 const askedSeries = new URLSearchParams(location.search).get('series');
-if (askedSeries && ALL.some(w => w.s === askedSeries)) { fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); }
+if (askedSeries && ALL.some(w => w.s === askedSeries)) { const h = location.hash; fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); history.replaceState(null, '', location.pathname + location.search + h); }   // (the work named after # is still the one opened)
 // start on the work named in the URL, else the first work
 const want = decodeURIComponent(location.hash.slice(1));
 const start = WORKS.findIndex(w => w.f === want || w.t === want);

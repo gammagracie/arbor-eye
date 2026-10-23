@@ -332,7 +332,7 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
-    const thumbH = m ? '39.6px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.9)' : 'calc((100vw - 2 * var(--side-pad)) * 0.0468)';   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
+    const thumbH = m ? '33.66px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.765)' : 'calc((100vw - 2 * var(--side-pad)) * 0.03978)';   // (since 2026-10-22 85% of the 21 October size, itself 90% of 1c's)   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
@@ -386,7 +386,7 @@ class Component extends DCLogic {
       heroPad: VF ? VF.pad : mp ? '32px 0 44px' : m ? '32px 0' : '35px 0 20px', // 35px above the image and 35px below the thumbnails (20 here + the tray's 15), so the block sits centred between header and fold; the hover title (8px gap + one line) fits inside the lower 30px
       mainMinH: m ? '0' : 'calc(100vh - var(--header-h) - 1px)', // phones keep the footer on screen; larger screens push it below the fold
       // phones in portrait: thumbnails overlap the image by 20% of their height (the tray's 10px padding is inside the overlap)
-      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : VF ? 'calc(-1 * ' + thumbH + ' - 5px)' : 'calc(-0.65 * ' + thumbH + ' - 10px)',   // H0 desktop: the thumbnails' bottom 14px below the painting   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
+      railMargin: mp ? 'calc(-0.2 * ' + thumbH + ' - 10px)' : m ? '28px' : VF ? 'calc(-1 * ' + thumbH + ' + 6px)' :   /* (since 2026-10-22) the thumbnails' bottom 25px below the painting (was 14px) */ 'calc(-0.65 * ' + thumbH + ' - 10px)',   // H0 desktop: the thumbnails' bottom 14px below the painting   // desktop: thumbnails straddle the image's bottom edge, two thirds on the image and one third below
       railAlign: desk ? 'center' : 'flex-end',   // H0 desktop: the chevrons centred on the thumbnails, over the painting; elsewhere their bottoms on the thumbnails' bottom edge
       arrowPadBottom: desk ? '8px' : '10px', // the tray's 10px padding: the chevron's bottom sits on the thumbnails' bottom edge
       railJustify: 'center', // arrows sit beside the thumbnails, the set centred
@@ -433,7 +433,7 @@ class Component extends DCLogic {
       hoverTitleScale: desk ? '1' : '0.72',
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? (this.state.wide ? '8px 0 0' : '-2px 0 0') : '5px 0 0',   // (since 2026-10-22) 10px lower on screens over 2000px   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '3px 0 0' : '5px 0 0',   // (since 2026-10-22) the title 12px under the thumbnails at every desktop size   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
