@@ -183,7 +183,7 @@ html { scrollbar-gutter: stable; }
           {{ detailImg }}
           <div style="position: absolute; top: 100%; left: {{ detailDotsL }}; width: {{ detailDotsW }}; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
             <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 6px" style-hover="color: #6E6B66">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
+              <svg width="37.4" height="37.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
             </button>
           </div>
         </div>
@@ -191,8 +191,8 @@ html { scrollbar-gutter: stable; }
           <!-- (since 2026-10-22) in this order: ORIGINAL, the title, the description in quotation marks, the series (a link to G5
                showing that series), medium and size, the edition and certificate lines, then the two links -->
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
-          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase">{{ detailTitle }}</h1>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}">{{ detailQuote }}</p>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs) * 0.85); letter-spacing: 0.1em; text-transform: uppercase; color: #3D3D3D">{{ detailTitle }}</h1>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #3D3D3D">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
           <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
