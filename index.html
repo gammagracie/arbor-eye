@@ -109,7 +109,7 @@ html { scrollbar-gutter: stable; }
       <!-- intro wordmark (since 2026-10-19 at 75% of its earlier size, 48.5% of the image's width) on a 25% black panel; the panel's padding scales with the image (since 2026-10-20 the panel 20% smaller each way, the lettering unchanged: 2.87% of the image's width above and below, 2.28% beyond the lettering at the sides); the panel fades with the wordmark -->
       <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 2.87% 2.28%; background: rgba(0, 0, 0, 0.25); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
-    <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
+    <div data-rail onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
@@ -125,7 +125,7 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transition: opacity 0.3s ease; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * 0.72); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
+      <p style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -427,9 +427,13 @@ class Component extends DCLogic {
       // (since 2026-10-21) the title shows only while the pointer is on a thumbnail, naming that thumbnail's work (not on the main image)
       hoverTitle: this.arts[this.state.tip != null ? this.state.tip : this.lastTip != null ? this.lastTip : i].title,
       hoverTitleOpacity: this.state.tip != null ? 1 : 0,
+      // (since 2026-10-22) the title sits centred under the thumbnail being hovered, at its full size on desktop (it had been
+      // scaled to 72% with the other pages' hover titles)
+      tipShift: (this.state.tipX || 0).toFixed(1) + 'px',
+      hoverTitleScale: desk ? '1' : '0.72',
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? '-2px 0 0' : '5px 0 0',   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? (this.state.wide ? '8px 0 0' : '-2px 0 0') : '5px 0 0',   // (since 2026-10-22) 10px lower on screens over 2000px   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
@@ -454,7 +458,10 @@ class Component extends DCLogic {
         alt: 'Show ' + this.arts[k].title,
         opacity: 1,   // every thumbnail at full strength
         select: () => this.show(k),
-        enter: () => { this.lastTip = k; this.setState({ tip: k }); }
+        enter: (e) => {
+          const b = e.currentTarget.getBoundingClientRect(), rail = e.currentTarget.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
+          this.lastTip = k; this.setState({ tip: k, tipX: (b.left + b.width / 2) - (r.left + r.width / 2) });
+        }
       }))
     };
   }
