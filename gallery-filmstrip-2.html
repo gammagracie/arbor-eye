@@ -389,14 +389,15 @@ function fit() {
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   // (since 2026-10-23) one-up and three-up: a portrait (or a set of them) is never larger than a landscape (set) would be in the same
   // place, turned upright: its height at most the width a landscape would have there
-  let upright = false;
+  let upright = false, portraitGap = null;
   if (!grid && slots.length && slots.every(s => s.idx >= 0 && WORKS[s.idx].r < 1)) {
     const sumL = nc * 1.5;
     let hL = Math.min((H - rowGap * (nr - 1)) / nr, (inner - gap * (nc - 1)) / sumL) * (count === 1 ? 0.86 * 1.18 : 1);
     hL = Math.min(hL, (inner - gap * (nc - 1)) / sumL);
     if (count === 1) hL = Math.min(hL, H - 2 * lift - 40);
-    const cap = count === 3 ? 2.25 * hL : 1.5 * hL;   // (since 2026-10-24) a three-up set of portraits on its own 50% larger than that
-    if (h > cap) { h = cap; upright = true; }
+    if (h > 1.5 * hL) { h = 1.5 * hL; upright = true; }
+    // three-up (since 2026-10-24): the portraits each centred where a landscape of the set would sit, the spare width going into the gaps
+    if (count === 3) portraitGap = 1.5 * hL + gap - h * slots.reduce((t, s) => t + WORKS[s.idx].r, 0) / slots.length;
   }
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
@@ -410,7 +411,7 @@ function fit() {
   }
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = h, gapX = gap;
-  row.style.columnGap = count === 3 ? gapX + 'px' : '';
+  row.style.columnGap = count === 3 ? (portraitGap != null ? portraitGap : gapX).toFixed(1) + 'px' : '';
   row.style.gridTemplateColumns = grid ? 'repeat(' + nc + ', ' + (h3 * 1.5).toFixed(2) + 'px)' : '';
   slots.forEach(s => { s.a.style.width = h3 * R(s) + 'px'; s.a.style.height = h3 + 'px'; });
   let rowH = h3 * nr + rowGap * (nr - 1), gridTop = null;
