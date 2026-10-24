@@ -720,7 +720,7 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, framed(frame, printShadow)) }),   // desktop: the print fills the wall inside its margin
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) }),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
       // frame swatches
       frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
         pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
