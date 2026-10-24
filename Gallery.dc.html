@@ -457,17 +457,16 @@ class Component extends DCLogic {
     const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
     const text = img && img.parentElement.nextElementSibling;
     // the text block sits 105px to the right of the artwork on desktop (120px on tablet), and the framing dots centre under the
-    // artwork. Landscape works: the artwork and its text are centred together as one block in the content area (since
-    // 2026-10-13; they used to start on the logo's line). Portrait works: the gap between artwork and text is centred on the
-    // page, the artwork ending just left of the centre line and the text starting just right of it (kept within the bag icon's line).
+    // artwork. Every work, landscape or portrait: the artwork and its text are centred together as one block in the content area
+    // (landscapes since 2026-10-13, portraits since 2026-10-24; a portrait used to end just left of the centre line with its text
+    // just right of it, which left the whole block sitting left of centre).
     const GAP = this.state.tablet ? 120 : 105;
     // Stacked (below 1330px, not phones): the artwork is centred and its text sits underneath, as wide as the artwork and lined up with it.
     let x = 0, dots = '100%', off = 0, tw = 'auto', tmax = 'none';
     if (img && text && !this.state.mobile && this.state.stackDetail) tw = img.offsetWidth + 'px';
     else if (img && text && !this.state.mobile) {
       const wrap = img.parentElement, iw = img.offsetWidth;
-      if (this.state.detailRatio < 1) { const half = wrap.parentElement.clientWidth / 2; off = Math.max(0, half - GAP / 2 - iw); tmax = (half - GAP / 2).toFixed(1) + 'px'; }
-      else off = Math.max(0, (wrap.parentElement.clientWidth - (iw + GAP + text.offsetWidth)) / 2);
+      off = Math.max(0, (wrap.parentElement.clientWidth - (iw + GAP + text.offsetWidth)) / 2);
       x = Math.max(0, text.offsetLeft - (wrap.offsetLeft + off + iw + GAP));
       dots = iw + 'px';
     }
