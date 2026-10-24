@@ -292,7 +292,7 @@ order.forEach((w, i) => {
   a.style.setProperty('--k', k);
   a.style.setProperty('--kh', 0.5625 * kw);   // the height cap's factor (a portrait's turn is already in --k)
   a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
-  a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
+  a.style.setProperty('--z', order.length - i);   // (since 2026-10-24) a steady stack: each work lies over the one below it, whatever their sizes (the smaller used to lie on top)
   a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
   a.querySelector('img').dataset.altTitle = w.t; a.querySelector('img').dataset.altTag = w.g || '';   // alt text "Title: tagline" (alt-text.js)
   a.querySelector('img').src = 'assets/works-m70-2000/' + w.f;   // (since 2026-10-23) the 2000px copies: as sharp as the largest hover needs, a third of the weight
