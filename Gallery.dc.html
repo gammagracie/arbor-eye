@@ -277,7 +277,7 @@ html { scrollbar-gutter: stable; }
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
                   <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 12px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
                   <span style="display: {{ fr.textDisplay }}; font-size: calc(14px * var(--fs)); letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 14px">Unframed</span>
-                  <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); font-size: calc(14px * var(--fs)); opacity: {{ fr.caret }}">^</span>
+                  <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); display: block; line-height: 0; color: #141414; opacity: {{ fr.caret }}"><svg width="16" height="7" viewBox="0 0 16 7" fill="none" stroke="currentColor" stroke-width="1.1" style="display: block"><polyline points="1 6.5 8 1 15 6.5"></polyline></svg></span>
                 </button>
               </sc-for>
             </div>
