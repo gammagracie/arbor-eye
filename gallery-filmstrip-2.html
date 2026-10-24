@@ -121,10 +121,10 @@ html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: 
 :root { --chev-w: clamp(9.75px, 1.31625vw, 19.0125px); }
 @media (min-width: 2001px) { :root { --chev-w: 28.52px; } }   /* screens over 2000px: the chevrons 150% of that (since 2026-10-21): 28.5 x 78px */
 .step svg { width: var(--chev-w); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
-.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs) * 0.72); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease; }
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs) * 0.72); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1); }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
-.page.multi .caption { transition: opacity 0.25s ease; }   /* 3 and 9 views (since 2026-10-21): the title fades in and out too (it used to pop) */
+.page.multi .caption { transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1); }   /* 3 and 9 views (since 2026-10-21): the title fades in and out too (it used to pop); since 2026-10-24 slower and softer (0.5s, was 0.25s; one-up 0.7s, was 0.35s) */
 /* one-up on screens 1760-3300px wide: the hover title 3px larger */
 @media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px) * var(--fs) * 0.72); } }   /* 3 and 9 views: the title never slides between works; it fades out, moves under the work the cursor is on, and fades in */
 html.touch .caption { opacity: 1; }
@@ -350,7 +350,7 @@ function buildSlots(n) {
     a.addEventListener('mouseenter', () => {
       clearTimeout(capSwap); hoverSlot = slot;
       const show = () => { if (hoverSlot !== slot) return; $('capTitle').textContent = WORKS[slot.idx].t; captionUnder(a); page.classList.add('hovering'); };
-      if (count > 1 && parseFloat(getComputedStyle(caption).opacity) > 0.05 && $('capTitle').textContent !== WORKS[slot.idx].t) capSwap = setTimeout(show, 250); else show();
+      if (count > 1 && parseFloat(getComputedStyle(caption).opacity) > 0.05 && $('capTitle').textContent !== WORKS[slot.idx].t) capSwap = setTimeout(show, 500); else show();
     });
     a.addEventListener('mouseleave', () => { clearTimeout(capSwap); hoverSlot = null; page.classList.remove('hovering'); });
     row.appendChild(a); slots.push(slot);
