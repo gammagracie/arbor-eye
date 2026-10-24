@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- G6 editorial gallery. Made in Claude Cowork, project chat "Ned" (cathydolle gallery analysis / G6), 2026-09-30 -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor &amp; Eye | Gallery (G6a)</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31px; --step-w: 32px; }
+@media (min-width: 768px) { :root { --thumb-h: 38px; --step-w: 84px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs)); }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
+/* G6: editorial column. The gallery is its own scroll area under the fixed header; wheel and drag glide it,
+   a thin scrollbar shows on the right while the pointer is over it. The footer ends the column. */
+html, body { overflow: hidden; }
+header { position: fixed; top: 0; left: 0; right: 0; }
+.scroller { position: fixed; top: var(--header-h); left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
+.scroller::-webkit-scrollbar { display: none; }
+/* opening sequence (see the script): dark tiles in a row that turn into the column, then into the paintings */
+.intro { position: fixed; inset: 0; z-index: 20; overflow: hidden; cursor: pointer; }
+.intro-stack { position: absolute; inset: 0; }
+.intro-tile { position: absolute; background: #141414; overflow: hidden; }
+.intro-tile img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+html:not(.touch) .scroller { cursor: grab; }
+.scroller.dragging { cursor: grabbing; user-select: none; }
+.scroller.dragging .work { pointer-events: none; }
+
+:root { --col: max(min(560px, 44vw), 38.9vw); --lap: calc(var(--col) * 0.045); }   /* the column: 560px at 1440px wide, growing with the screen beyond (1494px at 3840; since 2026-10-20) */
+@media (max-width: 767px) { :root { --col: calc(100vw - 2 * var(--side-pad)); --lap: calc(var(--col) * 0.1); } }
+/* one stack down the centre line: every work is centred, sized from a repeating cycle of widths (--k), and pulled up
+   over the one before it so they float over each other; smaller works sit on top of larger ones (stacking order by size) */
+.col { box-sizing: border-box; padding: 49px var(--side-pad) 180px; display: flex; flex-direction: column; align-items: center; }   /* desktop: the first work and its title start 49px under the header (15px higher since 2026-10-12) */
+@media (max-width: 767px) { .col { padding: 32px var(--side-pad) 96px; } }
+/* every work about the same size (87-100% of the column; since 2026-10-22 a portrait is a landscape turned upright, as wide as a
+   landscape is tall, where on 2026-10-20 and 21 it was as wide as a landscape), a portrait never taller than the screen allows
+   (header + 120px kept clear); each overlaps the one before by 8% of its width (12% of a
+   landscape's height), whatever its orientation */
+.work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--kh, var(--k)))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
+/* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
+.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 2.1s cubic-bezier(0.65, 0, 0.35, 1), --s 2.1s cubic-bezier(0.65, 0, 0.35, 1), --hy 2.1s cubic-bezier(0.65, 0, 0.35, 1); }   /* (since 2026-10-24) slower again, 2.1s (was 1.4s), on a full ease in and out */   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+@property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
+@property --hy { syntax: '<length>'; inherits: false; initial-value: 0px; }
+.work:first-child { margin-top: 0; }
+/* the whole painting always shows (frames share the scans' own proportions, so nothing is cropped) */
+.work .win { position: absolute; inset: 0; }
+.work img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
+html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
+.work.hov { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 9px rgba(20,20,20,0.30), 0 24px 56px rgba(20,20,20,0.42); }
+/* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
+.work .side { position: absolute; top: 50%; margin-top: 3.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none; }
+.work.r .side { left: calc(100% + 56px); align-items: flex-start; }
+.work.l .side { right: calc(100% + 56px); align-items: flex-end; }
+.work .side span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs) * 0.648); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
+/* G6a (since 2026-10-24): the hover title set vertically, one upright capital under another, down the side of the work and
+   centred on it */
+.work .side span { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.06em; line-height: 1; }
+.work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.work.hov .side { opacity: 1; }   /* .hov: set by the script while the pointer is on the work or its enlarged size (mouse only) */
+/* phones: widths 87-100% of the column for every work (portraits as wide, so taller, never taller than the screen allows);
+   overlap 70% of desktop's (5.6% of each work's width). A tap shows the
+   title under the work, a second tap opens it. */
+@media (max-width: 767px) {
+  .work { width: min(calc(var(--col) * var(--kp)), calc((100vh - var(--header-h) - 160px) * var(--r) * var(--kp))); margin-top: calc(-0.056 * var(--col) * var(--kp)); }
+  .work:first-child { margin-top: 0; }
+  .work .side { display: none; }
+  .work.tapped { z-index: 100; }
+  .work.r.tapped .side, .work.l.tapped .side { display: flex; opacity: 1; left: 50%; right: auto; top: calc(100% + 8px); transform: translateX(-50%); align-items: center; background: rgba(253,253,251,0.94); padding: 6px 10px; }
+}
+/* thin scrollbar on the right, shown while the pointer is over the gallery or the bar is being dragged */
+.sb { position: fixed; top: calc(var(--header-h) + 24px); bottom: 24px; right: var(--side-pad); width: 5px; z-index: 15; opacity: 0; transition: opacity 0.35s ease; }
+.sb::before { content: ""; position: absolute; top: 0; bottom: 0; right: 1px; width: 2px; background: rgba(20,20,20,0.10); }
+/* the handle is the simplified Tree of Life (v3: outlined 7-leaf crown, solid stem and ampersand), 58px tall, 4px right of the 2px track's centre */
+.sb .thumb { position: absolute; right: -31.5px; width: 58px; height: 58px; background: url(uploads/tol-v3.svg) center / contain no-repeat; opacity: 0.8; cursor: grab; transition: opacity 0.2s ease; }
+.sb:hover .thumb, .sb.held .thumb { opacity: 1; }
+.sb.held .thumb { cursor: grabbing; }
+.sb.show, .sb:hover, .sb.held { opacity: 1; }
+html.touch .sb { display: none; }
+footer { flex: none; }
+</style>
+<script src="alt-text.js?v=7"></script>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <div class="right">
+        <nav class="main">
+          <a href="h1.html">H1</a>
+          <a href="gallery-filmstrip-2.html">G5</a>
+          <a href="gallery-editorial.html">G6</a>
+          <a href="gallery-editorial-g6a.html" style="font-weight: 700; color: #141414">G6a</a>
+          <a href="works-index.html">Index</a>
+          <a href="About.dc.html">About</a>
+          <a href="Contact-tabs.dc.html">Contact</a>
+        </nav>
+        <div class="icons">
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="h1.html">H1</a>
+    <a href="gallery-filmstrip-2.html">G5</a>
+    <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
+    <a href="gallery-editorial-g6a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 700; color: #141414">G6a</a>
+    <a href="works-index.html">Index</a>
+    <a href="About.dc.html">About</a>
+    <a href="Contact-tabs.dc.html">Contact</a>
+    <a href="Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="Contact-tabs.dc.html#returns">Returns &amp; Exchanges</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></span>Shopping Cart</a>
+  </nav>
+
+<main class="scroller" id="scroller" aria-label="Gallery">
+  <div class="col" id="col"></div>
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
+      </div>
+    </div>
+</footer>
+</main>
+<div class="sb" id="sb" aria-hidden="true"><div class="thumb" id="sbThumb"></div></div>
+
+<script>
+// Works shown in the filmstrip. Generated from Gallery.dc.html (hidden works left out): f = file in assets/works,
+// s = series, t = title, r = width / height. Keep in step with the gallery's list when works change.
+const WORKS = [
+  {"f": "select_brilliance.jpg", "s": "Select", "t": "Brilliance", "r": 1.5, "g": "Light reveals what was always there."},
+  {"f": "core_script.jpg", "s": "Core", "t": "Script", "r": 1.5, "g": "Repeated strokes form a visual language."},
+  {"f": "core_symbiosis.jpg", "s": "Core", "t": "Symbiosis", "r": 1.5, "g": "Distinct forms exist through mutual relationships."},
+  {"f": "core_conduit.jpg", "s": "Core", "t": "Conduit", "r": 1.5, "g": "Pathways connect a shared structure."},
+  {"f": "core_chamber.jpg", "s": "Core", "t": "Chamber", "r": 1.5, "g": "Defined spaces establish internal relationships."},
+  {"f": "core_habitat.jpg", "s": "Core", "t": "Habitat", "r": 1.5, "g": "Living forms establish a shared environment."},
+  {"f": "core_affinity.jpg", "s": "Core", "t": "Affinity", "r": 1.5, "g": "Related forms create a unified field."},
+  {"f": "core_upwelling.jpg", "s": "Core", "t": "Upwelling", "r": 1.5, "g": "Parallel forms organize a living field."},
+  {"f": "core_emergence.jpg", "s": "Core", "t": "Emergence", "r": 1.5, "g": "Variation gives rise to complexity."},
+  {"f": "the-turning_passage.jpg", "s": "The Turning", "t": "Passage", "r": 1.5, "g": "The journey continues."},
+  {"f": "outliers_outliers-1.jpg", "s": "Outliers", "t": "Outliers 1", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-2.jpg", "s": "Outliers", "t": "Outliers 2", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-3.jpg", "s": "Outliers", "t": "Outliers 3", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-4.jpg", "s": "Outliers", "t": "Outliers 4", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-5.jpg", "s": "Outliers", "t": "Outliers 5", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-6.jpg", "s": "Outliers", "t": "Outliers 6", "r": 1.5, "g": ""},
+  {"f": "outliers_outliers-7.jpg", "s": "Outliers", "t": "Outliers 7", "r": 1.5, "g": ""},
+  {"f": "select_aurora.jpg", "s": "Select", "t": "Aurora", "r": 1.5, "g": "Creation unfolds through harmony."},
+  {"f": "select_confluence.jpg", "s": "Select", "t": "Confluence", "r": 1.5, "g": "Movement gives rise to a shared course."},
+  {"f": "select_emanation.jpg", "s": "Select", "t": "Emanation", "r": 1.5, "g": "Unity creates renewal."},
+  {"f": "select_singularity.jpg", "s": "Select", "t": "Singularity", "r": 1.5, "g": "Creation begins from within."},
+  {"f": "select_grove.jpg", "s": "Select", "t": "Grove", "r": 1.5, "g": "Rooted in nature, shared by connection."},
+  {"f": "select_meridian.jpg", "s": "Select", "t": "Meridian", "r": 1.5, "g": "Growth follows an unseen order."},
+  {"f": "select_resonance.jpg", "s": "Select", "t": "Resonance", "r": 1.5, "g": "Connection amplifies possibility."},
+  {"f": "spectrum_biome.jpg", "s": "Spectrum", "t": "Biome", "r": 1.5, "g": "Diversity shapes the whole."},
+  {"f": "spectrum_archipelago.jpg", "s": "Spectrum", "t": "Archipelago", "r": 1.5, "g": "Separation reveals connection."},
+  {"f": "spectrum_opalescence.jpg", "s": "Spectrum", "t": "Opalescence", "r": 1.5, "g": "Light reveals the unseen."},
+  {"f": "spectrum_chroma.jpg", "s": "Spectrum", "t": "Chroma", "r": 1.5, "g": "Color gives form to diversity."},
+  {"f": "structure_cubicle.jpg", "s": "Structure", "t": "Cubicle", "r": 0.667, "g": "Planes construct an implied volume."},
+  {"f": "structure_within.jpg", "s": "Structure", "t": "Within", "r": 0.667, "g": "Line defines a space for color."},
+  {"f": "structure_cadence.jpg", "s": "Structure", "t": "Cadence", "r": 0.667, "g": "Color follows an arc of repeating forms."},
+  {"f": "structure_crossings.jpg", "s": "Structure", "t": "Crossings", "r": 0.667, "g": "Color settles where forms overlap and diverge."},
+  {"f": "structure_framework.jpg", "s": "Structure", "t": "Framework", "r": 0.667, "g": "Color settles within a framework of line and form."},
+  {"f": "the-turning_character.jpg", "s": "The Turning", "t": "Character", "r": 1.5, "g": "Every mark leaves its mark."},
+  {"f": "the-turning_discovery.jpg", "s": "The Turning", "t": "Discovery", "r": 1.5, "g": "Possibility unfolds."},
+  {"f": "the-turning_momentum.jpg", "s": "The Turning", "t": "Momentum", "r": 1.5, "g": "Movement creates possibility."},
+  {"f": "the-turning_the-calling.jpg", "s": "The Turning", "t": "The Calling", "r": 1.5, "g": "Purpose awaits."},
+  {"f": "the-turning_horizon.jpg", "s": "The Turning", "t": "Horizon", "r": 1.5, "g": "Beyond awaits."},
+  {"f": "the-turning_revelation.jpg", "s": "The Turning", "t": "Revelation", "r": 1.5, "g": "The ordinary made extraordinary."},
+  {"f": "the-turning_the-turning-6.jpg", "s": "The Turning", "t": "The Turning 6", "r": 1.5, "g": ""},
+  {"f": "tonal_current.jpg", "s": "Tonal", "t": "Current", "r": 1.5, "g": "Everything flows."},
+  {"f": "tonal_firelight.jpg", "s": "Tonal", "t": "Firelight", "r": 1.5, "g": "Warmth endures."},
+  {"f": "tonal_vesper-2.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5, "g": "The quiet deepens."},
+  {"f": "tonal_vesper-1.jpg", "s": "Tonal", "t": "Vesper", "r": 1.5, "g": "Stillness remains."},
+  {"f": "convergence_counterform.jpg", "s": "Convergence", "t": "Counterform", "r": 1.5, "g": "Complementary forms establish a shared structure."},
+  {"f": "convergence_synthesis.jpg", "s": "Convergence", "t": "Synthesis", "r": 1.5, "g": "Independent elements become something greater."},
+  {"f": "convergence_counterline.jpg", "s": "Convergence", "t": "Counterline", "r": 1.5, "g": "A shared boundary preserves distinction."},
+  {"f": "convergence_convergence-6.jpg", "s": "Convergence", "t": "Convergence 6", "r": 1.5, "g": ""},
+  {"f": "convergence_counterpart.jpg", "s": "Convergence", "t": "Counterpart", "r": 1.5, "g": "Corresponding forms mirror across a shared divide."},
+  {"f": "convergence_counterpoint.jpg", "s": "Convergence", "t": "Counterpoint", "r": 1.5, "g": "Independent gestures create a shared rhythm."},
+  {"f": "convergence_convergence-7.jpg", "s": "Convergence", "t": "Convergence 7", "r": 1.5, "g": ""},
+  {"f": "ascent_ascent-1.jpg", "s": "Ascent", "t": "Ascent 1", "r": 0.667, "g": ""},
+  {"f": "ascent_artifact.jpg", "s": "Ascent", "t": "Artifact", "r": 0.667, "g": "Surface and structure converge, bearing the language of an ancient object."},
+  {"f": "ascent_canyons.jpg", "s": "Ascent", "t": "Canyons", "r": 0.667, "g": "Ancient channels carve the landscape, exposing a terrain shaped from within."},
+  {"f": "ascent_verdance.jpg", "s": "Ascent", "t": "Verdance", "r": 0.667, "g": "Layers of green and violet gather into a landscape alive with quiet renewal."},
+  {"f": "ascent_living-current.jpg", "s": "Ascent", "t": "Living Current", "r": 0.667, "g": "Movement gathers, divides, and begins again, revealing a form that is never fixed."},
+  {"f": "ascent_coastal-silence.jpg", "s": "Ascent", "t": "Coastal Silence", "r": 0.667, "g": "Stillness settles as movement comes to rest."},
+  {"f": "ascent_shared-orbit.jpg", "s": "Ascent", "t": "Shared Orbit", "r": 0.667, "g": "Separate forms move within the same field, each shaped by the gravity of the whole."},
+  {"f": "ascent_inner-eclipse.jpg", "s": "Ascent", "t": "Inner Eclipse", "r": 0.667, "g": "Light returns to its center, where every passage alters what remains."},
+  {"f": "ascent_origin.jpg", "s": "Ascent", "t": "Origin", "r": 0.667, "g": "The first instructions unfold within a single helix."},
+  {"f": "ascent_koi.jpg", "s": "Ascent", "t": "Koi", "r": 0.667, "g": "Beneath still waters, crimson forms weave through a landscape of quiet motion."},
+  {"f": "ascent_overlook.jpg", "s": "Ascent", "t": "Overlook", "r": 0.667, "g": "From above, land and water trace a landscape shaped by quiet movement."},
+  {"f": "tonal_canopy.jpg", "s": "Tonal", "t": "Canopy", "r": 1.5, "g": "Life surrounds us."}
+];
+
+const $ = id => document.getElementById(id);
+const scroller = $('scroller'), col = $('col'), sb = $('sb'), bar = $('sbThumb');
+document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) and (pointer: fine)').matches);
+
+// ---- Layout: one centred stack. The SIZES rhythm sets each work's parallax depth and stacking; its drawn size varies
+// far less (every work, landscape or portrait, 87-100% of the column width; since 2026-10-20), so the works read as one even
+// set, a 13% variation emphasising some; each work overlaps the previous one by --lap.
+const SIZES = [1, 0.68, 0.86, 0.6, 0.78, 0.92, 0.64];
+// Order: Brilliance opens and Canopy closes (as in the grid); between them the portraits are dealt out through the
+// landscapes one at a time after runs of 2, 3 or 4 landscapes (a fixed irregular rhythm), so neither orientation
+// ever bunches up. Each orientation keeps its own gallery order.
+const order = (() => {
+  const first = WORKS[0], last = WORKS[WORKS.length - 1], mid = WORKS.slice(1, -1);
+  const P = mid.filter(w => w.r < 1), L = mid.filter(w => w.r >= 1), runs = [3, 2, 4, 3, 2, 3, 4, 2, 3];
+  const out = [first];
+  P.forEach((p, i) => { out.push(...L.splice(0, Math.min(runs[i % runs.length], Math.max(1, Math.round(L.length / (P.length - i)))))); out.push(p); });
+  out.push(...L, last);
+  return out;
+})();
+order.forEach((w, i) => {
+  const a = document.createElement('a');
+  a.className = 'work ' + (i % 2 ? 'l' : 'r'); a.id = w.f; a.href = 'Gallery.dc.html#' + encodeURIComponent(w.f); a.draggable = false;
+  a.addEventListener('click', e => {
+    // phones: the first tap shows the title, a second tap on the same work opens it
+    if (matchMedia('(max-width: 767px)').matches && !a.classList.contains('tapped')) {
+      e.preventDefault(); col.querySelectorAll('.work.tapped').forEach(x => x.classList.remove('tapped')); a.classList.add('tapped'); return;
+    }
+    history.replaceState(null, '', '#' + encodeURIComponent(w.f));   // coming back from the detail view lands on this work
+  });
+  a.style.setProperty('--r', w.r);
+  const sz = SIZES[i % SIZES.length], depthK = sz;   // depthK: the rhythm for parallax and stacking (portraits treated as landscapes)
+  const kw = 0.87 + 0.13 * (sz - 0.6) / 0.4, k = 0.5625 * kw * (w.r < 1 ? w.r : 1);   // drawn width: 87-100% of the column, drawn at 56% on desktop (75% of 75%, since 2026-10-20); a portrait (since 2026-10-22) the same work turned upright: as wide as a landscape of its size is tall
+  a.style.setProperty('--kp', kw.toFixed(3));   // phones: 87-100% of the column (full size)
+  a.style.setProperty('--k', k);
+  a.style.setProperty('--kh', 0.5625 * kw);   // the height cap's factor (a portrait's turn is already in --k)
+  a.dataset.depth = (0.10 + (1 - depthK) * 0.40).toFixed(3);   // parallax: the smaller (nearer) the work, the faster it drifts past
+  a.style.setProperty('--z', Math.round((1.2 - depthK) * 100));   // the smaller the work, the higher it stacks, so small pieces overlay the larger ones above and below
+  a.innerHTML = '<span class="win"><img loading="lazy" draggable="false" alt=""></span><span class="side"><span></span></span>';
+  a.querySelector('img').dataset.altTitle = w.t; a.querySelector('img').dataset.altTag = w.g || '';   // alt text "Title: tagline" (alt-text.js)
+  a.querySelector('img').src = 'assets/works-m70-2000/' + w.f;   // (since 2026-10-23) the 2000px copies: as sharp as the largest hover needs, a third of the weight
+  a.querySelector('.side span').textContent = w.t;
+  col.appendChild(a);
+});
+
+// ---- Parallax (motion-based): while the column scrolls, each work trails the scroll by its own amount (the smaller,
+// nearer pieces keep up more closely than the larger ones behind), so the layers drift apart and the pieces feel afloat;
+// when the scrolling stops they all settle back into the stack, overlapping as laid out (12% of each work's height).
+const works = [...col.querySelectorAll('.work')];
+const trail = works.map(() => scroller.scrollTop);
+let parallaxRunning = false, parallaxLast = 0;
+function parallaxTick(now) {
+  const dt = parallaxLast ? Math.min(64, now - parallaxLast) : 16; parallaxLast = now;
+  const st = scroller.scrollTop; let moving = false;
+  works.forEach((w, i) => {
+    const tau = 760 - w.dataset.depth * 1100;                    // ms to close ~63% of the gap: about 420 - 650ms by depth, for a slow, fluid drift
+    trail[i] += (st - trail[i]) * (1 - Math.exp(-dt / tau));
+    let d = st - trail[i];
+    if (Math.abs(d) < 0.3) { trail[i] = st; d = 0; } else moving = true;
+    w.style.setProperty('--py', (90 * Math.tanh(d * 0.4 / 90)).toFixed(1) + 'px');   // eases into its limit (90px) instead of stopping hard
+  });
+  if (moving) requestAnimationFrame(parallaxTick); else { parallaxRunning = false; parallaxLast = 0; }
+}
+function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
+scroller.addEventListener('scroll', parallax, { passive: true });
+
+// ---- Hover (mouse): the work comes to the front and grows to one shared size, the same for every work whatever its size at
+// rest: its long side becomes 1.4 times the column width, or the visible height less 24px above and below if that is less, so a
+// landscape and a portrait reach the same dimensions turned (6 x 4 / 4 x 6) and a portrait always fits on screen (since
+// 2026-10-20; it was 120% of each work's own size). The works above and below draw back to leave 60px clear around it.
+const GAP = 60, EDGE = 24;
+// (since 2026-10-21) the hovered work moves to the vertical middle of the screen and is never cut by the header or the footer
+// (once it is in view): its enlarged size is capped so it fits, centred there, with 24px clear of both. As it moves away from where the pointer first was, it stays enlarged while the pointer is on its
+// enlarged size or its resting place, so it never flickers; the pointer leaving both (or moving onto another work) lets it go.
+const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
+let active = null, activeBox = null, px = -1, py = -1;
+const inBox = (b, x, y) => b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+function activate(w) {
+  const i = works.indexOf(w);
+  works.forEach(x => { x.classList.toggle('last', x === w); x.classList.toggle('hov', x === w); });
+  active = w;
+  const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape, never height-limited)
+  const sc = scroller.getBoundingClientRect(), foot = scroller.querySelector('footer').getBoundingClientRect();
+  const top = sc.top, bottom = Math.min(sc.bottom, foot.top), mid = innerHeight / 2;   // the middle of the screen (since 2026-10-21)
+  const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
+  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, 2 * Math.min(mid - top, bottom - mid) - 2 * EDGE));   // the shared long side: a portrait's height (and so every work) fits, centred on the screen
+  const sh = T / Math.max(bw, bh);
+  w.style.setProperty('--sh', sh.toFixed(4));
+  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
+  const shift = mid - cy, eTop = mid - bh * sh / 2, eBot = mid + bh * sh / 2;
+  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x));
+  const up = above.length ? Math.min(0, (eTop - GAP) - Math.max(...above)) : 0;
+  const down = below.length ? Math.max(0, (eBot + GAP) - Math.min(...below)) : 0;
+  works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
+  activeBox = { big: { left: cx - bw * sh / 2, right: cx + bw * sh / 2, top: eTop, bottom: eBot }, rest: { left: r.left, right: r.right, top: cy - bh / 2, bottom: cy + bh / 2 } };
+}
+function release() {
+  if (!active) return;
+  active.classList.remove('hov'); active = activeBox = null;
+  works.forEach(x => x.style.setProperty('--hy', '0px'));
+}
+works.forEach(w => w.addEventListener('mouseenter', () => {
+  if (document.documentElement.classList.contains('touch') || scroller.classList.contains('dragging') || w === active) return;
+  if (active && (inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py))) return;   // still on the enlarged work, which covers it
+  activate(w);
+}));
+document.addEventListener('mousemove', e => {
+  px = e.clientX; py = e.clientY;
+  if (!active || inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py)) return;
+  release();
+  const under = document.elementFromPoint(px, py), w = under && under.closest && under.closest('.work');
+  if (w && !document.documentElement.classList.contains('touch')) activate(w);
+});
+document.addEventListener('mouseleave', release);
+// scrolling under a held work: its places move with the column
+let lastTop = scroller.scrollTop;
+scroller.addEventListener('scroll', () => {
+  const d = scroller.scrollTop - lastTop; lastTop = scroller.scrollTop;
+  if (activeBox) ['big', 'rest'].forEach(k => { activeBox[k].top -= d; activeBox[k].bottom -= d; });
+}, { passive: true });
+
+// ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
+// Touch screens keep native scrolling. Keyboard and other native scrolls just re-sync the target.
+const max = () => scroller.scrollHeight - scroller.clientHeight;
+let target = 0, gliding = false, last = 0;
+function glide() {
+  if (gliding) return; gliding = true; last = performance.now();
+  const step = now => {
+    const dt = Math.min(64, now - last); last = now;
+    const cur = scroller.scrollTop, d = target - cur;
+    if (Math.abs(d) < 0.5) { scroller.scrollTop = target; gliding = false; return; }
+    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 340));   // a long, soft glide (slower since 2026-10-23: 340ms, was 220)
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const clamp = v => Math.max(0, Math.min(max(), v));
+scroller.addEventListener('wheel', e => {
+  if (e.ctrlKey) return;   // pinch zoom
+  e.preventDefault();
+  const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? scroller.clientHeight : 1;
+  if (!gliding) target = scroller.scrollTop;
+  target = clamp(target + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit * 0.6);   // (since 2026-10-23) each wheel step moves the column 60% as far
+  glide();
+}, { passive: false });
+
+// (since 2026-10-21) the keyboard glides the column too, wherever the focus is: arrows down / up (or right / left) a step,
+// page down / up and the space bar most of a screen, Home / End to the ends
+addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]'))) return;
+  const page = scroller.clientHeight * 0.85, by = { ArrowDown: 160, ArrowRight: 160, ArrowUp: -160, ArrowLeft: -160, PageDown: page, PageUp: -page, ' ': e.shiftKey ? -page : page }[e.key];
+  if (by === undefined && e.key !== 'Home' && e.key !== 'End') return;
+  if (e.key === ' ' && e.target.closest && e.target.closest('button, a')) return;   // the space bar still presses a focused button or link
+  e.preventDefault();
+  if (!gliding) target = scroller.scrollTop;
+  target = e.key === 'Home' ? 0 : e.key === 'End' ? max() : clamp(target + by);
+  glide();
+});
+
+// drag with the mouse: the column follows the pointer, then coasts on release; a drag never opens a work
+let drag = null, moved = false;
+scroller.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse' || e.button !== 0) return;
+  drag = { y: e.clientY, top: scroller.scrollTop, t: performance.now(), v: 0 }; moved = false;
+  gliding = false;
+});
+addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dy = e.clientY - drag.y;
+  if (!moved && Math.abs(dy) > 5) { moved = true; scroller.classList.add('dragging'); }
+  if (!moved) return;
+  const now = performance.now(), next = clamp(drag.top - dy);
+  drag.v = 0.8 * drag.v + 0.2 * (next - scroller.scrollTop) / Math.max(1, now - drag.t);
+  drag.t = now; scroller.scrollTop = target = next;
+  showBar();
+});
+addEventListener('pointerup', () => {
+  if (!drag) return;
+  if (moved) { target = clamp(scroller.scrollTop + drag.v * 320); glide(); }
+  drag = null;
+  setTimeout(() => scroller.classList.remove('dragging'), 0);
+});
+scroller.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
+scroller.addEventListener('scroll', () => { if (!gliding && !drag) target = scroller.scrollTop; place(); }, { passive: true });
+
+// ---- Scrollbar: thumb size and position follow the scroller; drag the thumb or click the track to move
+function place() {
+  const track = sb.clientHeight, h = bar.offsetHeight;   // the handle is a fixed-size emblem, not a proportional bar
+  bar.style.top = (max() ? scroller.scrollTop / max() * (track - h) : 0) + 'px';
+}
+let barDrag = null, hideT = 0;
+function showBar() { sb.classList.add('show'); clearTimeout(hideT); }
+document.addEventListener('mousemove', showBar);   // shown while the pointer is anywhere on the page, header included
+document.documentElement.addEventListener('mouseleave', () => { hideT = setTimeout(() => sb.classList.remove('show'), 250); });
+bar.addEventListener('pointerdown', e => {
+  e.preventDefault(); e.stopPropagation();
+  barDrag = { y: e.clientY, top: scroller.scrollTop }; sb.classList.add('held'); bar.setPointerCapture(e.pointerId);
+});
+bar.addEventListener('pointermove', e => {
+  if (!barDrag) return;
+  const room = sb.clientHeight - bar.offsetHeight;
+  scroller.scrollTop = target = clamp(barDrag.top + (e.clientY - barDrag.y) / Math.max(1, room) * max());
+});
+bar.addEventListener('pointerup', () => { barDrag = null; sb.classList.remove('held'); });
+sb.addEventListener('pointerdown', e => {
+  if (e.target === bar) return;
+  const r = sb.getBoundingClientRect();
+  target = clamp((e.clientY - r.top - bar.offsetHeight / 2) / Math.max(1, sb.clientHeight - bar.offsetHeight) * max());
+  glide();
+});
+addEventListener('resize', place);
+new ResizeObserver(place).observe(col);
+
+// phones: a tap anywhere outside the works hides a shown title
+document.addEventListener('click', e => { if (!e.target.closest('.work')) col.querySelectorAll('.work.tapped').forEach(x => x.classList.remove('tapped')); });
+
+// mobile menu
+$('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+
+// open on the work named in the URL
+const want = decodeURIComponent(location.hash.slice(1));
+const hit = WORKS.find(w => w.f === want || w.t === want);
+if (hit) requestAnimationFrame(() => { scroller.scrollTop = target = clamp($(hit.f).offsetTop - 40); trail.fill(scroller.scrollTop); });   // arrive at rest, without a drift
+
+// ---- Opening (desktop and tablet; skipped when the URL names a work, on phones, and for reduced motion). The first twelve
+// works appear one by one, top to bottom, as small dark tiles in an evenly spaced column down the middle of the screen, well
+// apart (since 2026-10-21; they used to appear in a row across the screen that then turned 90 degrees into the column); the
+// tiles then grow toward the viewer into their places in the stack (only now do they overlap) and turn into the paintings.
+// A click anywhere skips to the end. One timeline (ms).
+(function intro() {
+  if (hit || matchMedia('(max-width: 767px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const shown = works.slice(0, 12), n = shown.length;
+  const rects = shown.map(w => w.getBoundingClientRect());
+  const cx = innerWidth / 2, mid = (scroller.getBoundingClientRect().top + innerHeight) / 2;
+  const span = (innerHeight - scroller.getBoundingClientRect().top) * 0.86, slot = span / n;   // the column runs down 86% of the visible height
+  const sR = Math.min(...rects.map(r => slot * 0.6 / r.height));                     // tiles fill 60% of their slot: clear gaps between
+  const layer = document.createElement('div'), stack = document.createElement('div');
+  layer.className = 'intro'; stack.className = 'intro-stack'; stack.style.transformOrigin = cx + 'px ' + mid + 'px';
+  const tiles = shown.map((w, i) => {
+    const r = rects[i], t = document.createElement('div'), im = document.createElement('img');
+    t.className = 'intro-tile'; im.src = w.querySelector('img').src; im.alt = '';
+    Object.assign(t.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', zIndex: getComputedStyle(w).zIndex, opacity: 0 });
+    t.appendChild(im); stack.appendChild(t);
+    // small place: on the column through the middle of the screen, one slot apart (the row, before the turn)
+    return { t, im, dx: cx - (r.left + r.width / 2), dy: mid - span / 2 + (i + 0.5) * slot - (r.top + r.height / 2) };
+  });
+  layer.appendChild(stack); document.body.appendChild(layer);
+  scroller.style.opacity = '0';
+  const clamp01 = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (t, a, d) => clamp01((t - a) / d);
+  const inOut = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2, out = p => 1 - Math.pow(1 - p, 4);
+  const END = 2750;
+  let t0 = performance.now(), skip = false, done = false;
+  const frame = now => {
+    const t = skip ? END : now - t0;
+    const g = out(seg(t, 1200, 1200));                                                                 // grow into place (1.2 - 2.4s)
+    const f = inOut(seg(t, 2100, 600)).toFixed(3);                                                     // become the paintings (2.1 - 2.7s)
+    tiles.forEach((x, i) => {
+      const p = out(seg(t, 120 + i * 70, 380));                                                        // appear, one by one
+      x.t.style.opacity = p;
+      x.t.style.transform = 'translate(' + (x.dx * (1 - g)).toFixed(1) + 'px, ' + (x.dy * (1 - g)).toFixed(1) + 'px) scale(' + ((sR + (1 - sR) * g) * (0.3 + 0.7 * p)).toFixed(4) + ')';
+      x.im.style.opacity = f;
+    });
+    if (t < END) requestAnimationFrame(frame); else finish();
+  };
+  const finish = () => {
+    if (done) return; done = true;
+    scroller.style.transition = 'opacity 0.45s ease-out'; scroller.style.opacity = '1';
+    layer.style.transition = 'opacity 0.45s ease-out'; layer.style.opacity = '0';
+    setTimeout(() => { layer.remove(); scroller.style.transition = ''; scroller.style.opacity = ''; }, 500);
+  };
+  layer.addEventListener('click', () => { skip = true; });
+  requestAnimationFrame(frame);
+})();
+place();
+</script>
+</body>
+</html>
