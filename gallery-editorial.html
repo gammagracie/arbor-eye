@@ -254,7 +254,7 @@ const WORKS = [
   {"f": "ascent_koi.jpg", "s": "Ascent", "t": "Koi", "r": 0.667, "g": "Beneath still waters, crimson forms weave through a landscape of quiet motion."},
   {"f": "ascent_overlook.jpg", "s": "Ascent", "t": "Overlook", "r": 0.667, "g": "From above, land and water trace a landscape shaped by quiet movement."},
   {"f": "tonal_canopy.jpg", "s": "Tonal", "t": "Canopy", "r": 1.5, "g": "Life surrounds us."}
-];
+].filter(w => w.s !== 'Outliers');   // (since 2026-10-24) the Outliers are hidden from the site for now (their files stay in assets/)
 
 const $ = id => document.getElementById(id);
 const scroller = $('scroller'), col = $('col'), sb = $('sb'), bar = $('sbThumb');
