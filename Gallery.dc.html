@@ -798,8 +798,8 @@ class Component extends DCLogic {
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',
       detailDesc: d ? d.desc : '',
-      quoteDisplay: d && d.desc ? 'block' : 'none',
-      detailQuote: d && d.desc ? '\u201c' + d.desc.replace(/\s+$/, '') + '\u201d' : '',   // the detail page's description in quotation marks (since 2026-10-22)
+      quoteDisplay: d ? 'block' : 'none',
+      detailQuote: d ? '\u201c' + (d.desc ? d.desc.replace(/\s+$/, '') : 'Description text goes here') + '\u201d' : '',   // the description in quotation marks (since 2026-10-22); a work without one shows placeholder text (FPO, since 2026-10-24) until Ned's arrives
     };
   }
 }
