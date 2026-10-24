@@ -255,10 +255,13 @@ html { scrollbar-gutter: stable; }
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
-          <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
-          <sc-if value="{{ hasDesc }}" hint-placeholder-val="{{ false }}">
-            <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; color: #646464">{{ detailDesc }}</p>
+          <!-- (since 2026-10-24) under the title, as on the detail page: the description in quotation marks, then the series (a link to
+               G5 showing that series), then the price -->
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464">{{ detailQuote }}</p>
+          <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
+          <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
           <div style="display: grid; gap: 14px; padding-top: 16px">
             <p style="margin: 0; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">Size</p>
             <div style="display: flex; gap: 14px; flex-wrap: wrap">
@@ -412,7 +415,7 @@ class Component extends DCLogic {
     ['ascent_overlook.jpg', 'Ascent', 'Overlook', 'From above, land and water trace a landscape shaped by quiet movement.', true],
     ['tonal_canopy.jpg', 'Tonal', 'Canopy', 'Life surrounds us.', false]
   ].map(([f, s, t, tag, vertical, hidden]) => ({
-    hidden: !!hidden,
+    hidden: !!hidden || s === 'Outliers',   // (since 2026-10-24 the Outliers are hidden from the site for now)
     orient: vertical ? 'Vertical' : 'Horizontal',
     src: 'assets/works-m70/' + f,
     title: t,
@@ -668,7 +671,7 @@ class Component extends DCLogic {
       toggleAvail: (e) => { e.stopPropagation(); this.setState(s => ({ openMenu: s.openMenu === 'avail' ? null : 'avail' })); },
       seriesLabel: this.state.series === 'All' ? 'Series' : this.state.series,
       availLabel: this.state.avail === 'All' ? 'Availability' : this.state.avail,
-      seriesOptions: [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Outliers'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']].map(([v, label]) => ({
+      seriesOptions: [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']].map(([v, label]) => ({
         label: label || v, selected: this.state.series === v, color: this.state.series === v ? '#8A867E' : '#141414',
         pick: (e) => { e.stopPropagation(); this.shuffleTo({ series: v }); }
       })),
