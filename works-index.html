@@ -142,7 +142,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(13px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1); }
 .idx-series.show { opacity: 1; }
 .idx-row { transition: opacity 0.3s ease; }
-.idx.hovering .idx-row { opacity: 0.5; }
+.idx.hovering .idx-row { opacity: 0.35; }   /* the other rows 65% see-through while one is hovered (since 2026-10-24; was 50%) */
 .idx.hovering .idx-row.on { opacity: 1; }
 .idx-row { display: flex; flex-wrap: wrap; }
 .idx-item { position: relative; display: block; flex: none; height: var(--idx-h); transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
