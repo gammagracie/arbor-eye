@@ -47,7 +47,7 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 1100px) { .ct-main { display: flex; flex-direction: column; } }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
    1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px wide), 1.1em apart. Bulleted lists the same. */
-.bt p:not(.lbl), .bt li { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); line-height: 1.75; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1); }
+.bt p:not(.lbl), .bt li { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); line-height: 1.75; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1); text-wrap: pretty; }
 .bt ul { margin: 0; padding-left: 1.2em; } .bt > :last-child, .bt li:last-child { margin-bottom: 0; }
 @media (min-width: 2001px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 6px); margin-bottom: 1.1em; } }
 @media (min-width: 2001px) and (max-width: 2350px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 3px); } }
