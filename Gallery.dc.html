@@ -196,7 +196,7 @@ html { scrollbar-gutter: stable; }
                showing that series), medium and size, the edition and certificate lines, then the two links -->
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs) * 0.85); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464">{{ detailQuote }}</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
           <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
@@ -257,7 +257,7 @@ html { scrollbar-gutter: stable; }
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
           <!-- (since 2026-10-24) under the title, as on the detail page: the description in quotation marks, then the series (a link to
                G5 showing that series), then the price -->
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464">{{ detailQuote }}</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
           <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
@@ -799,7 +799,7 @@ class Component extends DCLogic {
       detailSize: d ? d.size : '',
       detailDesc: d ? d.desc : '',
       quoteDisplay: d ? 'block' : 'none',
-      detailQuote: d ? '\u201c' + (d.desc ? d.desc.replace(/\s+$/, '') : 'Description text goes here') + '\u201d' : '',   // the description in quotation marks (since 2026-10-22); a work without one shows placeholder text (FPO, since 2026-10-24) until Ned's arrives
+      detailQuote: d ? '\u201c' + (d.desc ? d.desc.replace(/\s+$/, '') : 'Description text goes here') + '\u201d' : '',   // the description in quotation marks (since 2026-10-22; its lines after the first hang under the first letter, past the opening mark, since 2026-10-24); a work without one shows placeholder text (FPO, since 2026-10-24) until Ned's arrives
     };
   }
 }
