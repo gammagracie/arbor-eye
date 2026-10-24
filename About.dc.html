@@ -312,7 +312,9 @@ html { scrollbar-gutter: stable; }
   <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
-             height) at the box's top-right corner -->
+             height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a three-slide strip, as on Studio: the brush roll,
+             the camera set up over the work table, then the three light-box photos side by side; dots under it, a sideways swipe (finger or
+             trackpad) or the left / right arrow keys move between them -->
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Process</h2>
@@ -320,7 +322,30 @@ html { scrollbar-gutter: stable; }
         <p>Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
-          <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: min(40.9vw, calc(var(--ab-h) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)); aspect-ratio: 4 / 3; align-self: start; object-fit: cover">
+          <div style="position: relative; align-self: start; width: min(40.9vw, calc((var(--ab-h) - 28px) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))">
+            <div class="proc-slider" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
+              <div style="display: flex; width: 300%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
+                <div style="width: calc(100% / 3); aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
+                  <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover">
+                </div>
+                <div style="width: calc(100% / 3); aspect-ratio: 4 / 3; display: flex; justify-content: center" aria-hidden="{{ procDeskHide1 }}">
+                  <img src="uploads/about/process-setup.webp" alt="A camera on a tripod over the work table, with paints, brushes and a painting laid out beneath it" loading="lazy" style="display: block; height: 100%; width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+                </div>
+                <div style="width: calc(100% / 3); aspect-ratio: 4 / 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(12px, 0.8vw, 40px); align-content: center" aria-hidden="{{ procDeskHide2 }}">
+                  <img src="uploads/about/process-lightbox-1.webp" alt="The camera looking down into a light box, a painting inside it" loading="lazy" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+                  <img src="uploads/about/process-lightbox-2.webp" alt="The light box and camera on the table in the evening" loading="lazy" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+                  <img src="uploads/about/process-lightbox-3.webp" alt="Down the camera rig to the light box, the painting on the camera's screen" loading="lazy" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
+                </div>
+              </div>
+            </div>
+            <!-- (the 1px clip at each side hides the hairline of the neighbouring slide the fractional track width lets through) -->
+            <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
+            <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; padding-top: 20px">
+              <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="3">
+                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+              </sc-for>
+            </div>
+          </div>
         </div>
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
@@ -389,7 +414,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'bio', bio: 0, proc: 0, stu: 0, bioFits: true };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'bio', bio: 0, proc: 0, procDesk: 0, stu: 0, bioFits: true };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -409,21 +434,24 @@ class Component extends DCLogic {
     this.mqStack.addEventListener('change', this.onMqStack);
     this.setState({ stack: this.mqStack.matches });
     this.onResize = () => this.measureBio(); window.addEventListener('resize', this.onResize);
-    // desktop Studio strip (since 2026-10-21): the left / right arrow keys, and a sideways trackpad swipe over it, move between the
-    // photos and the film (one move per gesture; the swipe never turns into the browser's back / forward)
+    // desktop Studio and Process strips (since 2026-10-21 / 10-24): the left / right arrow keys, and a sideways trackpad swipe over the
+    // strip, move one slide (one move per gesture, stopping at the ends; the swipe never turns into the browser's back / forward)
+    const strips = { studio: ['stu', 2], process: ['procDesk', 3] };
+    const step = (tab, d) => { const [key, n] = strips[tab]; this.setState(s => ({ [key]: Math.max(0, Math.min(n - 1, s[key] + d)) })); };
     this.onKey = e => {
-      if (this.state.tab !== 'studio' || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
-      if (e.key === 'ArrowRight') this.setState({ stu: 1 }); else if (e.key === 'ArrowLeft') this.setState({ stu: 0 });
+      if (!strips[this.state.tab] || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
+      if (e.key === 'ArrowRight') step(this.state.tab, 1); else if (e.key === 'ArrowLeft') step(this.state.tab, -1);
     };
     window.addEventListener('keydown', this.onKey);
     this.onWheel = e => {
-      if (!e.target.closest || !e.target.closest('.stu-slider') || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      const strip = e.target.closest && e.target.closest('.stu-slider, .proc-slider');
+      if (!strip || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
       clearTimeout(this.wheelQuiet); this.wheelQuiet = setTimeout(() => { this.wheelLock = false; this.wheelAcc = 0; }, 200);
       if (this.wheelLock) return;
       this.wheelAcc = (this.wheelAcc || 0) + e.deltaX;
       if (Math.abs(this.wheelAcc) < 30) return;
-      this.wheelLock = true; this.setState({ stu: this.wheelAcc > 0 ? 1 : 0 }); this.wheelAcc = 0;
+      this.wheelLock = true; step(strip.classList.contains('proc-slider') ? 'process' : 'studio', this.wheelAcc > 0 ? 1 : -1); this.wheelAcc = 0;
     };
     window.addEventListener('wheel', this.onWheel, { passive: false });
     if (document.fonts) document.fonts.ready.then(() => this.measureBio());
@@ -445,7 +473,7 @@ class Component extends DCLogic {
     const out = {};
     for (let k = 0; k < n; k++) out[key + 'D' + k] = i === k ? 1 : 0; // opacity: photos crossfade
     out[key + 'Dots'] = Array.from({ length: n }, (_, k) => ({ bg: i === k ? '#141414' : '#C9C5BD', label: 'Show slide ' + (k + 1) + ' of ' + n, go: () => this.setState({ [key]: k }) }));
-    out[key + 'Shift'] = (-100 / n * i) + '%';   // the desktop Studio strip: how far the track (n slides wide) has slid
+    out[key + 'Shift'] = (-100 / n * i) + '%';   // the desktop Studio / Process strips: how far the track (n slides wide) has slid
     for (let k = 0; k < n; k++) out[key + 'Hide' + k] = i === k ? 'false' : 'true';
     out[key + 'Prev'] = () => this.setState(s => ({ [key]: (s[key] + n - 1) % n }));
     out[key + 'Next'] = () => this.setState(s => ({ [key]: (s[key] + 1) % n }));
@@ -543,6 +571,7 @@ class Component extends DCLogic {
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 2),
       ...this.car('proc', 2),
+      ...this.car('procDesk', 3),   // the desktop Process strip (the stacked layout keeps its two-photo 'proc' carousel)
       ...this.car('stu', 2)
     };
   }
