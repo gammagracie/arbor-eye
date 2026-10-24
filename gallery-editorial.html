@@ -98,7 +98,7 @@ html:not(.touch) .scroller { cursor: grab; }
    landscape's height), whatever its orientation */
 .work { --w: min(calc(var(--col) * var(--k)), calc((100vh - var(--header-h) - 120px) * var(--r) * var(--kh, var(--k)))); position: relative; z-index: var(--z); display: block; flex: none; width: var(--w); aspect-ratio: var(--r); margin-top: calc(-0.08 * var(--col) * var(--k)); box-shadow: 0 2px 7px rgba(20,20,20,0.30), 0 16px 38px rgba(20,20,20,0.40); background: #F3F2EE; transform: translateY(var(--py, 0px)); transition: box-shadow 0.45s ease; will-change: transform; }
 /* hover scale and the neighbours' make-way shift (--hy) ride on top of the parallax shift (--py); both ease in */
-.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 1.4s cubic-bezier(0.45, 0, 0.2, 1), --s 1.4s cubic-bezier(0.45, 0, 0.2, 1), --hy 1.4s cubic-bezier(0.45, 0, 0.2, 1); }   /* (since 2026-10-23) slower and softer still: 1.4s, easing in gently as well as out */   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+.work { --s: 1; --hy: 0px; transform: translateY(calc(var(--py, 0px) + var(--hy))) scale(var(--s)); transition: box-shadow 2.1s cubic-bezier(0.65, 0, 0.35, 1), --s 2.1s cubic-bezier(0.65, 0, 0.35, 1), --hy 2.1s cubic-bezier(0.65, 0, 0.35, 1); }   /* (since 2026-10-24) slower again, 2.1s (was 1.4s), on a full ease in and out */   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 @property --s { syntax: '<number>'; inherits: false; initial-value: 1; }
 @property --hy { syntax: '<length>'; inherits: false; initial-value: 0px; }
 .work:first-child { margin-top: 0; }
@@ -108,10 +108,10 @@ html:not(.touch) .scroller { cursor: grab; }
 html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in front after the pointer leaves, until another is hovered */
 .work.hov { --s: var(--sh, 1.2); z-index: 100; box-shadow: 0 3px 9px rgba(20,20,20,0.30), 0 24px 56px rgba(20,20,20,0.42); }
 /* hover: the title beside the work, on alternating sides (odd works: right, even works: left), vertically centred */
-.work .side { position: absolute; top: 50%; margin-top: 3.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
+.work .side { position: absolute; top: 50%; margin-top: 3.5px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; white-space: nowrap; opacity: 0; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none; }
 .work.r .side { left: calc(100% + 56px); align-items: flex-start; }
 .work.l .side { right: calc(100% + 56px); align-items: flex-end; }
-.work .side span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
+.work .side span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs) * 0.648); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; }
 .work .side small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .work.hov .side { opacity: 1; }   /* .hov: set by the script while the pointer is on the work or its enlarged size (mouse only) */
 /* phones: widths 87-100% of the column for every work (portraits as wide, so taller, never taller than the screen allows);
