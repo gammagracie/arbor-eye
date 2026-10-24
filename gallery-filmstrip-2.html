@@ -395,7 +395,8 @@ function fit() {
     let hL = Math.min((H - rowGap * (nr - 1)) / nr, (inner - gap * (nc - 1)) / sumL) * (count === 1 ? 0.86 * 1.18 : 1);
     hL = Math.min(hL, (inner - gap * (nc - 1)) / sumL);
     if (count === 1) hL = Math.min(hL, H - 2 * lift - 40);
-    if (h > 1.5 * hL) { h = 1.5 * hL; upright = true; }
+    const cap = count === 3 ? 2.25 * hL : 1.5 * hL;   // (since 2026-10-24) a three-up set of portraits on its own 50% larger than that
+    if (h > cap) { h = cap; upright = true; }
   }
   if (grid) h = Math.min(h, (H - rowGap * (nr - 1) - 50) / nr);   // nine-up: 10px clear above the grid and 40px below it, so the bottom row's titles stay on the stage
   row.style.top = lift ? 'calc(50% - ' + lift + 'px)' : '';
