@@ -150,6 +150,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
    along a bell curve, each from its own centre and nudged sideways so they never overlap (set by the script below) */
 .idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }
 .idx-item img { display: block; height: 100%; width: auto; }
+.idx-item.v { height: calc(var(--idx-h) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
@@ -199,17 +200,17 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <p class="idx-series" id="idxSeries" aria-live="polite"></p>
     <p class="idx-title" id="idxTitle" aria-hidden="true"></p>
     <section class="idx-row" aria-label="Series 1, Ascent">
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_living-current.jpg"><img src="assets/thumbs-m70/ascent_living-current.jpg" style="aspect-ratio: 2 / 3" alt="Living Current" data-alt-title="Living Current" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_coastal-silence.jpg"><img src="assets/thumbs-m70/ascent_coastal-silence.jpg" style="aspect-ratio: 2 / 3" alt="Coastal Silence" data-alt-title="Coastal Silence" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_inner-eclipse.jpg"><img src="assets/thumbs-m70/ascent_inner-eclipse.jpg" style="aspect-ratio: 2 / 3" alt="Inner Eclipse" data-alt-title="Inner Eclipse" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_shared-orbit.jpg"><img src="assets/thumbs-m70/ascent_shared-orbit.jpg" style="aspect-ratio: 2 / 3" alt="Shared Orbit" data-alt-title="Shared Orbit" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_origin.jpg"><img src="assets/thumbs-m70/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin" data-alt-title="Origin" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_artifact.jpg"><img src="assets/thumbs-m70/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact" data-alt-title="Artifact" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_ascent-1.jpg"><img src="assets/thumbs-m70/ascent_ascent-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent 1" data-alt-title="Ascent 1" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_living-current.jpg"><img src="assets/thumbs-m70/ascent_living-current.jpg" style="aspect-ratio: 2 / 3" alt="Living Current" data-alt-title="Living Current" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_coastal-silence.jpg"><img src="assets/thumbs-m70/ascent_coastal-silence.jpg" style="aspect-ratio: 2 / 3" alt="Coastal Silence" data-alt-title="Coastal Silence" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_inner-eclipse.jpg"><img src="assets/thumbs-m70/ascent_inner-eclipse.jpg" style="aspect-ratio: 2 / 3" alt="Inner Eclipse" data-alt-title="Inner Eclipse" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_shared-orbit.jpg"><img src="assets/thumbs-m70/ascent_shared-orbit.jpg" style="aspect-ratio: 2 / 3" alt="Shared Orbit" data-alt-title="Shared Orbit" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_origin.jpg"><img src="assets/thumbs-m70/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin" data-alt-title="Origin" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_artifact.jpg"><img src="assets/thumbs-m70/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact" data-alt-title="Artifact" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Ascent#ascent_ascent-1.jpg"><img src="assets/thumbs-m70/ascent_ascent-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent 1" data-alt-title="Ascent 1" data-alt-size="s"></a>
     </section>
     <section class="idx-row" aria-label="Series 2, Convergence">
       <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Convergence#convergence_synthesis.jpg"><img src="assets/thumbs-m70/convergence_synthesis.jpg" style="aspect-ratio: 3 / 2" alt="Synthesis" data-alt-title="Synthesis" data-alt-size="s"></a>
@@ -247,11 +248,11 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Spectrum#spectrum_archipelago.jpg"><img src="assets/thumbs-m70/spectrum_archipelago.jpg" style="aspect-ratio: 3 / 2" alt="Archipelago" data-alt-title="Archipelago" data-alt-size="s"></a>
     </section>
     <section class="idx-row" aria-label="Series 6, Structure">
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_framework.jpg"><img src="assets/thumbs-m70/structure_framework.jpg" style="aspect-ratio: 2 / 3" alt="Framework" data-alt-title="Framework" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_cadence.jpg"><img src="assets/thumbs-m70/structure_cadence.jpg" style="aspect-ratio: 2 / 3" alt="Cadence" data-alt-title="Cadence" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_crossings.jpg"><img src="assets/thumbs-m70/structure_crossings.jpg" style="aspect-ratio: 2 / 3" alt="Crossings" data-alt-title="Crossings" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_within.jpg"><img src="assets/thumbs-m70/structure_within.jpg" style="aspect-ratio: 2 / 3" alt="Within" data-alt-title="Within" data-alt-size="s"></a>
-      <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_cubicle.jpg"><img src="assets/thumbs-m70/structure_cubicle.jpg" style="aspect-ratio: 2 / 3" alt="Cubicle" data-alt-title="Cubicle" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_framework.jpg"><img src="assets/thumbs-m70/structure_framework.jpg" style="aspect-ratio: 2 / 3" alt="Framework" data-alt-title="Framework" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_cadence.jpg"><img src="assets/thumbs-m70/structure_cadence.jpg" style="aspect-ratio: 2 / 3" alt="Cadence" data-alt-title="Cadence" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_crossings.jpg"><img src="assets/thumbs-m70/structure_crossings.jpg" style="aspect-ratio: 2 / 3" alt="Crossings" data-alt-title="Crossings" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_within.jpg"><img src="assets/thumbs-m70/structure_within.jpg" style="aspect-ratio: 2 / 3" alt="Within" data-alt-title="Within" data-alt-size="s"></a>
+      <a class="idx-item v" href="gallery-filmstrip-2.html?view=9&amp;series=Structure#structure_cubicle.jpg"><img src="assets/thumbs-m70/structure_cubicle.jpg" style="aspect-ratio: 2 / 3" alt="Cubicle" data-alt-title="Cubicle" data-alt-size="s"></a>
     </section>
     <section class="idx-row" aria-label="Series 7, The Turning">
       <a class="idx-item" href="gallery-filmstrip-2.html?view=9&amp;series=The%20Turning#the-turning_revelation.jpg"><img src="assets/thumbs-m70/the-turning_revelation.jpg" style="aspect-ratio: 3 / 2" alt="Revelation" data-alt-title="Revelation" data-alt-size="s"></a>
