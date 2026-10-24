@@ -374,7 +374,7 @@ class Component extends DCLogic {
       // tablets and phones, with no hover, always show them
       railEnter: () => this.setState({ railHover: true }), railLeave: () => this.setState({ railHover: false }),
       arrowOpacity: this.state.mobile || this.state.tablet || this.state.railHover ? 1 : 0,
-      arrowStroke: this.state.wide ? '2.4px' : !this.state.mobile && !this.state.tablet ? '1.7px' : '1.5px',   // the chevrons' line, 1px heavier than before (since 2026-10-20)
+      arrowStroke: this.state.wide ? '4.8px' : !this.state.mobile && !this.state.tablet ? '3.4px' : '1.5px',   // (since 2026-10-24 twice as heavy on desktop)   // the chevrons' line, 1px heavier than before (since 2026-10-20)
       hoverTitle: this.arts[i].title,
       hoverTitleOpacity: this.state.hover ? 1 : 0,
       railNudge: m ? 'none' : 'translateY(-1px)',   // H7, desktop and tablet: the arrows and thumbnail tray sit 1px higher than their layout place (10px higher than on the homepage), further onto the painting
