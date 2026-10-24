@@ -330,7 +330,7 @@ const isGrid = () => view === 9 || view === 2;
 // works are paged in that series' own arrangement: per = works on a page, cols = works across, a short last row centred under
 // the full ones with the same spacing; scale = the works' size against the plain grid's for that series (capped by the space).
 // An all-portrait series is laid out in portrait-shaped boxes rather than the grid's landscape columns.
-const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4 }, 'Convergence': { cols: 2, per: 4 }, 'Core': { cols: 2, per: 4 }, 'Outliers': { cols: 2, per: 4 },
+const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence': { cols: 2, per: 4 }, 'Core': { cols: 2, per: 4 }, 'Outliers': { cols: 2, per: 4 },
   'Select': { cols: 2, per: 4 }, 'The Turning': { cols: 2, per: 4 }, 'Spectrum': { cols: 2, per: 4 }, 'Structure': { cols: 3, per: 5, scale: 1.3 },
   'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 2, per: 4, mid: true } };
 // mid (since 2026-10-21, Vertical): the desktop grid is 2 x 2, its works halfway in size between the largest a 2 x 2 allows and
@@ -443,6 +443,7 @@ function fit() {
         const byH3 = wideGaps && V / 3.5 / 4 >= 60 ? V / 3.5 : (V - 120) / 3, byW3 = wideGaps && maxW / (boxR * 3 + 0.5) / 4 >= 60 ? maxW / (boxR * 3 + 0.5) : (maxW - 120) / (boxR * 3);
         a = (a + Math.min(byH3, byW3)) / 2;
       }
+      if (SL && SL.grow) a = Math.min(a * SL.grow, (V - 24 * (used - 1)) / used);   // grow: that much larger, the rows drawing closer (24px at least) to fit
       return a; };
     const gridW = a => boxR * nc * a + G(a) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
@@ -458,7 +459,7 @@ function fit() {
         if (aBelow > aNarrow) { gridTop = topBelow; V = bottom - topBelow; a = aBelow; } else a = aNarrow;
       }
     }
-    const g = G(a);
+    const g = G(a), gRow = SL && SL.grow && used > 1 ? Math.max(24, Math.min(g, (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
       Object.assign(row.style, { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: (gridW(a) + 2).toFixed(1) + 'px', gridTemplateColumns: '' });   // (+2px so rounding never wraps a full row)
     } else {
@@ -467,13 +468,13 @@ function fit() {
       Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' });
       row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - g) / 2).toFixed(2) + 'px)';
     }
-    row.style.columnGap = row.style.rowGap = g.toFixed(1) + 'px';
+    row.style.columnGap = g.toFixed(1) + 'px'; row.style.rowGap = gRow.toFixed(1) + 'px';
     const up = s => !SL && WORKS[s.idx] && WORKS[s.idx].r < 1;   // a portrait in the plain grid: the landscape box turned upright
     slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : up(s) ? 1 : R(s)) + 'px'; s.a.style.height = a * (up(s) ? 1.5 : 1) + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
     const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;
     if (!SL && short < nc && slots[lastStart]) slots[lastStart].a.style.gridColumn = (nc - short + 1) + ' / span 2';
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
-    rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + g * (usedNow - 1);
+    rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + gRow * (usedNow - 1);
     // (since 2026-10-21) the arrows level with the grid's middle (the middle row of a 3 x 3), the same on every page of it
     $('prev').style.top = $('next').style.top = (gridTop + V / 2).toFixed(1) + 'px';
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
