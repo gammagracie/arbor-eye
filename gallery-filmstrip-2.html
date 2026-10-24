@@ -71,6 +71,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* 9-up, where the grid needs the room: the two menus stack at the top right, on the bag icon's line (out of the flow, so the toolbar keeps its height) */
 .filters.stacked { position: absolute; right: var(--side-pad); top: 14px; flex-direction: column; align-items: flex-end; gap: 10px; }
 .filter-menu { position: relative; }
+.fm-btn.chosen span { font-weight: 600; }
 .fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
 .fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
 .filter-menu.open .fm-list { display: grid; }
@@ -817,6 +818,7 @@ function menu(id, label, opts, get, set) {
   const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
   const render = () => {
     btn.querySelector('span').textContent = get() === 'All' ? label : get();
+    btn.classList.toggle('chosen', get() !== 'All');   // (since 2026-10-24) a chosen series or year shows bold in the menu's button
     list.innerHTML = '';
     opts().forEach(([v, l]) => { const o = document.createElement('button'); o.setAttribute('role', 'option'); o.textContent = l || v; o.classList.toggle('on', get() === v); o.setAttribute('aria-selected', get() === v);
       o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); menuRenders.forEach(r => r()); applyFilter(); }); list.appendChild(o); });
