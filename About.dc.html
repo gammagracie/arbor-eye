@@ -357,18 +357,19 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 32px 41.6px">
       <div style="min-height: var(--ab-h); display: grid; align-content: start">
-        <!-- Studio (since 2026-10-21): the heading, then a two-slide strip: the three photos side by side across the box, and to their
-             right the film (as tall as the photos, centred in the box); two dots under the middle photo, a sideways swipe (finger or
-             trackpad) or the left / right arrow keys move between them -->
+        <!-- Studio (since 2026-10-21): the heading, then a slide strip: the three photos side by side across the box, and to their
+             right the film (as tall as the photos, centred in the box); since 2026-10-24 two more slides with the new process photos for
+             Ned to choose from: the camera over the work table (upright and landscape), then the three light-box photos side by side;
+             dots under the middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->
         <h2 class="ab-head">Studio</h2>
-        <div class="stu-slider" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.65 - 32px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; touch-action: pan-y">
-          <div style="display: flex; width: 200%; transform: translateX({{ stuShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
-            <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuHide0 }}">
+        <div class="stu-slider" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.65 - 32px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
+          <div style="display: flex; width: 400%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
+            <div style="width: 25%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
               <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
             </div>
-            <div style="width: 50%; display: flex; justify-content: center" aria-hidden="{{ stuHide1 }}">
+            <div style="width: 25%; display: flex; justify-content: center" aria-hidden="{{ stuDeskHide1 }}">
               <div style="position: relative; height: var(--stu-h); width: min(100%, calc(var(--stu-h) * 16 / 9)); overflow: hidden">
                 <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
                 <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
@@ -378,10 +379,19 @@ html { scrollbar-gutter: stable; }
                 </div>
               </div>
             </div>
+            <div style="width: 25%; display: flex; justify-content: center; gap: clamp(25px, 1.6vw, 80px)" aria-hidden="{{ stuDeskHide2 }}">
+              <img src="uploads/about/process-setup.webp" alt="A camera on a tripod over the work table, with paints, brushes and a painting laid out beneath it" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+              <img src="uploads/about/process-table.webp" alt="The camera and tripod at the end of the work table, the painting laid out with paints and brushes" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 4 / 3; object-fit: cover">
+            </div>
+            <div style="width: 25%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide3 }}">
+              <img src="uploads/about/process-lightbox-1.webp" alt="The camera looking down into a light box, a painting inside it" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+              <img src="uploads/about/process-lightbox-2.webp" alt="The light box and camera on the table in the evening" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+              <img src="uploads/about/process-lightbox-3.webp" alt="Down the camera rig to the light box, the painting on the camera's screen" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+            </div>
           </div>
         </div>
         <div style="display: flex; justify-content: center; gap: 12px; padding-top: 20px">
-          <sc-for list="{{ stuDots }}" as="d" hint-placeholder-count="2">
+          <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="4">
             <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
@@ -414,7 +424,7 @@ html { scrollbar-gutter: stable; }
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'bio', bio: 0, proc: 0, procDesk: 0, stu: 0, bioFits: true };
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, stack: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, tab: 'bio', bio: 0, proc: 0, procDesk: 0, stu: 0, stuDesk: 0, bioFits: true };
   // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
   setMenu(open) {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -436,7 +446,7 @@ class Component extends DCLogic {
     this.onResize = () => this.measureBio(); window.addEventListener('resize', this.onResize);
     // desktop Studio and Process strips (since 2026-10-21 / 10-24): the left / right arrow keys, and a sideways trackpad swipe over the
     // strip, move one slide (one move per gesture, stopping at the ends; the swipe never turns into the browser's back / forward)
-    const strips = { studio: ['stu', 2], process: ['procDesk', 3] };
+    const strips = { studio: ['stuDesk', 4], process: ['procDesk', 3] };
     const step = (tab, d) => { const [key, n] = strips[tab]; this.setState(s => ({ [key]: Math.max(0, Math.min(n - 1, s[key] + d)) })); };
     this.onKey = e => {
       if (!strips[this.state.tab] || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
@@ -572,7 +582,8 @@ class Component extends DCLogic {
       ...this.car('bio', 2),
       ...this.car('proc', 2),
       ...this.car('procDesk', 3),   // the desktop Process strip (the stacked layout keeps its two-photo 'proc' carousel)
-      ...this.car('stu', 2)
+      ...this.car('stu', 2),   // the stacked layout's Studio carousel
+      ...this.car('stuDesk', 4)   // the desktop Studio strip
     };
   }
 }
