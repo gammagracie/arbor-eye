@@ -54,6 +54,7 @@ html { scrollbar-gutter: stable; }
 .bt-table { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); } @media (min-width: 2001px) { .bt-table { font-size: calc(14.5px * var(--fs) + 3px); } }
 .bt li { margin-bottom: calc(clamp(15px, 0.9vw, 44px) * 0.55); } @media (min-width: 2001px) { .bt li { margin-bottom: 0.55em; } }   /* (since 2026-10-24) list items half a paragraph's gap apart, the line height still Biography's */
 .bt li:last-child { margin-bottom: 0; }
+.bt p.lbl ~ p.lbl { padding-top: calc(clamp(15px, 0.9vw, 44px) * 1.1); } @media (min-width: 2001px) { .bt p.lbl ~ p.lbl { padding-top: calc((14.5px * var(--fs) + 6px) * 1.1); } }   /* (since 2026-10-24) Returns: each later subsection twice a paragraph's gap below the one before */
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
@@ -136,7 +137,7 @@ html { scrollbar-gutter: stable; }
     </picture>
     <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 32px; padding: 20px 0; border-bottom: 1px solid #E7E4DE; font-size: calc(13px * var(--fs)); flex-wrap: wrap">
       <div style="display: flex; gap: 16px 40px; color: #6E6B66; flex-wrap: wrap">
-        <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
+        <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com?subject=Website%20Inquiry" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
         <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
       </div>
     </div>
@@ -201,8 +202,8 @@ html { scrollbar-gutter: stable; }
       <div style="display: grid; gap: 20px; font-size: calc(14px * var(--fs)); line-height: 1.7; color: #55524C">
         <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
         <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
-        <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
-        <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
+        <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
+        <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
         <p style="margin: 0">Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</p>
       </div>
     </div>
@@ -222,11 +223,11 @@ html { scrollbar-gutter: stable; }
       <div style="display: grid; gap: 0">
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
           <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
         </div>
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
           <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> before production of the item has started.</p>
         </div>
         <div style="padding: 28px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE">
           <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
@@ -298,8 +299,8 @@ html { scrollbar-gutter: stable; }
           <ul>
             <li>Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</li>
             <li>Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</li>
-            <li>If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</li>
-            <li>It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</li>
+            <li>If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</li>
+            <li>It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</li>
             <li>Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</li>
           </ul>
         </div>
@@ -315,9 +316,9 @@ html { scrollbar-gutter: stable; }
         <div class="bt" style="padding: 5% 10% 5% 8%; align-self: center">
           <h2 style="margin: 0 0 24px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Returns &amp; Exchanges</h2>
           <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Damaged or wrong item</p>
-          <p>If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
+          <p>If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
           <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Cancellations</p>
-          <p>If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com" style="border-bottom: 1px solid #C9C5BD">hello@arborandeye.com</a> before production of the item has started.</p>
+          <p>If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> before production of the item has started.</p>
           <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Made to order</p>
           <p>Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
         </div>
@@ -331,7 +332,7 @@ html { scrollbar-gutter: stable; }
           </sc-for>
         </div>
         <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); padding-bottom: 6px">
-          <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
+          <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com?subject=Website%20Inquiry" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
           <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
         </div>
       </div>
@@ -449,7 +450,8 @@ class Component extends DCLogic {
       send: () => {
         const { name, email, message } = this.state;
         if (!name.trim() || !email.trim() || !message.trim()) { this.setState({ note: 'Please fill in your name, email and message.' }); return; }
-        location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website enquiry from ' + name) + '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
+        location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website Inquiry') +   // (since 2026-10-24 every email from this page is headed "Website Inquiry")
+           '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
         this.setState({ note: '', sent: true });
       }
     };
