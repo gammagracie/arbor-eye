@@ -52,6 +52,8 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 2001px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 6px); margin-bottom: 1.1em; } }
 @media (min-width: 2001px) and (max-width: 2350px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 3px); } }
 .bt-table { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); } @media (min-width: 2001px) { .bt-table { font-size: calc(14.5px * var(--fs) + 3px); } }
+.bt li { margin-bottom: calc(clamp(15px, 0.9vw, 44px) * 0.55); } @media (min-width: 2001px) { .bt li { margin-bottom: 0.55em; } }   /* (since 2026-10-24) list items half a paragraph's gap apart, the line height still Biography's */
+.bt li:last-child { margin-bottom: 0; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
