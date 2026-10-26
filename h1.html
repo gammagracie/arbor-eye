@@ -197,11 +197,14 @@ class Component extends DCLogic {
     // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
     const hov = e.target && e.target.closest ? e.target.closest('button') : null, k = btns.indexOf(hov),   // (the re-application after a glide passes no target: the title then stays put)
           rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
-    if (k >= 0 && rail) {
+    if (k >= 0 && hov === this.tipBtn && rail) {   // (only for the thumbnail whose name is showing: a new one fades in under it, see enter)
       let acc2 = 0; for (let j = 0; j < k; j++) acc2 += extra[j];
       const r = rail.getBoundingClientRect();
       this.tipX = base[k].cx + acc2 + extra[k] / 2 - total / 2 - (r.left + r.width / 2);
-      if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
+      if (tip && this.tipFresh) {   // a name that has just appeared goes straight to where the swell will put it, so it only fades in
+        const t = tip.style.transition; tip.style.transition = 'opacity 0.45s ease'; tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
+        void tip.offsetWidth; tip.style.transition = t; this.tipFresh = false;
+      } else if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
     }
   }
   // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
@@ -370,6 +373,14 @@ class Component extends DCLogic {
       // since 2026-10-20: 40px of white above the painting and 90px below it (the thumbnails hang into it, the title under them);
       // H0 runs the full width of the screen; H0-alt1 spans the logo's left edge to the bag icon's right edge and H0-alt2 the gap
       // between the R and the B to the same distance in from the bag icon, both showing the whole painting on Ned's paper
+      // H1 (since 2026-10-26): the framed painting 10% larger every way from its centre where the screen has the room; otherwise as large
+      // as still leaves 20px above it and, below it, the tray's overhang, a hovered thumbnail's swell, the hover title and 24px to spare
+      // (never smaller than it was before; the thumbnails hang from its bottom edge as before, so they move down with it)
+      : VARIANT === '0a2' ? (() => {
+          const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 19 : 12) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
+          const capH = 'max(calc(100vh - var(--header-h) - 20px - ' + band + '), min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), calc(100vh - var(--header-h) - 130px)))';   // (the second: its height before)
+          return { w: 'min(calc((100% - 83.2px) * 1.1), calc(' + capH + ' * 1.655))', h: 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041 * 1.1), ' + capH + ')', ratio: 'auto', pad: '20px 0 ' + band, inset: 0, paper: '4.5cqw' };
+        })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
       : { w: '100%', h: 'calc(100vh - var(--header-h) - 8px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '8px 0 40px', inset: 0 };
@@ -484,8 +495,14 @@ class Component extends DCLogic {
         select: () => this.show(k),
         enter: (e) => {
           const el = e && e.currentTarget; if (!el) { this.lastTip = k; this.setState({ tip: k }); return; }
-          const b = el.getBoundingClientRect(), rail = el.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
-          this.lastTip = k; if (this.tipX == null) this.tipX = (b.left + b.width / 2) - (r.left + r.width / 2); this.setState({ tip: k });
+          const b = el.getBoundingClientRect(), rail = el.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b,
+                x = (b.left + b.width / 2) - (r.left + r.width / 2), tip = rail && rail.querySelector('[data-tip]');
+          // (since 2026-10-26) a name never slides over from the last thumbnail: it is put under this one unseen, then fades in in place
+          if (tip && (k !== this.lastTip || this.tipX == null || Math.abs(x - this.tipX) > 4)) {
+            const t = tip.style.transition; tip.style.transition = 'none'; tip.style.opacity = '0'; tip.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
+            void tip.offsetWidth; tip.style.transition = t; tip.style.opacity = '1'; this.tipFresh = true;
+          }
+          this.tipX = x; this.tipBtn = el; this.lastTip = k; this.setState({ tip: k });
         }
       }))
     };
