@@ -622,6 +622,16 @@ class Component extends DCLogic {
     const frame = this.state.frame;
     const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
     const detailFrame = views[this.state.detailView][0] === 'none' ? 0 : 76; // frame (16px) + mount (22px) on each side
+    // (since 2026-10-26, desktop and tablet) horizontals 12% smaller than before (77.4% of the largest that fits); verticals are the same
+    // box turned on its side (as tall as a horizontal is wide), but never so tall that the magnify icon under them leaves the screen
+    // and the page never scrolls (the screen's height less the header and 218px)
+    const detailW = (() => {
+      const r = this.state.detailRatio, f = detailFrame;
+      if (m) return 'min(100%, calc((84vh - var(--header-h) - ' + f + 'px) * ' + r + ' + ' + f + 'px))';
+      if (r >= 1) return 'calc(0.7744 * min(100%, calc((84vh - var(--header-h) - ' + f + 'px) * ' + r + ' + ' + f + 'px)))';
+      const longSide = 'min(calc(0.7744 * calc((84vh - var(--header-h) - ' + f + 'px) * 1.5 + ' + f + 'px)), calc(100vh - var(--header-h) - 218px))';
+      return 'min(100%, calc((' + longSide + ' - ' + f + 'px) * ' + r + ' + ' + f + 'px))';
+    })();
     // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
     const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
     // both states share numeric border/padding values so switching frames animates smoothly
@@ -786,7 +796,7 @@ class Component extends DCLogic {
       detailTitleSize: m ? '34px' : '46px',
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
-        style: Object.assign({ width: 'calc(' + (m ? 1 : 0.88) + ' * min(100%, calc((84vh - var(--header-h) - ' + detailFrame + 'px) * ' + this.state.detailRatio + ' + ' + detailFrame + 'px)))', height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed(views[this.state.detailView][0], printShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
+        style: Object.assign({ width: detailW, height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed(views[this.state.detailView][0], printShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
       detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailDotsW: this.state.detailDotsW,
       detailDotsL: this.state.detailImgOff.toFixed(1) + 'px',
