@@ -356,6 +356,8 @@ function genie() {
     w.style.setProperty('--hy', (at[i] - at[k]).toFixed(1) + 'px');
     w.classList.toggle('hov', i === k && s[k] > 1.3);
   });
+  // (since 2026-10-26) the hovered work comes to the front and stays there, after the pointer leaves too, until another work is hovered
+  if (s[k] > 1.3 && !works[k].classList.contains('last')) works.forEach((w, i) => w.classList.toggle('last', i === k));
 }
 const ask = () => { if (!raf) raf = requestAnimationFrame(genie); };
 document.addEventListener('mousemove', e => { px = e.clientX; py = e.clientY; ask(); });
