@@ -6,7 +6,8 @@
 <title>Arbor &amp; Eye | Brilliance 25% wider (test)</title>
 <meta name="robots" content="noindex">
 <!-- TEST PAGE (2026-10-26, unlinked): index.html with Brilliance 25% wider (its painting widened at both sides by seam insertion,
-     the middle untouched); its frame is as tall as the other works' and correspondingly wider. Every other work is unchanged. -->
+     the middle untouched); its frame is as tall as the other works' and correspondingly wider, but never wider than the nav
+     (logo to bag icon: then it is that wide and correspondingly shorter). Every other work is unchanged. -->
 <!-- H2 (homepage trial): on desktop, the main image fills the visible area exactly (sides on the nav lines, 25px clear above and below), the painting cropped to that shape inside a thin paper edge; tablet and phones as the homepage -->
 <!-- homepage: the artwork 12% more saturated (main image and thumbnails); Dock-style ("genie") thumbnail magnification, each thumbnail growing from its centre -->
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
@@ -108,7 +109,7 @@ html { scrollbar-gutter: stable; }
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
-    <a href="{{ heroHref }}" style="display: block; transition: width 0.95s cubic-bezier(0.45, 0, 0.55, 1); width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
+    <a href="{{ heroHref }}" style="display: block; transition: width 0.95s cubic-bezier(0.45, 0, 0.55, 1), height 0.95s cubic-bezier(0.45, 0, 0.55, 1); width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
       <p aria-hidden="true" style="position: absolute; inset: 0; margin: 0; padding: 0 12%; display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: calc(15px * var(--fs)); line-height: 1.5; color: #6E6B66; opacity: {{ heroAltOpacity }}; transition: {{ heroAltTransition }}; pointer-events: none"><span><em style="font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(19px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #141414">{{ heroAltTitle }}</em>: {{ heroAltTag }}</span></p>
       {{ heroImg }}
@@ -118,7 +119,7 @@ html { scrollbar-gutter: stable; }
     </a>
     <div data-rail onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftL }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="21 1 1 30.66 21 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 160px 40px; margin: 0 -160px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
         <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
@@ -130,7 +131,7 @@ html { scrollbar-gutter: stable; }
         </div>
       </div>
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftR }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
-        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
+        <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="1 1 21 30.66 1 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
       <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
     </div>
@@ -380,8 +381,8 @@ class Component extends DCLogic {
       : VARIANT === '0a2' ? (() => {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
-          const hh = 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ')';
-          return { w: 'calc(' + hh + ' * ' + (this.arts[i].ratio || 1.655).toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
+          const R = this.arts[i].ratio || 1.655, hh = 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ', calc((100vw - 2 * var(--side-pad)) / ' + R.toFixed(4) + '))';
+          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
@@ -462,8 +463,11 @@ class Component extends DCLogic {
       arrowTrans: desk && this.state.railHover ? 'opacity 0.45s ease, transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.45s ease, transform 0s 0.45s',
       // H0 desktop: the chevrons sit on the painting, so they are white with a soft dark shadow (elsewhere grey with a 1px white edge)
       arrowColor: desk && !(VF && VF.paper) ? '#FFFFFF' : '#ADA9A2',   // (the paper versions keep the grey chevrons: white would vanish on the paper)
-      arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(1px 0 0 #FFFFFF)',
-      arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
+      // (since 2026-10-27) desktop: a 6px band of 70% white right behind each 1px chevron (in place of the 1px offset shadow), so the
+      // chevrons read over the painting and the paper
+      arrowHalo: desk && VF && VF.paper ? '6px' : '0px', arrowHaloColor: 'rgba(255, 255, 255, 0.7)',
+      arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'none' : 'drop-shadow(1px 0 0 #FFFFFF)',
+      arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'none' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
       arrowStroke: !this.state.mobile && !this.state.tablet ? '1px' : '1.5px',   // (since 2026-10-26 back to a 1px line on desktop, with the 1px white edge shadow)
       // (since 2026-10-21) the title shows only while the pointer is on a thumbnail, naming that thumbnail's work (not on the main image)
       hoverTitle: this.arts[this.state.tip != null ? this.state.tip : this.lastTip != null ? this.lastTip : i].title,
