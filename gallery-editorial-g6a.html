@@ -324,45 +324,60 @@ function parallaxTick(now) {
 function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
 scroller.addEventListener('scroll', parallax, { passive: true });
 
-// ---- Hover (mouse; since 2026-10-24): the genie, as on the homepage trays and G5's filmstrip, run down the column. The work
-// under the pointer swells most (to 1.8 times its size, never more than fits on screen), the works around it less and less
-// the further they are from the pointer (a bell curve a little narrower than a work's height), each from its own centre; the works above
-// and below ease apart just enough to make room, so the work under the pointer stays where it is. Everything follows the
-// pointer slowly (1.5s, easing out) as it moves up or down the column or the column scrolls under it, and settles back when the
-// pointer leaves the column. The work under the pointer comes to the front with its title. (Until 2026-10-24 the hovered work
-// alone grew and glided to the middle of the screen.)
-const PEAK = 0.8;
-let px = -1, py = -1, raf = 0, live = false;
-function settle() {
-  if (!live) return; live = false;
-  works.forEach(x => { x.style.setProperty('--s', '1'); x.style.setProperty('--hy', '0px'); x.classList.remove('hov'); });
+// ---- Hover (mouse; since 2026-10-26): the hovered work comes to the front, grows and glides to the vertical middle of the screen,
+// and the works above and below draw back to leave 30px clear above and below it. It grows to one shared size whatever its size
+// at rest (its long side 1.4 times the column width, or the visible height less 24px above and below if that is less), so
+// landscapes and portraits match, turned. As it glides away from where the pointer first met it, it stays while the pointer is on
+// its new place or its resting place (so it never flickers); the pointer moving onto another work hands over to that one, and
+// leaving the page lets everything settle back. It stays in front after the pointer leaves, until another work is hovered.
+// Everything glides slowly (1.5s, easing out). (From 2026-10-24 to 26 the hover was a genie run down the column.)
+const GAP = 30, EDGE = 24;
+const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
+let active = null, activeBox = null, px = -1, py = -1;
+const inBox = (b, x, y) => b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+function activate(w) {
+  const i = works.indexOf(w);
+  works.forEach(x => { x.classList.toggle('last', x === w); x.classList.toggle('hov', x === w); if (x !== w) x.style.setProperty('--s', '1'); });
+  active = w;
+  const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape)
+  const sc = scroller.getBoundingClientRect(), ft = scroller.querySelector('footer');
+  const top = sc.top, bottom = ft ? Math.min(sc.bottom, ft.getBoundingClientRect().top) : sc.bottom, mid = (top + bottom) / 2;
+  const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
+  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, bottom - top - 2 * EDGE));   // the shared long side, fitting the visible height
+  const sh = T / Math.max(bw, bh);
+  w.style.setProperty('--s', sh.toFixed(4));
+  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
+  const shift = mid - cy, eTop = mid - bh * sh / 2, eBot = mid + bh * sh / 2;
+  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x));
+  const up = above.length ? (eTop - GAP) - Math.max(...above) : 0;
+  const down = below.length ? (eBot + GAP) - Math.min(...below) : 0;
+  works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
+  activeBox = { big: { left: cx - bw * sh / 2, right: cx + bw * sh / 2, top: eTop, bottom: eBot }, rest: { left: r.left, right: r.right, top: cy - bh / 2, bottom: cy + bh / 2 } };
 }
-function genie() {
-  raf = 0;
-  if (document.documentElement.classList.contains('touch') || scroller.classList.contains('dragging') || px < 0) return settle();
-  const colBox = col.getBoundingClientRect(), sc = scroller.getBoundingClientRect();
-  const rest = works.map(w => ({ w, h: w.offsetHeight, cy: colBox.top + w.offsetTop + w.offsetHeight / 2, half: w.offsetWidth / 2 }));
-  const mid = (colBox.left + colBox.right) / 2, reach = Math.max(...rest.map(r => r.half)) * 1.8 + 40;
-  if (Math.abs(px - mid) > reach || py < sc.top || py > sc.bottom) return settle();
-  const hs = rest.map(r => r.h).sort((a, b) => a - b), spread = hs[hs.length >> 1] * 0.85;
-  const room = sc.bottom - sc.top - 48;
-  const s = rest.map(r => Math.min(1 + PEAK * Math.exp(-Math.pow((py - r.cy) / spread, 2)), Math.max(1, room / r.h)));
-  const extra = s.map((v, i) => (v - 1) * rest[i].h);
-  let k = 0; s.forEach((v, i) => { if (v > s[k]) k = i; });
-  const at = []; let acc = 0; extra.forEach((e, i) => { at.push(acc + e / 2); acc += e; });
-  live = true;
-  works.forEach((w, i) => {
-    w.style.setProperty('--s', s[i].toFixed(4));
-    w.style.setProperty('--hy', (at[i] - at[k]).toFixed(1) + 'px');
-    w.classList.toggle('hov', i === k && s[k] > 1.3);
-  });
-  // (since 2026-10-26) the hovered work comes to the front and stays there, after the pointer leaves too, until another work is hovered
-  if (s[k] > 1.3 && !works[k].classList.contains('last')) works.forEach((w, i) => w.classList.toggle('last', i === k));
+function release() {
+  if (!active) return;
+  active.classList.remove('hov'); active = activeBox = null;
+  works.forEach(x => { x.style.setProperty('--hy', '0px'); x.style.setProperty('--s', '1'); });
 }
-const ask = () => { if (!raf) raf = requestAnimationFrame(genie); };
-document.addEventListener('mousemove', e => { px = e.clientX; py = e.clientY; ask(); });
-document.addEventListener('mouseleave', () => { px = py = -1; settle(); });
-scroller.addEventListener('scroll', () => { if (live) ask(); }, { passive: true });
+works.forEach(w => w.addEventListener('mouseenter', () => {
+  if (document.documentElement.classList.contains('touch') || scroller.classList.contains('dragging') || w === active) return;
+  if (active && (inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py))) return;   // still on the enlarged work, which covers it
+  activate(w);
+}));
+document.addEventListener('mousemove', e => {
+  px = e.clientX; py = e.clientY;
+  if (!active || inBox(activeBox.big, px, py) || inBox(activeBox.rest, px, py)) return;
+  release();
+  const under = document.elementFromPoint(px, py), w = under && under.closest && under.closest('.work');
+  if (w && !document.documentElement.classList.contains('touch')) activate(w);
+});
+document.addEventListener('mouseleave', release);
+// scrolling under a held work: its places move with the column
+let lastTop = scroller.scrollTop;
+scroller.addEventListener('scroll', () => {
+  const d = scroller.scrollTop - lastTop; lastTop = scroller.scrollTop;
+  if (activeBox) ['big', 'rest'].forEach(k => { activeBox[k].top -= d; activeBox[k].bottom -= d; });
+}, { passive: true });
 
 // ---- Smooth scrolling: wheel and mouse drag set a target; the scroller eases toward it.
 // Touch screens keep native scrolling. Keyboard and other native scrolls just re-sync the target.
