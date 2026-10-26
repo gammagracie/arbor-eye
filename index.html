@@ -197,11 +197,14 @@ class Component extends DCLogic {
     // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
     const hov = e.target && e.target.closest ? e.target.closest('button') : null, k = btns.indexOf(hov),   // (the re-application after a glide passes no target: the title then stays put)
           rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
-    if (k >= 0 && rail) {
+    if (k >= 0 && hov === this.tipBtn && rail) {   // (only for the thumbnail whose name is showing: a new one fades in under it, see enter)
       let acc2 = 0; for (let j = 0; j < k; j++) acc2 += extra[j];
       const r = rail.getBoundingClientRect();
       this.tipX = base[k].cx + acc2 + extra[k] / 2 - total / 2 - (r.left + r.width / 2);
-      if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
+      if (tip && this.tipFresh) {   // a name that has just appeared goes straight to where the swell will put it, so it only fades in
+        const t = tip.style.transition; tip.style.transition = 'opacity 0.45s ease'; tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
+        void tip.offsetWidth; tip.style.transition = t; this.tipFresh = false;
+      } else if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
     }
   }
   // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
@@ -483,8 +486,14 @@ class Component extends DCLogic {
         select: () => this.show(k),
         enter: (e) => {
           const el = e && e.currentTarget; if (!el) { this.lastTip = k; this.setState({ tip: k }); return; }
-          const b = el.getBoundingClientRect(), rail = el.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b;
-          this.lastTip = k; if (this.tipX == null) this.tipX = (b.left + b.width / 2) - (r.left + r.width / 2); this.setState({ tip: k });
+          const b = el.getBoundingClientRect(), rail = el.closest('[data-rail]'), r = rail ? rail.getBoundingClientRect() : b,
+                x = (b.left + b.width / 2) - (r.left + r.width / 2), tip = rail && rail.querySelector('[data-tip]');
+          // (since 2026-10-26) a name never slides over from the last thumbnail: it is put under this one unseen, then fades in in place
+          if (tip && (k !== this.lastTip || this.tipX == null || Math.abs(x - this.tipX) > 4)) {
+            const t = tip.style.transition; tip.style.transition = 'none'; tip.style.opacity = '0'; tip.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
+            void tip.offsetWidth; tip.style.transition = t; tip.style.opacity = '1'; this.tipFresh = true;
+          }
+          this.tipX = x; this.tipBtn = el; this.lastTip = k; this.setState({ tip: k });
         }
       }))
     };
