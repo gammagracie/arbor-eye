@@ -114,7 +114,7 @@ html { scrollbar-gutter: stable; }
       <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 2.87% 2.28%; background: rgba(0, 0, 0, 0.1625); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
     <div data-rail onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
-      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftL }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+      <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftL }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="21 1 1 30.66 21 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
       <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 160px 40px; margin: 0 -160px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
@@ -126,7 +126,7 @@ html { scrollbar-gutter: stable; }
           </sc-for>
         </div>
       </div>
-      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftR }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #6E6B66">
+      <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftR }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="1 1 21 30.66 1 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
       <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
@@ -457,12 +457,12 @@ class Component extends DCLogic {
       arrowShiftL: desk && this.state.railHover ? 'translateX(-30px)' : 'none', arrowShiftR: desk && this.state.railHover ? 'translateX(30px)' : 'none',
       arrowTrans: desk && this.state.railHover ? 'opacity 0.45s ease, transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.45s ease, transform 0s 0.45s',
       // H0 desktop: the chevrons sit on the painting, so they are white with a soft dark shadow (elsewhere grey with a 1px white edge)
-      arrowColor: desk && !(VF && VF.paper) ? '#FFFFFF' : '#ADA9A2',   // (the paper versions keep the grey chevrons: white would vanish on the paper)
-      // (since 2026-10-27) desktop: a 6px band of 70% white right behind each 1px chevron (in place of the 1px offset shadow), so the
-      // chevrons read over the painting and the paper
-      arrowHalo: desk && VF && VF.paper ? '6px' : '0px', arrowHaloColor: 'rgba(255, 255, 255, 0.7)',
-      arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'none' : 'drop-shadow(1px 0 0 #FFFFFF)',
-      arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'none' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
+      arrowColor: desk && !(VF && VF.paper) ? '#FFFFFF' : desk ? '#55524C' : '#ADA9A2',   // (the paper versions keep the grey chevrons: white would vanish on the paper)
+      // (since 2026-10-27, as on H1) desktop: the 1px chevrons dark grey rather than light, in a soft
+      // 70% white glow (two 3px blurs), darkening to black on hover
+      arrowHalo: '0px', arrowHaloColor: 'transparent',
+      arrowFilterL: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'drop-shadow(0 0 3px rgba(255,255,255,0.7)) drop-shadow(0 0 3px rgba(255,255,255,0.7))' : 'drop-shadow(1px 0 0 #FFFFFF)',
+      arrowFilterR: desk && !(VF && VF.paper) ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.6))' : desk ? 'drop-shadow(0 0 3px rgba(255,255,255,0.7)) drop-shadow(0 0 3px rgba(255,255,255,0.7))' : 'drop-shadow(-1px 0 0 #FFFFFF)',   // H0 desktop: the chevrons fade in only while the pointer is on the thumbnail tray (its row, including where the chevrons sit)
       arrowStroke: !this.state.mobile && !this.state.tablet ? '1px' : '1.5px',   // (since 2026-10-26 back to a 1px line on desktop, with the 1px white edge shadow)
       // (since 2026-10-21) the title shows only while the pointer is on a thumbnail, naming that thumbnail's work (not on the main image)
       hoverTitle: this.arts[this.state.tip != null ? this.state.tip : this.lastTip != null ? this.lastTip : i].title,
