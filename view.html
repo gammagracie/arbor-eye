@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Arbor &amp; Eye | File</title>
+<style>
+/* Viewer for the files linked from tol.html: shows one image large and centred, on a light ground or, for the
+   white artwork (?bg=dark), a dark one, so a white-on-clear file is visible instead of a blank page. */
+html, body { margin: 0; height: 100%; }
+body { background: #FDFDFB; color: #55524C; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; display: grid; grid-template-rows: 1fr auto; }
+body.dark { background: #2B2A28; color: #C9C5BD; }
+main { display: flex; align-items: center; justify-content: center; padding: 6vh 6vw 0; min-height: 0; }
+main img { display: block; width: 80vw; height: 72vh; object-fit: contain; }
+main img.small { width: auto; height: auto; max-width: 80vw; max-height: 72vh; }
+footer { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: center; padding: 24px 16px 32px; font-size: 13px; letter-spacing: 0.04em; }
+footer a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.err { font-size: 15px; }
+</style>
+</head>
+<body>
+<main id="m"></main>
+<footer id="f"></footer>
+<script>
+const q = new URLSearchParams(location.search), f = q.get('f') || '', dark = q.get('bg') === 'dark';
+const m = document.getElementById('m'), foot = document.getElementById('f');
+if (dark) document.body.classList.add('dark');
+if (!/^(uploads|assets)\/[\w.-]+\.(svg|png|jpg|webp)$/.test(f)) {
+  m.innerHTML = '<p class="err">No file to show.</p>';
+} else {
+  document.title = 'Arbor & Eye | ' + f.split('/').pop();
+  const img = new Image();
+  img.src = f; img.alt = '';
+  // small rasters (the favicon, the early marks) are shown at their own size rather than blown up
+  img.onload = () => { if (!/\.svg$/.test(f) && img.naturalWidth < 400) img.className = 'small'; };
+  m.appendChild(img);
+  const other = new URL(location.href); other.searchParams.set('bg', dark ? 'light' : 'dark');
+  foot.innerHTML = '<span>' + f + '</span><a href="' + other.search + '">' + (dark ? 'Light' : 'Dark') + ' background</a><a href="' + f + '">The file itself</a><a href="tol.html">Back to Tree of Life options</a>';
+}
+</script>
+</body>
+</html>
