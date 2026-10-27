@@ -343,7 +343,8 @@ function activate(w) {
   const sc = scroller.getBoundingClientRect(), ft = scroller.querySelector('footer');
   const top = sc.top, bottom = ft ? Math.min(sc.bottom, ft.getBoundingClientRect().top) : sc.bottom, mid = (top + bottom) / 2;
   const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
-  const T = Math.max(Math.max(bw, bh), Math.min(1.4 * colPx, bottom - top - 2 * EDGE));   // the shared long side, fitting the visible height
+  const T0 = Math.min(1.4 * colPx, bottom - top - 2 * EDGE);   // the shared long side, fitting the visible height
+  const T = Math.max(Math.max(bw, bh), bh > bw ? 0.85 * T0 : T0);   // (since 2026-10-27) a vertical 15% smaller than that
   const sh = T / Math.max(bw, bh);
   w.style.setProperty('--s', sh.toFixed(4));
   const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
