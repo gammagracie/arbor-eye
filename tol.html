@@ -28,6 +28,8 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 .small .stage { height: 220px; }
 .stage.dark { background: #2B2A28; }
 .stage img.mark { max-width: 80%; max-height: 80%; width: auto; height: auto; display: block; }
+/* the two early PNG marks carry a solid white ground; multiply lets the card colour show through */
+.stage img.flat { mix-blend-mode: multiply; }
 .info { padding: 16px 20px 20px; display: grid; gap: 6px; align-content: start; }
 .name { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
 .what { font-size: 14px; line-height: 1.6; color: #55524C; }
@@ -44,6 +46,15 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 .intro .word img { display: block; width: 100%; height: auto; }
 .intro.s-tree .tree { opacity: 1; }
 .intro.s-mark .word { opacity: 1; }
+/* static version of the intro: the new wordmark on its panel over the painting */
+.intro.still .word { opacity: 1; transition: none; }
+.word-tol { width: 80%; height: auto; display: block; }
+/* favicon trials: each design at tab sizes, on a light and a dark tab bar */
+.fav-stage { height: auto; padding: 28px 0; flex-direction: column; gap: 14px; }
+.tabbar { display: flex; align-items: center; gap: 28px; padding: 12px 22px; border-radius: 8px; }
+.tabbar.light { background: #E9E7E2; }
+.tabbar.dark { background: #2B2A28; }
+.tabbar img { display: block; }
 </style>
 </head>
 <body>
@@ -51,6 +62,17 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
   <a class="logo" href="index.html" aria-label="Arbor &amp; Eye, current homepage"><img src="uploads/logo-tol.svg" alt="Arbor &amp; Eye"></a>
   <h1>Tree of Life options</h1>
   <p class="lede">Every Tree of Life animation and illustration made for the site so far, in one place. Each animation plays once when the page opens; Replay runs it again. Under each is where it was used and when.</p>
+
+  <h2>New, 27 October</h2>
+  <div class="grid">
+    <div class="card"><div class="stage dark"><img class="word-tol" src="uploads/intro-logo-tol.svg" alt=""></div><div class="info"><span class="name">Intro wordmark with the tree</span><span class="what">The intro's widely spaced ARBOR &amp; EYE with the engraved Tree of Life in place of the ampersand, set as it is in the header logo: the crown rises above the capitals and the tree's own ampersand sits on the line. In white, drawn as a vector so it stays sharp at any size.</span><span class="file">uploads/intro-logo-tol.svg</span></div></div>
+    <div class="card"><div class="stage"><div class="intro still"><span class="word"><img src="uploads/intro-logo-tol.svg" alt=""></span></div></div><div class="info"><span class="name">The same, over the first painting</span><span class="what">As it would come up in the homepage intro: same width and the same light dark panel as the current wordmark. The panel is a little taller to make room for the crown.</span><span class="file">Not on the homepage yet</span></div></div>
+  </div>
+  <div class="grid small" style="margin-top: 24px">
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="uploads/favicon-crown.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown.svg" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="uploads/favicon-crown.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown.svg" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Simplified favicon, ink</span><span class="what">Just the solid 7-leaf crown on a short stem, in ink, with no ampersand, so it still reads at 16 pixels. Shown at 16, 32 and 64 pixels on a light and a dark tab bar.</span><span class="file">uploads/favicon-crown.svg</span></div></div>
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="uploads/favicon-crown-tile.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown-tile.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown-tile.svg" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="uploads/favicon-crown-tile.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown-tile.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown-tile.svg" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Simplified favicon, tile</span><span class="what">The same crown in white on a rounded ink square, so it holds up on both light and dark browser tabs.</span><span class="file">uploads/favicon-crown-tile.svg</span></div></div>
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Current favicon, for comparison</span><span class="what">The engraved tree and ampersand now in the tab. At 16 pixels the fine lines turn to a grey smudge.</span><span class="file">assets/favicon.png</span></div></div>
+  </div>
 
   <h2>Animations</h2>
   <div class="grid">
@@ -102,8 +124,8 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
     <div class="card"><div class="stage"><img class="mark" src="uploads/arbor-mark-ink.svg" alt=""></div><div class="info"><span class="name">Engraved tree, ink</span><span class="what">The engraved Tree of Life alone, in ink.</span><span class="file">uploads/arbor-mark-ink.svg</span></div></div>
     <div class="card"><div class="stage dark"><img class="mark" src="uploads/arbor-mark-white.svg" alt=""></div><div class="info"><span class="name">Engraved tree, white</span><span class="what">The white tree of the homepage intro (animation D), shown here on a dark ground.</span><span class="file">uploads/arbor-mark-white.svg</span></div></div>
     <div class="card"><div class="stage"><img class="mark" src="uploads/arbor-mark.png" alt=""></div><div class="info"><span class="name">Engraved tree, dark</span><span class="what">The dark tree once set behind the homepage painting, and the About page's large Tree of Life.</span><span class="file">uploads/arbor-mark.png</span></div></div>
-    <div class="card"><div class="stage"><img class="mark" src="assets/logo-mark.png" alt=""></div><div class="info"><span class="name">Early mark</span><span class="what">One of the first marks, from the site's start (14 September).</span><span class="file">assets/logo-mark.png</span></div></div>
-    <div class="card"><div class="stage"><img class="mark" src="assets/mark.png" alt=""></div><div class="info"><span class="name">Early mark, second</span><span class="what">The other first mark (14 September).</span><span class="file">assets/mark.png</span></div></div>
+    <div class="card"><div class="stage"><img class="mark flat" src="assets/logo-mark.png" alt=""></div><div class="info"><span class="name">Early mark</span><span class="what">One of the first marks, from the site's start (14 September).</span><span class="file">assets/logo-mark.png</span></div></div>
+    <div class="card"><div class="stage"><img class="mark flat" src="assets/mark.png" alt=""></div><div class="info"><span class="name">Early mark, second</span><span class="what">The other first mark (14 September).</span><span class="file">assets/mark.png</span></div></div>
     <div class="card"><div class="stage"><img class="mark" src="assets/favicon.png" alt="" style="width: 64px; image-rendering: auto"></div><div class="info"><span class="name">Favicon</span><span class="what">The Tree of Life in the browser tab.</span><span class="file">assets/favicon.png</span></div></div>
     <div class="card"><div class="stage dark"><img class="mark" src="uploads/intro-logo-spaced.png" alt=""></div><div class="info"><span class="name">Intro wordmark</span><span class="what">ARBOR &amp; EYE as it comes up in the homepage intro (animation D), widely spaced.</span><span class="file">uploads/intro-logo-spaced.png</span></div></div>
   </div>
