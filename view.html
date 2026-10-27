@@ -17,7 +17,7 @@ body.painting footer { background: rgba(0, 0, 0, 0.45); }
 main { display: flex; align-items: center; justify-content: center; padding: 6vh 6vw 0; min-height: 0; }
 main img { display: block; width: 80vw; height: 72vh; object-fit: contain; }
 main img.small { width: auto; height: auto; max-width: 80vw; max-height: 72vh; }
-/* on the dark ground the two intro wordmarks sit on a 40% black panel, padded in the homepage panel's proportions
+/* on the dark ground and over Brilliance the two intro wordmarks sit on a 40% black panel, padded in the homepage panel's proportions
    (5.9% of the wordmark's width above and below, 4.7% at the sides) */
 .panel { --w: min(80vw, 120vh); width: var(--w); padding: calc(var(--w) * 0.059) calc(var(--w) * 0.047); background: rgba(0, 0, 0, 0.4); line-height: 0; }
 .panel img { width: 100%; height: auto; }
@@ -44,7 +44,7 @@ if (!/^(uploads|assets)\/[\w.-]+\.(svg|png|jpg|webp)$/.test(f)) {
   img.src = f; img.alt = '';
   // small rasters (the favicon, the early marks) are shown at their own size rather than blown up
   img.onload = () => { if (!/\.svg$/.test(f) && img.naturalWidth < 400) img.className = 'small'; };
-  if (bg === 'dark' && WORDMARKS.includes(f)) {
+  if (WORDMARKS.includes(f)) {
     const panel = document.createElement('div');
     panel.className = 'panel'; panel.appendChild(img); m.appendChild(panel);
   } else m.appendChild(img);
