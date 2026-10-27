@@ -17,10 +17,11 @@ body.painting footer { background: rgba(0, 0, 0, 0.45); }
 main { display: flex; align-items: center; justify-content: center; padding: 6vh 6vw 0; min-height: 0; }
 main img { display: block; width: 80vw; height: 72vh; object-fit: contain; }
 main img.small { width: auto; height: auto; max-width: 80vw; max-height: 72vh; }
-/* on the dark ground and over Brilliance the two intro wordmarks sit on a 40% black panel, padded in the homepage panel's proportions
+/* on the dark ground the two intro wordmarks sit on a 40% black panel (20% over Brilliance), padded in the homepage panel's proportions
    (5.9% of the wordmark's width above and below, 4.7% at the sides) */
 .panel { --w: min(80vw, 120vh); width: var(--w); padding: calc(var(--w) * 0.059) calc(var(--w) * 0.047); background: rgba(0, 0, 0, 0.4); line-height: 0; }
 .panel img { width: 100%; height: auto; }
+body.painting .panel { background: rgba(0, 0, 0, 0.2); }
 footer { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: center; padding: 24px 16px 32px; font-size: 13px; letter-spacing: 0.04em; }
 footer a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
 .err { font-size: 15px; }
