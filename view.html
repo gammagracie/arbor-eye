@@ -6,11 +6,14 @@
 <meta name="robots" content="noindex">
 <title>Arbor &amp; Eye | File</title>
 <style>
-/* Viewer for the files linked from tol.html: shows one image large and centred, on a light ground or, for the
-   white artwork (?bg=dark), a dark one, so a white-on-clear file is visible instead of a blank page. */
+/* Viewer for the files linked from tol.html: shows one image large and centred on a ground it is visible on. Ink
+   artwork sits on the site's light ground; the white artwork (WHITE below) on a dark ground or over Brilliance, never
+   on light, where it would vanish. */
 html, body { margin: 0; height: 100%; }
 body { background: #FDFDFB; color: #55524C; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; display: grid; grid-template-rows: 1fr auto; }
 body.dark { background: #2B2A28; color: #C9C5BD; }
+body.painting { background: #2B2A28 center / cover no-repeat url('assets/home-v2/brilliance.jpg'); color: #FFFFFF; }
+body.painting footer { background: rgba(0, 0, 0, 0.45); }
 main { display: flex; align-items: center; justify-content: center; padding: 6vh 6vw 0; min-height: 0; }
 main img { display: block; width: 80vw; height: 72vh; object-fit: contain; }
 main img.small { width: auto; height: auto; max-width: 80vw; max-height: 72vh; }
@@ -23,9 +26,11 @@ footer a { color: inherit; text-decoration: none; border-bottom: 1px solid curre
 <main id="m"></main>
 <footer id="f"></footer>
 <script>
-const q = new URLSearchParams(location.search), f = q.get('f') || '', dark = q.get('bg') === 'dark';
+const WHITE = ['uploads/intro-logo-tol.svg', 'uploads/arbor-mark-white.svg', 'uploads/intro-logo-spaced.png'];
+const q = new URLSearchParams(location.search), f = q.get('f') || '', white = WHITE.includes(f);
+const bg = white ? (q.get('bg') === 'painting' ? 'painting' : 'dark') : 'light';
 const m = document.getElementById('m'), foot = document.getElementById('f');
-if (dark) document.body.classList.add('dark');
+if (bg !== 'light') document.body.classList.add(bg);
 if (!/^(uploads|assets)\/[\w.-]+\.(svg|png|jpg|webp)$/.test(f)) {
   m.innerHTML = '<p class="err">No file to show.</p>';
 } else {
@@ -35,8 +40,9 @@ if (!/^(uploads|assets)\/[\w.-]+\.(svg|png|jpg|webp)$/.test(f)) {
   // small rasters (the favicon, the early marks) are shown at their own size rather than blown up
   img.onload = () => { if (!/\.svg$/.test(f) && img.naturalWidth < 400) img.className = 'small'; };
   m.appendChild(img);
-  const other = new URL(location.href); other.searchParams.set('bg', dark ? 'light' : 'dark');
-  foot.innerHTML = '<span>' + f + '</span><a href="' + other.search + '">' + (dark ? 'Light' : 'Dark') + ' background</a><a href="' + f + '">The file itself</a><a href="tol.html">Back to Tree of Life options</a>';
+  // the white artwork switches between the dark ground and the painting; ink artwork stays on light
+  const swap = white ? '<a href="view.html?f=' + f + '&bg=' + (bg === 'dark' ? 'painting' : 'dark') + '">' + (bg === 'dark' ? 'Over Brilliance' : 'Dark background') + '</a>' : '';
+  foot.innerHTML = '<span>' + f + '</span>' + swap + '<a href="' + f + '" download>Download the file</a><a href="tol.html">Back to Tree of Life options</a>';
 }
 </script>
 </body>
