@@ -22,13 +22,13 @@
    (headings 75px at 3840; the paragraphs keep the site's paragraph size, plus 6px over 2000px since 2026-10-20: 24px). The copy's
    block is 50 x --ab-body wide (2028px at 3840). --ab-h: the height of the box every tab sits in. */
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
-  --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(30px, 1.95vw, 100px); --ab-measure: calc(var(--ab-body) * 50);
-  --ab-h: min(calc((100vw - 2 * var(--side-pad) - 83.2px) / 2), calc(100vh - var(--header-h) - var(--footer-h) - 64px - 68px)); }   /* the box: as tall as Contact's photo */
+  --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(22px, 1.35vw, 70px); --ab-measure: calc(var(--ab-body) * 50);
+  --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(49px + var(--tab-fs) * 1.2);
+  --ab-h: calc(100vh - var(--header-h) - var(--footer-h) - 50px - 28px - var(--tab-h) - 32px); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
    22px padding above its labels, less 50px) */
-.ab-portrait { height: calc(var(--ab-h) * 0.8); }
-@media (min-width: 2001px) { .ab-portrait { height: calc(var(--ab-h) - 28px); } }
+.ab-portrait { height: var(--ab-h); }   /* (since 2026-10-28) the portrait fills the box's height */
 /* the paragraphs of every desktop tab, and of Contact's Shipping and Returns (since 2026-10-22; class bt), styled as Biography's
    always were: 14.5px on a 1.75 line, 0.99vw apart (19px at 1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px
    wide), 1.1em apart; one column (Biography ran in two over 2000px on 2026-10-20 and 21) */
@@ -47,7 +47,8 @@
 .ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
 .ab-copy p { margin: 0; }
 .ab-copy.bt { display: block; }
-.ab-head { margin: 0 0 calc(var(--ab-head) * 0.55); font-family: 'EB Garamond', serif; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; }
+/* headings (since 2026-10-28): the body's sans-serif, spaced capitals, smaller than the Garamond they replace (26px at 1920, 52px at 3840) */
+.ab-head { margin: 0 0 calc(var(--ab-head) * 0.8); font-family: inherit; font-weight: 400; font-size: var(--ab-head); line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; }
 
 /* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
    logo's hidden text and H0's hover title are left out) */
@@ -274,11 +275,11 @@ html { scrollbar-gutter: stable; }
        or less on a short screen), and under it the tab bar exactly where Contact's is; the footer follows (on screen on load) -->
   <sc-if value="{{ wideAbout }}" hint-placeholder-val="{{ true }}">
   <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 32px 41.6px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: start">
+  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 50px 41.6px 32px">
+      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Biography: the portrait (3:4, 80% of the box's height; over 2000px down to 50px above the tab labels) at the box's top-left corner, on the logo's left edge, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="align-self: start; display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
+          <img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
           <div class="ab-bio" style="justify-self: start; max-width: var(--ab-measure)">
             <h1 class="ab-head">Biography</h1>
             <div class="ab-copy bt"><p>I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it&nbsp;forward.</p>
@@ -289,17 +290,17 @@ html { scrollbar-gutter: stable; }
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 32px 41.6px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: start">
+  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 50px 41.6px 32px">
+      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Tree of Life: the fresco photo (49.5% of the screen's width, at most the box's height) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(49.5vw, calc(var(--ab-h) * 1.4027), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)); height: auto; align-self: start">
+          <img src="uploads/about/pierodellafrancesca.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(calc(var(--ab-h) * 1.4027), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)); height: auto">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Tree of Life</h2>
             <div class="ab-copy bt"><p>The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
@@ -309,13 +310,13 @@ html { scrollbar-gutter: stable; }
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 32px 41.6px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: start">
+  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 50px 41.6px 32px">
+      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a three-slide strip, as on Studio: the brush roll,
              the camera set up over the work table, then the three light-box photos side by side; dots under it, a sideways swipe (finger or
@@ -327,7 +328,7 @@ html { scrollbar-gutter: stable; }
         <p>Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
-          <div style="position: relative; align-self: start; width: min(40.9vw, calc((var(--ab-h) - 28px) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))">
+          <div style="position: relative; width: min(calc((var(--ab-h) - 28px) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))">
             <div class="proc-slider" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
               <div style="display: flex; width: 300%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
                 <div style="width: calc(100% / 3); aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
@@ -355,19 +356,19 @@ html { scrollbar-gutter: stable; }
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 32px 41.6px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: start">
+  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 50px 41.6px 32px">
+      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Studio (since 2026-10-21): the heading, then a slide strip: the three photos side by side across the box, and to their
              right the film (as tall as the photos, centred in the box); since 2026-10-24 two more slides with the new process photos for
              Ned to choose from: the camera over the work table (upright and landscape), then the three light-box photos side by side;
              dots under the middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->
         <h2 class="ab-head">Studio</h2>
-        <div class="stu-slider" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.65 - 32px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
+        <div class="stu-slider" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
           <div style="display: flex; width: 400%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
             <div style="width: 25%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
               <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
@@ -403,7 +404,7 @@ html { scrollbar-gutter: stable; }
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the B of the logo to the same distance in from the bag icon, the labels 14px -->
       <div role="tablist" style="display: flex; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button></sc-for>
       </div>
   </section>
   </sc-if>
