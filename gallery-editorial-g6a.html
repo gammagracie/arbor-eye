@@ -148,6 +148,7 @@ footer { flex: none; }
         <nav class="main">
           <a href="h1.html">H1</a>
           <a href="h2.html">H2</a>
+          <a href="h3.html">H3</a>
           <a href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
           <a href="gallery-editorial-g6a.html" style="font-weight: 700; color: #141414">G6a</a>
@@ -166,6 +167,7 @@ footer { flex: none; }
   <nav class="menu" aria-label="Mobile menu">
     <a href="h1.html">H1</a>
     <a href="h2.html">H2</a>
+    <a href="h3.html">H3</a>
     <a href="gallery-filmstrip-2.html">G5</a>
     <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
     <a href="gallery-editorial-g6a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7; font-weight: 700; color: #141414">G6a</a>
@@ -327,14 +329,17 @@ function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAni
 scroller.addEventListener('scroll', parallax, { passive: true });
 
 // ---- Hover (mouse; since 2026-10-26): the hovered work comes to the front, grows and glides to the vertical middle of the screen,
-// and the works above and below draw back to leave 30px clear above and below it. It grows to one shared size whatever its size
+// and the works above and below draw back to leave clear space above and below it (since 2026-10-28 on G6a: 4.5% of the visible
+// height, at least 48px, measured from where the neighbours rest so their drift never narrows it; it was 30px). It grows to one shared size whatever its size
 // at rest (its long side 1.4 times the column width, or the visible height less 24px above and below if that is less), so
 // landscapes and portraits match, turned. As it glides away from where the pointer first met it, it stays while the pointer is on
 // its new place or its resting place (so it never flickers); the pointer moving onto another work hands over to that one, and
 // leaving the page lets everything settle back. It stays in front after the pointer leaves, until another work is hovered.
 // Everything glides slowly (1.5s, easing out). (From 2026-10-24 to 26 the hover was a genie run down the column.)
-const GAP = 30, EDGE = 24;
+const EDGE = 24;
 const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
+const drift = x => parseFloat(x.style.getPropertyValue('--py')) || 0;   // its parallax drift
+const restMid = x => { const r = x.getBoundingClientRect(); return (r.top + r.bottom) / 2 - hy(x) - drift(x); };   // its resting centre, whatever its glide, drift or scale
 let active = null, activeBox = null, px = -1, py = -1;
 const inBox = (b, x, y) => b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
 function activate(w) {
@@ -344,14 +349,15 @@ function activate(w) {
   const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape)
   const sc = scroller.getBoundingClientRect(), ft = scroller.querySelector('footer');
   const top = sc.top, bottom = ft ? Math.min(sc.bottom, ft.getBoundingClientRect().top) : sc.bottom, mid = (top + bottom) / 2;
+  const GAP = Math.max(48, 0.045 * (bottom - top));
   const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
   const T0 = Math.min(1.4 * colPx, bottom - top - 2 * EDGE);   // the shared long side, fitting the visible height
   const T = Math.max(Math.max(bw, bh), bh > bw ? 0.85 * T0 : T0);   // (since 2026-10-27) a vertical 15% smaller than that
   const sh = T / Math.max(bw, bh);
   w.style.setProperty('--s', sh.toFixed(4));
-  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
+  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = restMid(w);   // its resting centre
   const shift = mid - cy, eTop = mid - bh * sh / 2, eBot = mid + bh * sh / 2;
-  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x));
+  const above = works.slice(0, i).map(x => restMid(x) + x.offsetHeight / 2), below = works.slice(i + 1).map(x => restMid(x) - x.offsetHeight / 2);
   const up = above.length ? (eTop - GAP) - Math.max(...above) : 0;
   const down = below.length ? (eBot + GAP) - Math.min(...below) : 0;
   works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
