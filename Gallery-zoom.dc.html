@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor &amp; Eye | Gallery (zoom trial)</title>
+<meta name="robots" content="noindex">
+<!-- Zoom trial (2026-10-28): Gallery.dc.html with the artwork enlarged the way patagonia.com's product pages do it (zoom-trial.js).
+     A copy for review: changes to the detail or buy pages go in Gallery.dc.html, then copy it here again and re-add the two lines above
+     and the script tag below. -->
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<script src="./support.js"></script>
+<script src="alt-text.js?v=7"></script>
+<script src="zoom-trial.js?v=3" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+::selection { background: #E9E6DF; }
+p, h1, h2, h3, li { text-wrap: pretty; }
+.work:hover .work-title { opacity: 1 !important; }
+.lightbox .lb-arrow { opacity: 0; transition: opacity 0.2s ease; }
+.lightbox:hover .lb-arrow { opacity: 1; }
+/* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
+.pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
+.zoom-arrow { opacity: 0; transition: opacity 0.2s ease; } .zoombox:hover ~ .zoom-arrow, .zoom-arrow:hover, .zoom-arrow:focus-visible { opacity: 1; }
+/* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
+/* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
+:root { --side-pad: 24px; }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+html { scrollbar-gutter: stable; }
+/* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
+@media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
+/* Grid-size switcher is hidden on phones only */
+@media (max-width: 767px) { .layout-switch { display: none !important; } }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
+/* Phones in portrait: footer twice as tall */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
+.cta { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #141414 !important; transition: color 0.35s ease; }
+.cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
+.cta:hover { color: #141414 !important; }
+.cta:hover::before { transform: scaleX(1); transform-origin: left; }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
+<div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
+<header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
+    <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+    <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="h1.html">H1</a>
+          <a href="h2.html">H2</a>
+          <a href="h3.html">H3</a>
+          <a href="gallery-filmstrip-2.html">G5</a>
+          <a href="gallery-editorial.html">G6</a>
+          <a href="gallery-editorial-g6a.html">G6a</a>
+          <a href="works-index.html">Index</a>
+          <a href="About.dc.html">About</a>
+          <a href="Contact-tabs.dc.html">Contact</a>
+        </nav>
+      </sc-if>
+      <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
+        <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: {{ headerAlign }}">
+        <a href="#" aria-label="Account" style="display: flex; color: #141414">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>
+        </a>
+        <a href="#" aria-label="Cart" style="display: flex; align-items: center; position: relative; color: #141414">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg>
+          <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span>
+          </sc-if>
+        </a>
+        </div>
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barTop }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: opacity 0.2s; opacity: {{ barMid }}"></span>
+            <span style="display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s; transform: {{ barBot }}"></span>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</header>
+<nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="h1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
+  <a href="h2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
+  <a href="h3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
+  <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
+  <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
+  <a href="gallery-editorial-g6a.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6a</a>
+  <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
+  <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
+  <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
+  <a href="Contact-tabs.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
+  <a href="Contact-tabs.dc.html#returns" style="padding: 28px 0">Returns &amp; Exchanges</a>
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
+      <span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg><span style="position: absolute; top: -6px; right: -8px; display: {{ badgeDisplay }}; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span></span>
+      Shopping Cart
+    </a>
+  </sc-if>
+</nav>
+
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; flex: 1; display: flex; flex-direction: column">
+  <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Gallery — Grid (no boxes)" style="padding: {{ topPad }} 0 80px; display: grid; gap: {{ toolbarGap }}; align-content: start">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px 32px">
+        <div class="layout-switch" style="display: flex; gap: 14px; align-items: center">
+          <button onClick="{{ setL3 }}" aria-label="Small grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c3 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="8" height="8"></rect><rect x="10" y="0" width="8" height="8"></rect><rect x="0" y="10" width="8" height="8"></rect><rect x="10" y="10" width="8" height="8"></rect></svg>
+          </button>
+          <button onClick="{{ setL2 }}" aria-label="Two-column grid" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c2 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="8" height="18"></rect><rect x="10" y="0" width="8" height="18"></rect></svg>
+          </button>
+          <button onClick="{{ setL1 }}" aria-label="Single column" style="border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: {{ c1 }}">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="currentColor"><rect x="0" y="0" width="18" height="18"></rect></svg>
+          </button>
+        </div>
+        <div style="display: flex; gap: 24px 48px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; position: relative">
+          <div class="filter-menu">
+            <button onClick="{{ toggleSeries }}" aria-haspopup="listbox" aria-expanded="{{ seriesOpen }}" style="display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer">
+              <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg>
+              {{ seriesLabel }}
+            </button>
+            <sc-if value="{{ seriesOpen }}" hint-placeholder-val="{{ false }}">
+              <div role="listbox" style="position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: grid">
+                <sc-for list="{{ seriesOptions }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <div class="filter-menu">
+            <button onClick="{{ toggleAvail }}" aria-haspopup="listbox" aria-expanded="{{ availOpen }}" style="display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer">
+              <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg>
+              {{ availLabel }}
+            </button>
+            <sc-if value="{{ availOpen }}" hint-placeholder-val="{{ false }}">
+              <div role="listbox" style="position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: grid">
+                <sc-for list="{{ availOptions }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" role="option" aria-selected="{{ o.selected }}" style="text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: {{ o.color }}; cursor: pointer; white-space: nowrap" style-hover="color: #6E6B66">{{ o.label }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: {{ gridGap }}">
+        <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+          <div class="work" data-file="{{ c.src }}" style="position: relative; width: 100%; max-width: {{ cardMax }}; margin: 0 auto; aspect-ratio: {{ cellRatio }}; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1)" style-hover="transform: scale(1.03)">
+            {{ c.img }}
+            <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
+            </button>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 26px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">{{ c.title }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 24px 0 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.06em; color: #6E6B66">No works match the selected filters.</p>
+      </sc-if>
+    </section>
+  </sc-if>
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 32px; align-content: start">
+      <div>
+        <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: center">
+        <div class="detail-img" onDoubleClick="{{ detailDblClick }}" style="grid-column: 1; grid-row: 1; position: relative; cursor: {{ detailCursor }}">
+          {{ detailImg }}
+          <div style="position: absolute; top: 100%; left: {{ detailDotsL }}; width: {{ detailDotsW }}; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
+            <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 6px" style-hover="color: #6E6B66">
+              <svg width="37.4" height="37.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}; width: {{ detailTextW }}; max-width: {{ detailTextMax }}; justify-self: {{ detailTextJustify }}">
+          <!-- (since 2026-10-22) in this order: ORIGINAL, the title, the description in quotation marks, the series (a link to G5
+               showing that series), medium and size, the edition and certificate lines, then the two links -->
+          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs) * 0.85); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
+          <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
+          </sc-if>
+          <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: calc(14px * var(--fs)); color: #6E6B66; padding-top: 8px">
+            <div style="display: grid; gap: 8px">
+              <p style="margin: 0">{{ detailMedium }}</p>
+              <p style="margin: 0">Size: {{ detailSize }}</p>
+            </div>
+            <div class="facts-cert" style="display: grid; gap: 8px">
+              <p style="margin: 0; display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true" style="flex: none"><path d="M5.688 6.00002L9.047 2.24402L12.314 6.00002H15V15H3V6.00002H5.688ZM7.03 6.00002H10.988L9.036 3.75602L7.03 6.00002ZM4 7.00002V14H14V7.00002H4ZM6 9.00002V12H12V9.00002H6ZM5 8.00002H13V13H5V8.00002Z"></path></svg><span style="text-box: trim-both cap alphabetic">Part of a limited edition set</span></p>
+              <p style="margin: 0; display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true" style="flex: none"><path d="M9.001 4.45002C9.70182 4.4501 10.3884 4.64762 10.9822 5.01995C11.5759 5.39227 12.0527 5.92433 12.358 6.55516C12.6633 7.18598 12.7847 7.89006 12.7083 8.5867C12.6319 9.28334 12.3608 9.94436 11.926 10.494V15.841L9 14.281L6.076 15.841V10.494C5.64118 9.94429 5.37004 9.28318 5.29367 8.58645C5.21729 7.88972 5.33878 7.18557 5.64419 6.55471C5.9496 5.92384 6.42658 5.39179 7.02046 5.01955C7.61435 4.6473 8.3001 4.44991 9.001 4.45002ZM11.028 14.346V11.31C10.4247 11.7019 9.72044 11.91 9.001 11.909C8.254 11.909 7.557 11.689 6.974 11.31V14.346L9.001 13.263L11.028 14.346ZM14.658 2.00002C15.4 2.00002 16.003 2.60202 16.003 3.34502V11.857C16.003 12.601 15.4 13.203 14.657 13.203L12.864 13.202V12.305H14.657C14.905 12.305 15.106 12.105 15.106 11.857V3.34502C15.106 3.09802 14.905 2.89702 14.657 2.89702H3.345C3.098 2.89702 2.897 3.09702 2.897 3.34502V11.857C2.897 12.105 3.097 12.306 3.345 12.306L5.137 12.305V13.202H3.345C2.98846 13.202 2.6465 13.0604 2.39429 12.8084C2.14209 12.5564 2.00027 12.2146 2 11.858V3.34502C2 2.60202 2.602 2.00002 3.345 2.00002H14.657H14.658ZM9 5.34702C8.62355 5.33994 8.24947 5.40798 7.89962 5.54715C7.54977 5.68632 7.23117 5.89383 6.96245 6.15755C6.69372 6.42128 6.48026 6.73592 6.33455 7.08309C6.18883 7.43026 6.11378 7.803 6.11378 8.17952C6.11378 8.55603 6.18883 8.92877 6.33455 9.27594C6.48026 9.62311 6.69372 9.93776 6.96245 10.2015C7.23117 10.4652 7.54977 10.6727 7.89962 10.8119C8.24947 10.9511 8.62355 11.0191 9 11.012C9.74201 10.9981 10.4489 10.6935 10.9687 10.1638C11.4886 9.63416 11.7798 8.92166 11.7798 8.17952C11.7798 7.43738 11.4886 6.72487 10.9687 6.19519C10.4489 5.66551 9.74201 5.36096 9 5.34702Z"></path></svg><span style="text-box: trim-both cap alphabetic">Includes a Certificate of Authenticity</span></p>
+            </div>
+          </div>
+          <div style="display: grid; gap: 22px; justify-items: start; padding-top: 40px; font-size: calc(11px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase">
+            <a href="{{ enquireHref }}" style="border-bottom: 1px solid #141414; padding-bottom: 3px; font-weight: 600">Email to enquire about this piece</a>
+            <button onClick="{{ openPrint }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(11px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414; font-weight: 600" style-hover="color: #6E6B66">Buy the print</button>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ zoomOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: rgba(253,253,251,0.97); overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 120px; box-sizing: border-box">
+          {{ zoomImg }}
+        </div>
+        <button class="zoom-arrow" onClick="{{ zoomPrev }}" aria-label="Previous framing view" style="position: fixed; left: 24px; top: 50%; transform: translateY(-50%); z-index: 41; border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+        <button class="zoom-arrow" onClick="{{ zoomNext }}" aria-label="Next framing view" style="position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 41; border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+        <button onClick="{{ closeZoom }}" aria-label="Close" style="position: fixed; top: 18px; right: 24px; z-index: 41; border: none; background: transparent; color: #141414; font-size: calc(30px * var(--fs)); line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
+        <div style="position: fixed; left: 0; right: 0; bottom: 44px; z-index: 41; display: grid; justify-items: center; gap: 14px; pointer-events: none">
+          <div style="display: flex; gap: 12px; pointer-events: auto">
+            <sc-for list="{{ zoomDots }}" as="dt" hint-placeholder-count="3">
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+            </sc-for>
+          </div>
+          <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+  <sc-if value="{{ isPrint }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Gallery — Print detail" style="padding: {{ topPad }} 0 72px; display: grid; gap: 32px; align-content: start">
+      <div>
+        <button onClick="{{ viewOriginal }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">View original</button>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ printCols }}; gap: {{ printColGap }}; align-items: {{ printAlign }}; container-type: inline-size">
+        <div class="print-car" style="order: {{ printMainOrder }}; position: relative">
+          <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
+            {{ printImg }}
+          </div>
+          <button class="pc-arrow" onClick="{{ pcPrev }}" aria-label="Previous framing view" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+          <button class="pc-arrow" onClick="{{ pcNext }}" aria-label="Next framing view" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 18px; display: flex; justify-content: center; gap: 12px">
+            <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
+          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
+          <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
+          <!-- (since 2026-10-24) under the title, as on the detail page: the description in quotation marks, then the series (a link to
+               G5 showing that series), then the price -->
+          <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
+          <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
+          </sc-if>
+          <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
+          <div style="display: grid; gap: 14px; padding-top: 16px">
+            <p style="margin: 0; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">Size</p>
+            <div style="display: flex; gap: 14px; flex-wrap: wrap">
+              <sc-for list="{{ sizes }}" as="sz" hint-placeholder-count="3">
+                <button onClick="{{ sz.pick }}" style="border: 1px solid #141414; background: {{ sz.bg }}; color: {{ sz.color }}; padding: 10px 22px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.08em; cursor: pointer">{{ sz.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: grid; gap: 18px; padding-top: 20px">
+            <p style="margin: 0; font-size: calc(14px * var(--fs)); font-weight: 400; letter-spacing: 0.1em">Choose Your Frame Color</p>
+            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
+              <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
+                <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
+                  <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 12px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
+                  <span style="display: {{ fr.textDisplay }}; font-size: calc(14px * var(--fs)); letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 14px">Unframed</span>
+                  <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); display: block; line-height: 0; color: #141414; opacity: {{ fr.caret }}"><svg width="16" height="7" viewBox="0 0 16 7" fill="none" stroke="currentColor" stroke-width="1.1" style="display: block"><polyline points="1 6.5 8 1 15 6.5"></polyline></svg></span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display: grid; gap: 10px; font-size: calc(14px * var(--fs)); font-weight: 400; letter-spacing: 0.1em">
+              <p style="margin: 0">Frame: {{ frameLabel }}</p>
+              <p style="margin: 0">Mount: {{ mountLabel }}</p>
+            </div>
+          </div>
+          <button class="cta" onClick="{{ addToCart }}" style="align-self: start; width: 100%; max-width: 420px; background: #141414; color: #FFFFFF; border: none; padding: 16px 24px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; margin-top: 28px">Add to cart</button>
+        </div>
+      </div>
+      <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="lightbox" onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(102,102,102,0.97); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; box-sizing: border-box; cursor: zoom-out">
+          <button onClick="{{ closeLightbox }}" aria-label="Close" style="position: absolute; top: 20px; right: 24px; border: none; background: transparent; color: #FDFDFB; font-size: calc(28px * var(--fs)); line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
+          <button class="lb-arrow" onClick="{{ lbPrev }}" aria-label="Previous view" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
+          <button class="lb-arrow" onClick="{{ lbNext }}" aria-label="Next view" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+          {{ lightboxImg }}
+          <div onClick="{{ lbStop }}" style="display: flex; gap: 12px; align-items: center; cursor: default">
+            <sc-for list="{{ lbDots }}" as="dt" hint-placeholder-count="3">
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+            </sc-for>
+          </div>
+          <p style="margin: 0; color: #FDFDFB; font-size: calc(12px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8">{{ lbLabel }}</p>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+</main>
+
+<footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
+    <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+    <div style="display: flex; gap: 16px; align-items: center">
+      <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
+        <img src="uploads/social_IG.png" alt="Instagram" style="display: block; width: 27.5px; height: 27.5px">
+      </a>
+    </div>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;},
+  &quot;hoverTitles&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Grid&quot;}
+}">
+// Works whose details differ from the default (watercolour on paper; every original is 4 x 6 in, set by orientation below)
+const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spectrum': 5, 'Structure': 6, 'The Turning': 7, 'Tonal': 8 };
+const DETAILS = {
+  'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
+  'Brilliance': { medium: 'Acrylic and pastel on canvas', desc: 'Light reveals what was always there' },
+  'Canopy': { medium: 'Acrylic and pastel on canvas', desc: 'Life surrounds us.' },
+  'Passage': { medium: 'Acrylic and pastel on canvas', desc: 'The journey continues.' },
+  'Conduit': { medium: 'Acrylic and pastel on canvas', desc: 'Pathways connect a shared structure.' },
+  'Symbiosis': { medium: 'Acrylic and pastel on canvas', desc: 'Distinct forms exist through mutual relationships.' },
+  'Chamber': { medium: 'Acrylic and pastel on canvas', desc: 'Defined spaces establish internal relationships.' },
+  'Upwelling': { medium: 'Acrylic and pastel on canvas', desc: 'Parallel forms organize a living field.' },
+  'Outliers 1': { medium: 'Acrylic and pastel on canvas' },
+  'Outliers 3': { medium: 'Acrylic and pastel on canvas' },
+  'Outliers 4': { medium: 'Acrylic and pastel on canvas' },
+  'Coastal Silence': { medium: 'Acrylic and pastel on canvas', desc: 'Stillness settles as movement comes to rest.' },
+  'Habitat': { medium: 'Acrylic and pastel on canvas', desc: 'Living forms establish a shared environment.' },
+  'Crossings': { medium: 'Acrylic and pastel on canvas', desc: 'Color settles where forms overlap and diverge.' },
+  'Aurora': { medium: 'Acrylic and pastel on canvas', desc: 'Creation unfolds through harmony.' },
+  'Resonance': { medium: 'Acrylic and pastel on canvas', desc: 'Connection amplifies possibility.' }
+};
+class Component extends DCLogic {
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, stackDetail: typeof window !== 'undefined' && window.innerWidth < 1330, narrowGrid: typeof window !== 'undefined' && window.innerWidth < 1000, menuOpen: false, layout: 'g3', series: 'All', avail: 'All', sel: null, zoom: false, zoomLevel: 1, printView: false, openMenu: null, size: 0, added: 0, frame: 'white', lightbox: false, lbIndex: 0, lbRatio: 1.5, detailRatio: 1.5, detailShift: 0, detailDotsW: '100%', detailImgOff: 0, detailTextW: 'auto', detailTextMax: 'none', detailView: 0 };
+  // [file in assets/works (2400px; the grid shows the 600px copy in assets/thumbs), series, title, tagline, vertical, hidden]
+  arts = [
+    ['select_brilliance.jpg', 'Select', 'Brilliance', 'Light reveals what was always there.', false], // first in the gallery, per Ned
+    ['core_script.jpg', 'Core', 'Script', 'Repeated strokes form a visual language.', false],
+    ['core_symbiosis.jpg', 'Core', 'Symbiosis', 'Distinct forms exist through mutual relationships.', false],
+    ['core_conduit.jpg', 'Core', 'Conduit', 'Pathways connect a shared structure.', false],
+    ['core_articulation.jpg', 'Core', 'Articulation', 'Individual forms define a shared rhythm.', false, true], // hidden: Ned does not want it in the gallery
+    ['core_chamber.jpg', 'Core', 'Chamber', 'Defined spaces establish internal relationships.', false],
+    ['core_habitat.jpg', 'Core', 'Habitat', 'Living forms establish a shared environment.', false],
+    ['core_affinity.jpg', 'Core', 'Affinity', 'Related forms create a unified field.', false],
+    ['core_upwelling.jpg', 'Core', 'Upwelling', 'Parallel forms organize a living field.', false],
+    ['core_emergence.jpg', 'Core', 'Emergence', 'Variation gives rise to complexity.', false],
+    ['the-turning_passage.jpg', 'The Turning', 'Passage', 'The journey continues.', false],
+    ['outliers_outliers-1.jpg', 'Outliers', 'Outliers 1', '', false],
+    ['outliers_outliers-2.jpg', 'Outliers', 'Outliers 2', '', false],
+    ['outliers_outliers-3.jpg', 'Outliers', 'Outliers 3', '', false],
+    ['outliers_outliers-4.jpg', 'Outliers', 'Outliers 4', '', false],
+    ['outliers_outliers-5.jpg', 'Outliers', 'Outliers 5', '', false],
+    ['outliers_outliers-6.jpg', 'Outliers', 'Outliers 6', '', false],
+    ['outliers_outliers-7.jpg', 'Outliers', 'Outliers 7', '', false],
+    ['select_aurora.jpg', 'Select', 'Aurora', 'Creation unfolds through harmony.', false],
+    ['select_confluence.jpg', 'Select', 'Confluence', 'Movement gives rise to a shared course.', false],
+    ['select_emanation.jpg', 'Select', 'Emanation', 'Unity creates renewal.', false],
+    ['select_singularity.jpg', 'Select', 'Singularity', 'Creation begins from within.', false],
+    ['select_grove.jpg', 'Select', 'Grove', 'Rooted in nature, shared by connection.', false],
+    ['select_meridian.jpg', 'Select', 'Meridian', 'Growth follows an unseen order.', false],
+    ['select_resonance.jpg', 'Select', 'Resonance', 'Connection amplifies possibility.', false],
+    ['spectrum_biome.jpg', 'Spectrum', 'Biome', 'Diversity shapes the whole.', false],
+    ['spectrum_archipelago.jpg', 'Spectrum', 'Archipelago', 'Separation reveals connection.', false],
+    ['spectrum_opalescence.jpg', 'Spectrum', 'Opalescence', 'Light reveals the unseen.', false],
+    ['spectrum_chroma.jpg', 'Spectrum', 'Chroma', 'Color gives form to diversity.', false],
+    ['structure_cubicle.jpg', 'Structure', 'Cubicle', 'Planes construct an implied volume.', true],
+    ['structure_within.jpg', 'Structure', 'Within', 'Line defines a space for color.', true],
+    ['structure_cadence.jpg', 'Structure', 'Cadence', 'Color follows an arc of repeating forms.', true],
+    ['structure_crossings.jpg', 'Structure', 'Crossings', 'Color settles where forms overlap and diverge.', true],
+    ['structure_framework.jpg', 'Structure', 'Framework', 'Color settles within a framework of line and form.', true],
+    ['the-turning_character.jpg', 'The Turning', 'Character', 'Every mark leaves its mark.', false],
+    ['the-turning_discovery.jpg', 'The Turning', 'Discovery', 'Possibility unfolds.', false],
+    ['the-turning_momentum.jpg', 'The Turning', 'Momentum', 'Movement creates possibility.', false],
+    ['the-turning_the-calling.jpg', 'The Turning', 'The Calling', 'Purpose awaits.', false],
+    ['the-turning_horizon.jpg', 'The Turning', 'Horizon', 'Beyond awaits.', false],
+    ['the-turning_revelation.jpg', 'The Turning', 'Revelation', 'The ordinary made extraordinary.', false],
+    ['the-turning_the-turning-6.jpg', 'The Turning', 'The Turning 6', '', false],
+    ['tonal_current.jpg', 'Tonal', 'Current', 'Everything flows.', false],
+    ['tonal_firelight.jpg', 'Tonal', 'Firelight', 'Warmth endures.', false],
+    ['tonal_vesper-2.jpg', 'Tonal', 'Vesper', 'The quiet deepens.', false],
+    ['tonal_vesper-1.jpg', 'Tonal', 'Vesper', 'Stillness remains.', false],
+    ['convergence_counterform.jpg', 'Convergence', 'Counterform', 'Complementary forms establish a shared structure.', false],
+    ['convergence_synthesis.jpg', 'Convergence', 'Synthesis', 'Independent elements become something greater.', false],
+    ['convergence_counterline.jpg', 'Convergence', 'Counterline', 'A shared boundary preserves distinction.', false],
+    ['convergence_convergence-6.jpg', 'Convergence', 'Convergence 6', '', false],
+    ['convergence_counterpart.jpg', 'Convergence', 'Counterpart', 'Corresponding forms mirror across a shared divide.', false],
+    ['convergence_counterpoint.jpg', 'Convergence', 'Counterpoint', 'Independent gestures create a shared rhythm.', false],
+    ['convergence_convergence-7.jpg', 'Convergence', 'Convergence 7', '', false],
+    ['ascent_ascent-1.jpg', 'Ascent', 'Ascent 1', '', true],
+    ['ascent_artifact.jpg', 'Ascent', 'Artifact', 'Surface and structure converge, bearing the language of an ancient object.', true],
+    ['ascent_canyons.jpg', 'Ascent', 'Canyons', 'Ancient channels carve the landscape, exposing a terrain shaped from within.', true],
+    ['ascent_verdance.jpg', 'Ascent', 'Verdance', 'Layers of green and violet gather into a landscape alive with quiet renewal.', true],
+    ['ascent_living-current.jpg', 'Ascent', 'Living Current', 'Movement gathers, divides, and begins again, revealing a form that is never fixed.', true],
+    ['ascent_coastal-silence.jpg', 'Ascent', 'Coastal Silence', 'Stillness settles as movement comes to rest.', true],
+    ['ascent_shared-orbit.jpg', 'Ascent', 'Shared Orbit', 'Separate forms move within the same field, each shaped by the gravity of the whole.', true],
+    ['ascent_inner-eclipse.jpg', 'Ascent', 'Inner Eclipse', 'Light returns to its center, where every passage alters what remains.', true],
+    ['ascent_origin.jpg', 'Ascent', 'Origin', 'The first instructions unfold within a single helix.', true],
+    ['ascent_koi.jpg', 'Ascent', 'Koi', 'Beneath still waters, crimson forms weave through a landscape of quiet motion.', true],
+    ['ascent_overlook.jpg', 'Ascent', 'Overlook', 'From above, land and water trace a landscape shaped by quiet movement.', true],
+    ['tonal_canopy.jpg', 'Tonal', 'Canopy', 'Life surrounds us.', false]
+  ].map(([f, s, t, tag, vertical, hidden]) => ({
+    hidden: !!hidden || s === 'Outliers',   // (since 2026-10-24 the Outliers are hidden from the site for now)
+    orient: vertical ? 'Vertical' : 'Horizontal',
+    src: 'assets/works-m70/' + f,
+    title: t,
+    series: s,
+    avail: 'Available',
+    medium: (DETAILS[t] || {}).medium || 'Watercolor on paper',
+    size: vertical ? '6\u2033 x 4\u2033' : '4\u2033 x 6\u2033',   // (since 2026-10-22) every original: 4" x 6" for horizontals, 6" x 4" for verticals
+    desc: tag || (DETAILS[t] || {}).desc || ''
+  }));
+  setZoom(open) {
+    document.body.style.overflow = open ? 'hidden' : '';
+    this.setState({ zoom: open, zoomLevel: 1 });
+  }
+  // step the zoom level, then scroll the lightbox so the point that was clicked stays in view
+  zoomStep(e, level) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    this.setState({ zoomLevel: level });
+    setTimeout(() => {
+      const box = document.querySelector('.zoombox'); const img = box && box.querySelector('img'); if (!img) return;
+      box.scrollLeft = img.offsetLeft + fx * img.offsetWidth - box.clientWidth / 2;
+      box.scrollTop = img.offsetTop + fy * img.offsetHeight - box.clientHeight / 2;
+    }, 30);
+  }
+  // Tap / click zones and finger swipes on the framing carousels: right half or swipe left = next, left half or swipe right = previous
+  side(e) { const r = e.currentTarget.getBoundingClientRect(); return (e.clientX - r.left) > r.width / 2 ? 1 : 2; } // +1 next, +2 = previous (mod 3)
+  viewTouchStart(e) { this.touchX = e.touches[0].clientX; }
+  viewSwipe(e, go) { const dx = e.changedTouches[0].clientX - this.touchX; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); }
+  // Fallback if an artwork file is missing: a light green box
+  ph(a) { return e => { e.currentTarget.src = a.orient === 'Vertical' ? 'assets/placeholder-portrait.svg' : 'assets/placeholder-landscape.svg'; }; }
+  // Open menu: page scroll locked at the top, menu fixed below the header, footer pinned to the bottom of the screen
+  setMenu(open) {
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) window.scrollTo({ top: 0, behavior: 'instant' });
+    this.setState({ menuOpen: open });
+  }
+  // detail view (desktop and tablet): the text block moves left to the midpoint of the white space between it and the artwork
+  measureDetail() {
+    const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
+    const text = img && img.parentElement.nextElementSibling;
+    // the text block sits 105px to the right of the artwork on desktop (120px on tablet), and the framing dots centre under the
+    // artwork. Every work, landscape or portrait: the artwork and its text are centred together as one block in the content area
+    // (landscapes since 2026-10-13, portraits since 2026-10-24; a portrait used to end just left of the centre line with its text
+    // just right of it, which left the whole block sitting left of centre).
+    const GAP = this.state.tablet ? 120 : 105;
+    // Stacked (below 1330px, not phones): the artwork is centred and its text sits underneath, as wide as the artwork and lined up with it.
+    let x = 0, dots = '100%', off = 0, tw = 'auto', tmax = 'none';
+    if (img && text && !this.state.mobile && this.state.stackDetail) tw = img.offsetWidth + 'px';
+    else if (img && text && !this.state.mobile) {
+      const wrap = img.parentElement, iw = img.offsetWidth;
+      off = Math.max(0, (wrap.parentElement.clientWidth - (iw + GAP + text.offsetWidth)) / 2);
+      x = Math.max(0, text.offsetLeft - (wrap.offsetLeft + off + iw + GAP));
+      dots = iw + 'px';
+    }
+    if (Math.abs(x - this.state.detailShift) > 0.5 || Math.abs(off - this.state.detailImgOff) > 0.5 || dots !== this.state.detailDotsW || tw !== this.state.detailTextW || tmax !== this.state.detailTextMax) this.setState({ detailShift: x, detailDotsW: dots, detailImgOff: off, detailTextW: tw, detailTextMax: tmax });
+  }
+  shows(a, st) { return !a.hidden && (st.series === 'All' || a.series === st.series || a.orient === st.series) && (st.avail === 'All' || a.avail === st.avail); }
+  // ---- Filter change (desktop and tablet): the works leaving shrink away first; then the ones that stay glide to their new
+  // places while the newcomers rise in behind them, each a beat after the last
+  shuffleTo(patch) {
+    const next = Object.assign({}, this.state, patch);
+    const cards = [...document.querySelectorAll('.work[data-file]')];
+    if (this.state.mobile || !cards.length) { this.setState(Object.assign({ openMenu: null }, patch)); return; }
+    this.flipFrom = new Map(cards.map(c => [c.dataset.file, c.getBoundingClientRect()]));
+    let leaving = 0;
+    cards.forEach((c, i) => {
+      if (this.arts.some(a => a.src === c.dataset.file && this.shows(a, next))) return;
+      leaving++; c.style.transition = 'opacity 0.3s ease, transform 0.3s ease'; c.style.transitionDelay = Math.min(i * 10, 150) + 'ms';
+      c.style.opacity = '0'; c.style.transform = 'scale(0.9)'; c.style.pointerEvents = 'none';
+    });
+    clearTimeout(this.flipT);
+    this.flipT = setTimeout(() => this.setState(Object.assign({ openMenu: null }, patch)), leaving ? 320 : 0);
+  }
+  flip() {
+    const from = this.flipFrom; this.flipFrom = null;
+    const cards = [...document.querySelectorAll('.work[data-file]')];
+    let n = 0;
+    cards.forEach(c => {
+      const was = from.get(c.dataset.file), now = c.getBoundingClientRect();
+      c.style.transition = 'none'; c.style.pointerEvents = 'none';
+      if (was) { c.style.transform = 'translate(' + (was.left - now.left) + 'px, ' + (was.top - now.top) + 'px)'; c.style.opacity = '1'; }
+      else { c.style.transform = 'translateY(28px) scale(0.94)'; c.style.opacity = '0'; }
+      c.style.transitionDelay = ((was ? 0 : 140) + Math.min(n++ * 26, 400)) + 'ms';
+    });
+    void document.body.offsetWidth;
+    cards.forEach(c => { c.style.transition = 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease'; c.style.transform = ''; c.style.opacity = ''; });
+    clearTimeout(this.flipDone);
+    this.flipDone = setTimeout(() => cards.forEach(c => { c.style.transition = ''; c.style.transitionDelay = ''; c.style.pointerEvents = ''; }), 1400);
+  }
+  // ---- Eased scrolling (mouse wheel and trackpad): the page glides toward where the wheel asks instead of stepping
+  easeScroll() {
+    let target = 0, gliding = false, last = 0;
+    const max = () => document.documentElement.scrollHeight - window.innerHeight;
+    const glide = () => {
+      if (gliding) return; gliding = true; last = performance.now();
+      const step = now => {
+        const dt = Math.min(64, now - last); last = now;
+        const cur = window.scrollY, d = target - cur;
+        if (Math.abs(d) < 0.5) { window.scrollTo({ top: target, behavior: 'instant' }); gliding = false; return; }
+        window.scrollTo({ top: cur + d * (1 - Math.exp(-dt / 110)), behavior: 'instant' });
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    this.onWheel = e => {
+      if (e.ctrlKey || this.state.zoom || this.state.lightbox || this.state.menuOpen) return;   // pinch zoom; overlays and the menu scroll on their own
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1;
+      if (!gliding) target = window.scrollY;
+      target = Math.max(0, Math.min(max(), target + e.deltaY * unit));
+      glide();
+    };
+    window.addEventListener('wheel', this.onWheel, { passive: false });
+  }
+  componentDidMount() {
+    this.easeScroll();
+    this.onResize = () => this.measureDetail(); window.addEventListener('resize', this.onResize);
+    this.mq = window.matchMedia('(max-width: 767px)');
+    this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
+    this.mq.addEventListener('change', this.onMq);
+    this.setState({ mobile: this.mq.matches });
+    this.mqTablet = window.matchMedia('(max-width: 1279px)');
+    this.onMqTablet = () => this.setState({ tablet: this.mqTablet.matches });
+    this.mqTablet.addEventListener('change', this.onMqTablet);
+    this.mqGrid = window.matchMedia('(max-width: 999px)');
+    this.onMqGrid = () => this.setState({ narrowGrid: this.mqGrid.matches });
+    this.mqGrid.addEventListener('change', this.onMqGrid);
+    this.setState({ narrowGrid: this.mqGrid.matches });
+    this.setState({ tablet: this.mqTablet.matches });
+    // below 1330px the detail view stacks: the artwork centred, its text underneath (as on phones)
+    this.mqStack = window.matchMedia('(max-width: 1329px)');
+    this.onMqStack = () => this.setState({ stackDetail: this.mqStack.matches });
+    this.mqStack.addEventListener('change', this.onMqStack);
+    this.setState({ stackDetail: this.mqStack.matches });
+    // Open the work named in the URL hash (linked from the home carousel).
+    const want = decodeURIComponent(location.hash.slice(1));
+    const k = this.arts.findIndex(a => a.title === want || a.src.split('/').pop() === want); // by title or by file name
+    if (k >= 0) this.setState({ sel: k });
+    this.onKey = (e) => {
+      if (this.state.lightbox) {
+        if (e.key === 'Escape') this.setState({ lightbox: false });
+        if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + 2) % 3 }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % 3 }));
+      } else if (e.key === 'Escape' && this.state.openMenu) this.setState({ openMenu: null });
+      else if (this.state.zoom) {
+        if (e.key === 'Escape') this.setZoom(false);
+        if (e.key === 'ArrowLeft') this.setState(s => ({ detailView: (s.detailView + 2) % 3 }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ detailView: (s.detailView + 1) % 3 }));
+      }
+    };
+    window.addEventListener('keydown', this.onKey);
+    // (since 2026-10-21) magnifying by trackpad pinch (and Safari's pinch gesture) and by the mouse wheel: in the zoom view the
+    // wheel or a pinch zooms smoothly between 1x and 4x about the point under the pointer, and a drag pans the enlarged work;
+    // pinching out over the original's image on the detail page opens the zoom view
+    this.zoomTo = (level, cx, cy) => {
+      const box = document.querySelector('.zoombox'), img = box && box.querySelector('img'); if (!img) return;
+      const r = img.getBoundingClientRect(), fx = (cx - r.left) / r.width, fy = (cy - r.top) / r.height, b = box.getBoundingClientRect();
+      level = Math.max(1, Math.min(4, level));
+      if (Math.abs(level - this.state.zoomLevel) < 0.001) return;
+      this.setState({ zoomLevel: level }, () => requestAnimationFrame(() => {
+        box.scrollLeft = img.offsetLeft + fx * img.offsetWidth - (cx - b.left);
+        box.scrollTop = img.offsetTop + fy * img.offsetHeight - (cy - b.top);
+      }));
+    };
+    this.onZoomWheel = (e) => {
+      const inZoom = this.state.zoom && e.target.closest && e.target.closest('.zoombox');
+      if (inZoom) {
+        e.preventDefault();
+        const dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 400 : 1);
+        this.zoomTo(this.state.zoomLevel * Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.002)), e.clientX, e.clientY);
+      } else if (e.ctrlKey && e.deltaY < 0 && !this.state.zoom && !this.state.mobile && e.target.closest && e.target.closest('.detail-img')) {
+        e.preventDefault(); this.setZoom(true);
+      }
+    };
+    window.addEventListener('wheel', this.onZoomWheel, { passive: false });
+    this.onGestureStart = (e) => { if (this.state.zoom) { e.preventDefault(); this.gestureBase = this.state.zoomLevel; } };
+    this.onGestureChange = (e) => {
+      if (this.state.zoom) { e.preventDefault(); this.zoomTo((this.gestureBase || 1) * e.scale, e.clientX, e.clientY); }
+      else if (e.scale > 1.08 && !this.state.mobile && e.target.closest && e.target.closest('.detail-img')) { e.preventDefault(); this.setZoom(true); }
+    };
+    window.addEventListener('gesturestart', this.onGestureStart, { passive: false });
+    window.addEventListener('gesturechange', this.onGestureChange, { passive: false });
+    this.onPanDown = (e) => {
+      const box = e.target.closest && e.target.closest('.zoombox');
+      if (!box || e.button !== 0 || this.state.zoomLevel <= 1) return;
+      this.pan = { box, x: e.clientX, y: e.clientY, l: box.scrollLeft, t: box.scrollTop };
+    };
+    this.onPanMove = (e) => { if (!this.pan) return; e.preventDefault(); this.pan.box.scrollLeft = this.pan.l - (e.clientX - this.pan.x); this.pan.box.scrollTop = this.pan.t - (e.clientY - this.pan.y); };
+    this.onPanUp = () => { this.pan = null; };
+    window.addEventListener('pointerdown', this.onPanDown); window.addEventListener('pointermove', this.onPanMove); window.addEventListener('pointerup', this.onPanUp);
+    this.onDocClick = (e) => { if (this.state.openMenu && !e.target.closest('.filter-menu')) this.setState({ openMenu: null }); };
+    document.addEventListener('click', this.onDocClick);
+  }
+  componentDidUpdate() { this.measureDetail(); if (this.flipFrom) this.flip(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('wheel', this.onWheel); window.removeEventListener('wheel', this.onZoomWheel); window.removeEventListener('gesturestart', this.onGestureStart); window.removeEventListener('gesturechange', this.onGestureChange); window.removeEventListener('pointerdown', this.onPanDown); window.removeEventListener('pointermove', this.onPanMove); window.removeEventListener('pointerup', this.onPanUp); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqTablet) this.mqTablet.removeEventListener('change', this.onMqTablet); if (this.mqGrid) this.mqGrid.removeEventListener('change', this.onMqGrid); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); window.removeEventListener('keydown', this.onKey); document.removeEventListener('click', this.onDocClick); }
+  renderVals() {
+    const cartCount = (this.props.cartCount ?? 0) + this.state.added;
+    const hoverTitles = this.props.hoverTitles ?? true;
+    const m = this.state.mobile;
+    const L = this.state.layout;
+    const sel = this.state.sel;
+    const t = !m && this.state.tablet;
+    const oneCol = m || this.state.stackDetail;   // image above the text: phones, and anything below 1330px wide
+    const frame = this.state.frame;
+    const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
+    const detailFrame = views[this.state.detailView][0] === 'none' ? 0 : 76; // frame (16px) + mount (22px) on each side
+    // (since 2026-10-26, desktop and tablet) horizontals 12% smaller than before (77.4% of the largest that fits); verticals are the same
+    // box turned on its side (as tall as a horizontal is wide), but never so tall that the magnify icon under them leaves the screen
+    // and the page never scrolls (the screen's height less the header and 218px)
+    const detailW = (() => {
+      const r = this.state.detailRatio, f = detailFrame;
+      if (m) return 'min(100%, calc((84vh - var(--header-h) - ' + f + 'px) * ' + r + ' + ' + f + 'px))';
+      if (r >= 1) return 'calc(0.7744 * min(100%, calc((84vh - var(--header-h) - ' + f + 'px) * ' + r + ' + ' + f + 'px)))';
+      const longSide = 'min(calc(0.7744 * calc((84vh - var(--header-h) - ' + f + 'px) * 1.5 + ' + f + 'px)), calc(100vh - var(--header-h) - 218px))';
+      return 'min(100%, calc((0.9 * ' + longSide + ' - ' + f + 'px) * ' + r + ' + ' + f + 'px))';   // (since 2026-10-27) 10% smaller than that
+    })();
+    // A frame is drawn around the print: coloured border with a white mount inside; 'none' is just the artwork
+    const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
+    // both states share numeric border/padding values so switching frames animates smoothly
+    const ease = { boxSizing: 'border-box', transition: 'border 0.5s ease, padding 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease' };
+    const framed = (f, sh = wallShadow) => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: sh } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + sh });
+    const printShadow = '0 13.5px 54px rgba(20,20,20,0.45)';   // the buy (print) page and the original's detail image (since 2026-10-21): 2.25 times the wall shadow (three times, then 75% of that)
+    const d = sel != null ? this.arts[sel] : null;
+    const vertical = this.state.series === 'Vertical';
+    // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
+    const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
+    const cols = baseCols === 1 ? 1 : baseCols + (vertical ? 1 : 0);
+    const filtered = this.arts.map((a, k) => ({ a, k })).filter(({ a }) => this.shows(a, this.state));
+    return {
+      cartCount,
+      showCartBadge: cartCount > 0,
+      isMobile: m,
+      headerAlign: m ? 'center' : 'baseline', // phones have no nav text to align to
+      isDesktop: !m,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setMenu(!this.state.menuOpen),
+      footerPos: this.state.menuOpen ? 'fixed' : 'static',
+      barTop: this.state.menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
+      barMid: this.state.menuOpen ? 0 : 1,
+      barBot: this.state.menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
+      menuTransform: this.state.menuOpen ? 'translateY(0)' : 'translateY(-100%)',
+      menuVis: this.state.menuOpen ? 'visible' : 'hidden',
+      narrow: m, // whenever the hamburger shows, the account and cart icons move into the menu
+      headerIconsDisplay: m ? 'none' : 'flex',
+      badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
+      mainPad: '0 var(--side-pad)',
+      topPad: m ? '24px' : '36px',
+      toolbarGap: m ? '32px' : '48px',
+      isGrid: sel == null,
+      isDetail: sel != null && !this.state.printView,
+      isPrint: sel != null && this.state.printView,
+      c3: L === 'g3' ? '#141414' : '#C9C5BD',
+      c2: L === 'g2' ? '#141414' : '#C9C5BD',
+      c1: L === 'g1' ? '#141414' : '#C9C5BD',
+      setL3: () => this.setState({ layout: 'g3' }),
+      setL2: () => this.setState({ layout: 'g2' }),
+      setL1: () => this.setState({ layout: 'g1' }),
+      // filter dropdowns
+      seriesOpen: this.state.openMenu === 'series',
+      availOpen: this.state.openMenu === 'avail',
+      toggleSeries: (e) => { e.stopPropagation(); this.setState(s => ({ openMenu: s.openMenu === 'series' ? null : 'series' })); },
+      toggleAvail: (e) => { e.stopPropagation(); this.setState(s => ({ openMenu: s.openMenu === 'avail' ? null : 'avail' })); },
+      seriesLabel: this.state.series === 'All' ? 'Series' : this.state.series,
+      availLabel: this.state.avail === 'All' ? 'Availability' : this.state.avail,
+      seriesOptions: [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']].map(([v, label]) => ({
+        label: label || v, selected: this.state.series === v, color: this.state.series === v ? '#8A867E' : '#141414',
+        pick: (e) => { e.stopPropagation(); this.shuffleTo({ series: v }); }
+      })),
+      availOptions: [['All', 'All Works'], ['Available'], ['Sold']].map(([v, label]) => ({
+        label: label || v, selected: this.state.avail === v, color: this.state.avail === v ? '#8A867E' : '#141414',
+        pick: (e) => { e.stopPropagation(); this.shuffleTo({ avail: v }); }
+      })),
+      // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size
+      gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
+      gridGap: m ? (vertical ? '56px 20px' : '32px 20px') : L === 'g1' ? '88px' : vertical ? '120px 56px' : '72px 56px',
+      cellRatio: vertical ? '1 / 1' : '4 / 3',
+      cardMax: L === 'g1' && !m ? '880px' : 'none',
+      chipDisplay: hoverTitles ? 'block' : 'none',
+      noResults: filtered.length === 0,
+      cards: filtered.map(({ a, k }) => ({
+        title: a.title, src: a.src,
+        aria: 'View ' + a.title,
+        img: React.createElement('img', { src: a.src.replace('assets/works-m70/', 'assets/thumbs-m70/'), alt: a.title, 'data-alt-title': a.title, 'data-alt-tag': a.desc, onError: this.ph(a), style: Object.assign({ maxWidth: '100%', maxHeight: '100%', display: 'block', boxShadow: '0 8px 24px rgba(20,20,20,0.10)' }, a.orient === 'Vertical' ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }) }),   // every work fills its cell (landscapes the full width, portraits the full height), whatever the thumbnail file's own pixel size
+        open: () => { this.setState({ sel: k, zoom: false }); window.scrollTo(0, 0); }
+      })),
+      // back: to the gallery version the visitor came from (G5, G6, G7, the homepage...), at the work they left, when they
+      // arrived from another page of this site; otherwise to this grid. QA before the Shopify move: once a single gallery
+      // is chosen, this should simply return to that gallery.
+      back: () => {
+        let fromOtherPage = false;
+        try { const u = new URL(document.referrer); fromOtherPage = u.origin === location.origin && !/Gallery\.dc\.html$/.test(u.pathname); } catch (e) {}
+        if (fromOtherPage && history.length > 1) { history.back(); return; }
+        document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false });
+      },
+      openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
+      viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
+      // buy page, desktop (the same proportions at every screen size): the wall about 61% of the content width and a little taller
+      // than wide, the print filling it inside a 12.5% margin, a 6% gap, then the text column, centred on the wall's height
+      printCols: m ? '1fr' : 'minmax(0, 61fr) minmax(0, 33fr)',
+      printColGap: m ? '28px' : '6%',
+      printAlign: m ? 'start' : 'center',
+      printWallPad: m ? 'clamp(24px, 6vw, 96px)' : '12.5%',
+      // the wall keeps its column's full width (61% of the row) and is a little taller than wide (820:773), but never taller than
+      // the screen leaves under the header and the View original link
+      printWallH: m ? 'auto' : 'min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px))',
+      printInfoPad: '0',
+      printGap: m ? '28px' : 'clamp(40px, 4.5vw, 90px)',
+      printRailDir: m ? 'row' : 'column',
+      printRailOrder: m ? 2 : 0,
+      printMainOrder: m ? 1 : 0,
+      printInfoOrder: m ? 3 : 0,
+      printThumbSize: m ? '72px' : '104px',
+      printStageMin: m ? '320px' : '0',
+      printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
+      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) }),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
+      // frame swatches
+      frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
+        pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
+        swatchDisplay: c ? 'block' : 'none', textDisplay: c ? 'none' : 'block', color: c || 'transparent', caret: frame === f ? 1 : 0
+      })),
+      frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : 'Black',
+      mountLabel: frame === 'none' ? 'None' : 'Reveal',
+      // lightbox carousel of the framing views
+      lightboxOpen: this.state.lightbox,
+      openLightbox: () => this.setState({ lightbox: true, lbIndex: Math.max(0, views.findIndex(v => v[0] === frame)) }),
+      // the buy page's print: arrows and dots step through the framing views (the frame colour choice follows)
+      pcPrev: (e) => { e.stopPropagation(); const i = Math.max(0, views.findIndex(v => v[0] === frame)); this.setState({ frame: views[(i + views.length - 1) % views.length][0] }); },
+      pcNext: (e) => { e.stopPropagation(); const i = Math.max(0, views.findIndex(v => v[0] === frame)); this.setState({ frame: views[(i + 1) % views.length][0] }); },
+      pcDots: views.map(([f, label]) => ({ pick: (e) => { e.stopPropagation(); this.setState({ frame: f }); }, aria: label, bg: f === frame ? '#141414' : '#C9C5BD' })),
+      // the zoom view: the same for the original's framing views
+      zoomPrev: () => this.setState(s => ({ detailView: (s.detailView + views.length - 1) % views.length })),
+      zoomNext: () => this.setState(s => ({ detailView: (s.detailView + 1) % views.length })),
+      zoomDots: views.map(([f, label], i) => ({ pick: () => this.setState({ detailView: i }), aria: label, bg: i === this.state.detailView ? '#141414' : '#C9C5BD' })),
+      closeLightbox: () => this.setState({ lightbox: false }),
+      lbStop: (e) => e.stopPropagation(),
+      lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + views.length - 1) % views.length })); },
+      lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % views.length })); },
+      lbDots: views.map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
+      lbLabel: views[this.state.lbIndex][1],
+      // sized from the image's own ratio so it fills the overlay without distortion
+      lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + this.side(e)) % 3 })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + 3) % 3 }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
+      hasDesc: !!(d && d.desc),
+      printPrice: ['$225', '$595', '$1,195'][this.state.size],
+      sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
+        label,
+        bg: this.state.size === idx ? '#141414' : '#FFFFFF',
+        color: this.state.size === idx ? '#FFFFFF' : '#141414',
+        pick: () => this.setState({ size: idx })
+      })),
+      addToCart: () => this.setState(s => ({ added: s.added + 1 })),
+      toggleZoom: () => this.setZoom(true),
+      // double-clicking the artwork opens the magnified view too (desktop and tablet, where the zoom button shows)
+      detailDblClick: () => { if (!this.state.mobile) this.setZoom(true); },
+      detailCursor: m ? 'default' : 'zoom-in',
+      zoomLabel: 'Enlarge artwork',
+      // magnified view: white lightbox with the framing dots; double-click steps the zoom 1x -> 2x -> 3x -> 1x, option-click steps it down
+      zoomOpen: this.state.zoom,
+      closeZoom: () => this.setZoom(false),
+      zoomHint: this.state.zoomLevel > 1 ? (Math.round(this.state.zoomLevel * 10) / 10) + 'x \u00b7 scroll or pinch to zoom, drag to move \u00b7 esc to close' : 'double-click, scroll or pinch to zoom in \u00b7 esc to close',
+      zoomImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+        onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : Math.floor(this.state.zoomLevel) + 1),
+        onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, Math.ceil(this.state.zoomLevel) - 1)); },
+        
+        style: Object.assign({ width: 'calc(min(90vw, 80vh * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, framed(views[this.state.detailView][0])) }),
+      detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
+      detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the zoom button when the text stacks underneath (the framing dots live on the buy page only since 2026-10-13)
+      detailInfoCol: oneCol ? '1' : '2',
+      detailInfoRow: oneCol ? '2' : '1',
+      detailTextW: m ? 'auto' : this.state.detailTextW,
+      detailTextJustify: !m && oneCol ? 'center' : 'stretch',
+      detailTextMax: oneCol ? 'none' : this.state.detailTextMax,
+      detailDescMax: !oneCol && this.state.detailRatio < 1 ? '24em' : 'none',   // portraits, side by side: a long tagline breaks onto a second line (Overlook: after "landscape")
+      zoomDisplay: m ? 'none' : 'flex',
+      // framing views carousel (dots below the image)
+      viewTouchStart: (e) => this.viewTouchStart(e),
+      enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
+      detailInfoPad: m ? '0' : '48px',
+      detailTitleSize: m ? '34px' : '46px',
+      // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
+      detailImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+        style: Object.assign({ width: detailW, height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed(views[this.state.detailView][0], printShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
+      detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
+      detailDotsW: this.state.detailDotsW,
+      detailDotsL: this.state.detailImgOff.toFixed(1) + 'px',
+      // series number and name, as in Ned's documentation decks (Series 1, Ascent ... Series 8, Tonal); works outside the eight series keep "Original"
+      detailSeries: d && SERIES_NO[d.series] ? 'Series ' + SERIES_NO[d.series] + ', ' + d.series : d ? d.series : '',   // the series line (Outliers has no number)
+      hasSeries: !!(d && d.series),
+      seriesHref: d ? 'gallery-filmstrip-2.html?view=9&series=' + encodeURIComponent(d.series) : '#',   // G5's grid, filtered to that series
+      detailTitle: d ? d.title : '',
+      detailMedium: d ? d.medium : '',
+      detailSize: d ? d.size : '',
+      detailDesc: d ? d.desc : '',
+      quoteDisplay: d ? 'block' : 'none',
+      detailQuote: d ? '\u201c' + (d.desc ? d.desc.replace(/\s+$/, '') : 'Description text goes here') + '\u201d' : '',   // the description in quotation marks (since 2026-10-22; its lines after the first hang under the first letter, past the opening mark, since 2026-10-24); a work without one shows placeholder text (FPO, since 2026-10-24) until Ned's arrives
+    };
+  }
+}
+</script>
+</body>
+</html>
