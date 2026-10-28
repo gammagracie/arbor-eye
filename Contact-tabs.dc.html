@@ -46,6 +46,14 @@ html { scrollbar-gutter: stable; }
 /* (since 2026-10-21) desktop: the photograph (or the open section) and the row under it centred top to bottom between the header
    and the footer, at least 32px from each */
 @media (min-width: 1100px) { .ct-main { display: flex; flex-direction: column; } }
+/* (since 2026-10-28) desktop: the photograph (or the open section) as wide as the nav and as tall as the space between the header
+   and the tab labels less 50px above and below (never taller than three quarters of its width); the photograph is cropped to fit,
+   and a section whose text needs more room grows to hold it.
+   The tab labels 11.5px; headings the body's sans-serif in spaced capitals, as About's */
+:root { --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(51px + var(--tab-fs) * 1.2);
+  --ct-w: calc(100vw - 2 * var(--side-pad) - 83.2px); --ct-h: min(calc(100vh - var(--header-h) - var(--footer-h) - 50px - 28px - var(--tab-h) - 32px), calc(var(--ct-w) * 0.75));
+  --ct-head: clamp(22px, 1.35vw, 70px); }
+.ct-head { margin: 0 0 calc(var(--ct-head) * 0.8) !important; font-family: inherit !important; font-weight: 400; font-size: var(--ct-head) !important; line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; color: #141414; }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
    1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px wide), 1.1em apart. Bulleted lists the same. */
 .bt p:not(.lbl), .bt li { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); line-height: 1.75; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1); text-wrap: pretty; }
@@ -252,20 +260,20 @@ html { scrollbar-gutter: stable; }
        of Life sculpture filling the right half; Returns the same flipped, the packaged order on the left. The open link again
        brings the photograph back. -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
-  <section style="padding: 32px 0; margin: auto calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
-    <div style="width: min(calc(100vw - 2 * var(--side-pad) - 83.2px), calc((100vh - var(--header-h) - var(--footer-h) - 64px - 68px) * 2))">
+  <section style="padding: 50px 0 32px; margin: auto calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
+    <div style="width: var(--ct-w)">
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
         <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="100vw">
-        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover">
+        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); margin-bottom: 28px; object-fit: cover">
       </picture>
       </sc-if>
 
       <sc-if value="{{ deskContact }}" hint-placeholder-val="{{ false }}">
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center; align-items: center" data-screen-label="Contact — Get in touch">
+      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center; align-items: center" data-screen-label="Contact — Get in touch">
         <div>
-          <h2 style="margin: 0 0 20px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(56px * var(--fs)); line-height: 1.1">Get in touch</h2>
+          <h2 class="ct-head">Get in touch</h2>
           <p style="margin: 0; font-size: calc(17px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 34ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
         </div>
         <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
@@ -290,9 +298,9 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
       <!-- (since 2026-10-22) the text in one column on the left half, the Tree of Life sculpture filling the right half; paragraphs
            styled as Biography's on About (class bt) -->
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Shipping Policy">
-        <div class="bt" style="padding: 5% 8% 5% 10%; align-self: center">
-          <h2 style="margin: 0 0 24px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Shipping Policy</h2>
+      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Shipping Policy">
+        <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
+          <h2 class="ct-head">Shipping Policy</h2>
           <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
           <div class="bt-table" style="color: #141414; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1)">
             <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span></div>
@@ -316,10 +324,10 @@ html { scrollbar-gutter: stable; }
       <sc-if value="{{ deskReturns }}" hint-placeholder-val="{{ false }}">
       <!-- (since 2026-10-22) Shipping's format flipped: the photograph of the packaged order filling the left half, the text in one
            column on the right -->
-      <div style="aspect-ratio: 2 / 1; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Returns &amp; Exchanges">
+      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Returns &amp; Exchanges">
         <img src="assets/box.png" alt="Packaged order on a woven rug" style="display: block; width: 100%; height: 100%; object-fit: cover">
         <div class="bt" style="padding: 5% 10% 5% 8%; align-self: center">
-          <h2 style="margin: 0 0 24px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(44px * var(--fs)); line-height: 1.1; color: #141414">Returns &amp; Exchanges</h2>
+          <h2 class="ct-head">Returns &amp; Exchanges</h2>
           <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Damaged or wrong item</p>
           <p>If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
           <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Cancellations</p>
@@ -333,7 +341,7 @@ html { scrollbar-gutter: stable; }
       <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">
         <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
           <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-            <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(14px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
+            <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
           </sc-for>
         </div>
         <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); padding-bottom: 6px">
