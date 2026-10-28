@@ -29,7 +29,7 @@ a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
 /* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
@@ -143,9 +143,6 @@ html { scrollbar-gutter: stable; }
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
         <img src="uploads/social_IG.png" alt="Instagram" style="display: block; width: 27.5px; height: 27.5px">
-      </a>
-      <a href="#" aria-label="Pinterest" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
-        <img src="uploads/social_pinterest.png" alt="Pinterest" style="display: block; width: 27.5px; height: 27.5px">
       </a>
     </div>
   </div>

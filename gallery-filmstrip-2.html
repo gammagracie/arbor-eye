@@ -17,7 +17,7 @@
 @media (min-width: 2001px) { :root { --fs: 1.25; } }
 
 /* Shared site tokens: header/footer heights and side padding match the other pages */
-:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(43px, 19px + 1.859vw, 54px); --side-pad: 24px; --thumb-h: 31.25px; --step-w: clamp(32px, 5.8vw, 84px); }
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 31.25px; --step-w: clamp(32px, 5.8vw, 84px); }
 @media (min-width: 768px) { :root { --thumb-h: 37.5px; } }   /* filmstrip thumbnails 25% larger since 2026-10-21 (were 30px, 25px on phones) */
 /* desktop (since 2026-10-26): the filmstrip thumbnails half as large again (56px) and only 2px apart; over 2000px 80.5px (since 2026-10-27, 15% larger than the 70px of 10-26) */
 @media (min-width: 1280px) { :root { --thumb-h: 56px; --thumb-gap: 2px; } }
@@ -233,7 +233,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
       <div class="social">
         <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
-        <a href="#" aria-label="Pinterest"><img src="uploads/social_pinterest.png" alt="Pinterest"></a>
       </div>
     </div>
 </footer>
