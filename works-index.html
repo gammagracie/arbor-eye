@@ -163,10 +163,11 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-row[hidden], .idx-item[hidden] { display: none; }
 /* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
    Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as
-   G5's grid does (103%, 0.9s), Horizontal keeps the genie */
+   G5's grid does (107.5%, 0.9s), Horizontal keeps the genie */
 .idx.m-s .idx-row, .idx.m-h .idx-row, .idx.m-v .idx-row { justify-content: center; }
 .idx.m-s .idx-row, .idx.m-v .idx-row { margin-inline: auto; }
 .idx.m-h .idx-row { flex-wrap: nowrap; }
+.idx.m-v > .idx-row { margin-block: 0; }   /* Vertical (since 2026-10-29): the rows close under the series name, not centred */
 .idx.m-s .idx-item, .idx.m-v .idx-item { transform-origin: center center; }
 .idx.m-s .idx-item.hot, .idx.m-v .idx-item.hot { transform: scale(1.075); }   /* (1.03 until 2026-10-29) */
 </style>
@@ -445,11 +446,17 @@ function layout() {
       let i = 0;
       split.forEach(k => { const pad = ((cols - k) * (h * r + gx) / 2).toFixed(2) + 'px'; items[i].style.marginLeft = pad; items[i + k - 1].style.marginRight = pad; i += k; });
     }
-  } else if (mode === 'v') {   // 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
-    let h = 3 * H; const most = Math.max(...shown.map(row => Math.min(6, row.querySelectorAll('.idx-item:not([hidden])').length)));
-    h = Math.min(h, (aw * 0.95 - (most - 1) * gx) / most * 1.5);
-    shown.forEach(row => { const n = row.querySelectorAll('.idx-item:not([hidden])').length, cols = Math.min(6, n); set(row, h / 1.5, cols, h * 2 / 3, gx, gy); });
-    idx.style.gap = (gy * 1.8).toFixed(1) + 'px';
+  } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
+    // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
+    const ry = gy * 0.75, sy = gy * 1.8 * 0.75, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
+    const most = Math.max(...ns.map(n => Math.min(6, n))), nr = ns.reduce((a, n) => a + Math.ceil(n / 6), 0);
+    const top = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const ah = innerHeight - top - H * 0.1 - 16, hov = 1 + (1.075 - 1) / 2;   // (the usual 10% gap under the name; 16px clear under the last title)
+    const h = Math.min(3 * H, (aw * 0.95 - (most - 1) * gx) / most * 1.5,
+      (ah - (nr - shown.length) * ry - (shown.length - 1) * sy - TGAP - th) / (nr - 1 + hov));
+    shown.forEach((row, k) => { const cols = Math.min(6, ns[k]); set(row, h / 1.5, cols, h * 2 / 3, gx, ry); });
+    idx.style.gap = sy.toFixed(1) + 'px';
+    shown[0].style.marginTop = (H * 0.1 - sy).toFixed(1) + 'px';   // (the series gap is not kept under the name)
   } else {   // Horizontal: each series still one row, 25% larger (less if the longest row would not fit), a little apart
     const g = H * 0.15, most = Math.max(...shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length));
     const h = Math.min(1.25 * H, (aw - (most - 1) * g) / most / 1.5);
