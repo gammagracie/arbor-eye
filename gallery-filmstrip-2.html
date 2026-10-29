@@ -112,7 +112,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
 .art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
-html:not(.touch) .art:hover { transform: scale(1.03); z-index: 2; }   /* hover: a subtle centre-out enlargement */
+html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth) */
 .art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
@@ -509,10 +509,11 @@ let capDx = 0, capDy = 0, hoverSlot = null, capSwap = 0;
 // the hover title under a given work (several works shown), centred on it
 function captionUnder(a) {
   capDx = a.getBoundingClientRect().left + a.offsetWidth / 2 - (stage.getBoundingClientRect().left + stage.clientWidth / 2);
-  if (count > 1) capDy = 5 + a.getBoundingClientRect().bottom + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
+  const ar = a.getBoundingClientRect(), aBot = (ar.top + ar.bottom) / 2 + a.offsetHeight * 1.075 / 2;   // its bottom at its full hover size (whatever its grow has reached)
+  if (count > 1) capDy = 5 + aBot + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
   placeCaption();
 }
-function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + capDy.toFixed(1) + 'px)'; }
+function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + (capDy + 4).toFixed(1) + 'px)'; }   // (+4: every hover title 4px lower since 2026-10-29)
 
 // put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
 function assign(slot, k) {
