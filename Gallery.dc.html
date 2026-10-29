@@ -57,6 +57,7 @@ html { scrollbar-gutter: stable; }
 .cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
 .cta:hover { color: #141414 !important; }
 .cta:hover::before { transform: scaleX(1); transform-origin: left; }
+@media (min-width: 768px) and (max-width: 2000px) { .work-title { font-size: calc(15px * var(--fs) * 0.54 + 2px) !important; } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
