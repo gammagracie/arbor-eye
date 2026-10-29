@@ -24,7 +24,7 @@
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
   --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(22px, 1.35vw, 70px); --ab-measure: calc(var(--ab-body) * 50);
   --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(49px + var(--tab-fs) * 1.2);
-  --ab-h: calc(100vh - var(--header-h) - var(--footer-h) - 50px - 28px - var(--tab-h) - 32px); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
+  --ab-h: calc(100vh - var(--header-h) - 50px - 28px - var(--tab-h) - 32px); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
    22px padding above its labels, less 50px) */
@@ -81,12 +81,14 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* (since 2026-10-29) from 768px up the footer sits just below the fold, as on the homepage: there when you scroll, seen only at the very bottom */
+@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
-<div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
+<div class="shell" style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
     <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>

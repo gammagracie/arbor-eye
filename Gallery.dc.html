@@ -50,6 +50,8 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* (since 2026-10-29) from 768px up the footer sits just below the fold, as on the homepage: there when you scroll, seen only at the very bottom */
+@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; } }
 /* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
 .cta { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #141414 !important; transition: color 0.35s ease; }
 .cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
@@ -60,7 +62,7 @@ html { scrollbar-gutter: stable; }
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
-<div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
+<div class="shell" style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
   <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
     <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
@@ -176,7 +178,7 @@ html { scrollbar-gutter: stable; }
             {{ c.img }}
             <button onClick="{{ c.open }}" aria-label="{{ c.aria }}" style="position: absolute; inset: 0; width: 100%; border: none; background: transparent; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.25s ease" style-hover="opacity: 1">
             </button>
-            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 26px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.72); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">{{ c.title }}</p>
+            <p class="work-title" style="position: absolute; top: 100%; left: 0; right: 0; margin: 26px 0 0; display: {{ chipDisplay }}; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(15px * var(--fs) * 0.54); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none">{{ c.title }}</p>
           </div>
         </sc-for>
       </div>
