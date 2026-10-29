@@ -167,7 +167,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.m-s .idx-row, .idx.m-h .idx-row, .idx.m-v .idx-row { justify-content: center; }
 .idx.m-s .idx-row, .idx.m-v .idx-row { margin-inline: auto; }
 .idx.m-h .idx-row { flex-wrap: nowrap; }
-.idx.m-v > .idx-row { margin-block: 0; }   /* Vertical (since 2026-10-29): the rows close under the series name, not centred */
+.idx.m-v > .idx-row, .idx.m-h > .idx-row { margin-block: 0; }   /* Vertical and Horizontal (since 2026-10-29): the rows close under the menus, not centred */
 .idx.m-s .idx-item, .idx.m-v .idx-item { transform-origin: center center; }
 .idx.m-s .idx-item.hot, .idx.m-v .idx-item.hot { transform: scale(1.075); }   /* (1.03 until 2026-10-29) */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
@@ -329,7 +329,7 @@ document.getElementById('burger').addEventListener('click', () => document.body.
 // hovering a thumbnail: its series named above the thumbnails, its title to the right of its row, the other rows dimmed
 const idx = document.getElementById('idx'), label = document.getElementById('idxSeries'), title = document.getElementById('idxTitle');
 // (since 2026-10-29) the layout: 'all' (every series, or a year), 's' (one series, spread out and enlarged), 'h' (Horizontal), 'v' (Vertical)
-let mode = 'all';
+let mode = 'all', titleSwap = 0;
 // the distance from the title's top to the middle of its capitals (they sit above the middle of the line, over the descenders' room)
 const capCtx = document.createElement('canvas').getContext('2d');
 function capMid() {
@@ -338,7 +338,7 @@ function capMid() {
   const m = capCtx.measureText('H'), content = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
   return (title.offsetHeight - content) / 2 + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent / 2;
 }
-const TGAP = 18;   // a hover title's gap under its work, in the spread-out layouts (4px more since 2026-10-29)
+const TGAP = 25;   // a hover title's gap under its work, in the spread-out layouts (4px, then 7px more since 2026-10-29)
 function placeTitle(row) {
   const box = idx.getBoundingClientRect(), pad = parseFloat(getComputedStyle(idx).paddingRight);
   let x, y;
@@ -347,9 +347,10 @@ function placeTitle(row) {
     y = last.offsetTop + last.offsetHeight / 2 - capMid();   // (since 2026-10-29) its capitals centred on the row (they were 5, then 9px below)
     x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
   } else {   // under the hovered work, centred on it (following it where the genie nudges it)
-    const it = row._hot; if (!it) return;
+    const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
-    y = it.offsetTop + it.offsetHeight * (mode === 'h' ? 1 : 1.0375) + TGAP;   // (under its hover size: centre-out 107.5%; the genie grows upward)
+    y = mode === 'h' ? it.offsetTop + it.offsetHeight + parseFloat(idx.style.gap) / 2 - capMid()   // Horizontal: its capitals centred in the gap under the row
+      : it.offsetTop + it.offsetHeight * 1.0375 + TGAP;   // (under its hover size: centre-out 107.5%)
   }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
@@ -401,9 +402,16 @@ document.querySelectorAll('.idx-row').forEach(row => {
     document.querySelectorAll('.idx-row.on').forEach(r => r.classList.remove('on'));
     row.classList.add('on'); idx.classList.add('hovering');
     label.textContent = row.getAttribute('aria-label'); label.classList.add('show');
-    row._hot = item; title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show');
+    row._hot = item;
+    const showIt = () => { title._for = item; title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show'); };
+    // (since 2026-10-29) under the works the title never slides from one to the next: it fades out (0.25s), then fades in at the new one
+    clearTimeout(titleSwap);
+    if (mode !== 'all' && title.classList.contains('show') && title._for !== item) {
+      title.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)'; title.classList.remove('show');
+      titleSwap = setTimeout(() => { title.style.transition = ''; if (row._hot === item && row.classList.contains('on')) showIt(); }, 250);
+    } else showIt();
   }));
-  row.addEventListener('mouseleave', () => { row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
+  row.addEventListener('mouseleave', () => { clearTimeout(titleSwap); title.style.transition = ''; row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
 });
 // ---- (since 2026-10-28) Filters, as on G5: Series (each series, or horizontal / vertical works) and Year, one at a time
 // (choosing one sets the other back to all). A year shows only the matching works, rows left with none hidden. Years come
@@ -415,20 +423,21 @@ const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'
 const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.querySelectorAll('.idx-item[data-y]')].map(a => a.dataset.y))].sort((a, b) => b - a).map(y => [y]));
 // one series on its own: works per row (the last row centred under the others)
 const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 2 };
-// rows set by hand where the plain split would differ, each centred (Convergence 3/2/2, 2026-10-29)
-const SERIES_ROWS = { 'Convergence': [3, 2, 2] };
-// sized as if in rows of this many, then scaled (the page may scroll): Convergence 25% larger than in its earlier rows of 4,
-// Spectrum 35% larger
-const SERIES_SIZE = { 'Convergence': [4, 1.25], 'Spectrum': [2, 1.35] };
+// rows set by hand where the plain split would differ, each centred: Convergence's seven works 3/1/3 (2026-10-29; sized as Core is)
+const SERIES_ROWS = { 'Convergence': [3, 1, 3] };
+// sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
+// scroll): Ascent 15% larger, Spectrum 62% (35%, then 20% more)
+const SERIES_SIZE = { 'Ascent': [6, 1.15], 'Spectrum': [2, 1.35 * 1.2] };
 const thumbH = () => Math.min(197, Math.max(42, innerWidth * 0.05133));   // --idx-h
 // (since 2026-10-29) all series: the series name rides up onto the Series / Year menus' line, and the rows sit low enough that the
 // first row's genie (150%, growing upward) stays 12px clear of it
-function liftLabel() {
+function liftLabel() {   // (Horizontal and Vertical: the name on the menus' line too, the rows then closing up under it)
   label.style.transform = label.style.marginBottom = '';
-  if (mode !== 'all' || innerWidth < 768) return;
+  if (mode === 's' || innerWidth < 768) return;
   const f = document.querySelector('.filters').getBoundingClientRect(), l = label.getBoundingClientRect();
   const d = (l.top + l.height / 2) - (f.top + f.height / 2);
   label.style.transform = 'translateY(' + (-d).toFixed(1) + 'px)';
+  if (mode !== 'all') return;
   const row = [...idx.querySelectorAll('.idx-row')].find(r => !r.hidden); if (!row) return;
   const hmax = Math.max(...[...row.querySelectorAll('.idx-item:not([hidden])')].map(a => a.offsetHeight));
   label.style.marginBottom = Math.max(14, 12 + hmax / 2 - d - parseFloat(getComputedStyle(idx).rowGap)).toFixed(1) + 'px';
@@ -461,29 +470,43 @@ function layout() {
     const ah = innerHeight - top - parseFloat(cs.paddingBottom);
     const fit = (c, k) => Math.min((aw * 0.9 - (c - 1) * gx) / c / r, (ah * 0.94 - (k - 1) * gy - TGAP - th) / k);
     const sz = SERIES_SIZE[row.dataset.s];
-    const h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (aw * 0.9 - (cols - 1) * gx) / cols / r)
+    const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
+    const h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
                  : Math.min(fit(cols, nr), 2.83 * (v ? 1.5 * H : H));
     set(row, v ? h / 1.5 : h, cols, h * r, gx, gy);
+    const rw = cols * h * r + (cols - 1) * gx + 1;
+    if (rw > aw) row.style.marginLeft = row.style.marginRight = ((aw - rw) / 2).toFixed(1) + 'px';   // wider than the content: still centred
     if (split) {   // a shorter row is held in by equal margins on its outer works, so it breaks where it should, centred
       let i = 0;
       split.forEach(k => { const pad = ((cols - k) * (h * r + gx) / 2).toFixed(2) + 'px'; items[i].style.marginLeft = pad; items[i + k - 1].style.marginRight = pad; i += k; });
     }
   } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
     // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
-    const ry = gy * 0.75, sy = gy * 1.8 * 0.75, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
+    // (later that day) the gap between the two series the same as between Ascent's rows, and the white space between the menus
+    // and the first row halved
+    // (never closer than a title under a swollen work needs)
+    const ry = Math.max(gy * 0.75, 0.0375 * 3 * H + TGAP + th + 6), sy = ry, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
     const most = Math.max(...ns.map(n => Math.min(6, n))), nr = ns.reduce((a, n) => a + Math.ceil(n / 6), 0);
-    const top = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
-    const ah = innerHeight - top - H * 0.1 - 16, hov = 1 + (1.075 - 1) / 2;   // (the usual 10% gap under the name; 16px clear under the last title)
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;   // where a row would start
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    const top = fb + (flow + H * 0.1 - fb) / 2;
+    const ah = innerHeight - top - 16, hov = 1 + (1.075 - 1) / 2;   // (16px clear under the last title)
     const h = Math.min(3 * H, (aw * 0.95 - (most - 1) * gx) / most * 1.5,
       (ah - (nr - shown.length) * ry - (shown.length - 1) * sy - TGAP - th) / (nr - 1 + hov));
     shown.forEach((row, k) => { const cols = Math.min(6, ns[k]); set(row, h / 1.5, cols, h * 2 / 3, gx, ry); });
     idx.style.gap = sy.toFixed(1) + 'px';
-    shown[0].style.marginTop = (H * 0.1 - sy).toFixed(1) + 'px';   // (the series gap is not kept under the name)
+    shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
   } else {   // Horizontal: each series still one row, 25% larger (less if the longest row would not fit), a little apart
     const g = H * 0.15, most = Math.max(...shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length));
     const h = Math.min(1.25 * H, (aw - (most - 1) * g) / most / 1.5);
     shown.forEach(row => set(row, h, 0, 0, g, g));
-    idx.style.gap = ((TGAP + th + g * 2) * 0.65).toFixed(1) + 'px';   // (65% of the earlier spacing since 2026-10-29: still clear of a title under a row)
+    // (since 2026-10-29) the rows 65%, then 75% of that, as far apart as before (the title centred in the gap), and the white
+    // space between the menus and the first row halved
+    const sy = (18 + th + g * 2) * 0.65 * 0.75;
+    idx.style.gap = sy.toFixed(1) + 'px';
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    shown[0].style.marginTop = (fb + (flow + (18 + th + g * 2) * 0.65 - fb) / 2 - flow - sy).toFixed(1) + 'px';
   }
   // works shown larger than their 600px thumbnails swap to the full-size image once it has loaded
   const dpr = devicePixelRatio || 1;

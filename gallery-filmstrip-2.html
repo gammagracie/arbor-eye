@@ -514,7 +514,7 @@ function captionUnder(a) {
   if (count > 1) capDy = 5 + aBot + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
   placeCaption();
 }
-function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + (capDy + 4).toFixed(1) + 'px)'; }   // (+4: every hover title 4px lower since 2026-10-29)
+function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + (capDy + 11).toFixed(1) + 'px)'; }   // (+11: every hover title 4px, then 7px lower since 2026-10-29)
 
 // put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
 function assign(slot, k) {
