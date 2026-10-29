@@ -137,6 +137,7 @@ html:not(.touch) .work.last { z-index: 99; }   /* the last work hovered stays in
 .sb.show, .sb:hover, .sb.held { opacity: 1; }
 html.touch .sb { display: none; }
 footer { flex: none; }
+@media (min-width: 768px) and (max-width: 2000px) { .work .side span { font-size: calc(16px * var(--fs) * 0.486 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 </style>
 <script src="alt-text.js?v=7"></script>
 </head>
