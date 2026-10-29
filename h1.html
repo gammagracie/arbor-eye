@@ -125,8 +125,8 @@ html { scrollbar-gutter: stable; }
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftL }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterL }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="21 1 1 30.66 21 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="21 1 1 30.66 21 59"></polyline></svg>
       </button>
-      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 10px 160px 40px; margin: 0 -160px -30px; flex: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
-        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
+      <div style="clip-path: {{ railClip }}; width: {{ railWidth }}; padding: 120px 160px 40px; margin: -110px -160px -30px; flex: none; pointer-events: none; -webkit-mask-image: {{ railMask }}; mask-image: {{ railMask }}">
+        <div onMouseMove="{{ dockMove }}" onMouseLeave="{{ dockLeave }}" style="pointer-events: auto; display: flex; gap: 16px; align-items: flex-end; width: max-content; will-change: transform; transform: {{ railShift }}; transition: {{ railTransition }}">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="9">
             <button onClick="{{ t.select }}" onMouseEnter="{{ t.enter }}" aria-label="{{ t.alt }}" style="border: none; background: transparent; padding: 0; cursor: pointer; flex: none; opacity: {{ t.opacity }}; visibility: {{ t.vis }}; display: block; position: relative; transform-origin: center bottom; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease" style-hover="opacity: 1">
               {{ t.img }}
@@ -175,8 +175,9 @@ class Component extends DCLogic {
     { src: 'assets/home-v2/upwelling.jpg', thumb: 'assets/thumbs/core_upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
-  // Dock-style magnification, the "genie": the thumbnail under the cursor grows most (130%), neighbours less
-  // (bell curve), each growing evenly from its own centre and nudged sideways so they never overlap; it tracks the cursor.
+  // Dock-style magnification, the "genie", as on G5 (since 2026-10-29): the thumbnail under the cursor grows most (150%),
+  // neighbours less along a wide bell curve, each growing up from its own base and nudged sideways so they never overlap,
+  // the thumbnail under the cursor staying under it; it tracks the cursor softly (0.45s) and settles back in 0.5s.
   dockBase(strip) {
     this.dock = Array.from(strip.children).map(b => { const r = b.getBoundingClientRect(); return { cx: r.left + r.width / 2, w: r.width }; });
   }
@@ -187,14 +188,15 @@ class Component extends DCLogic {
     const strip = e.currentTarget; const btns = Array.from(strip.children);
     if (!this.dock || this.dock.length !== btns.length) this.dockBase(strip);
     const base = this.dock; const slot = base.length > 1 ? base[1].cx - base[0].cx : 100;
-    const scales = base.map(b => 1 + 0.3 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.15 * slot), 2)));
+    const scales = base.map(b => 1 + 0.5 * Math.exp(-Math.pow((e.clientX - b.cx) / (1.7 * slot), 2)));
     const extra = scales.map((sc, k) => (sc - 1) * base[k].w);
-    const total = extra.reduce((a, b) => a + b, 0);
+    let total = 0;   // (the growth that sits left of the cursor: taken off every shift, so the thumbnail under the cursor stays put)
+    base.forEach((b, k) => { total += 2 * extra[k] * Math.max(0, Math.min(1, (e.clientX - b.cx + b.w / 2) / b.w)); });
     let acc = 0;
     btns.forEach((btn, k) => {
       const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
       btn.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // (since 2026-10-21) the swell follows the cursor softly (was 0.14s)
-      btn.style.transformOrigin = 'center center';
+      btn.style.transformOrigin = 'center bottom';
       btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
       btn.style.zIndex = String(Math.round(scales[k] * 100));
     });
@@ -225,7 +227,7 @@ class Component extends DCLogic {
     this.setState({ tip: null });   // the hover title fades (it keeps the last name while it does)
     this.dockX = null;
     Array.from(e.currentTarget.children).forEach(btn => {
-      btn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back slowly and softly (0.9s since 2026-10-21)
+      btn.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back as on G5 (0.5s since 2026-10-29)
       btn.style.transform = ''; btn.style.zIndex = '';
     });
     this.dock = null;
@@ -478,16 +480,16 @@ class Component extends DCLogic {
       // (since 2026-10-22) the title sits centred under the thumbnail being hovered, at its full size on desktop (it had been
       // scaled to 72% with the other pages' hover titles)
       tipShift: (this.tipX != null ? this.tipX : this.state.tipX || 0).toFixed(1) + 'px',
-      hoverTitleScale: desk ? '1' : '0.72',
+      hoverTitleScale: desk ? '0.75' : '0.54',   // (since 2026-10-29 25% smaller: was 1 / 0.72)
       railNudge: m ? 'none' : 'translateY(9px)',   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
-      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? 'calc(' + (this.state.wide ? 5 : -2) + 'px + 0.15 * ' + thumbH + ') 0 0'   /* (since 2026-10-26) 5px higher: 7px under a fully swollen thumbnail, 14px over 2000px */ : '5px 0 0',   /* 7px lower again over 2000px (since 2026-10-23) */   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
+      hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? (this.state.wide ? 5 : -2) + 'px 0 0'   /* (since 2026-10-29 the swell grows upward, so no room is kept for it here) */   /* (since 2026-10-26) 5px higher: 7px under a fully swollen thumbnail, 14px over 2000px */ : '5px 0 0',   /* 7px lower again over 2000px (since 2026-10-23) */   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
       prev: () => this.go(-1),
       // one slot = thumbnail width (about 1.5 x its height) + padding/border + gap
       railWidth: 'calc(' + (2 * half + 1) + ' * ' + slot + ' - 16px)',
       railShift: 'translateX(calc(' + (-(n + base + shift - half)) + ' * ' + slot + '))',   // the current work at the centre of the middle run (a glide past either end settles one run along: identical thumbnails, no visible step)
       railTransition: this.state.animate ? 'transform 1.6s cubic-bezier(0.45, 0.05, 0.25, 1)' : 'none',   // a slow, soft glide
-      railClip: 'inset(-120px 0 -20px 0)',   // (since 2026-10-20 the same at rest and while gliding, and the feathered mask below is always on, inside a 160px margin
+      railClip: 'inset(-20px 0 -20px 0)',   // (since 2026-10-29 the tray's box starts 110px higher, for G5's upward swell)   // (since 2026-10-20 the same at rest and while gliding, and the feathered mask below is always on, inside a 160px margin
       // either side of the thumbnails, so nothing is cut or uncut, and no shadow jumps, when a glide starts or ends)
       // while the tray slides, its thumbnails feather in and out over 64px at each side (the tray box reaches 64px past the
       // visible thumbnails for this, so at rest nothing is faded)
