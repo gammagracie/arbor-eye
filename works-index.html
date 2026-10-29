@@ -132,35 +132,43 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 
 /* ---- Index: every work as a small thumbnail, one row per series in Ned's deck order (Series 1, Ascent to Series 8, Tonal,
    then the Outliers); the thumbnails touch, each at its own shape and one height, and the rows sit directly on one another.
-   Hovering a thumbnail enlarges it (120%, from its centre), names its series once, centred above the thumbnails, and dims the other rows to 50%; a click opens
+   Hovering a thumbnail brings up the genie (see below), names its series once, centred above the thumbnails, and fades the other rows to 25%; a click opens
    G5 one-up on that work, its series chosen in the filter (since 2026-10-24; on 2026-10-22 and 23 it opened the series grid). */
 /* (since 2026-10-20) the page fills the screen less the footer, so the footer is on screen on load whenever the index fits (as on
    Ned's 3840 x 2160 screen); the spare height is shared out as equal space around each row, so the rows sit vertically centred */
 .page.index { height: auto; min-height: 100vh; min-height: 100dvh; }   /* (since 2026-10-29) the footer always below the fold, seen only at the very bottom (it was on screen whenever the index fitted) */
-:root { --idx-h: clamp(42px, 5.133vw, 197px); }   /* 74px tall on a 1440px screen, growing with the screen */
-.idx { flex: 1; display: flex; flex-direction: column; padding: 16px var(--side-pad) 50px; }   /* 50px under the rows = the 16px and the series label's 34px above them */
+:root { --idx-h: clamp(42px, 5.133vw, 197px); --idx-gap: calc(var(--idx-h) * 0.1); }   /* 74px tall on a 1440px screen, growing with the screen; (since 2026-10-29) a gap of a tenth of that between thumbnails and between rows (10px at 1920, 20px at 3840: the rows' spacing on Ned's screen) */
+.idx { flex: 1; display: flex; flex-direction: column; gap: var(--idx-gap); padding: 16px var(--side-pad) 50px; }   /* 50px under the rows = the 16px and the series label's 34px above them */
 .idx > .idx-row { margin-block: auto; }
-.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(13px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1); }
+.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(13px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 .idx-series.show { opacity: 1; }
-.idx-row { transition: opacity 0.3s ease; }
-.idx.hovering .idx-row { opacity: 0.35; }   /* the other rows 65% see-through while one is hovered (since 2026-10-24; was 50%) */
+.idx-row { transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.idx.hovering .idx-row { opacity: 0.25; }   /* (since 2026-10-29, as martonperlaki.com/thumbnails) the other rows fade to 25% over 0.3s while one is hovered; the names fade in over 0.6s on the same curve */
 .idx.hovering .idx-row.on { opacity: 1; }
-.idx-row { display: flex; flex-wrap: wrap; }
-.idx-item { position: relative; display: block; flex: none; height: var(--idx-h); transform-origin: center bottom; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+.idx-row { --ih: var(--idx-h); display: flex; flex-wrap: wrap; gap: var(--idx-gap); }
+.idx-item { position: relative; display: block; flex: none; height: var(--ih); transform-origin: center bottom; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 /* the genie, as on G5 (since 2026-10-29): the thumbnail under the cursor swells most (150%), its neighbours less along a wide
    bell curve, each growing up from its own base and nudged sideways so they never overlap (set by the script below) */
 .idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }
 .idx-item img { display: block; height: 100%; width: auto; }
-.idx-item.v { height: calc(var(--idx-h) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
+.idx-item.v { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
-.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.45, 0, 0.55, 1), transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
+.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
 .idx-title.show { opacity: 1; }
 /* (since 2026-10-28) Series and Year menus at the top right, on the bag icon's line, as on G5: a series shows only its row,
    Horizontal / Vertical and a year only the matching works, each remaining row still on its own line */
 .index .tools { padding-top: 14px; }
 .idx-row[hidden], .idx-item[hidden] { display: none; }
+/* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
+   Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as
+   G5's grid does (103%, 0.9s), Horizontal keeps the genie */
+.idx.m-s .idx-row, .idx.m-h .idx-row, .idx.m-v .idx-row { justify-content: center; }
+.idx.m-s .idx-row, .idx.m-v .idx-row { margin-inline: auto; }
+.idx.m-h .idx-row { flex-wrap: nowrap; }
+.idx.m-s .idx-item, .idx.m-v .idx-item { transform-origin: center center; }
+.idx.m-s .idx-item.hot, .idx.m-v .idx-item.hot { transform: scale(1.03); }
 </style>
 <script src="alt-text.js?v=7"></script>
 </head>
@@ -179,6 +187,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
           <a href="gallery-editorial.html">G6</a>
           <a href="gallery-editorial-g6a.html">G6a</a>
           <a style="font-weight: 700; color: #141414" href="works-index.html">Index</a>
+          <a href="tol.html">ToL</a>
           <a href="About.dc.html">About</a>
           <a href="Contact-tabs.dc.html">Contact</a>
         </nav>
@@ -317,10 +326,21 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 document.getElementById('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
 // hovering a thumbnail: its series named above the thumbnails, its title to the right of its row, the other rows dimmed
 const idx = document.getElementById('idx'), label = document.getElementById('idxSeries'), title = document.getElementById('idxTitle');
+// (since 2026-10-29) the layout: 'all' (every series, or a year), 's' (one series, spread out and enlarged), 'h' (Horizontal), 'v' (Vertical)
+let mode = 'all';
+const TGAP = 14;   // a hover title's gap under its work, in the spread-out layouts
 function placeTitle(row) {
-  const items = row.querySelectorAll('.idx-item:not([hidden])'), last = items[items.length - 1], box = idx.getBoundingClientRect();   // (its resting place, plus the genie's push)
-  const pad = parseFloat(getComputedStyle(idx).paddingRight), y = last.offsetTop + last.offsetHeight / 2 - title.offsetHeight / 2 + 5;   // (5px below the row's middle since 2026-10-22)
-  const x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  const box = idx.getBoundingClientRect(), pad = parseFloat(getComputedStyle(idx).paddingRight);
+  let x, y;
+  if (mode === 'all') {   // to the right of the row: 24px past its last thumbnail, centred on the row
+    const items = row.querySelectorAll('.idx-item:not([hidden])'), last = items[items.length - 1];   // (its resting place, plus the genie's push)
+    y = last.offsetTop + last.offsetHeight / 2 - title.offsetHeight / 2 + 5;   // (5px below the row's middle since 2026-10-22)
+    x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  } else {   // under the hovered work, centred on it (following it where the genie nudges it)
+    const it = row._hot; if (!it) return;
+    x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
+    y = it.offsetTop + it.offsetHeight + TGAP;
+  }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
   title.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
@@ -342,6 +362,7 @@ function genie(row, x, item) {
   let acc = 0;
   line.forEach((it, k) => {
     const shift = acc + extra[k] / 2 - pivot; acc += extra[k];
+    it._dx = shift;
     it.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.45s ease';
     it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
     it.style.zIndex = String(Math.round(sc[k] * 100));
@@ -352,39 +373,127 @@ function genie(row, x, item) {
   placeTitle(row);
 }
 function settle(row) {
-  row.querySelectorAll('.idx-item').forEach(it => { it.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
+  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
 }
 const fine = matchMedia('(hover: hover) and (pointer: fine)');
 document.querySelectorAll('.idx-row').forEach(row => {
-  row.addEventListener('mousemove', e => { if (!fine.matches) return; const it = e.target.closest('.idx-item'); if (it) { genie(row, e.clientX, it); row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot'); } });
+  row.addEventListener('mousemove', e => {
+    if (!fine.matches || flipping) return;
+    const it = e.target.closest('.idx-item'); if (!it) return;
+    row._hot = it;
+    if (mode === 's' || mode === 'v') placeTitle(row);   // the enlarged works grow a little, as G5's grid does (CSS)
+    else genie(row, e.clientX, it);
+    row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot');
+  });
   row.addEventListener('mouseleave', () => { settle(row); row._titleShift = 0; });
   row.querySelectorAll('.idx-item').forEach(item => item.addEventListener('mouseenter', () => {
+    if (flipping) return;
     document.querySelectorAll('.idx-row.on').forEach(r => r.classList.remove('on'));
     row.classList.add('on'); idx.classList.add('hovering');
     label.textContent = row.getAttribute('aria-label'); label.classList.add('show');
-    title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show');
+    row._hot = item; title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show');
   }));
   row.addEventListener('mouseleave', () => { row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
 });
 // ---- (since 2026-10-28) Filters, as on G5: Series (each series, or horizontal / vertical works) and Year, one at a time
-// (choosing one sets the other back to all). A series shows only its row; Horizontal, Vertical or a year only the matching
-// works, rows left with none hidden. Years come from G5's list of works (Outliers and Spectrum have none yet).
+// (choosing one sets the other back to all). A year shows only the matching works, rows left with none hidden. Years come
+// from G5's list of works (Outliers and Spectrum have none yet). (Since 2026-10-29) a series moves to the middle of the
+// screen and spreads out, enlarged, in the rows below; Horizontal and Vertical centre their rows, spaced out (sizes in layout()).
 const $ = id => document.getElementById(id);
 let fSeries = 'All', fYear = 'All';
 const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']];
 const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.querySelectorAll('.idx-item[data-y]')].map(a => a.dataset.y))].sort((a, b) => b - a).map(y => [y]));
+// one series on its own: works per row (the last row centred under the others)
+const SERIES_COLS = { 'Ascent': 6, 'Convergence': 4, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 2 };
+const thumbH = () => Math.min(197, Math.max(42, innerWidth * 0.05133));   // --idx-h
+function layout() {
+  const rows = [...document.querySelectorAll('.idx-row')];
+  rows.forEach(r => r.removeAttribute('style'));
+  idx.style.gap = '';
+  idx.classList.remove('m-s', 'm-h', 'm-v');
+  if (mode === 'all') return;
+  idx.classList.add('m-' + mode);
+  const cs = getComputedStyle(idx), aw = idx.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const th = parseFloat(getComputedStyle(title).fontSize) * 1.25, H = thumbH();
+  const gx = Math.max(25, aw * 0.02), gy = TGAP + th + Math.max(18, gx * 0.7);   // at least 25px between works; under each, room for its title
+  const shown = rows.filter(r => !r.hidden);
+  const set = (row, ih, cols, w, colGap, rowGap) => {
+    row.style.setProperty('--ih', ih.toFixed(2) + 'px');
+    if (cols) row.style.width = (cols * w + (cols - 1) * colGap + 1).toFixed(1) + 'px';
+    row.style.columnGap = colGap.toFixed(1) + 'px'; row.style.rowGap = rowGap.toFixed(1) + 'px';
+  };
+  if (mode === 's') {   // as large as fits with room round it: up to 8 times a thumbnail's area (2.83 times as wide and tall)
+    const row = shown[0]; if (!row) return;
+    const items = row.querySelectorAll('.idx-item:not([hidden])'), n = items.length, v = items[0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;
+    const cols = Math.min(n, SERIES_COLS[row.dataset.s] || 3), nr = Math.ceil(n / cols);
+    const top = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const ah = innerHeight - top - parseFloat(cs.paddingBottom);
+    const fitH = Math.min((aw * 0.9 - (cols - 1) * gx) / cols / r, (ah * 0.94 - (nr - 1) * gy - TGAP - th) / nr);
+    const h = Math.min(fitH, 2.83 * (v ? 1.5 * H : H));
+    set(row, v ? h / 1.5 : h, cols, h * r, gx, gy);
+  } else if (mode === 'v') {   // 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
+    let h = 3 * H; const most = Math.max(...shown.map(row => Math.min(6, row.querySelectorAll('.idx-item:not([hidden])').length)));
+    h = Math.min(h, (aw * 0.95 - (most - 1) * gx) / most * 1.5);
+    shown.forEach(row => { const n = row.querySelectorAll('.idx-item:not([hidden])').length, cols = Math.min(6, n); set(row, h / 1.5, cols, h * 2 / 3, gx, gy); });
+    idx.style.gap = (gy * 1.8).toFixed(1) + 'px';
+  } else {   // Horizontal: each series still one row, 25% larger (less if the longest row would not fit), a little apart
+    const g = H * 0.15, most = Math.max(...shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length));
+    const h = Math.min(1.25 * H, (aw - (most - 1) * g) / most / 1.5);
+    shown.forEach(row => set(row, h, 0, 0, g, g));
+    idx.style.gap = (TGAP + th + g * 2).toFixed(1) + 'px';
+  }
+  // works shown larger than their 600px thumbnails swap to the full-size image once it has loaded
+  const dpr = devicePixelRatio || 1;
+  shown.forEach(row => row.querySelectorAll('.idx-item:not([hidden]) img').forEach(img => {
+    if (img.dataset.big || img.closest('.idx-item').offsetWidth * dpr <= 600 * 0.9) return;
+    img.dataset.big = 1; const big = img.getAttribute('src').replace('assets/thumbs-m70/', 'assets/works-m70/'), pre = new Image();
+    pre.onload = () => { img.src = big; }; pre.src = big;
+  }));
+}
+// changing the filter: works leaving fade out (0.3s); the rest glide from where they were to where they now go, growing or
+// shrinking on the way (0.8s), and works arriving fade in
+let flipping = false, flipT = 0;
 function applyFilter() {
-  document.querySelectorAll('.idx-row').forEach(row => {
+  const rows = [...document.querySelectorAll('.idx-row')], items = [...document.querySelectorAll('.idx-item')];
+  rows.forEach(settle); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show');
+  const vis = a => !a.hidden && !a.closest('.idx-row').hidden;
+  const was = new Set(items.filter(vis)), next = new Set();
+  rows.forEach(row => {
     const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
-    let shown = 0;
     row.querySelectorAll('.idx-item').forEach(a => {
       const v = a.classList.contains('v');
-      const ok = inSeries && (fSeries !== 'Horizontal' || !v) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear);
-      a.hidden = !ok; if (ok) shown++;
+      if (inSeries && (fSeries !== 'Horizontal' || !v) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)) next.add(a);
     });
-    row.hidden = !shown;
   });
+  const leaving = [...was].filter(a => !next.has(a));
+  flipping = true;
+  const go = () => {
+    const first = new Map([...was].filter(a => next.has(a)).map(a => [a, a.getBoundingClientRect()]));
+    items.forEach(a => { a.hidden = !next.has(a); a.style.opacity = ''; });
+    rows.forEach(row => { row.hidden = !row.querySelector('.idx-item:not([hidden])'); });
+    mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : 'all';
+    layout();
+    if (mode !== 'all') { se.scrollTop = 0; tY = 0; }
+    const moving = [];
+    items.filter(a => next.has(a)).forEach(a => {
+      const f = first.get(a), l = a.getBoundingClientRect();
+      a.style.transition = 'none';
+      if (!f) { a.style.opacity = '0'; return; }
+      a.style.transformOrigin = '0 0';
+      a.style.transform = 'translate(' + (f.left - l.left).toFixed(1) + 'px, ' + (f.top - l.top).toFixed(1) + 'px) scale(' + (f.width / l.width).toFixed(4) + ', ' + (f.height / l.height).toFixed(4) + ')';
+      moving.push(a);
+    });
+    void idx.offsetWidth;
+    requestAnimationFrame(() => {
+      moving.forEach(a => { a.style.transition = 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)'; a.style.transform = ''; });
+      items.filter(a => next.has(a) && !first.has(a)).forEach(a => { a.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s'; a.style.opacity = ''; });
+    });
+    clearTimeout(flipT); flipT = setTimeout(() => { items.forEach(a => { a.style.transition = ''; a.style.transformOrigin = ''; }); flipping = false; }, 900);
+  };
+  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); setTimeout(go, 300); }
+  else go();
 }
+addEventListener('resize', () => { if (mode !== 'all') layout(); });
 const menuRenders = [];
 function menu(id, label, opts, get, set) {
   const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
