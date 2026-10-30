@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Arbor &amp; Eye | Tree of Life options</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Reference page (2026-10-27), linked only from homepages.html: every Tree of Life animation and illustration made for the
+   site, side by side. The animations are the site's own code, replayed here on demand; the illustrations are the files as they are. */
+html, body { margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: #141414; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 72px 24px 96px; }
+.logo { display: block; width: 188px; margin: 0 0 56px; }
+.logo img { display: block; width: 188px; height: auto; }
+h1 { margin: 0 0 12px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: 0.06em; text-transform: uppercase; }
+.lede { margin: 0 0 48px; max-width: 64ch; font-size: 15px; line-height: 1.7; color: #55524C; }
+h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E; border-bottom: 1px solid #E7E4DE; padding-bottom: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 600px), 1fr)); gap: 32px; }
+.grid.small { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 24px; }
+.card { border: 1px solid #E7E4DE; background: #FFFFFF; display: grid; grid-template-rows: auto 1fr; }
+.stage { position: relative; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #FDFDFB; border-bottom: 1px solid #E7E4DE; }
+.small .stage { height: 220px; }
+.stage.dark { background: #2B2A28; }
+.stage img.mark { max-width: 80%; max-height: 80%; width: auto; height: auto; display: block; }
+/* the two early PNG marks carry a solid white ground; multiply lets the card colour show through */
+.stage img.flat { mix-blend-mode: multiply; }
+.info { padding: 16px 20px 20px; display: grid; gap: 6px; align-content: start; }
+.name { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+.what { font-size: 14px; line-height: 1.6; color: #55524C; }
+.file { font-size: 12px; color: #9A968E; overflow-wrap: anywhere; }
+.file a { color: inherit; border-bottom: 1px solid #D6D2CA; }
+.file a:hover { color: #141414; border-color: #141414; }
+.replay { justify-self: start; margin-top: 6px; border: 1px solid #141414; background: transparent; padding: 7px 14px; font: inherit; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; }
+.replay:hover { background: #141414; color: #FFFFFF; }
+/* the animated header logo, three times its size in the header (188 x 51px there) */
+.ae-holder { position: relative; width: 565px; max-width: 90%; aspect-ratio: 1123.5 / 305.4; margin-top: 70px; }
+.ae-holder svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* the homepage intro, over a painting in its paper frame */
+.intro { position: relative; width: 92%; aspect-ratio: 1.655; background: center / cover no-repeat url('assets/home-v2/brilliance.jpg'); container-type: size; }
+.intro .tree { position: absolute; left: calc(50% + 2.5%); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); }
+.intro .word { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 2.87% 2.28%; background: rgba(0, 0, 0, 0.1625); line-height: 0; opacity: 0; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); }
+.intro .word img { display: block; width: 100%; height: auto; }
+.intro.s-tree .tree { opacity: 1; }
+.intro.s-mark .word { opacity: 1; }
+/* static version of the intro: the new wordmark on its panel over the painting */
+.intro.still .word { opacity: 1; transition: none; }
+.word-tol { width: 80%; height: auto; display: block; }
+/* favicon trials: each design at tab sizes, on a light and a dark tab bar */
+.fav-stage { height: auto; padding: 28px 0; flex-direction: column; gap: 14px; }
+.tabbar { display: flex; align-items: center; gap: 28px; padding: 12px 22px; border-radius: 8px; }
+.tabbar.light { background: #E9E7E2; }
+.tabbar.dark { background: #2B2A28; }
+.tabbar img { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="index.html" aria-label="Arbor &amp; Eye, current homepage"><img src="uploads/logo-tol.svg" alt="Arbor &amp; Eye"></a>
+  <h1>Tree of Life options</h1>
+  <p class="lede">Here is a compilation of every Tree of Life animation and illustration made for the site so far. Each animation plays once when the page opens; the Replay button runs it again. Below each illustration is information on where and when it was used on the site.</p>
+
+  <h2>New, 27 October</h2>
+  <div class="grid">
+    <div class="card"><div class="stage dark"><img class="word-tol" src="uploads/intro-logo-tol.svg" alt=""></div><div class="info"><span class="name">Wide-set text and ToL intro wordmark</span><span class="what">In white, drawn as a vector to maintain sharpness at any size.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol.svg&amp;bg=dark">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol.svg&amp;bg=dark</a></span></div></div>
+    <div class="card"><div class="stage"><div class="intro still"><span class="word"><img src="uploads/intro-logo-tol.svg" alt=""></span></div></div><div class="info"><span class="name">The same, as above placed over Brilliance</span><span class="what">Currently not shown on the homepage. Let me know if you'd like to see this on top of the homepage carousel. If so, to avoid redundancy, we should probably remove the opening ToL illustration and only show this.</span></div></div>
+  </div>
+  <div class="grid small" style="margin-top: 24px">
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="uploads/favicon-crown.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown.svg" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="uploads/favicon-crown.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown.svg" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Simplified favicon, ink</span><span class="what">Just the solid 7-leaf crown on a short stem, in ink, with no ampersand, so it still reads at 16 pixels. Shown at 16, 32 and 64 pixels on a light and a dark tab bar.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/favicon-crown.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/favicon-crown.svg</a></span></div></div>
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="uploads/favicon-crown-tile.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown-tile.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown-tile.svg" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="uploads/favicon-crown-tile.svg" alt="" width="16" height="16"><img src="uploads/favicon-crown-tile.svg" alt="" width="32" height="32"><img src="uploads/favicon-crown-tile.svg" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Simplified favicon, tile</span><span class="what">The same crown in white on a rounded ink square, so it holds up on both light and dark browser tabs.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/favicon-crown-tile.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/favicon-crown-tile.svg</a></span></div></div>
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Current favicon, for comparison</span><span class="what">The engraved tree and ampersand now in the tab. At 16 pixels the fine lines turn to a grey smudge.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png</a></span></div></div>
+  </div>
+
+  <h2>Animations</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="stage"><div class="ae-holder" data-variant="a"></div></div>
+      <div class="info">
+        <span class="name">A · Tree settles into the ampersand</span>
+        <span class="what">The engraved tree fades in large above the wordmark, the letters come up, then the tree shrinks and rises into place and turns into the ampersand, staying behind it. 5.3 seconds.</span>
+        <span class="file">The animated header logo of the second homepage, "H2" (Home-animated.dc.html, September 2026; removed 2 October)</span>
+        <button class="replay" type="button">Replay</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stage"><div class="ae-holder" data-variant="a2"></div></div>
+      <div class="info">
+        <span class="name">A2 · Tree settles into the ampersand, cross-hatched</span>
+        <span class="what">As A, but the ampersand keeps the engraved cross-hatching all the way through, as in the wide-set intro wordmark above, instead of turning solid black. 5.3 seconds.</span>
+        <span class="file">New trial, 28 October</span>
+        <button class="replay" type="button">Replay</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stage"><div class="ae-holder" data-variant="b"></div></div>
+      <div class="info">
+        <span class="name">B · Tree settles, then fades away</span>
+        <span class="what">As A, but as the tree turns into the ampersand it fades away, leaving the plain wordmark, which eases up 8px to where the static logo sits on every other page. 5.3 seconds.</span>
+        <span class="file">The animated header logo of "H4" (Home-animated-3.dc.html, September 2026; removed 2 October)</span>
+        <button class="replay" type="button">Replay</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stage"><div class="ae-holder" data-variant="c"></div></div>
+      <div class="info">
+        <span class="name">C · Engraved tree into the simplified tree</span>
+        <span class="what">The engraved tree fades in at its resting size with the letters, holds, and crossfades into the simplified v3 Tree of Life (outlined 7-leaf crown, solid stem and ampersand), which the logo rests on. Nothing moves. 6.6 seconds.</span>
+        <span class="file">The animated header logo of the homepage until 11 October, kept as <a href="https://gammagracie.github.io/arbor-eye/index-b.html">https://gammagracie.github.io/arbor-eye/index-b.html</a></span>
+        <button class="replay" type="button">Replay</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stage"><div class="intro" id="intro"><img class="tree" src="uploads/arbor-mark-white.svg" alt=""><span class="word"><img src="uploads/intro-logo-spaced.png" alt=""></span></div></div>
+      <div class="info">
+        <span class="name">D · Homepage intro over the first painting</span>
+        <span class="what">The white Tree of Life fades in over the painting (3.2s), holds, and fades away slowly; part-way through, ARBOR &amp; EYE comes up on a light dark panel, holds, and fades off. About 11 seconds.</span>
+        <span class="file">On the homepage now (<a href="https://gammagracie.github.io/arbor-eye/index.html">https://gammagracie.github.io/arbor-eye/index.html</a>) and on H1</span>
+        <button class="replay" type="button">Replay</button>
+      </div>
+    </div>
+  </div>
+
+  <h2>Illustrations</h2>
+  <div class="grid small">
+    <div class="card"><div class="stage"><img class="mark" src="uploads/logo-tol.svg" alt=""></div><div class="info"><span class="name">Header logo</span><span class="what">ARBOR &amp; EYE with the engraved Tree of Life: the logo on every page now.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol.svg</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/logo-tol-v3.svg" alt=""></div><div class="info"><span class="name">Header logo, v3 tree</span><span class="what">The logo with the simplified v3 tree (outlined 7-leaf crown, solid stem and ampersand). Trial, 9 October.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol-v3.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol-v3.svg</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/tol-v3.svg" alt=""></div><div class="info"><span class="name">v3 tree on its own</span><span class="what">The simplified v3 tree that animation C ends on; also used on G6's scrollbar handle and G7's marker.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/tol-v3.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/tol-v3.svg</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/logo-tol-simple.svg" alt=""></div><div class="info"><span class="name">Header logo, first 7-leaf draft</span><span class="what">The first simplified 7-leaf tree in the logo, replaced the same day by v3. 9 October.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol-simple.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/logo-tol-simple.svg</a> (restored from the history)</span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/tol-simple-solid.svg" alt=""></div><div class="info"><span class="name">7-leaf tree, solid</span><span class="what">The first draft's tree on its own, filled solid. 9 October.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/tol-simple-solid.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/tol-simple-solid.svg</a> (restored from the history)</span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/arbor-mark-ink.svg" alt=""></div><div class="info"><span class="name">Engraved tree, ink</span><span class="what">The engraved Tree of Life alone, in ink.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark-ink.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark-ink.svg</a></span></div></div>
+    <div class="card"><div class="stage dark"><img class="mark" src="uploads/arbor-mark-white.svg" alt=""></div><div class="info"><span class="name">Engraved tree, white</span><span class="what">The white tree of the homepage intro (animation D), shown here on a dark ground.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark-white.svg&amp;bg=dark">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark-white.svg&amp;bg=dark</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="uploads/arbor-mark.png" alt=""></div><div class="info"><span class="name">Engraved tree, dark</span><span class="what">The dark tree once set behind the homepage painting, and the About page's large Tree of Life.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark.png">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/arbor-mark.png</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark flat" src="assets/logo-mark.png" alt=""></div><div class="info"><span class="name">Early mark</span><span class="what">One of the first marks, from the site's start (14 September).</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/logo-mark.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/logo-mark.png</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark flat" src="assets/mark.png" alt=""></div><div class="info"><span class="name">Early mark, second</span><span class="what">The other first mark (14 September).</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/mark.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/mark.png</a></span></div></div>
+    <div class="card"><div class="stage"><img class="mark" src="assets/favicon.png" alt="" style="width: 64px; image-rendering: auto"></div><div class="info"><span class="name">Favicon</span><span class="what">The Tree of Life in the browser tab.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png</a></span></div></div>
+    <div class="card"><div class="stage dark"><img class="mark" src="uploads/intro-logo-spaced.png" alt=""></div><div class="info"><span class="name">Intro wordmark</span><span class="what">ARBOR &amp; EYE as it comes up in the homepage intro (animation D), widely spaced.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-spaced.png&amp;bg=dark">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-spaced.png&amp;bg=dark</a></span></div></div>
+  </div>
+</div>
+<script>
+// The animated header logo, replayed from the site's own code (Home-animated.dc.html, Home-animated-3.dc.html, index-b.html):
+// the wordmark SVG with the engraved tree is fetched and inlined, and each variant runs its own timing on it.
+const VARIANTS = {
+  a: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: false },
+  a2: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: false, hatched: true },
+  b: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: true },
+  c: { START: 2.035, ENDS: 2.035, LIFT0: 51, LIFT1: 51, SHIFTX0: 0, END: 6.6, shrink: [2.9, 2.6], swap: [5.5, 1.0], simple: true, fadeTree: false }
+};
+const fetched = {};
+const getText = url => fetched[url] || (fetched[url] = fetch(url).then(r => r.text()));
+const clamp = p => p < 0 ? 0 : p > 1 ? 1 : p, seg = (e, t, d) => clamp((e - t) / d);
+const outCubic = p => 1 - Math.pow(1 - p, 3), inOutSine = p => -(Math.cos(Math.PI * p) - 1) / 2, inOutCubic = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const T = { cx: 573.56, cy: 959.55, h: 1211.5 }, A = { cx: 875.2, cy: 261.39, h: 150.42 }, fit = A.h / T.h;
+async function playLogo(holder) {
+  const v = VARIANTS[holder.dataset.variant];
+  cancelAnimationFrame(holder._raf);
+  holder.style.transition = 'none'; holder.style.transform = '';
+  holder.innerHTML = await getText('uploads/logo-animation.svg');
+  const svg = holder.querySelector('svg');
+  svg.setAttribute('viewBox', '132.4 57.8 1123.5 305.4');
+  svg.style.overflow = 'visible'; svg.style.fill = '#141414';
+  const $ = id => holder.querySelector('#' + id);
+  let simple = null;
+  if (v.simple) {
+    const src = await getText('uploads/tol-v3.svg');
+    simple = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    simple.setAttribute('opacity', '0');
+    simple.innerHTML = src.slice(src.indexOf('>') + 1, src.lastIndexOf('</svg>'));
+    svg.appendChild(simple);
+  }
+  const tree = $('ae-tree');
+  const apply = e => {
+    const treeIn = outCubic(seg(e, 0.1, 0.8)), textIn = outCubic(seg(e, 1.0, 2.2)), shrink = inOutSine(seg(e, v.shrink[0], v.shrink[1])), swap = inOutCubic(seg(e, v.swap[0], v.swap[1]));
+    const sc = fit * (v.START + (v.ENDS - v.START) * shrink), lift = v.LIFT0 + (v.LIFT1 - v.LIFT0) * shrink, sx = v.SHIFTX0 * (1 - shrink);
+    const place = 'translate(' + (A.cx + sx).toFixed(2) + ' ' + (A.cy - lift).toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(' + (-T.cx) + ' ' + (-T.cy) + ')';
+    tree.setAttribute('transform', place);
+    $('ae-arbor').setAttribute('opacity', textIn.toFixed(3));
+    $('ae-eye').setAttribute('opacity', textIn.toFixed(3));
+    if (simple) {
+      simple.setAttribute('transform', place);
+      $('ae-tree-e').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
+      $('ae-tree-keep').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
+      $('ae-core').setAttribute('opacity', '0'); $('ae-amp').setAttribute('opacity', '0');
+      simple.setAttribute('opacity', swap.toFixed(3));
+    } else if (v.hatched) {   // A2: the engraved ampersand stays, as in the wide-set intro wordmark
+      $('ae-tree-e').setAttribute('opacity', treeIn.toFixed(3));
+      $('ae-tree-keep').setAttribute('opacity', treeIn.toFixed(3));
+      $('ae-core').setAttribute('opacity', '0'); $('ae-amp').setAttribute('opacity', '0');
+    } else {
+      $('ae-tree-e').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
+      $('ae-tree-keep').setAttribute('opacity', treeIn.toFixed(3));
+      $('ae-core').setAttribute('opacity', (0.4 * swap).toFixed(3));
+      $('ae-amp').setAttribute('opacity', swap.toFixed(3));
+    }
+  };
+  let fading = false;
+  const t0 = performance.now();
+  const frame = now => {
+    const e = Math.min((now - t0) / 1000, v.END); apply(e);
+    if (v.fadeTree && e >= v.swap[0] && !fading) {   // B: the tree fades away and the wordmark eases up 8px (in the header; 24px at this size)
+      fading = true;
+      ['ae-tree-keep', 'ae-core'].forEach(id => { const g = $(id); g.style.transition = 'opacity 1s ease-in-out'; g.style.opacity = '0'; });
+      holder.style.transition = 'transform 1s cubic-bezier(0.45, 0, 0.15, 1)'; holder.style.transform = 'translateY(-24px)';
+    }
+    if (e < v.END) holder._raf = requestAnimationFrame(frame);
+  };
+  holder._raf = requestAnimationFrame(frame);
+}
+// the homepage intro, with the homepage's own timings
+function playIntro() {
+  const el = document.getElementById('intro');
+  (el._timers || []).forEach(clearTimeout);
+  el.className = 'intro'; void el.offsetWidth;
+  const at = (ms, f) => el._timers.push(setTimeout(f, ms));
+  el._timers = [];
+  at(150, () => { el.className = 'intro s-tree'; });
+  at(150 + 3400, () => { el.className = 'intro'; });
+  at(150 + 3400 + 1600, () => { el.className = 'intro s-mark'; });
+  at(150 + 3400 + 1600 + 3200, () => { el.className = 'intro'; });
+}
+document.querySelectorAll('.ae-holder').forEach(playLogo);
+playIntro();
+document.querySelectorAll('.replay').forEach(b => b.addEventListener('click', () => {
+  const card = b.closest('.card'), h = card.querySelector('.ae-holder');
+  if (h) playLogo(h); else playIntro();
+}));
+</script>
+</body>
+</html>
