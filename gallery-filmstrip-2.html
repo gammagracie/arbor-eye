@@ -107,6 +107,11 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
   .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
   .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
 }
+/* three-up over 2000px (since 2026-10-30): the arrows 30px further out, so the end works' hover growth stays clear of them */
+@media (min-width: 2001px) {
+  .page.three .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px); }
+  .page.three .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px); }
+}
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
@@ -355,7 +360,7 @@ const viewCount = () => { const L = seriesLayout(); return L ? L.per : countOf(v
 const cols = () => seriesLayout() ? seriesLayout().cols : view === 9 ? 3 : view === 2 ? 2 : count, rows = () => Math.ceil(count / cols());
 const slots = [];
 function buildSlots(n) {
-  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', isGrid()); page.classList.toggle('multi', count > 1);
+  row.innerHTML = ''; slots.length = 0; row.classList.toggle('grid', isGrid()); page.classList.toggle('multi', count > 1); page.classList.toggle('three', count === 3);
   for (let i = 0; i < n; i++) {
     const a = document.createElement('a'); a.className = 'art'; a.href = '#'; a.setAttribute('aria-label', 'View work details');
     const imgs = [document.createElement('img'), document.createElement('img')]; imgs.forEach(im => { im.alt = ''; a.appendChild(im); });
