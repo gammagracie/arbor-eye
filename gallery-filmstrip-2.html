@@ -180,7 +180,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
           <a href="h4.html">H4</a>
           <a style="font-weight: 700; color: #141414" href="gallery-filmstrip-2.html">G5</a>
           <a href="gallery-editorial.html">G6</a>
-          <a href="gallery-editorial-g6a.html">G6a</a>
           <a href="works-index.html">Index</a>
           <a href="tol.html">ToL</a>
           <a href="About.dc.html">About</a>
@@ -201,7 +200,6 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
     <a href="h4.html">H4</a>
     <a href="gallery-filmstrip-2.html" style="font-weight: 700; color: #141414">G5</a>
     <a href="gallery-editorial.html">G6</a>
-    <a href="gallery-editorial-g6a.html">G6a</a>
     <a href="works-index.html">Index</a>
     <a href="tol.html">ToL</a>
     <a href="About.dc.html">About</a>
@@ -519,7 +517,7 @@ function captionUnder(a) {
   if (count > 1) capDy = 5 + aBot + (isGrid() ? (document.documentElement.clientWidth >= 2800 ? 18 : 12) : 25) - (caption.offsetHeight - $('capTitle').offsetHeight) / 2 - stage.getBoundingClientRect().bottom;
   placeCaption();
 }
-function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + (capDy + 11).toFixed(1) + 'px)'; }   // (+11: every hover title 4px, then 7px lower since 2026-10-29)
+function placeCaption() { caption.style.transform = 'translate(' + capDx.toFixed(1) + 'px, ' + (capDy + 1).toFixed(1) + 'px)'; }   // (+1: every hover title 4px, then 7px lower on 2026-10-29, then 10px higher on 2026-10-30)
 
 // put work k in a slot with a soft crossfade (incoming image decoded first; only the latest request lands)
 function assign(slot, k) {
