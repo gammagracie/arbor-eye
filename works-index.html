@@ -503,15 +503,18 @@ function layout() {
     const g = H * 0.15, most = Math.max(...shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length));
     // (since 2026-10-29) the rows 65%, then 75% of that, as far apart as before, and the white space between the menus and the
     // first row halved
-    const sy = (18 + th + g * 2) * 0.65 * 0.75;
-    idx.style.gap = sy.toFixed(1) + 'px';
+    const sy0 = (18 + th + g * 2) * 0.65 * 0.75;
     const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
     const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
     const top = fb + (flow + (18 + th + g * 2) * 0.65 - fb) / 2;   // the first row's top
-    shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
-    // (since 2026-10-30) small enough that the last row's swell (a quarter of its height below it) and its title stay on screen
+    // (since 2026-10-30) small enough that the last row's swell (a quarter of its height below it) and its title stay on screen;
+    // the rows (since 2026-10-30) at least far enough apart that a hovered work's swell and its title clear the row below by 12px
+    const n = shown.length, c = 8 + th + 12, room = innerHeight - 16 - th - (top - se.scrollTop);
     const h = Math.min(1.25 * H, (aw - (most - 1) * g) / most / 1.5,
-      (innerHeight - 16 - th - (top - se.scrollTop) - (shown.length - 1) * sy) / (shown.length + PEAK / 2));
+      (room - (n - 1) * sy0) / (n + PEAK / 2), (room - (n - 1) * c) / (n + PEAK / 2 + (n - 1) * PEAK / 2));
+    const sy = Math.max(sy0, h * PEAK / 2 + c);
+    idx.style.gap = sy.toFixed(1) + 'px';
+    shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
     shown.forEach(row => set(row, h, 0, 0, g, g));
   }
   // works shown larger than their 600px thumbnails swap to the full-size image once it has loaded
