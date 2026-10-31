@@ -262,7 +262,8 @@ html { scrollbar-gutter: stable; }
        (the links 14px), lined up with the photograph's edges. A link swaps the photograph for its content in the same box: Get in
        touch in columns, each centred top to bottom; Shipping (since 2026-10-22) its text in one column on the left half and the Tree
        of Life sculpture filling the right half; Returns the same flipped, the packaged order on the left. The open link again
-       brings the photograph back. -->
+       brings the photograph back. Since 2026-10-30 the photograph has 10px trimmed off its top and bottom (the space
+       stays, so the tab bar doesn't move). -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
   <section style="padding: 50px 0 32px; margin: auto calc(-1 * var(--side-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
     <div style="width: var(--ct-w)">
@@ -270,7 +271,7 @@ html { scrollbar-gutter: stable; }
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
         <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="100vw">
-        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); margin-bottom: 28px; object-fit: cover">
+        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); margin-bottom: 28px; object-fit: cover; clip-path: inset(10px 0)">
       </picture>
       </sc-if>
 
