@@ -28,7 +28,7 @@
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* Biography over 2000px (since 2026-10-20): the portrait grows down to 50px above the tab labels (the box less 28px: the bar's
    22px padding above its labels, less 50px) */
-.ab-portrait { height: var(--ab-h); }   /* (since 2026-10-28) the portrait fills the box's height */
+.ab-portrait { height: calc(0.8 * var(--ab-h)); }   /* (since 2026-10-30) the portrait 80% of the box's height (it filled it from 2026-10-28) */
 /* the paragraphs of every desktop tab, and of Contact's Shipping and Returns (since 2026-10-22; class bt), styled as Biography's
    always were: 14.5px on a 1.75 line, 0.99vw apart (19px at 1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px
    wide), 1.1em apart; one column (Biography ran in two over 2000px on 2026-10-20 and 21) */
@@ -324,7 +324,7 @@ html { scrollbar-gutter: stable; }
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a three-slide strip, as on Studio: the brush roll,
              the camera set up over the work table, then the three light-box photos side by side; dots under it, a sideways swipe (finger or
-             trackpad) or the left / right arrow keys move between them -->
+             trackpad) or the left / right arrow keys move between them. Since 2026-10-30 the strip is 70% of that size -->
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Process</h2>
@@ -332,7 +332,7 @@ html { scrollbar-gutter: stable; }
         <p>Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
-          <div style="position: relative; width: min(calc((var(--ab-h) - 28px) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))">
+          <div style="position: relative; width: calc(0.7 * min(calc((var(--ab-h) - 28px) * 4 / 3), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px)))">
             <div class="proc-slider" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
               <div style="display: flex; width: 300%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
                 <div style="width: calc(100% / 3); aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
