@@ -301,9 +301,10 @@ html { scrollbar-gutter: stable; }
       </sc-if>
 
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
-      <!-- (since 2026-10-22) the text in one column on the left half, the Tree of Life sculpture filling the right half; paragraphs
-           styled as Biography's on About (class bt) -->
-      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Shipping Policy">
+      <!-- (since 2026-10-22) the text in one column on the left, the Tree of Life sculpture filling the right; paragraphs styled as
+           Biography's on About (class bt). Since 2026-11-01 the box runs out to the nav's edges (the logo's left, the bag icon's right:
+           41.6px further each side than the other tabs) and the text takes 60%, the sculpture 40% -->
+      <div style="min-height: var(--ct-h); margin: 0 -41.6px 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); color: #55524C" data-screen-label="Shipping Policy">
         <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
           <h2 class="ct-head">Shipping Policy</h2>
           <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
