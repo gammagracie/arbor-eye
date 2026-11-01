@@ -51,7 +51,7 @@ html { scrollbar-gutter: stable; }
    and a section whose text needs more room grows to hold it.
    The tab labels 11.5px; headings the body's sans-serif in spaced capitals, as About's */
 :root { --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(51px + var(--tab-fs) * 1.2);
-  --ct-w: calc(100vw - 2 * var(--side-pad) - 83.2px); --ct-h: min(calc(100vh - var(--header-h) - 50px - 28px - var(--tab-h) - 32px), calc(var(--ct-w) * 0.75));
+  --ct-w: calc(100vw - 2 * var(--side-pad));   /* (since 2026-11-01) the nav's full width, logo's left edge to bag icon's right */ --ct-h: min(calc(100vh - var(--header-h) - 50px - 28px - var(--tab-h) - 32px), calc(var(--ct-w) * 0.75));
   --ct-head: clamp(22px, 1.35vw, 70px); }
 .ct-head { margin: 0 0 calc(var(--ct-head) * 0.8) !important; font-family: inherit !important; font-weight: 400; font-size: var(--ct-head) !important; line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; color: #141414; }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
@@ -96,7 +96,7 @@ html { scrollbar-gutter: stable; }
           <a href="works-index.html">Index</a>
           <a href="tol.html">ToL</a>
           <a href="About.dc.html">About</a>
-          <a href="#" style="font-weight: 700; color: #141414">Contact</a>
+          <a href="#" onClick="{{ goPhoto }}" style="font-weight: 700; color: #141414">Contact</a>
         </nav>
       </sc-if>
       <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
@@ -256,8 +256,8 @@ html { scrollbar-gutter: stable; }
   </sc-if>
   </sc-if>
 
-  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph from the B of the logo (41.6px in from its left edge, the same
-       margins as the homepage's painting; since 2026-10-22) to the same distance in from the bag icon, 2:1, or smaller and centred
+  <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph from the logo's left edge to the bag icon's right (the nav's full
+       width since 2026-11-01; 41.6px in from each from 2026-10-22), 2:1, or smaller and centred
        while the row under it stays on screen; in that row the three links (left) and Email / Instagram (right) share one baseline
        (the links 14px), lined up with the photograph's edges. A link swaps the photograph for its content in the same box: Get in
        touch in columns, each centred top to bottom; Shipping (since 2026-10-22) its text in one column on the left half and the Tree
@@ -302,9 +302,8 @@ html { scrollbar-gutter: stable; }
 
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
       <!-- (since 2026-10-22) the text in one column on the left, the Tree of Life sculpture filling the right; paragraphs styled as
-           Biography's on About (class bt). Since 2026-11-01 the box runs out to the nav's edges (the logo's left, the bag icon's right:
-           41.6px further each side than the other tabs) and the text takes 60%, the sculpture 40% -->
-      <div style="min-height: var(--ct-h); margin: 0 -41.6px 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); color: #55524C" data-screen-label="Shipping Policy">
+           Biography's on About (class bt). Since 2026-11-01 the text takes 60%, the sculpture 40% -->
+      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); color: #55524C" data-screen-label="Shipping Policy">
         <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
           <h2 class="ct-head">Shipping Policy</h2>
           <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
@@ -451,6 +450,8 @@ class Component extends DCLogic {
       narrowLayout: !wide, wideLayout: wide,   // desktop layout from 1100px (wide); tablets and phones keep the stacked one
       deskImage: !this.state.deskTab, deskContact: this.state.deskTab === 'contact', deskShipping: this.state.deskTab === 'shipping', deskReturns: this.state.deskTab === 'returns',
       goContact: () => this.goTab('contact'),
+      // desktop nav's Contact (since 2026-11-01): back to Ned's photograph, whatever tab is open
+      goPhoto: e => { e.preventDefault(); this.setState({ tab: 'contact', deskTab: null }); history.replaceState(null, '', location.pathname + location.search); window.scrollTo({ top: 0, behavior: 'instant' }); },
       goShipping: () => this.goTab('shipping'),
       goReturns: () => this.goTab('returns'),
       // contact form: opens the visitor's mail app with the message filled in (no server needed)

@@ -424,6 +424,9 @@ function fit() {
     const bottom = st.top + H / 2 - lift + h / 2, hP = bottom - iconTop;
     if (hP > h && hP * WORKS[slots[0].idx].r <= inner) { h = hP; row.style.top = ((iconTop + bottom) / 2 - st.top).toFixed(1) + 'px'; tallPortrait = true; tallBottom = bottom; }
   }
+  // (since 2026-11-01) one-up portraits (desktop): the work and its hover title 15px lower
+  const down = count === 1 && !phone.matches && slots[0] && slots[0].idx >= 0 && WORKS[slots[0].idx].r < 1 ? 15 : 0;
+  if (down) row.style.top = tallPortrait ? (parseFloat(row.style.top) + down).toFixed(1) + 'px' : 'calc(50% - ' + (lift - down) + 'px)';
   // three-up: the works at 95% of that size, the width this frees widening the two gaps (the row keeps its overall width)
   const h3 = h, gapX = gap;
   row.style.columnGap = count === 3 ? (portraitGap != null ? portraitGap : gapX).toFixed(1) + 'px' : '';
@@ -503,7 +506,7 @@ function fit() {
   const big = grid && document.documentElement.clientWidth >= 2800;
   // hover title: one-up, midway between the bottom of the work and the thumbnails; several works, 25px under the hovered work
   const sb = stage.getBoundingClientRect().bottom, rowBottom = gridTop !== null ? sb - H + gridTop + rowH : tallPortrait ? tallBottom : sb - (H - rowH) / 2 - lift, capH = caption.offsetHeight;
-  capDy = 5 + (count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb);   // (+5: every hover title 5px lower since 2026-10-22)
+  capDy = 5 + (count === 1 ? (rowBottom + track.getBoundingClientRect().top) / 2 - (sb + capH / 2) : rowBottom + (grid ? (big ? 18 : 12) : 25) - (capH - $('capTitle').offsetHeight) / 2 - sb) + down;   // (+5: every hover title 5px lower since 2026-10-22)
   placeCaption();
   // (since 2026-10-20) a work under the pointer keeps the title under it when the layout is redone (an image finishing loading
   // used to send it down under the bottom row, far from the work on a page with an empty last row)
