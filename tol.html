@@ -100,7 +100,7 @@ const VARIANTS = {
   b: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: true },
   // A3 (2026-10-30): A with the ampersand at the letters' height: the tree ends at 74.7% of A's size, centred on the ampersand,
   // which sits 17.8 units further left so the space before it is unchanged; EYE closes up by 35.6
-  a3: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: false, ampK: 0.7473, ampDX: -17.8, ampDY: 0.3, eyeDX: -35.6 },
+  a3: { START: 2.3, ENDS: 2.035, LIFT0: 20, LIFT1: 51, SHIFTX0: -3, END: 5.3, shrink: [2.9, 1.04], swap: [4.2, 1.0], simple: false, fadeTree: false, ampK: 0.7473, ampDX: -17.8, ampDY: 0.3, eyeDX: -35.6, eyeDX0: 30 },
   c: { START: 2.035, ENDS: 2.035, LIFT0: 51, LIFT1: 51, SHIFTX0: 0, END: 6.6, shrink: [2.9, 2.6], swap: [5.5, 1.0], simple: true, fadeTree: false }
 };
 const fetched = {};
@@ -131,7 +131,6 @@ async function playLogo(holder) {
   if (v.ampK) {   // A3: the solid ampersand scaled and moved with the tree, EYE closed up
     const at = 'translate(' + (A.cx + dx) + ' ' + (A.cy + dy) + ') scale(' + k + ') translate(' + (-A.cx) + ' ' + (-A.cy) + ')';
     $('ae-amp').setAttribute('transform', at);   // (its stem, ae-core, is part of the tree and moves with it)
-    $('ae-eye').setAttribute('transform', 'translate(' + v.eyeDX + ' 0)');
   }
   const apply = e => {
     const treeIn = outCubic(seg(e, 0.1, 0.8)), textIn = outCubic(seg(e, 1.0, 2.2)), shrink = inOutSine(seg(e, v.shrink[0], v.shrink[1])), swap = inOutCubic(seg(e, v.swap[0], v.swap[1]));
@@ -140,6 +139,8 @@ async function playLogo(holder) {
     tree.setAttribute('transform', place);
     $('ae-arbor').setAttribute('opacity', textIn.toFixed(3));
     $('ae-eye').setAttribute('opacity', textIn.toFixed(3));
+    // A3 (since 2026-10-31): EYE starts eyeDX0 along, clear of the large ampersand, and slides in to eyeDX as the tree shrinks
+    if (v.ampK) $('ae-eye').setAttribute('transform', 'translate(' + ((v.eyeDX0 ?? v.eyeDX) * (1 - shrink) + v.eyeDX * shrink).toFixed(2) + ' 0)');
     if (simple) {
       simple.setAttribute('transform', place);
       $('ae-tree-e').setAttribute('opacity', (treeIn * (1 - swap)).toFixed(3));
