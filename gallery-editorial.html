@@ -336,6 +336,7 @@ scroller.addEventListener('scroll', parallax, { passive: true });
 // Everything glides slowly (1.5s, easing out). (From 2026-10-24 to 26 the hover was a genie run down the column.)
 const GAP = 30, EDGE = 24;
 const hy = x => parseFloat(getComputedStyle(x).getPropertyValue('--hy')) || 0;   // where its glide stands now
+const pyOf = x => parseFloat(x.style.getPropertyValue('--py')) || 0;   // (since 2026-11-01) its parallax drift now, which settles to 0 once the scroll stops: left out, so the hovered work lands exactly in the middle of the content area
 let active = null, activeBox = null, px = -1, py = -1;
 const inBox = (b, x, y) => b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
 function activate(w) {
@@ -350,9 +351,9 @@ function activate(w) {
   const T = Math.max(Math.max(bw, bh), bh > bw ? 0.85 * T0 : T0);   // (since 2026-10-27) a vertical 15% smaller than that
   const sh = T / Math.max(bw, bh);
   w.style.setProperty('--s', sh.toFixed(4));
-  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w);   // its resting centre
+  const r = w.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - hy(w) - pyOf(w);   // its resting centre
   const shift = mid - cy, eTop = mid - bh * sh / 2, eBot = mid + bh * sh / 2;
-  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x));
+  const above = works.slice(0, i).map(x => x.getBoundingClientRect().bottom - hy(x) - pyOf(x)), below = works.slice(i + 1).map(x => x.getBoundingClientRect().top - hy(x) - pyOf(x));
   const up = above.length ? (eTop - GAP) - Math.max(...above) : 0;
   const down = below.length ? (eBot + GAP) - Math.min(...below) : 0;
   works.forEach((x, j) => x.style.setProperty('--hy', (j < i ? up : j > i ? down : shift).toFixed(1) + 'px'));
