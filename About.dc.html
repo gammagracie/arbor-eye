@@ -557,7 +557,7 @@ class Component extends DCLogic {
       tabJustify: m ? 'center' : 'flex-start',
       tabGap: m ? '24px' : '40px',
       tabs: [['bio', 'Biography'], ['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
-        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); if (!this.state.stack) { const a = document.getElementById('tabs-anchor'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); } },   // desktop: bring the tabs and the chosen section up into view
+        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); if (!this.state.stack) window.scrollTo({ top: 0, behavior: 'instant' }); },   // desktop (since 2026-11-01): the page never jumps; it stays at the top, the footer just below the fold (it used to scroll to the tabs, pulling the footer into view)
         weight: this.state.tab === k ? 700 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       stackAbout: stack, wideAbout: !stack,   // under 1000px the stacked layout with carousels; 1000px and wider the desktop views

@@ -438,7 +438,7 @@ class Component extends DCLogic {
       tabGap: m ? '24px' : '40px',
       // tabs: Contact (default) | Shipping | Returns & Exchanges
       tabs: [['contact', 'Get in touch'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
-        label, selected: tab === k, pick: () => this.setState({ tab: k }),
+        label, selected: tab === k, pick: () => { this.setState({ tab: k }); if (innerWidth >= 1000) window.scrollTo({ top: 0, behavior: 'instant' }); },   // desktop (since 2026-11-01): a tab never leaves the page scrolled; the footer stays just below the fold
         // desktop: a link swaps the photograph for its section; the open link again brings the photograph back
         toggle: () => this.setState({ deskTab: this.state.deskTab === k ? null : k }), deskSelected: this.state.deskTab === k,
         deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#8A867E', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
