@@ -25,6 +25,9 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }   /* the three wordmark options side by side (since 2026-10-30) */
 @media (max-width: 1100px) { .grid.three { grid-template-columns: 1fr; } }
 .grid.small { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 24px; }
+/* a single card centred on the page (since 2026-10-31): the painting card as wide as before (684px), the favicon card 445px */
+.grid.one { grid-template-columns: minmax(0, 684px); justify-content: center; }
+.grid.small.one { grid-template-columns: minmax(0, 445px); }
 .card { border: 1px solid #E7E4DE; background: #FFFFFF; display: grid; grid-template-rows: auto 1fr; }
 .stage { position: relative; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #FDFDFB; border-bottom: 1px solid #E7E4DE; }
 .small .stage { height: 220px; }
@@ -73,7 +76,7 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
     <div class="card"><div class="stage dark"><img class="word-tol" src="uploads/intro-logo-tol-amp.svg" alt=""></div><div class="info"><span class="name">Wide-set text and ToL intro wordmark - dark</span><span class="what">In white, drawn as a vector to maintain sharpness at any size. The ampersand is now the same height as the letters; the leaves rise above them.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol-amp.svg&amp;bg=dark">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol-amp.svg&amp;bg=dark</a></span></div></div>
     <div class="card"><div class="stage white"><img class="word-tol" src="uploads/intro-logo-tol-amp-ink.svg" alt=""></div><div class="info"><span class="name">Wide-set text and ToL intro wordmark - light</span><span class="what">The same wordmark reversed: in ink on a white background.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol-amp-ink.svg">https://gammagracie.github.io/arbor-eye/view.html?f=uploads/intro-logo-tol-amp-ink.svg</a></span></div></div>
     <div class="card">
-      <div class="stage"><div class="ae-holder" data-variant="a3"></div></div>
+      <div class="stage"><div class="ae-holder" data-variant="a3" style="position: relative; top: -40px"></div></div>
       <div class="info">
         <span class="name">A · Tree settles into the ampersand</span>
         <span class="what">The engraved tree fades in large above the wordmark, the letters come up, then the tree shrinks and rises into place and turns into the ampersand, staying behind it. The ampersand now ends the same height as the letters. 5.3 seconds.</span>
@@ -81,11 +84,11 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
       </div>
     </div>
   </div>
-  <div class="grid" style="margin-top: 32px">
+  <div class="grid one" style="margin-top: 32px">
     <div class="card"><div class="stage"><div class="intro still"><span class="word"><img src="uploads/intro-logo-tol-amp.svg" alt=""></span></div></div><div class="info"><span class="name">The same, placed over Brilliance</span><span class="what">The dark version above, with the ampersand at letter height, on its panel over the painting. Currently not shown on the homepage. Let me know if you'd like to see this on top of the homepage carousel. If so, to avoid redundancy, we should probably remove the opening ToL illustration and only show this.</span></div></div>
   </div>
-  <div class="grid small" style="margin-top: 32px">
-    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Current favicon</span><span class="what">The engraved tree and ampersand now in the tab, shown at 16, 32 and 64 pixels on a light and a dark tab bar.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png</a></span></div></div>
+  <div class="grid small one" style="margin-top: 32px">
+    <div class="card"><div class="stage fav-stage"><div class="tabbar light"><img src="assets/favicon.png" alt="" width="16" height="16"><img src="assets/favicon.png" alt="" width="32" height="32"><img src="assets/favicon.png" alt="" width="64" height="64"></div><div class="tabbar dark"><img src="assets/favicon-white.png" alt="" width="16" height="16"><img src="assets/favicon-white.png" alt="" width="32" height="32"><img src="assets/favicon-white.png" alt="" width="64" height="64"></div></div><div class="info"><span class="name">Current favicon</span><span class="what">The engraved tree and ampersand now in the tab, shown at 16, 32 and 64 pixels on a light tab bar, and in white on a dark one.</span><span class="file"><a href="https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png">https://gammagracie.github.io/arbor-eye/view.html?f=assets/favicon.png</a></span></div></div>
   </div>
 </div>
 <script>
