@@ -304,7 +304,7 @@ html { scrollbar-gutter: stable; }
         <!-- Tree of Life: the fresco photo with the two insignia sculptures (since 2026-10-30, 2000 x 1820), 75% of the size that fills the box's height (or leaves the copy its room) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img src="uploads/about/pierodellafrancesca-sculptures.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: calc(0.75 * min(calc(var(--ab-h) * 1.0989), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))); height: auto">
+          <img src="uploads/about/pierodellafrancesca-sculptures.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: calc(0.975 * min(calc(var(--ab-h) * 1.0989), calc(100vw - 2 * var(--side-pad) - 83.2px - var(--ab-gap) - 360px))); height: auto">
           <div style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Tree of Life</h2>
             <div class="ab-copy bt"><p>The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
@@ -323,7 +323,7 @@ html { scrollbar-gutter: stable; }
       <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a three-slide strip, as on Studio: the brush roll,
-             the camera set up over the work table, then the three light-box photos side by side; dots under it, a sideways swipe (finger or
+             the camera and tripod at the end of the work table (landscape, since 2026-11-01), then the three light-box photos side by side; dots under it, a sideways swipe (finger or
              trackpad) or the left / right arrow keys move between them. Since 2026-10-30 the strip is 70% of that size -->
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--ab-measure)">
@@ -338,8 +338,8 @@ html { scrollbar-gutter: stable; }
                 <div style="width: calc(100% / 3); aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
                   <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover">
                 </div>
-                <div style="width: calc(100% / 3); aspect-ratio: 4 / 3; display: flex; justify-content: center" aria-hidden="{{ procDeskHide1 }}">
-                  <img src="uploads/about/process-setup.webp" alt="A camera on a tripod over the work table, with paints, brushes and a painting laid out beneath it" loading="lazy" style="display: block; height: 100%; width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+                <div style="width: calc(100% / 3); aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide1 }}">
+                  <img src="uploads/about/process-table.webp" alt="The camera and tripod at the end of the work table, the painting laid out with paints and brushes" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover">
                 </div>
                 <div style="width: calc(100% / 3); aspect-ratio: 4 / 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(12px, 0.8vw, 40px); align-content: center" aria-hidden="{{ procDeskHide2 }}">
                   <img src="uploads/about/process-lightbox-1.webp" alt="The camera looking down into a light box, a painting inside it" loading="lazy" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover">
@@ -367,33 +367,18 @@ html { scrollbar-gutter: stable; }
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 50px 41.6px 32px">
       <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
-        <!-- Studio (since 2026-10-21): the heading, then a slide strip: the three photos side by side across the box, and to their
-             right the film (as tall as the photos, centred in the box); since 2026-10-24 two more slides with the new process photos for
-             Ned to choose from: the camera over the work table (upright and landscape), then the three light-box photos side by side;
-             dots under the middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->
+        <!-- Studio (since 2026-10-21): the heading, then a two-slide strip (since 2026-11-01; the film and the camera-over-the-table
+             slides came out): the three studio photos side by side across the box, then the three light-box photos; dots under the
+             middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->
         <h2 class="ab-head">Studio</h2>
         <div class="stu-slider" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((100vw - 2 * var(--side-pad) - 83.2px - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
-          <div style="display: flex; width: 400%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
-            <div style="width: 25%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
+          <div style="display: flex; width: 200%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
+            <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
               <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
             </div>
-            <div style="width: 25%; display: flex; justify-content: center" aria-hidden="{{ stuDeskHide1 }}">
-              <div style="position: relative; height: var(--stu-h); width: min(100%, calc(var(--stu-h) * 16 / 9)); overflow: hidden">
-                <img src="uploads/about/video_still.webp" alt="Film still — a painter at an easel in the studio" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
-                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
-                  <span style="width: clamp(76px, 4vw, 180px); height: clamp(76px, 4vw, 180px); border-radius: 50%; background: rgba(253,253,251,0.82); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(20,20,20,0.18)">
-                    <svg viewBox="0 0 24 24" fill="#141414" style="width: 34%; height: 34%"><path d="M8 5.5v13l11-6.5z"></path></svg>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div style="width: 25%; display: flex; justify-content: center; gap: clamp(25px, 1.6vw, 80px)" aria-hidden="{{ stuDeskHide2 }}">
-              <img src="uploads/about/process-setup.webp" alt="A camera on a tripod over the work table, with paints, brushes and a painting laid out beneath it" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
-              <img src="uploads/about/process-table.webp" alt="The camera and tripod at the end of the work table, the painting laid out with paints and brushes" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 4 / 3; object-fit: cover">
-            </div>
-            <div style="width: 25%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide3 }}">
+            <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide1 }}">
               <img src="uploads/about/process-lightbox-1.webp" alt="The camera looking down into a light box, a painting inside it" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/process-lightbox-2.webp" alt="The light box and camera on the table in the evening" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/process-lightbox-3.webp" alt="Down the camera rig to the light box, the painting on the camera's screen" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
@@ -401,7 +386,7 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
         <div style="display: flex; justify-content: center; gap: 12px; padding-top: 20px">
-          <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="4">
+          <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
             <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
@@ -453,7 +438,7 @@ class Component extends DCLogic {
     this.onResize = () => this.measureBio(); window.addEventListener('resize', this.onResize);
     // desktop Studio and Process strips (since 2026-10-21 / 10-24): the left / right arrow keys, and a sideways trackpad swipe over the
     // strip, move one slide (one move per gesture, stopping at the ends; the swipe never turns into the browser's back / forward)
-    const strips = { studio: ['stuDesk', 4], process: ['procDesk', 3] };
+    const strips = { studio: ['stuDesk', 2], process: ['procDesk', 3] };
     const step = (tab, d) => { const [key, n] = strips[tab]; this.setState(s => ({ [key]: Math.max(0, Math.min(n - 1, s[key] + d)) })); };
     this.onKey = e => {
       if (!strips[this.state.tab] || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
@@ -590,7 +575,7 @@ class Component extends DCLogic {
       ...this.car('proc', 2),
       ...this.car('procDesk', 3),   // the desktop Process strip (the stacked layout keeps its two-photo 'proc' carousel)
       ...this.car('stu', 2),   // the stacked layout's Studio carousel
-      ...this.car('stuDesk', 4)   // the desktop Studio strip
+      ...this.car('stuDesk', 2)   // the desktop Studio strip
     };
   }
 }
