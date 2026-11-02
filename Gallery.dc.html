@@ -29,6 +29,9 @@ a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 .work:hover .work-title { opacity: 1 !important; }
+/* (since 2026-11-02) the grid's hovered work: its shadow 170% as dark (0.10 at rest) */
+.work img { transition: box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.work:hover img { box-shadow: 0 8px 24px rgba(20,20,20,0.17) !important; }
 /* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
 .pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
 .zoom-arrow { opacity: 0; transition: opacity 0.2s ease; } .zoombox:hover ~ .zoom-arrow, .zoom-arrow:hover, .zoom-arrow:focus-visible { opacity: 1; }

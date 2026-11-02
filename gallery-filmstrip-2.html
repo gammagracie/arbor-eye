@@ -118,8 +118,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
-.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
-html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth) */
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 0 6px 16px rgba(20,20,20,0.238); }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth); since 2026-11-02 the shadow 170% as dark (0.14 at rest) */
 .art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
