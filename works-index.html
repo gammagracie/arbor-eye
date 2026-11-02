@@ -170,8 +170,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.m-h .idx-row { flex-wrap: nowrap; }
 .idx.m-v > .idx-row, .idx.m-h > .idx-row { margin-block: 0; }   /* Vertical and Horizontal (since 2026-10-29): the rows close under the menus, not centred */
 .idx.m-s .idx-item, .idx.m-v .idx-item, .idx.m-h .idx-item { transform-origin: center center; }   /* (Horizontal's genie too, since 2026-10-30: it swells out on all four sides) */
-/* (since 2026-11-02) one series and Vertical: every hover grows and shrinks in the same 0.5s, quick then settling */
-.idx.m-s .idx-item, .idx.m-v .idx-item { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+/* (since 2026-11-02) one series and Vertical: every hover grows and shrinks the same way, as G5's works do: 0.9s on a gentle
+   ease both ways (0.5s, quick then settling, earlier that day) */
+.idx.m-s .idx-item, .idx.m-v .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
 .idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
@@ -448,13 +449,14 @@ const SERIES_SIZE = { 'Ascent': [6, 1.15], 'Spectrum': [2, 1.35 * 1.2 * 0.9], 'T
 // or down, row2 = the second row that much lower, zoom = the hovered work's size (the growth over 1.075's 7.5%: Ascent 1.25 times,
 // Convergence, Core, Select and Structure 2.5 times, Tonal 1.75 times); Spectrum's columns as far apart as its rows.
 // Since later on 2026-11-02 every series and Vertical share one hover size, Convergence's (ZOOM, 118.75%), and Convergence, Core
-// and Select have their columns twice as far apart (1.5 times before)
+// and Select have their columns twice as far apart (1.5 times before); then Ascent's and Structure's too (1 and 1.5 times before),
+// and Spectrum's hover 80% of that growth (115%)
 const Z = f => 1 + 0.075 * f, ZOOM = Z(2.5);
 const SERIES_TUNE = {
-  'Ascent': { k: 0.9, row2: 20 },
+  'Ascent': { k: 0.9, row2: 20, cx: 2 },
   'Convergence': { k: 1.15, dy: -30, cx: 2 }, 'Core': { k: 1.15, dy: -30, cx: 2 },
-  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 1.5 },
-  'Spectrum': { k: 0.9, cxRow: true },
+  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 2 },
+  'Spectrum': { k: 0.9, cxRow: true, zoom: Z(2.5 * 0.8) },
   'The Turning': { k: 1.15, cx: 2 },
   'Tonal': { dy: -50, cx: 2, cy: 2 }
 };
@@ -504,7 +506,7 @@ function layout() {
     const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
     let h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
                  : Math.min(fit(cols, nr), 2.83 * (v ? 1.5 * H : H));
-    const T = SERIES_TUNE[row.dataset.s] || {}, zoom = ZOOM;
+    const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || ZOOM;
     h *= T.k || 1;
     // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
     let gyS, gxS;
