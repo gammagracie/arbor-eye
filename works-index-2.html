@@ -74,7 +74,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }
 .fm-btn.chosen span { font-weight: 600; }
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
-@media (min-width: 1280px) { .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides */
+@media (min-width: 1280px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow (since 2026-11-02) */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -174,7 +174,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.m-h .idx-row { flex-wrap: nowrap; }
 .idx.m-v > .idx-row, .idx.m-h > .idx-row { margin-block: 0; }   /* Vertical and Horizontal (since 2026-10-29): the rows close under the menus, not centred */
 .idx.m-s .idx-item, .idx.m-v .idx-item, .idx.m-h .idx-item { transform-origin: center center; }   /* (Horizontal's genie too, since 2026-10-30: it swells out on all four sides) */
-.idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(1.075); }   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
+.idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 </style>
@@ -350,7 +350,7 @@ function placeTitle(row) {
     const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
     y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + ((it._sc || 1) - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
-      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + (1.075 - 1) / 2) + TGAP;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward)
+      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((parseFloat(getComputedStyle(it).getPropertyValue('--hz')) || 1.075) - 1) / 2) + TGAP;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward)
   }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
@@ -406,6 +406,9 @@ document.querySelectorAll('.idx-row').forEach(row => {
     if (!fine.matches || flipping) return;
     const it = e.target.closest('.idx-item'); if (!it) return;
     row._hot = it;
+    // (since 2026-11-02) a work the pointer was already resting on when a series finished arriving gets no mouseenter: moving over it
+    // brings its title up all the same
+    if (mode !== 'all' && (title._for !== it || !title.classList.contains('show')) && !titleSwap) it.dispatchEvent(new MouseEvent('mouseenter'));
     if (mode === 'v' || mode === 's') placeTitle(row);   // the enlarged works grow a little from their centres, as G5's grid does (CSS; one series since 2026-11-02, the genie before)
     else genie(row, e.clientX, it);
     row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot');
@@ -419,13 +422,13 @@ document.querySelectorAll('.idx-row').forEach(row => {
     row._hot = item;
     const showIt = () => { title._for = item; title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show'); };
     // (since 2026-10-29) under the works the title never slides from one to the next: it fades out (0.25s), then fades in at the new one
-    clearTimeout(titleSwap);
+    clearTimeout(titleSwap); titleSwap = 0;
     if (mode !== 'all' && title.classList.contains('show') && title._for !== item) {
       title.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)'; title.classList.remove('show');
-      titleSwap = setTimeout(() => { title.style.transition = ''; if (row._hot === item && row.classList.contains('on')) showIt(); }, 250);
+      titleSwap = setTimeout(() => { titleSwap = 0; title.style.transition = ''; if (row._hot === item && row.classList.contains('on')) showIt(); }, 250);
     } else showIt();
   }));
-  row.addEventListener('mouseleave', () => { clearTimeout(titleSwap); title.style.transition = ''; row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
+  row.addEventListener('mouseleave', () => { clearTimeout(titleSwap); titleSwap = 0; title.style.transition = ''; row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
 });
 // ---- (since 2026-10-28) Filters, as on G5: Series (each series, or horizontal / vertical works) and Year, one at a time
 // (choosing one sets the other back to all). A year shows only the matching works, rows left with none hidden. Years come
@@ -443,6 +446,19 @@ const SERIES_ROWS = { 'Convergence': [3, 1, 3] };
 // scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
 // rows of 2 (2026-10-30)
 const SERIES_SIZE = { 'Ascent': [6, 1.15], 'Spectrum': [2, 1.35 * 1.2 * 0.9], 'Tonal': [2, 1.25] };
+// (since 2026-11-02) each series' own adjustments on top of that: k = size, cx / cy = the space between columns / rows, dy = moved up (-)
+// or down, row2 = the second row that much lower, zoom = the hovered work's size (the growth over 1.075's 7.5%: Ascent 1.25 times,
+// Convergence, Core, Select and Structure 2.5 times, Tonal 1.75 times); Spectrum's columns as far apart as its rows
+const Z = f => 1 + 0.075 * f;
+const SERIES_TUNE = {
+  'Ascent': { k: 0.9, zoom: Z(1.25), row2: 20 },
+  'Convergence': { k: 1.15, dy: -30, cx: 1.5, zoom: Z(2.5) }, 'Core': { k: 1.15, dy: -30, cx: 1.5, zoom: Z(2.5) },
+  'Select': { k: 1.15, dy: -30, cx: 1.5, zoom: Z(2.5) }, 'Structure': { k: 1.15, dy: -30, cx: 1.5, zoom: Z(2.5) },
+  'Spectrum': { k: 0.9, cxRow: true },
+  'The Turning': { k: 1.15, cx: 2 },
+  'Tonal': { dy: -50, cx: 2, cy: 2, zoom: Z(1.75) }
+};
+const VERT_TUNE = { cx: 1.5, zoom: Z(1.5) };   // Vertical: the columns 1.5 times as far apart, the hover 150% of its growth
 const thumbH = () => Math.min(197, Math.max(42, innerWidth * 0.05133));   // --idx-h
 // (since 2026-10-29) all series: the series name rides up onto the Series / Year menus' line, and the rows sit low enough that the
 // first row's genie (150%, growing upward) stays 12px clear of it
@@ -486,31 +502,40 @@ function layout() {
     const fit = (c, k) => Math.min((aw * 0.9 - (c - 1) * gx) / c / r, (ah * 0.94 - (k - 1) * gy - TGAP - th) / k);
     const sz = SERIES_SIZE[row.dataset.s];
     const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
-    const h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
+    let h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
                  : Math.min(fit(cols, nr), 2.83 * (v ? 1.5 * H : H));
-    set(row, v ? h / 1.5 : h, cols, h * r, gx, gy);
-    const rw = cols * h * r + (cols - 1) * gx + 1;
+    const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || 1.075;
+    h *= T.k || 1;
+    // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
+    let gyS = Math.max(gy * (T.cy || 1), (zoom - 1) / 2 * h + TGAP + th + 6) + (T.row2 || 0);
+    const gxS = T.cxRow ? gyS : gx * (T.cx || 1);
+    set(row, v ? h / 1.5 : h, cols, h * r, gxS, gyS);
+    row.style.setProperty('--hz', zoom);
+    const rw = cols * h * r + (cols - 1) * gxS + 1;
     if (rw > aw) row.style.marginLeft = row.style.marginRight = ((aw - rw) / 2).toFixed(1) + 'px';   // wider than the content: still centred
     if (split) {   // a shorter row is held in by equal margins on its outer works, so it breaks where it should, centred
       let i = 0;
-      split.forEach(k => { const pad = ((cols - k) * (h * r + gx) / 2).toFixed(2) + 'px'; items[i].style.marginLeft = pad; items[i + k - 1].style.marginRight = pad; i += k; });
+      split.forEach(k => { const pad = ((cols - k) * (h * r + gxS) / 2).toFixed(2) + 'px'; items[i].style.marginLeft = pad; items[i + k - 1].style.marginRight = pad; i += k; });
     }
     // (since 2026-10-30) the last row's works grow upward from their base, so their titles stay on screen
     items.forEach(a => a.classList.toggle('lastrow', a.offsetTop === items[n - 1].offsetTop));
+    // moved up (SERIES_TUNE dy): from its centred place, never closer than its usual gap under the series name
+    if (T.dy) { const rh = row.offsetHeight; row.style.marginTop = Math.max(0, (ah - rh) / 2 + T.dy).toFixed(1) + 'px'; row.style.marginBottom = 'auto'; }
   } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
     // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
     // (later that day) the gap between the two series the same as between Ascent's rows, and the white space between the menus
     // and the first row halved
     // (never closer than a title under a swollen work needs)
-    const ry = Math.max(gy * 0.75, 0.0375 * 3 * H + TGAP + th + 6), sy = ry, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
+    const gxV = gx * VERT_TUNE.cx, zV = VERT_TUNE.zoom;
+    const ry = Math.max(gy * 0.75, (zV - 1) / 2 * 3 * H + TGAP + th + 6), sy = ry, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
     const most = Math.max(...ns.map(n => Math.min(6, n))), nr = ns.reduce((a, n) => a + Math.ceil(n / 6), 0);
     const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;   // where a row would start
     const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
     const top = fb + (flow + H * 0.1 - fb) / 2;
-    const ah = innerHeight - top - 16, hov = 1 + (1.075 - 1) / 2;   // (16px clear under the last title)
-    const h = Math.min(3 * H, (aw * 0.95 - (most - 1) * gx) / most * 1.5,
+    const ah = innerHeight - top - 16, hov = 1 + (zV - 1) / 2;   // (16px clear under the last title)
+    const h = Math.min(3 * H, (aw * 0.95 - (most - 1) * gxV) / most * 1.5,
       (ah - (nr - shown.length) * ry - (shown.length - 1) * sy - TGAP - th) / (nr - 1 + hov));
-    shown.forEach((row, k) => { const cols = Math.min(6, ns[k]); set(row, h / 1.5, cols, h * 2 / 3, gx, ry); });
+    shown.forEach((row, k) => { const cols = Math.min(6, ns[k]); set(row, h / 1.5, cols, h * 2 / 3, gxV, ry); row.style.setProperty('--hz', zV); });
     idx.style.gap = sy.toFixed(1) + 'px';
     shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
   } else {   // Horizontal: each series still one row, 25% larger (less if the longest row would not fit), a little apart
