@@ -73,6 +73,10 @@ html { scrollbar-gutter: stable; }
 @keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
 @keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
 @keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
+/* (since 2026-11-02) the replay button on a film that plays once: bottom-right over the film, a 36px white circle */
+.film-replay { position: absolute; right: 12px; bottom: 12px; width: 36px; height: 36px; border-radius: 9999px; border: none; padding: 0; background: rgba(255, 255, 255, 0.9); color: #1C1C1C; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; opacity: 0.85; transition: opacity 0.2s ease, transform 0.2s ease; }
+.film-replay:hover { opacity: 1; transform: rotate(-30deg); }
+.film-replay svg { display: block; }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -667,7 +671,19 @@ class Component extends DCLogic {
     const zI = vid && this.state.zoomVid ? views.length : this.state.detailView;   // the zoom view's slide (its film last, since 2026-11-02)
     const zGo = i => this.setState(i === views.length ? { zoomVid: true, zoomLevel: 1 } : { detailView: i, zoomVid: false });
     const pcGo = i => this.setState(i === views.length ? { printVid: true } : { frame: views[i][0], printVid: false });
-    const film = (style, onClick) => React.createElement('video', { key: d.video, onClick, src: d.video + '.mp4', poster: d.video + '.jpg', autoPlay: true, loop: !FILM_ONCE.includes(d.video), muted: true, playsInline: true, 'aria-label': d.title + ', framed, in a room', ref: v => { if (v && !v.ended) { v.muted = true; const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ display: 'block' }, style) });
+    const filmEl = (style, onClick) => React.createElement('video', { key: d.video, onClick, src: d.video + '.mp4', poster: d.video + '.jpg', autoPlay: true, loop: !FILM_ONCE.includes(d.video), muted: true, playsInline: true, 'aria-label': d.title + ', framed, in a room', ref: v => { if (v && !v.ended) { v.muted = true; const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ display: 'block' }, style) });
+    // (since 2026-11-02) a film that plays once has a replay button over its bottom-right corner (a circular arrow in a white circle);
+    // it starts the film again from the beginning
+    const film = (style, onClick) => {
+      if (!FILM_ONCE.includes(d.video)) return filmEl(style, onClick);
+      const fill = style.position === 'absolute';   // the buy page's wall: the film fits the wall's height, centred, so the button sits on its corner
+      const replay = React.createElement('button', { className: 'film-replay', 'aria-label': 'Play the film again', onClick: (e) => { e.stopPropagation(); const v = e.currentTarget.parentNode.querySelector('video'); if (v) { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } } },
+        React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' },
+          React.createElement('path', { d: 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8' }), React.createElement('path', { d: 'M3 3v5h5' })));
+      const inner = React.createElement('span', { style: fill ? { position: 'relative', display: 'block', height: '100%' } : { position: 'relative', display: 'inline-block', flex: 'none', lineHeight: 0 } },
+        filmEl(fill ? { height: '100%', width: 'auto', maxWidth: '100%' } : style, onClick), replay);
+      return fill ? React.createElement('div', { key: d.video, style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, inner) : React.createElement('span', { key: d.video, style: { display: 'contents' } }, inner);
+    };
     const vertical = this.state.series === 'Vertical';
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
     const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
