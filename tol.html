@@ -189,5 +189,12 @@ document.querySelectorAll('.replay').forEach(b => b.addEventListener('click', ()
   if (h) playLogo(h); else playIntro();
 }));
 </script>
+<!-- back-idx -->
+<script>/* (since 2026-11-02) "Back to index" at the top centre: this page is listed on homepages.html and old-pages.html; the link returns to the list that opened it (homepages.html otherwise) */
+(function () { var a = document.createElement('a'); a.href = /old-pages\.html/.test(document.referrer || '') ? 'old-pages.html' : 'homepages.html'; a.textContent = '\u2190 Back to index';
+  a.style.cssText = 'position: fixed; top: 6px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 4px 8px; background: rgba(253,253,251,0.9); font: 400 11px/1.2 "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: #6E6B66; text-decoration: none';
+  document.body.appendChild(a); })();
+</script>
+<!-- /back-idx -->
 </body>
 </html>

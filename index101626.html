@@ -57,5 +57,12 @@ h2 { margin: 56px 0 16px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 
   <p class="note">The page layouts, type and behaviour are exactly as they were that day. The artwork images are today's files: the gallery images were rebuilt from Ned's full-size scans on 19 October, so a painting may look slightly sharper or be framed slightly differently than it did on the 16th. <a href="index.html">Back to the current site</a>.</p>
 </div>
+<!-- back-idx -->
+<script>/* (since 2026-11-02) "Back to index" at the top centre: this page is listed on homepages.html and old-pages.html; the link returns to the list that opened it (homepages.html otherwise) */
+(function () { var a = document.createElement('a'); a.href = /old-pages\.html/.test(document.referrer || '') ? 'old-pages.html' : 'homepages.html'; a.textContent = '\u2190 Back to index';
+  a.style.cssText = 'position: fixed; top: 6px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 4px 8px; background: rgba(253,253,251,0.9); font: 400 11px/1.2 "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: #6E6B66; text-decoration: none';
+  document.body.appendChild(a); })();
+</script>
+<!-- /back-idx -->
 </body>
 </html>
