@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Artwork by Ned Church</title>
+<!-- H4 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
+     painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
+     quietest top-to-bottom paths, the drawn shapes, rough edges and paper border untouched); the frame as tall as the
+     homepage's and correspondingly wider, past the nav lines where need be, but at least 40px in from the screen's edges -->
 <!-- H2 (homepage trial): on desktop, the main image fills the visible area exactly (sides on the nav lines, 25px clear above and below), the painting cropped to that shape inside a thin paper edge; tablet and phones as the homepage -->
 <!-- homepage: the artwork 12% more saturated (main image and thumbnails); Dock-style ("genie") thumbnail magnification, each thumbnail growing from its centre -->
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
@@ -47,11 +51,12 @@ html { scrollbar-gutter: stable; }
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
-  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ headPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
     <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
+          <a href="old-pages.html" aria-label="Older pages">&lt;--</a>
           <a href="h1.html">H1</a>
           <a href="h2.html">H2</a>
           <a href="h3.html">H3</a>
@@ -89,6 +94,7 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
+  <a href="old-pages.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7" aria-label="Older pages">&lt;--</a>
   <a href="h1.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H1</a>
   <a href="h2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H2</a>
   <a href="h3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H3</a>
@@ -119,7 +125,7 @@ html { scrollbar-gutter: stable; }
       {{ heroImg }}
       <img src="uploads/arbor-mark-white.svg" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ introTreeOpacity }}; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); pointer-events: none">
       <!-- intro wordmark (since 2026-10-19 at 75% of its earlier size, 48.5% of the image's width) on a 16% black panel (65% of the earlier 25%, since 2026-10-24); the panel's padding scales with the image (since 2026-10-20 the panel 20% smaller each way, the lettering unchanged: 2.87% of the image's width above and below, 2.28% beyond the lettering at the sides); the panel fades with the wordmark -->
-      <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48.53%; padding: 2.87% 2.28%; background: rgba(0, 0, 0, 0.1625); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
+      <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 45.45%; padding: 2.69% 2.14%; background: rgba(0, 0, 0, 0.1625); line-height: 0; opacity: {{ introOpacity }}; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none"><img src="uploads/intro-logo-spaced.png" alt="" style="display: block; width: 100%; height: auto"></span>
     </a>
     <div data-rail onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" onMouseEnter="{{ railEnter }}" onMouseLeave="{{ railLeave }}" style="position: relative; margin-top: {{ railMargin }}; transform: {{ railNudge }}; display: flex; align-items: {{ railAlign }}; justify-content: {{ railJustify }}; gap: {{ railGap }}; touch-action: pan-y">
       <button onClick="{{ prev }}" aria-label="Previous artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftL }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; margin-left: {{ prevMargin }}; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
@@ -163,16 +169,16 @@ class Component extends DCLogic {
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
-    { src: 'assets/home-v2/brilliance.jpg', thumb: 'assets/thumbs/select_brilliance.jpg', baked: true, fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
-    { src: 'assets/home-v2/symbiosis.jpg', thumb: 'assets/thumbs/core_symbiosis.jpg', baked: true, fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
-    { src: 'assets/home-v2/emergence.jpg', thumb: 'assets/thumbs/core_emergence-no-dedication.jpg', baked: true, fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
-    { src: 'assets/home-v2/script.jpg', thumb: 'assets/thumbs/core_script.jpg', baked: true, fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
+    { src: 'assets/home-h4/brilliance.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/select_brilliance.jpg', baked: true, fit: [0.118, 0.878, 0.170, 0.830], title: 'Brilliance', tag: 'Light reveals what was always there.', alt: 'Brilliance: Light reveals what was always there.' }, // first, per Ned
+    { src: 'assets/home-h4/symbiosis.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_symbiosis.jpg', baked: true, fit: [0.120, 0.883, 0.188, 0.818], cropped: 'assets/art-1.png', title: 'Symbiosis', tag: 'Distinct forms exist through mutual relationships.', alt: 'Symbiosis: Distinct forms exist through mutual relationships.' },
+    { src: 'assets/home-h4/emergence.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_emergence-no-dedication.jpg', baked: true, fit: [0.117, 0.882, 0.172, 0.828], cropped: 'assets/art-2.png', title: 'Emergence', tag: 'Variation gives rise to complexity.', alt: 'Emergence: Variation gives rise to complexity.' },
+    { src: 'assets/home-h4/script.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_script.jpg', baked: true, fit: [0.118, 0.882, 0.177, 0.828], cropped: 'assets/art-3.png', title: 'Script', tag: 'Repeated strokes form a visual language.', alt: 'Script: Repeated strokes form a visual language.' },
     { src: 'assets/works/core_articulation.jpg', fit: [0.165, 0.800, 0.323, 0.632], cropped: 'assets/art-4.png', title: 'Articulation', tag: 'Individual forms define a shared rhythm.', alt: 'Articulation: Individual forms define a shared rhythm.', hidden: true }, // Ned does not want it shown
-    { src: 'assets/home-v2/habitat.jpg', thumb: 'assets/thumbs/core_habitat.jpg', baked: true, fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
-    { src: 'assets/home-v2/chamber.jpg', thumb: 'assets/thumbs/core_chamber.jpg', baked: true, fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
-    { src: 'assets/home-v2/affinity.jpg', thumb: 'assets/thumbs/core_affinity.jpg', baked: true, fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
-    { src: 'assets/home-v2/conduit.jpg', thumb: 'assets/thumbs/core_conduit.jpg', baked: true, fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
-    { src: 'assets/home-v2/upwelling.jpg', thumb: 'assets/thumbs/core_upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
+    { src: 'assets/home-h4/habitat.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_habitat.jpg', baked: true, fit: [0.122, 0.882, 0.177, 0.823], cropped: 'assets/art-5.png', title: 'Habitat', tag: 'Living forms establish a shared environment.', alt: 'Habitat: Living forms establish a shared environment.' },
+    { src: 'assets/home-h4/chamber.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_chamber.jpg', baked: true, fit: [0.122, 0.877, 0.185, 0.823], cropped: 'assets/art-6.png', title: 'Chamber', tag: 'Defined spaces establish internal relationships.', alt: 'Chamber: Defined spaces establish internal relationships.' },
+    { src: 'assets/home-h4/affinity.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_affinity.jpg', baked: true, fit: [0.117, 0.880, 0.175, 0.833], cropped: 'assets/art-7.png', title: 'Affinity', tag: 'Related forms create a unified field.', alt: 'Affinity: Related forms create a unified field.' },
+    { src: 'assets/home-h4/conduit.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_conduit.jpg', baked: true, fit: [0.108, 0.892, 0.163, 0.823], title: 'Conduit', tag: 'Pathways connect a shared structure.', alt: 'Conduit: Pathways connect a shared structure.' },
+    { src: 'assets/home-h4/upwelling.jpg', ratio: 3418 / 1934, thumb: 'assets/thumbs/core_upwelling.jpg', baked: true, paint: [0.075, 0.927, 0.090, 0.910], title: 'Upwelling', tag: 'Parallel forms organize a living field.', alt: 'Upwelling: Parallel forms organize a living field.' }
   ].filter(a => !a.hidden);
   go(d) { this.show((this.state.index + d + this.arts.length) % this.arts.length); }
   // Dock-style magnification, the "genie", as on G5 (since 2026-10-29): the thumbnail under the cursor grows most (150%),
@@ -384,7 +390,8 @@ class Component extends DCLogic {
       : VARIANT === '0a2' ? (() => {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
-          return { w: 'min(calc(100% - 83.2px), calc(' + capH + ' * 1.655))', h: 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ')', ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
+          const R = this.arts[i].ratio || 1.655, hh = 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ', calc((100vw - 80px) / ' + R.toFixed(4) + '))';   // H2: the homepage's height, the wider painting's width
+          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
@@ -420,6 +427,7 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
+      headPad: VF ? '0 min(12%, calc((100% - ' + VF.w + ') / 2))' : '0 var(--side-pad)',   // H4: the header's edges on the painting's, at most 12% in
       heroLift: desk && !VF ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
       heroPaper: 'none',   // H2: a thin edge of Ned's paper round the cropped painting
       heroFrameShadow: 'none',
