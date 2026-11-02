@@ -170,7 +170,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.m-h .idx-row { flex-wrap: nowrap; }
 .idx.m-v > .idx-row, .idx.m-h > .idx-row { margin-block: 0; }   /* Vertical and Horizontal (since 2026-10-29): the rows close under the menus, not centred */
 .idx.m-s .idx-item, .idx.m-v .idx-item, .idx.m-h .idx-item { transform-origin: center center; }   /* (Horizontal's genie too, since 2026-10-30: it swells out on all four sides) */
-.idx.m-v .idx-item.hot { transform: scale(1.075); }   /* (1.03 until 2026-10-29) */
+.idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(1.075); }   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 </style>
@@ -346,7 +346,7 @@ function placeTitle(row) {
     const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
     y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + ((it._sc || 1) - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
-      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((mode === 's' ? (it._sc || 1) : 1.075) - 1) / 2) + TGAP;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward)
+      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + (1.075 - 1) / 2) + TGAP;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward)
   }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
@@ -402,8 +402,8 @@ document.querySelectorAll('.idx-row').forEach(row => {
     if (!fine.matches || flipping) return;
     const it = e.target.closest('.idx-item'); if (!it) return;
     row._hot = it;
-    if (mode === 'v') placeTitle(row);   // the enlarged works grow a little, as G5's grid does (CSS)
-    else genie(row, e.clientX, it, mode === 's' ? HOV_S - 1 : PEAK);   // (one series since 2026-11-01: the genie, peaking at its old 130% hover size)
+    if (mode === 'v' || mode === 's') placeTitle(row);   // the enlarged works grow a little from their centres, as G5's grid does (CSS; one series since 2026-11-02, the genie before)
+    else genie(row, e.clientX, it);
     row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot');
   });
   row.addEventListener('mouseleave', () => { settle(row); row._titleShift = 0; });
