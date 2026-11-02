@@ -217,11 +217,13 @@ html { scrollbar-gutter: stable; }
       <div onClick="{{ procTap }}" onTouchStart="{{ procTouchStart }}" onTouchEnd="{{ procTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ procD0 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ procD1 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and finished postcards laid out on the table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD2 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted autoplay loop playsinline preload="metadata" aria-label="Peeling the tape from a finished painting on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD3 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted autoplay loop playsinline preload="metadata" aria-label="Peeling the tape from a painting and lifting it from its mount" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ procPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
-          <sc-for list="{{ procDots }}" as="d" hint-placeholder-count="2">
+          <sc-for list="{{ procDots }}" as="d" hint-placeholder-count="4">
             <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 10.5px; height: 10.5px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
@@ -324,7 +326,8 @@ html { scrollbar-gutter: stable; }
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a strip, as on Studio: since 2026-11-01 two slides, the brush roll, then
              the camera and tripod at the end of the work table (the three light-box photos came out; more to come); dots under it, a sideways swipe (finger or
-             trackpad) or the left / right arrow keys move between them. Since 2026-10-30 the strip is 70% of that size -->
+             trackpad) or the left / right arrow keys move between them. Since 2026-10-30 the strip is 70% of that size. Since 2026-11-02 two
+             films follow the photos (tape peeled from two paintings, `_incoming/process-videos-compressed`, cropped to 4:3, muted, looping) -->
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--proc-text)">
             <h2 class="ab-head">Process</h2>
@@ -334,19 +337,25 @@ html { scrollbar-gutter: stable; }
           </div>
           <div style="position: relative; width: min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - var(--ab-gap) - var(--proc-text)))">
             <div class="proc-slider" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
-              <div style="display: flex; width: 200%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
-                <div style="width: 50%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
+              <div style="display: flex; width: 400%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
+                <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
                   <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover">
                 </div>
-                <div style="width: 50%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide1 }}">
+                <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide1 }}">
                   <img src="uploads/about/process-table.webp" alt="The camera and tripod at the end of the work table, the painting laid out with paints and brushes" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover">
+                </div>
+                <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide2 }}">
+                  <video class="ab-film" src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted autoplay loop playsinline preload="metadata" aria-label="Peeling the tape from a finished painting on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
+                </div>
+                <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide3 }}">
+                  <video class="ab-film" src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted autoplay loop playsinline preload="metadata" aria-label="Peeling the tape from a painting and lifting it from its mount" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
                 </div>
               </div>
             </div>
             <!-- (the 1px clip at each side hides the hairline of the neighbouring slide the fractional track width lets through) -->
             <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
             <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; padding-top: 20px">
-              <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="2">
+              <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="4">
                 <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
               </sc-for>
             </div>
@@ -419,6 +428,7 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
+    setTimeout(() => this.playFilms(), 0);
     // #biography / #tree / #process / #studio deep links open that tab (Biography is the one on landing)
     const pick = () => { const h = location.hash.slice(1); if (h === 'biography') this.setState({ tab: 'bio' }); else if (['tree', 'process', 'studio'].includes(h)) this.setState({ tab: h }); };
     pick(); this.onHash = pick; window.addEventListener('hashchange', this.onHash);
@@ -433,7 +443,7 @@ class Component extends DCLogic {
     this.onResize = () => this.measureBio(); window.addEventListener('resize', this.onResize);
     // desktop Studio and Process strips (since 2026-10-21 / 10-24): the left / right arrow keys, and a sideways trackpad swipe over the
     // strip, move one slide (one move per gesture, stopping at the ends; the swipe never turns into the browser's back / forward)
-    const strips = { studio: ['stuDesk', 2], process: ['procDesk', 2] };
+    const strips = { studio: ['stuDesk', 2], process: ['procDesk', 4] };
     const step = (tab, d) => { const [key, n] = strips[tab]; this.setState(s => ({ [key]: Math.max(0, Math.min(n - 1, s[key] + d)) })); };
     this.onKey = e => {
       if (!strips[this.state.tab] || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
@@ -453,7 +463,9 @@ class Component extends DCLogic {
     window.addEventListener('wheel', this.onWheel, { passive: false });
     if (document.fonts) document.fonts.ready.then(() => this.measureBio());
   }
-  componentDidUpdate() { this.measureBio(); }
+  componentDidUpdate() { this.measureBio(); this.playFilms(); }
+  // (since 2026-11-02) the Process films: muted (so they may play on their own), looping
+  playFilms() { document.querySelectorAll('video.ab-film').forEach(v => { v.muted = true; if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } }); }
   // Biography opener: the heading and copy are centred on the photo unless they are more than 80px taller than it; then
   // (shorter, narrower screens) the two line up at the top instead, so the photo is not pushed down under the pinned tabs
   measureBio() {
@@ -567,8 +579,8 @@ class Component extends DCLogic {
       quoteMarkBottom: m ? '-4px' : '16px',
       headingSize: m ? '24px' : '30px',
       ...this.car('bio', 2),
-      ...this.car('proc', 2),
-      ...this.car('procDesk', 2),   // the desktop Process strip (the stacked layout keeps its two-photo 'proc' carousel)
+      ...this.car('proc', 4),
+      ...this.car('procDesk', 4),   // the desktop Process strip (the stacked layout keeps its 'proc' crossfade carousel; both since 2026-11-02 end with the two films)
       ...this.car('stu', 2),   // the stacked layout's Studio carousel
       ...this.car('stuDesk', 2)   // the desktop Studio strip
     };

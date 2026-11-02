@@ -249,7 +249,7 @@ html { scrollbar-gutter: stable; }
       </div>
       <div style="display: grid; grid-template-columns: {{ printCols }}; gap: {{ printColGap }}; align-items: {{ printAlign }}; container-type: inline-size">
         <div class="print-car" style="order: {{ printMainOrder }}; position: relative">
-          <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
+          <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="position: relative; background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
             {{ printImg }}
           </div>
           <button class="pc-arrow" onClick="{{ pcPrev }}" aria-label="Previous framing view" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
@@ -333,6 +333,9 @@ html { scrollbar-gutter: stable; }
 }">
 // Works whose details differ from the default (watercolour on paper; every original is 4 x 6 in, set by orientation below)
 const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spectrum': 5, 'Structure': 6, 'The Turning': 7, 'Tonal': 8 };
+// (since 2026-11-02) works with a short film of the framed print in a room: the last slide of the buy page's framing carousel and
+// its lightbox (cropped to the picture, muted, looping; from `Videos/Archive 2.zip`)
+const VIDEOS = ['ascent_living-current.jpg', 'structure_framework.jpg', 'ascent_inner-eclipse.jpg', 'structure_within.jpg'];
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
   'Brilliance': { medium: 'Acrylic and pastel on canvas', desc: 'Light reveals what was always there' },
@@ -423,6 +426,7 @@ class Component extends DCLogic {
     hidden: !!hidden || s === 'Outliers',   // (since 2026-10-24 the Outliers are hidden from the site for now)
     orient: vertical ? 'Vertical' : 'Horizontal',
     src: 'assets/works-m70/' + f,
+    video: VIDEOS.includes(f) ? 'assets/videos/' + f.replace('.jpg', '') : null,   // (+ .mp4 / .jpg poster)
     title: t,
     series: s,
     avail: 'Available',
@@ -562,8 +566,9 @@ class Component extends DCLogic {
     this.onKey = (e) => {
       if (this.state.lightbox) {
         if (e.key === 'Escape') this.setState({ lightbox: false });
-        if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + 2) % 3 }));
-        if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % 3 }));
+        const n = 3 + (this.arts[this.state.sel] && this.arts[this.state.sel].video ? 1 : 0);   // (a work's film is a fourth slide)
+        if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + n - 1) % n }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % n }));
       } else if (e.key === 'Escape' && this.state.openMenu) this.setState({ openMenu: null });
       else if (this.state.zoom) {
         if (e.key === 'Escape') this.setZoom(false);
@@ -644,6 +649,11 @@ class Component extends DCLogic {
     const framed = (f, sh = wallShadow) => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: sh } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + sh });
     const printShadow = '0 13.5px 54px rgba(20,20,20,0.45)';   // the buy (print) page and the original's detail image (since 2026-10-21): 2.25 times the wall shadow (three times, then 75% of that)
     const d = sel != null ? this.arts[sel] : null;
+    // the framing carousels' slides: the three framing views, then the work's film where it has one (since 2026-11-02)
+    const vid = !!(d && d.video), nPc = views.length + (vid ? 1 : 0);
+    const pcI = vid && this.state.printVid ? views.length : Math.max(0, views.findIndex(v => v[0] === frame));
+    const pcGo = i => this.setState(i === views.length ? { printVid: true } : { frame: views[i][0], printVid: false });
+    const film = (style, onClick) => React.createElement('video', { key: d.video, onClick, src: d.video + '.mp4', poster: d.video + '.jpg', autoPlay: true, loop: true, muted: true, playsInline: true, 'aria-label': d.title + ', framed, in a room', ref: v => { if (v) { v.muted = true; const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ display: 'block' }, style) });
     const vertical = this.state.series === 'Vertical';
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
     const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
@@ -715,7 +725,7 @@ class Component extends DCLogic {
         if (fromOtherPage && history.length > 1) { history.back(); return; }
         document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false });
       },
-      openPrint: () => { this.setState({ printView: true }); window.scrollTo(0, 0); },
+      openPrint: () => { this.setState({ printView: true, printVid: false }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
       // buy page, desktop (the same proportions at every screen size): the wall about 61% of the content width and a little taller
       // than wide, the print filling it inside a 12.5% margin, a 6% gap, then the text column, centred on the wall's height
@@ -735,33 +745,33 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) }),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
+      printImg: d && (vid && this.state.printVid ? film(m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) : React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) })),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
       // frame swatches
       frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
-        pick: () => this.setState({ frame: f }), aria: f === 'none' ? 'Unframed' : f + ' frame',
+        pick: () => this.setState({ frame: f, printVid: false }), aria: f === 'none' ? 'Unframed' : f + ' frame',
         swatchDisplay: c ? 'block' : 'none', textDisplay: c ? 'none' : 'block', color: c || 'transparent', caret: frame === f ? 1 : 0
       })),
       frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : 'Black',
       mountLabel: frame === 'none' ? 'None' : 'Reveal',
       // lightbox carousel of the framing views
       lightboxOpen: this.state.lightbox,
-      openLightbox: () => this.setState({ lightbox: true, lbIndex: Math.max(0, views.findIndex(v => v[0] === frame)) }),
+      openLightbox: () => this.setState({ lightbox: true, lbIndex: pcI }),
       // the buy page's print: arrows and dots step through the framing views (the frame colour choice follows)
-      pcPrev: (e) => { e.stopPropagation(); const i = Math.max(0, views.findIndex(v => v[0] === frame)); this.setState({ frame: views[(i + views.length - 1) % views.length][0] }); },
-      pcNext: (e) => { e.stopPropagation(); const i = Math.max(0, views.findIndex(v => v[0] === frame)); this.setState({ frame: views[(i + 1) % views.length][0] }); },
-      pcDots: views.map(([f, label]) => ({ pick: (e) => { e.stopPropagation(); this.setState({ frame: f }); }, aria: label, bg: f === frame ? '#141414' : '#C9C5BD' })),
+      pcPrev: (e) => { e.stopPropagation(); pcGo((pcI + nPc - 1) % nPc); },
+      pcNext: (e) => { e.stopPropagation(); pcGo((pcI + 1) % nPc); },
+      pcDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); pcGo(i); }, aria: label, bg: i === pcI ? '#141414' : '#C9C5BD' })),
       // the zoom view: the same for the original's framing views
       zoomPrev: () => this.setState(s => ({ detailView: (s.detailView + views.length - 1) % views.length })),
       zoomNext: () => this.setState(s => ({ detailView: (s.detailView + 1) % views.length })),
       zoomDots: views.map(([f, label], i) => ({ pick: () => this.setState({ detailView: i }), aria: label, bg: i === this.state.detailView ? '#141414' : '#C9C5BD' })),
       closeLightbox: () => this.setState({ lightbox: false }),
       lbStop: (e) => e.stopPropagation(),
-      lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + views.length - 1) % views.length })); },
-      lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % views.length })); },
-      lbDots: views.map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
-      lbLabel: views[this.state.lbIndex][1],
+      lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + nPc - 1) % nPc })); },
+      lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % nPc })); },
+      lbDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
+      lbLabel: (views[this.state.lbIndex] || [0, 'Film'])[1],
       // sized from the image's own ratio so it fills the overlay without distortion
-      lightboxImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + this.side(e)) % 3 })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + 3) % 3 }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) }),
+      lightboxImg: d && (vid && this.state.lbIndex === views.length ? film({ height: 'min(80vh, 1600px)', width: 'auto', maxWidth: '86vw', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }, (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + nPc) % nPc }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) })),
       hasDesc: !!(d && d.desc),
       printPrice: ['$225', '$595', '$1,195'][this.state.size],
       sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
