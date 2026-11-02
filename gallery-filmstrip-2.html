@@ -80,7 +80,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }   /* the chosen option in black, bold (since 2026-10-23; it was a paler grey) */
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
-@media (min-width: 1280px) { .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides */
+@media (min-width: 1280px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow, YEAR's right edge on YEAR's */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -473,7 +473,13 @@ function fit() {
     const gridW = a => boxR * nc * a + GC(a) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
     let a = sizeFor(inner, V);
-    if (cx + gridW(a) / 2 + 24 > fs.left) {
+    if (!tab.matches) {
+      // desktop (since 2026-11-02): SERIES and YEAR stay side by side, the SERIES list opening rightwards from its arrow and
+      // YEAR's leftwards from its right edge (CSS); where the works would come within 24px of either, the grid narrows to clear it
+      const listW = parseFloat(getComputedStyle(filters.querySelector('.fm-list')).width) || 0;
+      const menusLeft = Math.min(fs.left, fy.right - listW);
+      if (cx + gridW(a) / 2 + 24 > menusLeft) a = sizeFor(2 * (menusLeft - 24 - cx), V);
+    } else if (cx + gridW(a) / 2 + 24 > fs.left) {
       filters.classList.add('stacked');
       const stackLeft = fy.right - Math.max(fs.width, fy.width);
       if (cx + gridW(a) / 2 + 24 > stackLeft) {
