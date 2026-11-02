@@ -703,8 +703,9 @@ function centreOn(b, instant) {
 // neighbours slide aside, and the thumbnail under the cursor stays under it.
 const PEAK = 0.5;              // +50% at the cursor
 function magnify(x) {
-  const left = strip.getBoundingClientRect().left - pos;   // screen x of the track's origin
   const btns = [...track.children];
+  // screen x of the buttons' offset origin, from the track itself (already slid by pos): a short strip is centred, so not the strip's edge
+  const left = track.getBoundingClientRect().left + parseFloat(getComputedStyle(track).paddingLeft) - btns[0].offsetLeft;
   const geo = btns.map(b => ({ l: left + b.offsetLeft, w: b.offsetWidth }));
   const sigma = 1.7 * (geo[0].w + 6);
   const bell = geo.map(g => Math.exp(-Math.pow((x - (g.l + g.w / 2)) / sigma, 2)));
