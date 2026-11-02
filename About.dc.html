@@ -89,6 +89,20 @@ html { scrollbar-gutter: stable; }
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 /* (since 2026-10-29) from 768px up the footer sits just below the fold, as on the homepage: there when you scroll, seen only at the very bottom */
 @media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; } }
+/* (since 2026-11-02) every lightbox's controls, as on Tappan: previous and next in 44px white circles, close in a 56px one
+   between them, 18px apart and 40px above the bottom of the screen; on hover the icon slides out and back in */
+.tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 41; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+.tp-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 9999px; background: #FFFFFF; color: #1C1C1C; border: none; padding: 0; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; overflow: hidden; cursor: pointer; }
+.tp-btn.xl { width: 56px; height: 56px; }
+.tp-btn svg { display: block; }
+.tp-btn.prev:hover svg { animation: tp-prev 0.45s ease-in-out; }
+.tp-btn.next:hover svg { animation: tp-next 0.45s ease-in-out; }
+.tp-btn.xl:hover svg { animation: tp-close 0.45s ease-in-out; }
+@keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
+@keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+/* the desktop strips open the lightbox */
+.proc-slider img, .proc-slider video, .stu-slider img { cursor: zoom-in; }
+@keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -338,7 +352,7 @@ html { scrollbar-gutter: stable; }
         <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
           <div style="position: relative; width: min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - var(--ab-gap) - var(--proc-text)))">
-            <div class="proc-slider" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
+            <div class="proc-slider" onClick="{{ openLb }}" onTouchStart="{{ procDeskTouchStart }}" onTouchEnd="{{ procDeskTouchEnd }}" style="overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
               <div style="display: flex; width: 400%; transform: translateX({{ procDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
                 <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide0 }}">
                   <img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover">
@@ -377,7 +391,7 @@ html { scrollbar-gutter: stable; }
              slides came out): the three studio photos side by side across the box, then the three light-box photos; dots under the
              middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->
         <h2 class="ab-head">Studio</h2>
-        <div class="stu-slider" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((var(--ab-w) - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
+        <div class="stu-slider" onClick="{{ openLb }}" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((var(--ab-w) - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
           <div style="display: flex; width: 200%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
             <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
               <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
@@ -416,6 +430,16 @@ html { scrollbar-gutter: stable; }
     </div>
   </div>
 </footer>
+<sc-if value="{{ lbOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ lbClose }}" style="position: fixed; inset: 0; z-index: 60; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 24px 24px 128px; box-sizing: border-box; cursor: zoom-out">
+    {{ lbMedia }}
+  </div>
+  <div class="tp-bar" style="z-index: 61">
+          <button class="tp-btn prev" onClick="{{ lbPrev }}" aria-label="Previous"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
+          <button class="tp-btn xl" onClick="{{ lbClose }}" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></button>
+          <button class="tp-btn next" onClick="{{ lbNext }}" aria-label="Next"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
+        </div>
+</sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
@@ -451,6 +475,11 @@ class Component extends DCLogic {
     // and round as its own arrows do
     const fades = { bio: ['bio', 2], process: ['proc', 4], studio: ['stu', 2] };
     this.onKey = e => {
+      if (this.state.lb) {   // the lightbox: arrows step round, escape closes
+        if (e.key === 'Escape') this.setState({ lb: null });
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') this.lbStep(e.key === 'ArrowRight' ? 1 : -1);
+        return;
+      }
       if ((e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') || (e.target.closest && e.target.closest('input, textarea'))) return;
       const d = e.key === 'ArrowRight' ? 1 : -1;
       if (this.state.stack) { const f = fades[this.state.tab]; if (f) { const [key, n] = f; this.setState(s => ({ [key]: (s[key] + d + n) % n })); } return; }
@@ -484,6 +513,14 @@ class Component extends DCLogic {
     if (fits !== this.state.bioFits) this.setState({ bioFits: fits });
   }
   componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); window.removeEventListener('wheel', this.onWheel); window.removeEventListener('hashchange', this.onHash); if (this.mq) this.mq.removeEventListener('change', this.onMq); if (this.mqStack) this.mqStack.removeEventListener('change', this.onMqStack); }
+  // (since 2026-11-02) clicking a photo or film in the desktop Process or Studio strip opens it in a white lightbox, as on Tappan;
+  // the lightbox steps through every photo and film in that strip (its arrows, a click on either half of the picture, or the arrow keys)
+  lbStep(d) { this.setState(s => s.lb && ({ lb: { items: s.lb.items, i: (s.lb.i + d + s.lb.items.length) % s.lb.items.length } })); }
+  openLb(e) {
+    const t = e.target.closest && e.target.closest('img, video'); if (!t) return;
+    const els = [...e.currentTarget.querySelectorAll('img, video')];
+    this.setState({ lb: { i: els.indexOf(t), items: els.map(el => ({ src: el.getAttribute('src'), video: el.tagName === 'VIDEO', poster: el.getAttribute('poster'), alt: el.getAttribute('alt') || el.getAttribute('aria-label') || '' })) } });
+  }
   car(key, n) {
     const i = this.state[key];
     const out = {};
@@ -503,7 +540,18 @@ class Component extends DCLogic {
   renderVals() {
     const cartCount = this.props.cartCount ?? 0;
     const m = this.state.mobile, stack = this.state.stack;
+    const lb = this.state.lb, it = lb && lb.items[lb.i];
+    const lbBox = { maxWidth: 'calc(100vw - 48px)', maxHeight: 'calc(100vh - 152px)', width: 'auto', height: 'auto', display: 'block', cursor: 'default' };
+    const lbTap = e => { e.stopPropagation(); const r = e.currentTarget.getBoundingClientRect(); this.lbStep(e.clientX - r.left > r.width / 2 ? 1 : -1); };
     return {
+      lbOpen: !!lb,
+      openLb: e => this.openLb(e),
+      lbClose: () => this.setState({ lb: null }),
+      lbPrev: e => { e.stopPropagation(); this.lbStep(-1); },
+      lbNext: e => { e.stopPropagation(); this.lbStep(1); },
+      lbMedia: it && (it.video
+        ? React.createElement('video', { key: it.src, src: it.src, poster: it.poster, autoPlay: true, loop: true, muted: true, playsInline: true, 'aria-label': it.alt, onClick: lbTap, ref: v => { if (v) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ height: 'calc(100vh - 152px)' }, lbBox) })
+        : React.createElement('img', { key: it.src, src: it.src, alt: it.alt, onClick: lbTap, style: lbBox })),
       cartCount,
       showCartBadge: cartCount > 0,
       isMobile: m,

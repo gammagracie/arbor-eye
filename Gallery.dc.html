@@ -29,8 +29,6 @@ a:hover { color: #6E6B66; }
 ::selection { background: #E9E6DF; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 .work:hover .work-title { opacity: 1 !important; }
-.lightbox .lb-arrow { opacity: 0; transition: opacity 0.2s ease; }
-.lightbox:hover .lb-arrow { opacity: 1; }
 /* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
 .pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
 .zoom-arrow { opacity: 0; transition: opacity 0.2s ease; } .zoombox:hover ~ .zoom-arrow, .zoom-arrow:hover, .zoom-arrow:focus-visible { opacity: 1; }
@@ -58,6 +56,18 @@ html { scrollbar-gutter: stable; }
 .cta:hover { color: #141414 !important; }
 .cta:hover::before { transform: scaleX(1); transform-origin: left; }
 @media (min-width: 768px) and (max-width: 2000px) { .work-title { font-size: calc(15px * var(--fs) * 0.54 + 2px) !important; } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
+/* (since 2026-11-02) every lightbox's controls, as on Tappan: previous and next in 44px white circles, close in a 56px one
+   between them, 18px apart and 40px above the bottom of the screen; on hover the icon slides out and back in */
+.tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 41; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+.tp-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 9999px; background: #FFFFFF; color: #1C1C1C; border: none; padding: 0; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; overflow: hidden; cursor: pointer; }
+.tp-btn.xl { width: 56px; height: 56px; }
+.tp-btn svg { display: block; }
+.tp-btn.prev:hover svg { animation: tp-prev 0.45s ease-in-out; }
+.tp-btn.next:hover svg { animation: tp-next 0.45s ease-in-out; }
+.tp-btn.xl:hover svg { animation: tp-close 0.45s ease-in-out; }
+@keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
+@keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+@keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -222,18 +232,15 @@ html { scrollbar-gutter: stable; }
         </div>
       </div>
       <sc-if value="{{ zoomOpen }}" hint-placeholder-val="{{ false }}">
-        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: rgba(253,253,251,0.97); overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 120px; box-sizing: border-box">
+        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: #FFFFFF; overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 160px; box-sizing: border-box">
           {{ zoomImg }}
         </div>
-        <button class="zoom-arrow" onClick="{{ zoomPrev }}" aria-label="Previous framing view" style="position: fixed; left: 24px; top: 50%; transform: translateY(-50%); z-index: 41; border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
-        <button class="zoom-arrow" onClick="{{ zoomNext }}" aria-label="Next framing view" style="position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 41; border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
-        <button onClick="{{ closeZoom }}" aria-label="Close" style="position: fixed; top: 18px; right: 24px; z-index: 41; border: none; background: transparent; color: #141414; font-size: calc(30px * var(--fs)); line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
-        <div style="position: fixed; left: 0; right: 0; bottom: 44px; z-index: 41; display: grid; justify-items: center; gap: 14px; pointer-events: none">
-          <div style="display: flex; gap: 12px; pointer-events: auto">
-            <sc-for list="{{ zoomDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
-            </sc-for>
-          </div>
+        <div class="tp-bar">
+          <button class="tp-btn prev" onClick="{{ zoomPrev }}" aria-label="Previous"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
+          <button class="tp-btn xl" onClick="{{ closeZoom }}" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></button>
+          <button class="tp-btn next" onClick="{{ zoomNext }}" aria-label="Next"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
+        </div>
+        <div style="position: fixed; left: 0; right: 0; bottom: 112px; z-index: 41; display: grid; justify-items: center; pointer-events: none">
           <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
         </div>
       </sc-if>
@@ -249,8 +256,6 @@ html { scrollbar-gutter: stable; }
           <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="position: relative; background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
             {{ printImg }}
           </div>
-          <button class="pc-arrow" onClick="{{ pcPrev }}" aria-label="Previous framing view" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
-          <button class="pc-arrow" onClick="{{ pcNext }}" aria-label="Next framing view" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
           <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 18px; display: flex; justify-content: center; gap: 12px">
             <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
               <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
@@ -295,17 +300,13 @@ html { scrollbar-gutter: stable; }
         </div>
       </div>
       <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
-        <div class="lightbox" onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(102,102,102,0.97); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; box-sizing: border-box; cursor: zoom-out">
-          <button onClick="{{ closeLightbox }}" aria-label="Close" style="position: absolute; top: 20px; right: 24px; border: none; background: transparent; color: #FDFDFB; font-size: calc(28px * var(--fs)); line-height: 1; cursor: pointer; padding: 8px; font-family: inherit">&times;</button>
-          <button class="lb-arrow" onClick="{{ lbPrev }}" aria-label="Previous view" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
-          <button class="lb-arrow" onClick="{{ lbNext }}" aria-label="Next view" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #FDFDFB; cursor: pointer; padding: 12px"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
+        <div class="lightbox" onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 40; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 24px 24px 128px; box-sizing: border-box; cursor: zoom-out">
           {{ lightboxImg }}
-          <div onClick="{{ lbStop }}" style="display: flex; gap: 12px; align-items: center; cursor: default">
-            <sc-for list="{{ lbDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
-            </sc-for>
-          </div>
-          <p style="margin: 0; color: #FDFDFB; font-size: calc(12px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8">{{ lbLabel }}</p>
+        </div>
+        <div class="tp-bar">
+          <button class="tp-btn prev" onClick="{{ lbPrev }}" aria-label="Previous"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
+          <button class="tp-btn xl" onClick="{{ closeLightbox }}" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></button>
+          <button class="tp-btn next" onClick="{{ lbNext }}" aria-label="Next"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></button>
         </div>
       </sc-if>
     </section>
@@ -770,15 +771,11 @@ class Component extends DCLogic {
       // the zoom view: the same for the original's framing views
       zoomPrev: () => zGo((zI + nPc - 1) % nPc),
       zoomNext: () => zGo((zI + 1) % nPc),
-      zoomDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: () => zGo(i), aria: label, bg: i === zI ? '#141414' : '#C9C5BD' })),
       closeLightbox: () => this.setState({ lightbox: false }),
-      lbStop: (e) => e.stopPropagation(),
       lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + nPc - 1) % nPc })); },
       lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % nPc })); },
-      lbDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); this.setState({ lbIndex: i }); }, aria: label, bg: i === this.state.lbIndex ? '#FDFDFB' : 'rgba(253,253,251,0.4)' })),
-      lbLabel: (views[this.state.lbIndex] || [0, 'Film'])[1],
       // sized from the image's own ratio so it fills the overlay without distortion
-      lightboxImg: d && (vid && this.state.lbIndex === views.length ? film({ height: 'min(80vh, 1600px)', width: 'auto', maxWidth: '86vw', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }, (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + nPc) % nPc }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(86vw, 1400px, calc(72vh * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) })),
+      lightboxImg: d && (vid && this.state.lbIndex === views.length ? film({ height: 'calc(100vh - 152px)', width: 'auto', maxWidth: 'calc(100vw - 48px)', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }, (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + nPc) % nPc }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(calc(100vw - 48px), calc((100vh - 152px) * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) })),
       hasDesc: !!(d && d.desc),
       printPrice: ['$225', '$595', '$1,195'][this.state.size],
       sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
@@ -797,11 +794,11 @@ class Component extends DCLogic {
       zoomOpen: this.state.zoom,
       closeZoom: () => this.setZoom(false),
       zoomHint: vid && this.state.zoomVid ? 'esc to close' : this.state.zoomLevel > 1 ? (Math.round(this.state.zoomLevel * 10) / 10) + 'x \u00b7 scroll or pinch to zoom, drag to move \u00b7 esc to close' : 'double-click, scroll or pinch to zoom in \u00b7 esc to close',
-      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'min(80vh, 1600px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 216px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : Math.floor(this.state.zoomLevel) + 1),
         onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, Math.ceil(this.state.zoomLevel) - 1)); },
         
-        style: Object.assign({ width: 'calc(min(90vw, 80vh * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, framed(views[this.state.detailView][0])) })),
+        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, framed(views[this.state.detailView][0])) })),
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
       detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the zoom button when the text stacks underneath (the framing dots live on the buy page only since 2026-10-13)
       detailInfoCol: oneCol ? '1' : '2',
