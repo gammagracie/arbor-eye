@@ -354,7 +354,7 @@ function placeTitle(row) {
     const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
     y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + ((it._sc || 1) - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
-      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((parseFloat(getComputedStyle(it).getPropertyValue('--hz')) || 1.075) - 1) / 2) + TGAP;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward)
+      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((parseFloat(getComputedStyle(it).getPropertyValue('--hz')) || 1.075) - 1) / 2) + TGAP - 8;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward; 8px higher since 2026-11-02)
   }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
