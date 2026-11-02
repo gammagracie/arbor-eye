@@ -49,6 +49,7 @@
 /* (since 2026-10-21) each desktop tab (its box and the tab bar under it) centred top to bottom between the header and the footer,
    at least 32px from each */
 @media (min-width: 1000px) { .ab-main { display: flex; flex-direction: column; } }
+@media (max-width: 999px) { .ab-main { display: flex; flex-direction: column; padding-top: 28px !important; } .ab-main > section[data-screen-label="About — Tabs"] { order: 1; } }   /* (since 2026-11-02) under 1000px the tab links sit below the tab's content */
 .ab-copy { display: grid; gap: calc(var(--ab-body) * 1.1); font-size: var(--ab-body); line-height: 1.75; text-align: left; }
 .ab-copy p { margin: 0; }
 .ab-copy.bt { display: block; }
@@ -553,13 +554,13 @@ class Component extends DCLogic {
       studioFilmW: m ? 'calc((100% - 20px) / 3 * 4 / 3 * 16 / 9)' : 'calc((100% - 50px) / 3 * 4 / 3 * 16 / 9)',
       // tabs at the top of the page, above the photo of Ned (since 2026-10-15): Biography (on landing) | Tree of Life | Process | Studio;
       // each shows its own section in place of the others; desktop left-justified on the logo's line, as on the Contact page
-      tabsPad: m ? '20px 0 0' : '28px 0 0',
+      tabsPad: m ? '24px 0 32px' : '32px 0 40px',
       tabsPos: 'static',
       tabsRule: 'none',
       tabJustify: m ? 'center' : 'flex-start',
       tabGap: m ? '24px' : '40px',
       tabs: [['bio', 'Biography'], ['tree', 'Tree of Life'], ['process', 'Process'], ['studio', 'Studio']].map(([k, label]) => ({
-        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); if (!this.state.stack) window.scrollTo({ top: 0, behavior: 'instant' }); },   // desktop (since 2026-11-01): the page never jumps; it stays at the top, the footer just below the fold (it used to scroll to the tabs, pulling the footer into view)
+        label, selected: this.state.tab === k, pick: () => { this.setState({ tab: k }); history.replaceState(null, '', '#' + (k === 'bio' ? 'biography' : k)); window.scrollTo({ top: 0, behavior: 'instant' }); },   // (since 2026-11-02 under 1000px too, the links being below the content: the new tab starts at its top)   // desktop (since 2026-11-01): the page never jumps; it stays at the top, the footer just below the fold (it used to scroll to the tabs, pulling the footer into view)
         weight: this.state.tab === k ? 700 : 400, color: this.state.tab === k ? '#141414' : '#8A867E', border: this.state.tab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       stackAbout: stack, wideAbout: !stack,   // under 1000px the stacked layout with carousels; 1000px and wider the desktop views
