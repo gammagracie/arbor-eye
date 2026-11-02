@@ -105,13 +105,14 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
    the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
 @media (min-width: 768px) {
-  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
-  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22); }
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
 }
+@media (min-width: 1280px) { :root { --step-out: 20px; } }   /* desktop (since 2026-11-02): both arrows 20px further out */
 /* three-up over 2000px (since 2026-10-30): the arrows 30px further out, so the end works' hover growth stays clear of them */
 @media (min-width: 2001px) {
-  .page.three .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px); }
-  .page.three .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px); }
+  .page.three .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px - var(--step-out, 0px)); }
+  .page.three .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px - var(--step-out, 0px)); }
 }
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }

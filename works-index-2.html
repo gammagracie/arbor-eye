@@ -529,6 +529,13 @@ function layout() {
       if (rh <= maxH + 0.5) break;
       h *= (maxH - gaps) / (rh - gaps); apply();
     }
+    // (since 2026-11-02) and never wider than the nav's margins (the logo's left edge to the bag's right, the content's width): only
+    // a hovered work grows past them
+    for (let i = 0; i < 3; i++) {
+      const rw = cols * h * r + (cols - 1) * gxS + 1;
+      if (rw <= aw + 0.5) break;
+      h *= (aw - 1 - (cols - 1) * gxS) / (cols * h * r); apply();
+    }
     row.style.setProperty('--hz', zoom);
     const rw = cols * h * r + (cols - 1) * gxS + 1;
     if (rw > aw) row.style.marginLeft = row.style.marginRight = ((aw - rw) / 2).toFixed(1) + 'px';   // wider than the content: still centred
