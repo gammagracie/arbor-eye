@@ -153,8 +153,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }
 .idx-item img { display: block; height: 100%; width: auto; }
 /* Index2 (since 2026-11-01): every thumbnail in a border of the buy page's grey (#F0F2EF, the wall behind the print); since
-   2026-11-01 three times as wide as at first: 11.5px at 1920, 23px at 3840 (it was 3.8 / 7.7) */
-.idx-item img { border: clamp(11.25px, 0.75vw, 30px) solid #F0F2EF; box-sizing: border-box; }
+   2026-11-01 three times as wide as at first: 11.5px at 1920, 23px at 3840 (it was 3.8 / 7.7); since 2026-11-02 only on the
+   all-series index, not on one series, Horizontal or Vertical */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item img { border: clamp(11.25px, 0.75vw, 30px) solid #F0F2EF; box-sizing: border-box; }
 .idx:not(.m-s):not(.m-v):not(.m-h), .idx:not(.m-s):not(.m-v):not(.m-h) .idx-row { gap: 0; }   /* (since 2026-11-02) all series: the bordered thumbnails touch, along each row and between the rows */
 .idx-item.v { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
