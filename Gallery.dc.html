@@ -334,6 +334,8 @@ const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spec
 // (since 2026-11-02) works with a short film of the framed print in a room: the last slide of the buy page's framing carousel and
 // its lightbox (cropped to the picture, muted, looping; from `Videos/Archive 2.zip`)
 const VIDEOS = ['ascent_living-current.jpg', 'structure_framework.jpg', 'ascent_inner-eclipse.jpg', 'structure_within.jpg'];
+// (since 2026-11-02) films that play once instead of looping: Inner Eclipse's runs forward, then in reverse back to its first frame, and stops
+const FILM_ONCE = ['assets/videos/ascent_inner-eclipse'];
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
   'Brilliance': { medium: 'Acrylic and pastel on canvas', desc: 'Light reveals what was always there' },
@@ -661,7 +663,7 @@ class Component extends DCLogic {
     const zI = vid && this.state.zoomVid ? views.length : this.state.detailView;   // the zoom view's slide (its film last, since 2026-11-02)
     const zGo = i => this.setState(i === views.length ? { zoomVid: true, zoomLevel: 1 } : { detailView: i, zoomVid: false });
     const pcGo = i => this.setState(i === views.length ? { printVid: true } : { frame: views[i][0], printVid: false });
-    const film = (style, onClick) => React.createElement('video', { key: d.video, onClick, src: d.video + '.mp4', poster: d.video + '.jpg', autoPlay: true, loop: true, muted: true, playsInline: true, 'aria-label': d.title + ', framed, in a room', ref: v => { if (v) { v.muted = true; const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ display: 'block' }, style) });
+    const film = (style, onClick) => React.createElement('video', { key: d.video, onClick, src: d.video + '.mp4', poster: d.video + '.jpg', autoPlay: true, loop: !FILM_ONCE.includes(d.video), muted: true, playsInline: true, 'aria-label': d.title + ', framed, in a room', ref: v => { if (v && !v.ended) { v.muted = true; const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); } }, style: Object.assign({ display: 'block' }, style) });
     const vertical = this.state.series === 'Vertical';
     // columns: phone 2 (or 1 in single-column mode); three-column mode is 3, or 2 under 1000px; +1 when filtered to vertical works
     const baseCols = m ? (L === 'g3' ? 2 : 1) : L === 'g3' ? (this.state.narrowGrid ? 2 : 3) : L === 'g2' ? 2 : 1;
