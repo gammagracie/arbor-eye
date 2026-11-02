@@ -503,9 +503,21 @@ function layout() {
     const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || 1.075;
     h *= T.k || 1;
     // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
-    let gyS = Math.max(gy * (T.cy || 1), (zoom - 1) / 2 * h + TGAP + th + 6) + (T.row2 || 0);
-    const gxS = T.cxRow ? gyS : gx * (T.cx || 1);
-    set(row, v ? h / 1.5 : h, cols, h * r, gxS, gyS);
+    let gyS, gxS;
+    const apply = () => {
+      gyS = Math.max(gy * (T.cy || 1), (zoom - 1) / 2 * h + TGAP + th + 6) + (T.row2 || 0);
+      gxS = T.cxRow ? gyS : gx * (T.cx || 1);
+      set(row, v ? h / 1.5 : h, cols, h * r, gxS, gyS);
+    };
+    apply();
+    // enlarged (k > 1), never past the screen: the last row's title stays 16px above its bottom, so the works grow only as far as
+    // that allows (Fit the screen, since 2026-11-02)
+    if ((T.k || 1) > 1) for (let i = 0; i < 3; i++) {
+      const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0),   // (the row starts the series list's gap below `top`)
+        rh = row.offsetHeight, gaps = rh - nr * (v ? h : h);
+      if (rh <= maxH + 0.5) break;
+      h *= (maxH - gaps) / (rh - gaps); apply();
+    }
     row.style.setProperty('--hz', zoom);
     const rw = cols * h * r + (cols - 1) * gxS + 1;
     if (rw > aw) row.style.marginLeft = row.style.marginRight = ((aw - rw) / 2).toFixed(1) + 'px';   // wider than the content: still centred
