@@ -445,9 +445,14 @@ class Component extends DCLogic {
     // strip, move one slide (one move per gesture, stopping at the ends; the swipe never turns into the browser's back / forward)
     const strips = { studio: ['stuDesk', 2], process: ['procDesk', 4] };
     const step = (tab, d) => { const [key, n] = strips[tab]; this.setState(s => ({ [key]: Math.max(0, Math.min(n - 1, s[key] + d)) })); };
+    // (since 2026-11-02) under 1000px the arrow keys step the open tab's crossfade carousel too (Biography, Process, Studio), round
+    // and round as its own arrows do
+    const fades = { bio: ['bio', 2], process: ['proc', 4], studio: ['stu', 2] };
     this.onKey = e => {
-      if (!strips[this.state.tab] || this.state.stack || (e.target.closest && e.target.closest('input, textarea'))) return;
-      if (e.key === 'ArrowRight') step(this.state.tab, 1); else if (e.key === 'ArrowLeft') step(this.state.tab, -1);
+      if ((e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') || (e.target.closest && e.target.closest('input, textarea'))) return;
+      const d = e.key === 'ArrowRight' ? 1 : -1;
+      if (this.state.stack) { const f = fades[this.state.tab]; if (f) { const [key, n] = f; this.setState(s => ({ [key]: (s[key] + d + n) % n })); } return; }
+      if (strips[this.state.tab]) step(this.state.tab, d);
     };
     window.addEventListener('keydown', this.onKey);
     this.onWheel = e => {
