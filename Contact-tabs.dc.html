@@ -160,12 +160,8 @@ html { scrollbar-gutter: stable; }
         <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
       </div>
     </div>
-    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; padding: 32px 0 0; scroll-margin-top: 40px">
-      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
-      </sc-for>
-    </div>
   </section>
+  <div id="ct-panel" aria-hidden="true"></div>
 
   <sc-if value="{{ tabContact }}" hint-placeholder-val="{{ false }}">
   <section style="display: grid; grid-template-columns: {{ formCols }}; gap: 28px {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Contact form">
@@ -256,6 +252,12 @@ html { scrollbar-gutter: stable; }
     </div>
   </section>
   </sc-if>
+  <!-- under 1100px (since 2026-11-02): the links below the section they open, none open at first -->
+    <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; padding: 32px 0 8px; scroll-margin-top: 40px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" role="tab" aria-selected="{{ t.selected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.border }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
   </sc-if>
 
   <!-- DESKTOP (1100px and wider, since 2026-10-19): Ned's photograph from the logo's left edge to the bag icon's right (the nav's full
@@ -440,15 +442,18 @@ class Component extends DCLogic {
       tabGap: m ? '24px' : '40px',
       // tabs: Contact (default) | Shipping | Returns & Exchanges
       tabs: [['contact', 'Get in touch'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
-        label, selected: tab === k, pick: () => { this.setState({ tab: k }); if (innerWidth >= 1000) window.scrollTo({ top: 0, behavior: 'instant' }); },   // desktop (since 2026-11-01): a tab never leaves the page scrolled; the footer stays just below the fold
+        label, selected: this.state.deskTab === k, pick: () => {   // under 1100px (since 2026-11-02): as on desktop, nothing opens until a link is tapped, and the open link again closes it; an opened section is scrolled to, under the header
+          const open = this.state.deskTab === k ? null : k; this.setState({ tab: open || 'contact', deskTab: open });
+          if (open) requestAnimationFrame(() => { const a = document.getElementById('ct-panel'), hd = document.querySelector('header'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + scrollY - (hd ? hd.offsetHeight : 0) - 16, behavior: 'instant' }); });
+        },
         // desktop: a link swaps the photograph for its section; the open link again brings the photograph back
         toggle: () => this.setState({ deskTab: this.state.deskTab === k ? null : k }), deskSelected: this.state.deskTab === k,
         deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#8A867E', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
-        weight: tab === k ? 600 : 400, color: tab === k ? '#141414' : '#8A867E', border: tab === k ? '1px solid #141414' : '1px solid transparent'
+        weight: this.state.deskTab === k ? 600 : 400, color: this.state.deskTab === k ? '#141414' : '#8A867E', border: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent'
       })),
-      tabContact: tab === 'contact',
-      tabShipping: tab === 'shipping',
-      tabReturns: tab === 'returns',
+      tabContact: this.state.deskTab === 'contact',
+      tabShipping: this.state.deskTab === 'shipping',
+      tabReturns: this.state.deskTab === 'returns',
       narrowLayout: !wide, wideLayout: wide,   // desktop layout from 1100px (wide); tablets and phones keep the stacked one
       deskImage: !this.state.deskTab, deskContact: this.state.deskTab === 'contact', deskShipping: this.state.deskTab === 'shipping', deskReturns: this.state.deskTab === 'returns',
       goContact: () => this.goTab('contact'),
