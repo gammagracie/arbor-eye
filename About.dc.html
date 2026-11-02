@@ -174,7 +174,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ bioPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ bioDots }}" as="d" hint-placeholder-count="3">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 10.5px; height: 10.5px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ bioNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -222,7 +222,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ procPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ procDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to photo" style="width: 10.5px; height: 10.5px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ procNext }}" aria-label="Next photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -263,7 +263,7 @@ html { scrollbar-gutter: stable; }
         <button onClick="{{ stuPrev }}" aria-label="Previous slide" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
         <div style="display: flex; gap: 9px; align-items: center">
           <sc-for list="{{ stuDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="Go to slide" style="width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="Go to slide" style="width: 10.5px; height: 10.5px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
         <button onClick="{{ stuNext }}" aria-label="Next slide" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
@@ -347,7 +347,7 @@ html { scrollbar-gutter: stable; }
             <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
             <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; padding-top: 20px">
               <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="2">
-                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
               </sc-for>
             </div>
           </div>
@@ -382,7 +382,7 @@ html { scrollbar-gutter: stable; }
         </div>
         <div style="display: flex; justify-content: center; gap: 12px; padding-top: 20px">
           <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
       </div>

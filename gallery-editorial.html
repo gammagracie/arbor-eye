@@ -321,7 +321,8 @@ function parallaxTick(now) {
 function parallax() { if (!parallaxRunning) { parallaxRunning = true; requestAnimationFrame(parallaxTick); } }
 scroller.addEventListener('scroll', parallax, { passive: true });
 
-// ---- Hover (mouse; since 2026-10-26): the hovered work comes to the front, grows and glides to the vertical middle of the screen,
+// ---- Hover (mouse; since 2026-10-26): the hovered work comes to the front, grows and glides to the middle of the screen (the screen's
+// own centre since 2026-11-02; the content area's below the header before),
 // and the works above and below draw back to leave 30px clear above and below it. It grows to one shared size whatever its size
 // at rest (its long side 1.4 times the column width, or the visible height less 24px above and below if that is less), so
 // landscapes and portraits match, turned. As it glides away from where the pointer first met it, it stays while the pointer is on
@@ -339,9 +340,9 @@ function activate(w) {
   active = w;
   const first = works[0], colPx = first.offsetWidth / (+first.style.getPropertyValue('--k') || 1);   // the column width (the first work is a landscape)
   const sc = scroller.getBoundingClientRect(), ft = scroller.querySelector('footer');
-  const top = sc.top, bottom = ft ? Math.min(sc.bottom, ft.getBoundingClientRect().top) : sc.bottom, mid = (top + bottom) / 2;
+  const top = sc.top, bottom = ft ? Math.min(sc.bottom, ft.getBoundingClientRect().top) : sc.bottom, mid = innerHeight / 2;   // (since 2026-11-02) the screen's own middle, not the content area's
   const bw = w.offsetWidth, bh = w.offsetHeight;   // its resting size (the layout size, before any scaling)
-  const T0 = Math.min(1.4 * colPx, bottom - top - 2 * EDGE);   // the shared long side, fitting the visible height
+  const T0 = Math.min(1.4 * colPx, 2 * (mid - top - EDGE), 2 * (bottom - mid - EDGE));   // the shared long side, fitting the visible height either side of the middle
   const T = Math.max(Math.max(bw, bh), bh > bw ? 0.85 * T0 : T0);   // (since 2026-10-27) a vertical 15% smaller than that
   const sh = T / Math.max(bw, bh);
   w.style.setProperty('--s', sh.toFixed(4));

@@ -150,6 +150,10 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-item { position: relative; display: block; flex: none; height: var(--ih); transform-origin: center bottom; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 /* the genie, as on G5 (since 2026-10-29): the thumbnail under the cursor swells most (150%), its neighbours less along a wide
    bell curve, each growing up from its own base and nudged sideways so they never overlap (set by the script below) */
+/* (since 2026-11-02) all series: Koi, Artifact and Overlook, under the series name in the first row (and Canyons and Verdance
+   either side of them, which reached it at 1280), swell from their centres
+   rather than up from their bases, so they stay clear of the name */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.mid { transform-origin: center center; }
 .idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.22); }
 .idx-item img { display: block; height: 100%; width: auto; }
 .idx-item.v { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
@@ -232,11 +236,11 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
       <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_inner-eclipse.jpg"><img src="assets/thumbs-m70/ascent_inner-eclipse.jpg" style="aspect-ratio: 2 / 3" alt="Inner Eclipse" data-alt-title="Inner Eclipse" data-alt-size="s"></a>
       <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_shared-orbit.jpg"><img src="assets/thumbs-m70/ascent_shared-orbit.jpg" style="aspect-ratio: 2 / 3" alt="Shared Orbit" data-alt-title="Shared Orbit" data-alt-size="s"></a>
       <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_origin.jpg"><img src="assets/thumbs-m70/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin" data-alt-title="Origin" data-alt-size="s"></a>
-      <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
-      <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
-      <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_artifact.jpg"><img src="assets/thumbs-m70/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact" data-alt-title="Artifact" data-alt-size="s"></a>
-      <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
-      <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_artifact.jpg"><img src="assets/thumbs-m70/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact" data-alt-title="Artifact" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
       <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_ascent-1.jpg"><img src="assets/thumbs-m70/ascent_ascent-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent 1" data-alt-title="Ascent 1" data-alt-size="s"></a>
     </section>
     <section class="idx-row" data-s="Convergence" aria-label="Series 2, Convergence">
@@ -471,7 +475,7 @@ function liftLabel() {   // (Horizontal and Vertical: the name on the menus' lin
   if (mode !== 'all') return;
   const row = [...idx.querySelectorAll('.idx-row')].find(r => !r.hidden); if (!row) return;
   const hmax = Math.max(...[...row.querySelectorAll('.idx-item:not([hidden])')].map(a => a.offsetHeight));
-  label.style.marginBottom = Math.max(14, 12 + hmax / 2 - d - parseFloat(getComputedStyle(idx).rowGap)).toFixed(1) + 'px';
+  label.style.marginBottom = (Math.max(14, 12 + hmax / 2 - d - parseFloat(getComputedStyle(idx).rowGap)) - 30).toFixed(1) + 'px';   // (the rows 30px higher since 2026-11-02)
 }
 function layout() {
   const rows = [...document.querySelectorAll('.idx-row')];

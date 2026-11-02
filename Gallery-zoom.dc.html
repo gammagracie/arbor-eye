@@ -234,7 +234,7 @@ html { scrollbar-gutter: stable; }
         <div style="position: fixed; left: 0; right: 0; bottom: 44px; z-index: 41; display: grid; justify-items: center; gap: 14px; pointer-events: none">
           <div style="display: flex; gap: 12px; pointer-events: auto">
             <sc-for list="{{ zoomDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
             </sc-for>
           </div>
           <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
@@ -256,7 +256,7 @@ html { scrollbar-gutter: stable; }
           <button class="pc-arrow" onClick="{{ pcNext }}" aria-label="Next framing view" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #ADA9A2; cursor: pointer; padding: 12px" style-hover="color: #6E6B66"><svg width="14" height="38" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 1 21 30.66 1 59"></polyline></svg></button>
           <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 18px; display: flex; justify-content: center; gap: 12px">
             <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
             </sc-for>
           </div>
         </div>
@@ -305,7 +305,7 @@ html { scrollbar-gutter: stable; }
           {{ lightboxImg }}
           <div onClick="{{ lbStop }}" style="display: flex; gap: 12px; align-items: center; cursor: default">
             <sc-for list="{{ lbDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 8px; height: 8px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
             </sc-for>
           </div>
           <p style="margin: 0; color: #FDFDFB; font-size: calc(12px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8">{{ lbLabel }}</p>
