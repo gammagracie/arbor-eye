@@ -80,6 +80,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }   /* the chosen option in black, bold (since 2026-10-23; it was a paler grey) */
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
+@media (min-width: 1280px) { .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -449,7 +450,7 @@ function fit() {
     gridTop = (SL && SL.cols === 2 && SL.per === 4 ? $('tools').querySelector('.count svg').getBoundingClientRect().bottom : iconTop) - st.top;
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
-    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60;
+    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches ? 1 : 1.5, GC = a => kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
     // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
@@ -457,19 +458,19 @@ function fit() {
     const units = SL ? used : tall.reduce((t, f) => t + f, 0) + Math.max(0, used - tall.length);   // rows in heights of a landscape
     const sizeFor = (maxW, V) => {
       const byH = wideGaps && V / (units + (used - 1) / 4) / 4 >= 60 ? V / (units + (used - 1) / 4) : (V - 60 * (used - 1)) / units;
-      const byW = wideGaps && maxW / (boxR * nc + (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + (nc - 1) / 4) : (maxW - 60 * (nc - 1)) / (boxR * nc);
+      const byW = wideGaps && maxW / (boxR * nc + kc * (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + kc * (nc - 1) / 4) : (maxW - 60 * kc * (nc - 1)) / (boxR * nc);
       let a = Math.min(byH, byW);
       if (SL && SL.scale) {   // a series with its own size: the plain 3 x 3 grid's size for these works, scaled, never more than fits
-        const u0 = Math.ceil(Math.min(9, WORKS.length) / 3), h0 = (V - 60 * (u0 - 1)) / u0, w0 = (inner - 120) / 4.5;
+        const u0 = Math.ceil(Math.min(9, WORKS.length) / 3), h0 = (V - 60 * (u0 - 1)) / u0, w0 = (inner - 120 * kc) / 4.5;
         a = Math.min(a, SL.scale * Math.min(h0, w0));
       }
       if (SL && SL.mid && view === 9) {   // halfway between this size and a 3 x 3 grid's
-        const byH3 = wideGaps && V / 3.5 / 4 >= 60 ? V / 3.5 : (V - 120) / 3, byW3 = wideGaps && maxW / (boxR * 3 + 0.5) / 4 >= 60 ? maxW / (boxR * 3 + 0.5) : (maxW - 120) / (boxR * 3);
+        const byH3 = wideGaps && V / 3.5 / 4 >= 60 ? V / 3.5 : (V - 120) / 3, byW3 = wideGaps && maxW / (boxR * 3 + 0.5 * kc) / 4 >= 60 ? maxW / (boxR * 3 + 0.5 * kc) : (maxW - 120 * kc) / (boxR * 3);
         a = (a + Math.min(byH3, byW3)) / 2;
       }
       if (SL && SL.grow) a = Math.min(a * SL.grow, (V - 24 * (used - 1)) / used);   // grow: that much larger, the rows drawing closer (24px at least) to fit
       return a; };
-    const gridW = a => boxR * nc * a + G(a) * (nc - 1);
+    const gridW = a => boxR * nc * a + GC(a) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
     let a = sizeFor(inner, V);
     if (cx + gridW(a) / 2 + 24 > fs.left) {
@@ -490,9 +491,9 @@ function fit() {
       // (since 2026-10-21) the grid in half columns, each work spanning two, so a short last row (the end of a filtered list)
       // can sit centred under the full rows with the same spacing
       Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' });
-      row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - g) / 2).toFixed(2) + 'px)';
+      row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - GC(a)) / 2).toFixed(2) + 'px)';
     }
-    row.style.columnGap = g.toFixed(1) + 'px'; row.style.rowGap = gRow.toFixed(1) + 'px';
+    row.style.columnGap = GC(a).toFixed(1) + 'px'; row.style.rowGap = gRow.toFixed(1) + 'px';
     const up = s => !SL && WORKS[s.idx] && WORKS[s.idx].r < 1;   // a portrait in the plain grid: the landscape box turned upright
     slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : up(s) ? 1 : R(s)) + 'px'; s.a.style.height = a * (up(s) ? 1.5 : 1) + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
     const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;

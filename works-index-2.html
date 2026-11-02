@@ -74,6 +74,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }
 .fm-btn.chosen span { font-weight: 600; }
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
+@media (min-width: 1280px) { .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
