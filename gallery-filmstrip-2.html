@@ -40,7 +40,7 @@ button { font-family: inherit; }
 /* header */
 header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
 .bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
-.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo { position: relative; display: block; width: 216.43px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
 .logo .logo-text { visibility: hidden; }
 .logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
 .right, .icons { display: flex; align-items: baseline; }
@@ -123,6 +123,17 @@ html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 0
 .art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
+/* (since 2026-11-04) no hard edge where works roll in and out: while a set slides, a soft fade of the page colour lies over the
+   stage's edges (top and bottom for the arrows' up / down slide, the sides for the thumbnails' sideways one), so the works
+   dissolve as they leave and appear; it eases in as the slide starts and out as the new works settle */
+.edge-fade { position: absolute; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 0.35s ease; }
+.edge-fade.t, .edge-fade.b { left: 0; right: 0; height: 90px; }
+.edge-fade.t { top: var(--fade-top, 0px); background: linear-gradient(#FDFDFB, rgba(253, 253, 251, 0)); }
+.edge-fade.b { bottom: 0; background: linear-gradient(rgba(253, 253, 251, 0), #FDFDFB); }
+.edge-fade.l, .edge-fade.r { top: 0; bottom: 0; width: 90px; }
+.edge-fade.l { left: 0; background: linear-gradient(to right, #FDFDFB, rgba(253, 253, 251, 0)); }
+.edge-fade.r { right: 0; background: linear-gradient(to left, #FDFDFB, rgba(253, 253, 251, 0)); }
+.page.slide-y .edge-fade.t, .page.slide-y .edge-fade.b, .page.slide-x .edge-fade.l, .page.slide-x .edge-fade.r { opacity: 1; }
 .art img.on { opacity: 1; }
 /* previous / next chevrons either side of the work (placed by fit()) */
 .step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
@@ -131,12 +142,12 @@ html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 0
 :root { --chev-w: clamp(9.75px, 1.31625vw, 19.0125px); }
 @media (min-width: 2001px) { :root { --chev-w: 28.52px; } }   /* screens over 2000px: the chevrons 150% of that (since 2026-10-21): 28.5 x 78px */
 .step svg { width: var(--chev-w); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
-.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) * var(--fs) * 0.54); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1); }
+.caption { flex: none; height: clamp(34px, calc(2.38vw + 10.2px), 57.8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54);   /* (since 2026-11-04) the Index's hover-title size (it was clamp(16px, 1.12vw + 4.8px, 27.2px)) */ font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1); }
 .caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
 .page.hovering .caption { opacity: 1; }
 .page.multi .caption { transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1); }   /* 3 and 9 views (since 2026-10-21): the title fades in and out too (it used to pop); since 2026-10-24 slower and softer (0.5s, was 0.25s; one-up 0.7s, was 0.35s) */
 /* one-up on screens 1760-3300px wide: the hover title 3px larger */
-@media (min-width: 1760px) and (max-width: 3300px) { .page:not(.multi) .caption { font-size: calc(calc(clamp(16px, calc(1.12vw + 4.8px), 27.2px) + 3px) * var(--fs) * 0.54); } }   /* 3 and 9 views: the title never slides between works; it fades out, moves under the work the cursor is on, and fades in */
+/* (one-up's title 3px larger from 1760 to 3300px came out on 2026-11-04: every G5 hover title is the Index's size) */
 html.touch .caption { opacity: 1; }
 /* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
 html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
@@ -166,40 +177,47 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 @media (min-width: 768px) and (max-width: 2000px) { #capTitle { font-size: calc(1em + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: the hover title 2px larger */
+/* (since 2026-11-04) the header nav: each link as wide as its bold self (a hidden bold copy under it), so the current page's bold
+   link never pushes its neighbours and the nav sits identically on every page */
+a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
+a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
+.prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
+/* (since 2026-11-04) every arrow (previous / next, on the page and in the lightboxes) takes clicks over an invisible 5px border
+   all round it as well, so it is easier to hit */
+:where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"]) { position: relative; }   /* (no weight: an arrow's own position wins) */
+:where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"])::before { content: ""; position: absolute; inset: -5px; }
 </style>
 <script src="alt-text.js?v=7"></script>
+<script src="search-data.js?v=1" defer></script>
+<script src="search.js?v=1" defer></script>
 </head>
 <body>
 <div class="page" id="page">
   <header>
     <div class="bar">
-      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
       <div class="right">
         <nav class="main">
-          <a href="old-pages.html" aria-label="Older pages">PREV</a>
-          <a href="h99.html">H99</a>
-          <a style="font-weight: 700; color: #141414" href="gallery-filmstrip-2.html">G5</a>
-          <a href="gallery-editorial.html">G6</a>
-          <a href="works-index.html">Index</a>
-          <a href="works-index-2.html">I2</a>
-          <a href="About.dc.html">About</a>
-          <a href="Contact-tabs.dc.html">Contact</a>
+          <a href="h99.html" data-t="H99">H99</a>
+          <a style="font-weight: 700; color: #141414" href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
+          <a href="works-index.html" data-t="Index">Index</a>
+          <a href="About.dc.html" data-t="About">About</a>
+          <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
         <div class="icons">
+          <button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
           <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
           <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <a class="prev-box" href="old-pages.html" aria-label="Older pages" style="display: inline-flex; align-items: center; background: #5E7A5A; color: #FFFFFF; font-family: &quot;Neuzeit Grotesk&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: calc(11px * var(--fs, 1)); line-height: 1; letter-spacing: 0.18em; padding: 6px 6px 5px 8px; text-transform: uppercase">PREV</a>
           <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
         </div>
       </div>
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="old-pages.html" aria-label="Older pages">PREV</a>
     <a href="h99.html">H99</a>
-    <a href="gallery-filmstrip-2.html" style="font-weight: 700; color: #141414">G5</a>
-    <a href="gallery-editorial.html">G6</a>
+    <a href="gallery-filmstrip-2.html" style="font-weight: 700; color: #141414">Gallery</a>
     <a href="works-index.html">Index</a>
-    <a href="works-index-2.html">I2</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
@@ -221,6 +239,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 
   <main class="stage" id="stage">
     <div class="row" id="row"></div>
+    <div class="edge-fade t" aria-hidden="true"></div><div class="edge-fade b" aria-hidden="true"></div><div class="edge-fade l" aria-hidden="true"></div><div class="edge-fade r" aria-hidden="true"></div>
     <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
     <button class="step next" id="next" aria-label="Next work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
   </main>
@@ -450,7 +469,9 @@ function fit() {
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
     // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
     const tall = !SL ? [...Array(Math.ceil(slots.length / nc)).keys()].map(r => slots.slice(r * nc, r * nc + nc).some(x => WORKS[x.idx] && WORKS[x.idx].r < 1) ? 1.5 : 1) : [];
-    const units = SL ? used : tall.reduce((t, f) => t + f, 0) + Math.max(0, used - tall.length);   // rows in heights of a landscape
+    // (since 2026-11-04) every page of the plain grid is sized for three landscape rows (its pages are cut to fit that height, see
+    // buildPages), so a work is the same size on every page; a page with room to spare is centred in the height
+    const units = SL ? used : Math.max(used, tall.reduce((t, f) => t + f, 0));   // rows in heights of a landscape
     const sizeFor = (maxW, V) => {
       const byH = wideGaps && V / (units + (used - 1) / 4) / 4 >= 60 ? V / (units + (used - 1) / 4) : (V - 60 * (used - 1)) / units;
       const byW = wideGaps && maxW / (boxR * nc + kc * (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + kc * (nc - 1) / 4) : (maxW - 60 * kc * (nc - 1)) / (boxR * nc);
@@ -543,7 +564,7 @@ function assign(slot, k) {
 // slide the row: the current works glide out one way while the new set glides in from the other, moving together
 // like a belt. d = +1 for the right arrow (the works travel to the right, the new set arriving from the left),
 // -1 for the left arrow; the incoming images are decoded before anything moves
-let outRow = null;
+let outRow = null, slideFadeT = 0;
 async function slideTo(ks, d, axis) {
   busy(1900);   // from the moment of the request, through loading and the slide
   if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
@@ -568,6 +589,11 @@ async function slideTo(ks, d, axis) {
   const ease = 'transform 1.3s cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
   row.style.transition = ease; out.style.transition = ease;
   row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
+  // the edge fade over the stage while the works cross its edges (its top fade on the grid's raised top edge, where it clips)
+  const cp = /inset\((-?[\d.]+)px/.exec(stage.style.clipPath || '');
+  stage.style.setProperty('--fade-top', (cp ? parseFloat(cp[1]) : 0) + 'px');
+  page.classList.remove('slide-x', 'slide-y'); page.classList.add(vert ? 'slide-y' : 'slide-x');
+  clearTimeout(slideFadeT); slideFadeT = setTimeout(() => page.classList.remove('slide-x', 'slide-y'), 1000);
   busy(1450);
   setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1350);
 }
@@ -584,7 +610,20 @@ function buildPages() {
   const L = seriesLayout();
   if (L) { for (let j = 0; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
   // the plain grid (since 2026-10-21): pages of a full grid in order, the last one holding what is left (its short last row centred)
-  if (isGrid() && !phone.matches && WORKS.length > count) { for (let j = 0; j < WORKS.length; j += count) PAGES.push(WORKS.slice(j, j + count).map((w, i) => j + i)); return; }
+  // (since 2026-11-04) every work the same size on every page: a page takes rows of three in gallery order while they fit the
+  // height of three landscape rows (a row holding a portrait, which stands upright, counts as 1.5), so a page with portraits
+  // holds two rows instead of three rather than shrinking its works
+  if (isGrid() && !phone.matches && WORKS.length > count) {
+    const nc = Math.round(Math.sqrt(count));
+    let pg = [], u = 0;
+    for (let j = 0; j < WORKS.length; j += nc) {
+      const r = WORKS.slice(j, j + nc).map((w, i) => j + i), ru = r.some(k => WORKS[k].r < 1) ? 1.5 : 1;
+      if (pg.length && (u + ru > 3.001 || pg.length >= count)) { PAGES.push(pg); pg = []; u = 0; }
+      pg = pg.concat(r); u += ru;
+    }
+    if (pg.length) PAGES.push(pg);
+    return;
+  }
   if (view !== 3) return;
   [false, true].forEach(portrait => {
     const ks = WORKS.map((w, k) => k).filter(k => (WORKS[k].r < 1) === portrait);
