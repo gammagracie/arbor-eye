@@ -14,6 +14,8 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
+<script src="search-data.js?v=1" defer></script>
+<script src="search.js?v=1" defer></script>
 </head>
 <body>
 <x-dc>
@@ -45,29 +47,36 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
+/* (since 2026-11-04) the header nav: each link as wide as its bold self (a hidden bold copy under it), so the current page's bold
+   link never pushes its neighbours and the nav sits identically on every page */
+a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
+a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
+.prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
+/* (since 2026-11-04) every arrow (previous / next, on the page and in the lightboxes) takes clicks over an invisible 5px border
+   all round it as well, so it is easier to hit */
+:where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"]) { position: relative; }   /* (no weight: an arrow's own position wins) */
+:where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"])::before { content: ""; position: absolute; inset: -5px; }
 </style>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAF9F5"></rect><text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#141414">A&amp;E</text></svg></template>
 <div style="min-height: 100vh; display: flex; flex-direction: column; position: relative">
 <header style="border-bottom: 1px solid #E7E4DE; position: relative; z-index: 30; background: #FDFDFB" data-screen-label="Header">
-  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ headPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
-    <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+  <div style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; height: var(--header-h); display: flex; flex-wrap: wrap; align-content: center; align-items: {{ headerAlign }}; justify-content: space-between; gap: 32px">
+    <a href="index.html" aria-label="Arbor &amp; Eye" style="position: relative; display: block; width: 216.43px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap"><span style="visibility: hidden">Arbor <span style="font-style: italic; text-transform: none; letter-spacing: 0">&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="old-pages.html" aria-label="Older pages">PREV</a>
-          <a href="h99.html" style="font-weight: 700; color: #141414">H99</a>
-          <a href="gallery-filmstrip-2.html">G5</a>
-          <a href="gallery-editorial.html">G6</a>
-          <a href="works-index.html">Index</a>
-          <a href="works-index-2.html">I2</a>
-          <a href="About.dc.html">About</a>
-          <a href="Contact-tabs.dc.html">Contact</a>
+          <a href="h99.html" style="font-weight: 700; color: #141414" data-t="H99">H99</a>
+          <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
+          <a href="works-index.html" data-t="Index">Index</a>
+          <a href="About.dc.html" data-t="About">About</a>
+          <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
       </sc-if>
       <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
         <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: {{ headerAlign }}">
+        <button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
         <a href="#" aria-label="Account" style="display: flex; color: #141414">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>
         </a>
@@ -77,6 +86,7 @@ html { scrollbar-gutter: stable; }
             <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span>
           </sc-if>
         </a>
+        <a class="prev-box" href="old-pages.html" aria-label="Older pages" style="display: inline-flex; align-items: center; background: #5E7A5A; color: #FFFFFF; font-family: &quot;Neuzeit Grotesk&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: calc(11px * var(--fs, 1)); line-height: 1; letter-spacing: 0.18em; padding: 6px 6px 5px 8px; text-transform: uppercase">PREV</a>
         </div>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
@@ -90,12 +100,9 @@ html { scrollbar-gutter: stable; }
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="old-pages.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7" aria-label="Older pages">PREV</a>
   <a href="h99.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H99</a>
-  <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G5</a>
-  <a href="gallery-editorial.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">G6</a>
+  <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
-  <a href="works-index-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">I2</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
   <a href="Contact-tabs.dc.html#shipping" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
@@ -419,7 +426,6 @@ class Component extends DCLogic {
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
       mainPad: '0 var(--side-pad)',
-      headPad: VF ? '0 min(12%, calc((100% - ' + VF.w + ') / 2))' : '0 var(--side-pad)',   // H4: the header's edges on the painting's, at most 12% in
       heroLift: desk && !VF ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
       heroPaper: 'none',   // H2: a thin edge of Ned's paper round the cropped painting
       heroFrameShadow: 'none',

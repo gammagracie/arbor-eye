@@ -36,7 +36,7 @@ button { font-family: inherit; }
 /* header */
 header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
 .bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
-.logo { position: relative; display: block; width: 188.2px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo { position: relative; display: block; width: 216.43px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
 .logo .logo-text { visibility: hidden; }
 .logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
 .right, .icons { display: flex; align-items: baseline; }
@@ -180,40 +180,43 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
+/* (since 2026-11-04) the header nav: each link as wide as its bold self (a hidden bold copy under it), so the current page's bold
+   link never pushes its neighbours and the nav sits identically on every page */
+a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
+a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
+.prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
 </style>
 <script src="alt-text.js?v=7"></script>
+<script src="search-data.js?v=1" defer></script>
+<script src="search.js?v=1" defer></script>
 </head>
 <body>
 <div class="page index" id="page">
   <header>
     <div class="bar">
-      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -6.9px; width: 188.2px; height: 51.2px; display: block"></a>
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
       <div class="right">
         <nav class="main">
-          <a href="old-pages.html" aria-label="Older pages">PREV</a>
-          <a href="h99.html">H99</a>
-          <a href="gallery-filmstrip-2.html">G5</a>
-          <a href="gallery-editorial.html">G6</a>
-          <a style="font-weight: 700; color: #141414" href="works-index.html">Index</a>
-          <a href="works-index-2.html">I2</a>
-          <a href="About.dc.html">About</a>
-          <a href="Contact-tabs.dc.html">Contact</a>
+          <a href="h99.html" data-t="H99">H99</a>
+          <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
+          <a style="font-weight: 700; color: #141414" href="works-index.html" data-t="Index">Index</a>
+          <a href="About.dc.html" data-t="About">About</a>
+          <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
         <div class="icons">
+          <button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
           <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
           <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <a class="prev-box" href="old-pages.html" aria-label="Older pages" style="display: inline-flex; align-items: center; background: #5E7A5A; color: #FFFFFF; font-family: &quot;Neuzeit Grotesk&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: calc(11px * var(--fs, 1)); line-height: 1; letter-spacing: 0.18em; padding: 6px 6px 5px 8px; text-transform: uppercase">PREV</a>
           <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
         </div>
       </div>
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="old-pages.html" aria-label="Older pages">PREV</a>
     <a href="h99.html">H99</a>
-    <a href="gallery-filmstrip-2.html">G5</a>
-    <a href="gallery-editorial.html">G6</a>
+    <a href="gallery-filmstrip-2.html">Gallery</a>
     <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
-    <a href="works-index-2.html">I2</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
     <a href="Contact-tabs.dc.html#shipping">Shipping</a>
