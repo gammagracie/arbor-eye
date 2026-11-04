@@ -94,7 +94,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="h99.html" data-t="H99">H99</a>
           <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
           <a href="works-index.html" data-t="Index">Index</a>
           <a href="About.dc.html" data-t="About">About</a>
@@ -113,7 +112,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             <span style="position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs))">{{ cartCount }}</span>
           </sc-if>
         </a>
-        <a class="prev-box" href="old-pages.html" aria-label="Older pages" style="display: inline-flex; align-items: center; background: #5E7A5A; color: #FFFFFF; font-family: &quot;Neuzeit Grotesk&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: calc(11px * var(--fs, 1)); line-height: 1; letter-spacing: 0.18em; padding: 6px 6px 5px 8px; text-transform: uppercase">PREV</a>
+        <a class="prev-box" href="old-pages.html" aria-label="Older pages" title="Older pages" style="position: fixed; top: 10px; right: 10px; z-index: 999; display: block; width: 28px; height: 28px; background: #5E7A5A"></a>
         </div>
         <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ toggleMenu }}" aria-label="Menu" style="border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; display: grid; gap: 5px">
@@ -127,7 +126,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="h99.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">H99</a>
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
