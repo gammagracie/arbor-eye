@@ -108,12 +108,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
   .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
   .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
 }
-@media (min-width: 1280px) { :root { --step-out: 20px; } }   /* desktop (since 2026-11-02): both arrows 20px further out */
-/* three-up over 2000px (since 2026-10-30): the arrows 30px further out, so the end works' hover growth stays clear of them */
-@media (min-width: 2001px) {
-  .page.three .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px - var(--step-out, 0px)); }
-  .page.three .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - 30px - var(--step-out, 0px)); }
-}
+/* (since 2026-11-04 nothing goes past the nav: the 20px push-out on desktop from 2026-11-02 and the extra 30px for three-up over
+   2000px from 2026-10-30 are gone, so the chevrons' points sit on the logo's and the bag's edges again) */
 /* the featured works sit in a centred row, all the same height, a gap apart */
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
@@ -159,8 +155,13 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; display: flex; justify-content: safe center; }   /* (since 2026-10-20) a strip shorter than the page is centred on it */
 .track { display: flex; gap: var(--thumb-gap, 6px); align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
-/* desktop (since 2026-10-27): the filmstrip runs the full width of the screen, edge to edge, with no fade at the sides */
-@media (min-width: 1280px) { .strip-wrap { -webkit-mask-image: none; mask-image: none; } .track { padding: 0; } }
+/* desktop (since 2026-11-04; edge to edge from 2026-10-27): the filmstrip never runs past the nav, the logo's left edge to the bag's
+   right, its thumbnails fading out over the last 32px as they slide past those lines; at either end of the row they rest just inside the fade */
+@media (min-width: 1280px) {
+  .strip-wrap { margin-left: var(--side-pad); margin-right: var(--side-pad);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 32px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 32px), transparent); }
+  .track { padding: 0 32px; } }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;   /* the swell follows the cursor softly (0.45s since 2026-10-21; was 0.16s) */ }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); transition: box-shadow 0.35s ease; }
 .thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.38); }   /* the works featured in the main area: a deeper shadow */
@@ -405,7 +406,10 @@ function fit() {
   const sv = $('prev').querySelector('svg').getBoundingClientRect();
   $('prev').style.left = $('next').style.right = phone.matches ? '0px' : '';
   // the works always stay clear of the arrows: within the content width less each chevron and 24px
-  const inner = contentW - 2 * (sv.width + 24);
+  let inner = contentW - 2 * (sv.width + 24);
+  // (since 2026-11-04, when the arrows came back onto the nav lines) the end works' hover growth (3.75% of a work's width a side)
+  // keeps at least 12px clear of the chevrons too: on wide screens, where that growth is more than 12px, the works are that much narrower
+  if (grid || count === 3) inner -= 2 * Math.max(0, 0.0375 * inner / nc - 12);
   // 9-up: every landscape gets the same 3:2 box (the scans' proportion) so the columns line up; portraits keep their own
   const R = s => grid && WORKS[s.idx].r >= 1 ? 1.5 : WORKS[s.idx].r;
   // width needed per unit of height: the ratios across the row; in the grid every column is the 3:2 landscape box wide

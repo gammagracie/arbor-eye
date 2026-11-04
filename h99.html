@@ -387,7 +387,7 @@ class Component extends DCLogic {
       : VARIANT === '0a2' ? (() => {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
-          const R = this.arts[i].ratio || 1.655, hh = 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ', calc((100vw - 80px) / ' + R.toFixed(4) + '))';   // H2: the homepage's height, the wider painting's width
+          const R = this.arts[i].ratio || 1.655, hh = 'min(calc((100vw - 2 * var(--side-pad) - 83.2px) * 0.6041), ' + capH + ', calc((100vw - 2 * var(--side-pad)) / ' + R.toFixed(4) + '))';   // H2: the homepage's height, the wider painting's width
           return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
