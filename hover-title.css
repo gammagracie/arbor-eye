@@ -1,0 +1,9 @@
+/* (since 2026-11-06, Grace) one size for every hover title on the site: at any one screen width, every work's hover title on every
+   page is the same size and spacing. The homepage's size is the standard. Set per screen width here, in one place; widths not set
+   here yet keep each page's own size (to be set as the responsive sizes are built).
+   Hover titles: the homepage tray's (p[data-tip]: index.html, Home.dc.html, H2, H3, H4, H99, H1), the Gallery's and GX2's
+   (#capTitle), G7's, the Index's and I2's (.idx-title), the grid gallery's (.work-title), G6 / G6a's (.work .side span). */
+@media (min-width: 2501px) {
+  :root { --hover-title: calc(min(100vw * 0.84 * 0.03978 * 0.23, 22px) * 0.75); }   /* (the 84% is the width inside the 8% side margins, written out so every page gets the same size whatever its own margins) the homepage's: 14.76px at 2560, 16.5px from about 2980 up */
+  p[data-tip], #capTitle, .idx-title, .work-title, .work .side span { font-size: var(--hover-title) !important; letter-spacing: 0.1em !important; }
+}
