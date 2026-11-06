@@ -18,6 +18,7 @@
 
 /* Shared site tokens: header/footer heights and side padding match the other pages */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 2501px) { :root { --header-h: 96px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 16px taller, 8px more above and below the logo and nav (80px before) */
 @media (min-width: 768px) { :root { --thumb-h: 30px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
