@@ -182,7 +182,7 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
   .track { padding: 0 32px; } }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;   /* the swell follows the cursor softly (0.45s since 2026-10-21; was 0.16s) */ }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 5px 6px 14px -4px rgba(20,20,20,0.336); transition: box-shadow 0.35s ease; }
-.thumb.on img { box-shadow: none; }   /* (GX3, 2026-11-06) the featured thumbnails have no shadow: the pill under them marks them instead */   /* the works featured in the main area: a deeper shadow */
+.thumb.on img, .thumb.on:hover img, .thumb.on.hot img { box-shadow: none !important; }   /* (GX3, 2026-11-06) the featured thumbnails have no shadow: the pill under them marks them instead */   /* the works featured in the main area: a deeper shadow */
 html.touch .track { touch-action: none; }
 
 /* footer */
