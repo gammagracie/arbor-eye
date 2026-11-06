@@ -383,9 +383,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             </div>
             <!-- (the 1px clip at each side hides the hairline of the neighbouring slide the fractional track width lets through) -->
             <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
-            <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; padding-top: 20px">
+            <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it) -->
+            <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 18px; padding-top: 14px">
               <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="4">
-                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-clip: padding-box; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
               </sc-for>
             </div>
           </div>
@@ -418,9 +419,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             </div>
           </div>
         </div>
-        <div style="display: flex; justify-content: center; gap: 12px; padding-top: 20px">
+        <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it) -->
+        <div style="display: flex; justify-content: center; gap: 18px; padding-top: 14px; margin-bottom: -6px">
           <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-clip: padding-box; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
           </sc-for>
         </div>
       </div>
