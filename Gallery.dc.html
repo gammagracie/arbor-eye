@@ -73,7 +73,8 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 768px) and (max-width: 2000px) { .work-title { font-size: calc(15px * var(--fs) * 0.54 + 2px) !important; } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 /* (since 2026-11-02) every lightbox's controls, as on Tappan: previous and next in 44px white circles, close in a 56px one
    between them, 18px apart and 40px above the bottom of the screen; on hover the icon slides out and back in */
-.tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 41; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+.tp-bar { position: fixed; left: 0; right: 0; bottom: 20px; z-index: 41; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+/* (since 2026-11-06) the round buttons 20px off the screen's bottom (40px before), so the zoom hint above them clears the frame */
 .tp-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 9999px; background: #FFFFFF; color: #1C1C1C; border: none; padding: 0; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
 .tp-ic { display: grid; place-items: center; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; }
 .tp-btn.xl { width: 56px; height: 56px; }
@@ -263,7 +264,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           <button class="tp-btn xl" onClick="{{ closeZoom }}" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
           <button class="tp-btn next" onClick="{{ zoomNext }}" aria-label="Next"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
         </div>
-        <div style="position: fixed; left: 0; right: 0; bottom: 112px; z-index: 41; display: grid; justify-items: center; pointer-events: none">
+        <div style="position: fixed; left: 0; right: 0; bottom: 86px; z-index: 41; display: grid; justify-items: center; pointer-events: none">
           <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
         </div>
       </sc-if>
@@ -279,9 +280,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           <div onClick="{{ openLightbox }}" role="button" aria-label="View framing options" style="position: relative; background: #F0F2EF; display: flex; align-items: center; justify-content: center; padding: {{ printWallPad }}; box-sizing: border-box; min-height: {{ printStageMin }}; height: {{ printWallH }}; cursor: zoom-in">
             {{ printImg }}
           </div>
-          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 18px; display: flex; justify-content: center; gap: 12px">
+          <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it) -->
+          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 12px; display: flex; justify-content: center; gap: 18px">
             <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 12px; height: 12px; border-radius: 50%; background: {{ dt.bg }}; border: none; padding: 0; cursor: pointer; transition: background 0.35s ease"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-clip: padding-box; padding: 0; cursor: pointer; background: {{ dt.bg }}; transition: background 0.35s ease"></button>
             </sc-for>
           </div>
         </div>
