@@ -37,6 +37,13 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+/* (since 2026-11-05; Home, About and Contact only) screens over 2500px: the header's side margins 12% of the width (10% below that) */
+@media (min-width: 2501px) { :root { --side-pad: 12vw; } }
+/* (since 2026-11-05; Home, About and Contact only) the page's content and the footer sit further in than the header: their right
+   edge on the last letter of CONTACT in the nav (the search, account and bag icons stand to the right of it), the left edge the same
+   distance in from the window's left. body-fit.js measures it exactly; 140px past the side margin is the fallback while it loads */
+:root { --body-pad: var(--side-pad); }
+@media (min-width: 1280px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }   /* desktop only; tablets and phones keep the side margin */
 html { scrollbar-gutter: stable; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
@@ -110,7 +117,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
@@ -142,7 +149,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -528,5 +535,6 @@ class Component extends DCLogic {
   document.body.appendChild(a); })();
 </script>
 <!-- /back-idx -->
+<script src="body-fit.js?v=2"></script>
 </body>
 </html>
