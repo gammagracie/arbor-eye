@@ -20,7 +20,7 @@
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 31.25px; --step-w: clamp(32px, 5.8vw, 84px); }
 @media (min-width: 768px) { :root { --thumb-h: 37.5px; } }   /* filmstrip thumbnails 25% larger since 2026-10-21 (were 30px, 25px on phones) */
 /* desktop (since 2026-10-26): the filmstrip thumbnails half as large again (56px) and only 2px apart; over 2000px 80.5px (since 2026-10-27, 15% larger than the 70px of 10-26) */
-@media (min-width: 1280px) { :root { --thumb-h: 56px; --thumb-gap: 2px; } }
+@media (min-width: 1280px) { :root { --thumb-h: 56px; --thumb-gap: 7px; } }   /* (since 2026-11-06) 7px between the filmstrip thumbnails in every view and filter (was 2px) */
 @media (min-width: 2001px) { :root { --thumb-h: 80.5px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
@@ -428,6 +428,10 @@ function fit() {
   h = Math.min(h, (inner - gap * (nc - 1)) / sumR);   // never under the arrows
   const lift = count === 1 ? 14 : grid ? 15 : 0;   // three-up: centred on the stage, so the works' middle is level with the arrows (it sat 5% lower for part of 2026-10-20)   // one-up sits 14px above centre, so the title below it has more room; nine-up 15px (10px clear above, 40px below)
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
+  // (since 2026-11-06, Grace) three-up: the works 90% of that size; portraits below are matched to the landscapes (their height
+  // the landscapes' width)
+  const K3 = count === 3 && !grid ? 0.9 : 1;
+  h *= K3;
   // (since 2026-10-23) one-up and three-up: a portrait (or a set of them) is never larger than a landscape (set) would be in the same
   // place, turned upright: its height at most the width a landscape would have there
   let upright = false, portraitGap = null;
@@ -436,7 +440,9 @@ function fit() {
     let hL = Math.min((H - rowGap * (nr - 1)) / nr, (inner - gap * (nc - 1)) / sumL) * (count === 1 ? 0.86 * 1.18 : 1);
     hL = Math.min(hL, (inner - gap * (nc - 1)) / sumL);
     if (count === 1) hL = Math.min(hL, H - 2 * lift - 40);
-    if (h > 1.5 * hL) { h = 1.5 * hL; upright = true; }
+    hL *= K3;
+    if (count === 3) { h = 1.5 * hL; upright = true; }   // (since 2026-11-06) exactly a landscape's width, turned upright
+    else if (h > 1.5 * hL) { h = 1.5 * hL; upright = true; }
     // three-up (since 2026-10-24): the portraits each centred where a landscape of the set would sit, the spare width going into the gaps
     if (count === 3) portraitGap = 1.5 * hL + gap - h * slots.reduce((t, s) => t + WORKS[s.idx].r, 0) / slots.length;
   }
@@ -595,16 +601,18 @@ async function slideTo(ks, d, axis) {
   const from = vert ? 'translateY(' + (d * dist) + 'px)' : 'translateX(' + (-d * dist) + 'px)', to = vert ? 'translateY(' + (-d * dist) + 'px)' : 'translateX(' + (d * dist) + 'px)';
   row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) ' + from;
   void row.offsetWidth;
-  const ease = 'transform 1.3s cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
+  // (since 2026-11-06, Grace) the sideways slide (thumbnail clicks, drags) faster: 0.8s, was 1.3s; the vertical slide is unchanged
+  const T = vert ? 1.3 : 0.8;
+  const ease = 'transform ' + T + 's cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
   row.style.transition = ease; out.style.transition = ease;
   row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
   // the edge fade over the stage while the works cross its edges (its top fade on the grid's raised top edge, where it clips)
   const cp = /inset\((-?[\d.]+)px/.exec(stage.style.clipPath || '');
   stage.style.setProperty('--fade-top', (cp ? parseFloat(cp[1]) : 0) + 'px');
   page.classList.remove('slide-x', 'slide-y'); page.classList.add(vert ? 'slide-y' : 'slide-x');
-  clearTimeout(slideFadeT); slideFadeT = setTimeout(() => page.classList.remove('slide-x', 'slide-y'), 1000);
-  busy(1450);
-  setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, 1350);
+  clearTimeout(slideFadeT); slideFadeT = setTimeout(() => page.classList.remove('slide-x', 'slide-y'), T * 770);
+  busy(T * 1115);
+  setTimeout(() => { if (outRow === out) { out.remove(); outRow = null; row.style.transition = ''; } }, T * 1040);
 }
 
 // feature the works from f onward (the window never runs past the end of the list); moving the window slides the row,
@@ -730,7 +738,7 @@ function run() {
       if ((pos === 0 && vel < 0) || (pos === maxPan() && vel > 0) || (drive === 0 && Math.abs(vel) < 0.01)) vel = 0;
       target = pos;
     }
-    else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 160)); }   // wheel / trackpad: follow directly
+    else if (cap === Infinity) { vel = 0; pos = Math.abs(d) < 0.3 ? target : pos + d * (1 - Math.exp(-dt / 90));   /* (since 2026-11-06) quicker to catch up (was 160) */ }   // wheel / trackpad: follow directly
     else {
       const want = Math.max(-cap, Math.min(cap, d / GLIDE));   // px per ms
       vel += (want - vel) * (1 - Math.exp(-dt / ACCEL));
@@ -808,7 +816,7 @@ addEventListener('touchmove', e => { lastTouch = Date.now(); busy(600); if (touc
     follow(e.clientX);
   });
   document.addEventListener('mouseleave', () => { if (mouseX !== null) relax(); });
-  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY))); cap = Infinity; drive = null; run(); }, { passive: false });
+  strip.addEventListener('wheel', e => { e.preventDefault(); target = Math.max(0, Math.min(maxPan(), target + 2 * (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY)));   /* (since 2026-11-06) twice as far per scroll */ cap = Infinity; drive = null; run(); }, { passive: false });
 }
 
 // keyboard, resize
