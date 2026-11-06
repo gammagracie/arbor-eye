@@ -11,7 +11,9 @@
    frame (1.7673:1) plus the 40px above it and the band below (78.5px + 0.0271 of its width, the thumbnails hanging from it and
    the title) fit the height under the header with 20px to spare: width = (100vh - header - 140px) x 1.6866. The thumbnails
    keep one proportion to the painting (6.255% of its width tall) */
-@media (min-width: 1280px) { :root { --h77-pad: max(var(--side-pad), calc((100vw - (100vh - var(--header-h) - 140px) * 1.6866) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); } }
+/* (later on 2026-11-06) the thumbnails 20% of their height lower, 110px of white above the painting and 60px under the thumbnails
+   (the hover title inside that): width = (100vh - header - 203px) x 1.7048 */
+@media (min-width: 1280px) { :root { --h77-pad: max(var(--side-pad), calc((100vw - (100vh - var(--header-h) - 203px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); } }
 </style>
 <!-- H77 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
@@ -136,7 +138,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--h77-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--h77-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: flex-start" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
@@ -410,7 +412,7 @@ class Component extends DCLogic {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
           const R = this.arts[i].ratio || 1.655, hh = 'calc((100vw - 2 * var(--h77-pad)) / ' + R.toFixed(4) + ')';   // H2: the homepage's height, the wider painting's width
-          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
+          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '110px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
@@ -504,7 +506,7 @@ class Component extends DCLogic {
       // scaled to 72% with the other pages' hover titles)
       tipShift: (this.tipX != null ? this.tipX : this.state.tipX || 0).toFixed(1) + 'px',
       hoverTitleScale: desk ? '0.75' : '0.54',   // (since 2026-10-29 25% smaller: was 1 / 0.72)
-      railNudge: m ? 'none' : this.state.tablet ? 'translateY(9px)' : 'translateY(24px)',   // (since 2026-11-06, Grace) desktop 15px lower again (was 9px)   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
+      railNudge: m ? 'none' : this.state.tablet ? 'translateY(9px)' : 'translateY(calc(24px + 0.2 * var(--h77-thumb)))',   // (since 2026-11-06, Grace) desktop 15px lower again (was 9px)   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitlePlus: desk && !this.state.wide ? '2px' : '0px',   // (since 2026-10-29) desktop up to 2000px: every hover title 2px larger
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
       hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? (this.state.wide ? 8 : 1) + 'px 0 0'   /* (since 2026-11-06, Grace) desktop: 8px higher (was 16 / 9) */   /* (2026-10-29: 4px, then 7px lower, as every hover title) */   /* (since 2026-10-29 the swell grows upward, so no room is kept for it here) */   /* (since 2026-10-26) 5px higher: 7px under a fully swollen thumbnail, 14px over 2000px */ : '8px 0 0',   /* (2026-11-06: 8px higher, was 16px) */   /* 7px lower again over 2000px (since 2026-10-23) */   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
