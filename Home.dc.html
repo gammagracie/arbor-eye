@@ -12,6 +12,7 @@
 <script src="./support.js"></script>
 <script src="search-data.js?v=1" defer></script>
 <script src="search.js?v=2" defer></script>
+<link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 </head>
 <body>
 <x-dc>
@@ -71,6 +72,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
           <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
+          <a href="gallery-gx2.html" data-t="GX2">GX2</a>
           <a href="works-index.html" data-t="Index">Index</a>
           <a href="About.dc.html" data-t="About">About</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
@@ -103,6 +105,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
   <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
+  <a href="gallery-gx2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">GX2</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="Contact-tabs.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
