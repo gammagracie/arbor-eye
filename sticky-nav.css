@@ -1,0 +1,5 @@
+/* TEST (since 2026-11-06, Grace; may be taken out): the header stays at the top of the screen while the page scrolls.
+   Linked from every page with the site header. To take it out, remove the <link href="sticky-nav.css"> line from the pages
+   (or empty this file). */
+header { position: sticky !important; top: 0; z-index: 30; }
+html { scroll-padding-top: var(--header-h, 80px); }   /* jump links (About, Contact tabs) land below the header, not under it */
