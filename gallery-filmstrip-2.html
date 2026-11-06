@@ -18,6 +18,7 @@
 
 /* Shared site tokens: header/footer heights and side padding match the other pages */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 31.25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 2501px) { :root { --header-h: 96px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 16px taller, 8px more above and below the logo and nav (80px before) */
 @media (min-width: 768px) { :root { --thumb-h: 37.5px; } }   /* filmstrip thumbnails 25% larger since 2026-10-21 (were 30px, 25px on phones) */
 /* desktop (since 2026-10-26): the filmstrip thumbnails half as large again (56px) and only 2px apart; over 2000px 80.5px (since 2026-10-27, 15% larger than the 70px of 10-26) */
 @media (min-width: 1280px) { :root { --thumb-h: 56px; --thumb-gap: 7px; } }   /* (since 2026-11-06) 7px between the filmstrip thumbnails in every view and filter (was 2px) */
