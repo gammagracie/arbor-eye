@@ -984,14 +984,20 @@ if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0)
 (function () {
   const strip = document.getElementById('strip'), track = document.getElementById('track'); if (!strip || !track) return;
   const pill = document.createElement('div'); pill.className = 'on-pill'; pill.setAttribute('aria-hidden', 'true'); strip.appendChild(pill);
-  let last = '';
-  (function tick() {
+  // (later on 2026-11-06) when the featured set changes the pill slides to it (0.6s, eased); while the strip scrolls it follows at once
+  let cur = null, from = null, to = null, t0 = 0, last = '';
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  (function tick(now) {
     const on = track.querySelectorAll('.thumb.on');
     if (on.length) {
       const a = on[0], b = on[on.length - 1], x = new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
-      const L = a.offsetLeft + x, W = b.offsetLeft + b.offsetWidth - a.offsetLeft, T = a.offsetTop + a.offsetHeight + 20;   // 14px under the thumbnails (the strip's own 6px padding included; 6px until 8px lower on 2026-11-06)
-      const key = L.toFixed(1) + '|' + W.toFixed(1) + '|' + T.toFixed(1);
-      if (key !== last) { last = key; pill.style.transform = 'translate(' + L.toFixed(1) + 'px, ' + T.toFixed(1) + 'px)'; pill.style.width = W.toFixed(1) + 'px'; }
+      const goal = { l: a.offsetLeft, w: b.offsetLeft + b.offsetWidth - a.offsetLeft, t: a.offsetTop + a.offsetHeight + 20 };   // 14px under the thumbnails
+      if (!cur) cur = Object.assign({}, goal);
+      if (!to || goal.l !== to.l || goal.w !== to.w || goal.t !== to.t) { from = Object.assign({}, cur); to = goal; t0 = now || performance.now(); }
+      const k = ease(Math.min(1, ((now || performance.now()) - t0) / 600));
+      cur = { l: from.l + (to.l - from.l) * k, w: from.w + (to.w - from.w) * k, t: from.t + (to.t - from.t) * k };
+      const key = (cur.l + x).toFixed(1) + '|' + cur.w.toFixed(1) + '|' + cur.t.toFixed(1);
+      if (key !== last) { last = key; pill.style.transform = 'translate(' + (cur.l + x).toFixed(1) + 'px, ' + cur.t.toFixed(1) + 'px)'; pill.style.width = cur.w.toFixed(1) + 'px'; }
       pill.style.opacity = '1';
     } else pill.style.opacity = '0';
     requestAnimationFrame(tick);
