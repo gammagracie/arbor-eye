@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Gallery (GX3)</title>
 <meta name="robots" content="noindex">
-<!-- GX3 (since 2026-11-06): GX2 with its works' shadows only to the right and below (later that day 30% deeper: every shadow value x 1.3) (none on the top or left; the same reach
+<!-- GX3 (since 2026-11-06): GX2 with its works' shadows only to the right and below (later that day reshaped from Grace's reference: a wide soft shadow that starts near the top and left edges and spreads off the right and bottom) (none on the top or left; the same reach
      right and down as GX2's, drawn with a negative spread). GX2 notes follow. -->
 <!-- GX2 (since 2026-11-06): a copy of the Gallery (G5, gallery-filmstrip-2.html) whose works' drop shadows are 1.6 times as dark (then 1.75 times that, 2026-11-06) and
      fall to the right and down (they sat evenly round each work, just below it). Keep it in step with G5 by copying G5 over it and
@@ -111,7 +111,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .page.listmode .stage, .page.listmode .caption, .page.listmode .strip-wrap { display: none; }
 .page.listmode .list { display: grid; gap: 44px; padding: 28px var(--side-pad) 52px; }
 .li { display: grid; justify-items: center; gap: 14px; color: #141414; }
-.li img { display: block; width: 100%; height: auto; box-shadow: 20.8px 24.7px 20.8px -13px rgba(20,20,20,0.392); }
+.li img { display: block; width: 100%; height: auto; box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); }
 .li.v img { width: auto; max-width: 100%; max-height: 72vh; }   /* portraits: full width unless that would make them taller than 72% of the screen */
 .li span { font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(16px * var(--fs)); letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 .stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
@@ -128,8 +128,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
-.art { position: relative; flex: none; display: block; box-shadow: 20.8px 24.7px 20.8px -13px rgba(20,20,20,0.392); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
-html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 20.8px 24.7px 20.8px -13px rgba(20,20,20,0.667); }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth); since 2026-11-02 the shadow 170% as dark (0.14 at rest) */
+.art { position: relative; flex: none; display: block; box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.667); }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth); since 2026-11-02 the shadow 170% as dark (0.14 at rest) */
 .art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
 .stage { touch-action: pan-y; }
@@ -177,8 +177,8 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
             mask-image: linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 32px), transparent); }
   .track { padding: 0 32px; } }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;   /* the swell follows the cursor softly (0.45s since 2026-10-21; was 0.16s) */ }
-.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 13px 14.3px 10.4px -10.4px rgba(20,20,20,0.336); transition: box-shadow 0.35s ease; }
-.thumb.on img { box-shadow: 20.8px 23.4px 15.6px -15.6px rgba(20,20,20,1); }   /* the works featured in the main area: a deeper shadow */
+.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 5px 6px 14px -4px rgba(20,20,20,0.336); transition: box-shadow 0.35s ease; }
+.thumb.on img { box-shadow: 8px 10px 22px -6px rgba(20,20,20,0.8); }   /* the works featured in the main area: a deeper shadow */
 html.touch .track { touch-action: none; }
 
 /* footer */
