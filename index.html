@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Artwork by Ned Church</title>
+<style>:root { --hang: 45px; --hw: calc(100vw - 2 * var(--body-pad)); --hp: var(--body-pad); --h4-top: 40px; }
+@media (min-width: 2501px) { :root { --hang: 59px; } }   /* the thumbnails hang 45px (59px over 2500px) below the frame, measured */
+@media (min-width: 1280px) { :root { --hw: min(calc(100vw - 2 * var(--side-pad)), calc((0.86 * (100vh - var(--header-h)) - var(--hang)) * 1.7673)); --hp: calc((100vw - var(--hw)) / 2); --h4-top: calc((100vh - var(--header-h) - var(--hw) / 1.7673 - var(--hang)) / 2); } }
+</style>
 <!-- H4 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
      quietest top-to-bottom paths, the drawn shapes, rough edges and paper border untouched); the frame as tall as the
@@ -130,7 +134,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--hp); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: flex-start" data-screen-label="Home — Gallery">
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
@@ -162,7 +166,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--hp); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -403,8 +407,8 @@ class Component extends DCLogic {
       : VARIANT === '0a2' ? (() => {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
-          const R = this.arts[i].ratio || 1.655, hh = 'calc((100vw - 2 * var(--body-pad)) / ' + R.toFixed(4) + ')';   // H2: the homepage's height, the wider painting's width
-          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: '40px 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
+          const R = this.arts[i].ratio || 1.655, hh = 'calc(var(--hw) / ' + R.toFixed(4) + ')';   // H2: the homepage's height, the wider painting's width
+          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: 'var(--h4-top) 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
@@ -543,5 +547,25 @@ class Component extends DCLogic {
 }
 </script>
 <script src="body-fit.js?v=4"></script>
+<script>
+// (2026-11-06) the header placed on the painting: the logo's Tree of Life (138.7px into the 216.43px logo) over the painting's left
+// edge, the C of CONTACT over its right edge (desktop, 1280px up); the same sums as the stylesheet's --hw
+(function () {
+  const root = document.documentElement;
+  function fit() {
+    const bar = document.querySelector('header > div'), logo = bar && bar.querySelector('a'), c = document.querySelector('header a[data-t="Contact"]');
+    const icons = [...document.querySelectorAll('header svg')].filter(e => e.getBoundingClientRect().width > 0 && !e.closest('.prev-box'));
+    if (!bar || !logo || !c || !icons.length) return;
+    if (!matchMedia('(min-width: 1280px)').matches) { bar.style.paddingLeft = bar.style.paddingRight = ''; return; }
+    const W = root.clientWidth, H = innerHeight, hh = bar.offsetHeight, side = W * (W > 2500 ? 0.08 : 0.10), hang = W > 2500 ? 59 : 45;
+    const hw = Math.min(W - 2 * side, (0.86 * (H - hh) - hang) * 1.7673), left = (W - hw) / 2, right = left + hw;
+    const D = Math.max(...icons.map(e => e.getBoundingClientRect().right)) - c.getBoundingClientRect().left;
+    bar.style.paddingLeft = Math.max(0, left - 138.7).toFixed(2) + 'px';
+    bar.style.paddingRight = Math.max(0, W - right - D).toFixed(2) + 'px';
+  }
+  let n = 0; (function early() { fit(); if (++n < 120) requestAnimationFrame(early); })();
+  addEventListener('resize', fit); addEventListener('load', fit); if (document.fonts) document.fonts.ready.then(fit);
+})();
+</script>
 </body>
 </html>
