@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Gallery (GX3)</title>
 <meta name="robots" content="noindex">
+<!-- GX3 also (since 2026-11-06): a 3px grey pill (#333 at 30%) under the featured thumbnails in the strip. -->
 <!-- GX3 (since 2026-11-06): GX2 with its works' shadows only to the right and below (later that day reshaped from Grace's reference: a wide soft shadow that starts near the top and left edges and spreads off the right and bottom) (none on the top or left; the same reach
      right and down as GX2's, drawn with a negative spread). GX2 notes follow. -->
 <!-- GX2 (since 2026-11-06): a copy of the Gallery (G5, gallery-filmstrip-2.html) whose works' drop shadows are 1.6 times as dark (then 1.75 times that, 2026-11-06) and
@@ -167,7 +168,10 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
 .strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 29px; pointer-events: none;   /* 29px under the strip: 15px higher since 2026-10-21 */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
-.strip { overflow: visible; padding: 6px 0; display: flex; justify-content: safe center; }   /* (since 2026-10-20) a strip shorter than the page is centred on it */
+.strip { overflow: visible; padding: 6px 0; display: flex; justify-content: safe center; }
+/* (GX3 trial, since 2026-11-06) a thin pill under the works showing above: 3px high, as wide as their thumbnails together, #333 at 30% */
+.strip { position: relative; }
+.on-pill { position: absolute; left: 0; top: 0; height: 3px; border-radius: 3px; background: rgba(51, 51, 51, 0.3); pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }   /* (since 2026-10-20) a strip shorter than the page is centred on it */
 .track { display: flex; gap: var(--thumb-gap, 6px); align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
 /* desktop (since 2026-11-04; edge to edge from 2026-10-27): the filmstrip never runs past the nav, the logo's left edge to the bag's
    right, its thumbnails fading out over the last 32px as they slide past those lines; at either end of the row they rest just inside the fade */
@@ -974,5 +978,25 @@ stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 </script>
 <script src="body-fit.js?v=4"></script>
+<script>
+// GX3 trial (since 2026-11-06): the pill under the featured thumbnails. It follows them as the set changes and as the strip
+// scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)
+(function () {
+  const strip = document.getElementById('strip'), track = document.getElementById('track'); if (!strip || !track) return;
+  const pill = document.createElement('div'); pill.className = 'on-pill'; pill.setAttribute('aria-hidden', 'true'); strip.appendChild(pill);
+  let last = '';
+  (function tick() {
+    const on = track.querySelectorAll('.thumb.on');
+    if (on.length) {
+      const a = on[0], b = on[on.length - 1], x = new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
+      const L = a.offsetLeft + x, W = b.offsetLeft + b.offsetWidth - a.offsetLeft, T = a.offsetTop + a.offsetHeight + 12;   // 6px under the thumbnails (the strip's own 6px padding included)
+      const key = L.toFixed(1) + '|' + W.toFixed(1) + '|' + T.toFixed(1);
+      if (key !== last) { last = key; pill.style.transform = 'translate(' + L.toFixed(1) + 'px, ' + T.toFixed(1) + 'px)'; pill.style.width = W.toFixed(1) + 'px'; }
+      pill.style.opacity = '1';
+    } else pill.style.opacity = '0';
+    requestAnimationFrame(tick);
+  })();
+})();
+</script>
 </body>
 </html>
