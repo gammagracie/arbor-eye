@@ -6,7 +6,8 @@
 <title>Arbor &amp; Eye | Artwork by Ned Church (H4)</title>
 <style>:root { --hang: 45px; --hw: calc(100vw - 2 * var(--body-pad)); --hp: var(--body-pad); --h4-top: 40px; }
 @media (min-width: 2501px) { :root { --hang: 59px; } }   /* the thumbnails hang 45px (59px over 2500px) below the frame, measured */
-@media (min-width: 1280px) { :root { --hw: min(calc(100vw - 2 * var(--side-pad)), calc((0.86 * (100vh - var(--header-h)) - var(--hang)) * 1.7673)); --hp: calc((100vw - var(--hw)) / 2); --h4-top: calc((100vh - var(--header-h) - var(--hw) / 1.7673 - var(--hang)) / 2); } }
+/* (later, Grace) the painting and thumbnails 10% larger than that (--hw), the header left where that sum put it */
+@media (min-width: 1280px) { :root { --hw0: min(calc(100vw - 2 * var(--side-pad)), calc((0.86 * (100vh - var(--header-h)) - var(--hang)) * 1.7673)); --hw: calc(1.1 * var(--hw0)); --hp: calc((100vw - var(--hw)) / 2); --h4-top: max(12px, calc((100vh - var(--header-h) - var(--hw) / 1.7673 - 1.1 * var(--hang)) / 2)); } }
 </style>
 <!-- H4 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
@@ -388,7 +389,7 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
-    const thumbH = m ? '33.66px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.765)' : 'calc((100vw - 2 * var(--side-pad)) * 0.03978)';   // (since 2026-10-22 85% of the 21 October size, itself 90% of 1c's)   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
+    const thumbH = m ? '33.66px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.765)' : 'calc((100vw - 2 * var(--side-pad)) * 0.043758)';   // (since 2026-10-22 85% of the 21 October size, itself 90% of 1c's)   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
