@@ -296,7 +296,7 @@ class Component extends DCLogic {
   // the excess cut off at the opening's edge on that side only (cq units: the frame is the size container; Ned's paper texture
   // shows in the border wherever a scan's own paper is cut away or runs short)
   paperImg(a, B) {
-    if (a.baked) return { left: 0, top: 0, width: '100cqw', height: '100cqh' };   // v2: the picture is the whole frame, border and all
+    if (a.baked) { const fade = 'linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 5%, #000 95%, transparent)'; return { left: '50px', top: 'calc(50cqh - (100cqw - 100px) / 3418 * 1934 / 2)', width: 'calc(100cqw - 100px)', height: 'calc((100cqw - 100px) / 3418 * 1934)', maskImage: fade, WebkitMaskImage: fade, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }; }   // H4: 50px more paper left and right (2026-11-06)   // v2: the picture is the whole frame, border and all
     const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = (1.5 * pw / ph).toFixed(4);
     const IW = 'calc(100cqw - 2 * ' + B + ')', IH = 'calc(100cqh - 2 * ' + B + ')';
     const PW = 'max(min(' + IW + ', calc(' + IH + ' * ' + P + ')), calc(max(' + IW + ', calc(' + IH + ' * ' + P + ')) / 1.01))', PH = 'calc(' + PW + ' / ' + P + ')';
