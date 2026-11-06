@@ -611,6 +611,8 @@ async function slideTo(ks, d, axis) {
   const T = vert ? 1.3 : 0.8;
   const ease = 'transform ' + T + 's cubic-bezier(0.45, 0.05, 0.25, 1)';   // soft: eases in gently, glides, and settles slowly
   row.style.transition = ease; out.style.transition = ease;
+  // (since 2026-11-06, Grace) up / down: the set leaving fades out quickly as it starts to move (0.5s), so it never cuts off at the stage's edge
+  if (vert) { out.style.transition = ease + ', opacity 0.5s cubic-bezier(0.4, 0, 0.6, 1)'; out.style.opacity = '0'; }
   row.style.transform = 'translate(-50%, -50%)'; out.style.transform = 'translate(-50%, -50%) ' + to;
   // the edge fade over the stage while the works cross its edges (its top fade on the grid's raised top edge, where it clips)
   const cp = /inset\((-?[\d.]+)px/.exec(stage.style.clipPath || '');
