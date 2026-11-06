@@ -7,6 +7,10 @@
 .srch { position: fixed; inset: 0; z-index: 1000; background: rgba(253, 253, 251, 0.98); overflow: auto; display: none; }
 .srch.open { display: block; }
 .srch-in { width: min(760px, calc(100vw - 48px)); margin: 0 auto; padding: calc(var(--header-h, 80px) + 32px) 0 80px; box-sizing: border-box; }
+/* (since 2026-11-06) with nothing typed the search field sits dead centre on the screen (--srch-mid, set from the field's own height);
+   once there are results (or a "nothing matches") it rises to the top and they show below it */
+.srch:not(.q) .srch-in { padding-top: var(--srch-mid, 40vh); }
+@media (prefers-reduced-motion: no-preference) { .srch-in { transition: padding-top 0.4s cubic-bezier(0.22, 1, 0.36, 1); } }
 .srch-row { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #141414; padding-bottom: 10px; }
 .srch-row svg { flex: none; color: #141414; }
 .srch input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; font-family: 'EB Garamond', serif; font-size: calc(28px * var(--fs, 1)); letter-spacing: 0.06em; color: #141414; padding: 4px 0; }
@@ -47,7 +51,11 @@
     box.querySelector('.srch-x').addEventListener('click', close);
     box.addEventListener('click', e => { if (e.target === box) close(); });
     input.addEventListener('input', run);
+    addEventListener('resize', centre);
   }
+  // the field's middle on the screen's middle: the space above it is half the screen less half the field (the panel's own height,
+  // so a browser's toolbar coming and going on a phone is allowed for)
+  function centre() { if (box) box.style.setProperty('--srch-mid', Math.max(0, (box.clientHeight - box.querySelector('.srch-row').offsetHeight) / 2) + 'px'); }
 
   function score(item, words, fields) {
     let s = 0;
@@ -64,6 +72,7 @@
     const D = window.SEARCH_DATA || { works: [], pages: [] };
     const words = fold(input.value).split(/\s+/).filter(Boolean);
     sel = -1;
+    box.classList.toggle('q', words.length > 0);
     if (!words.length) { list.innerHTML = ''; count.textContent = ''; links = []; return; }
     const works = D.works.map(w => ({ w, s: score(w, words, [[w.t, 10], [w.s, 5], [w.d, 3], [w.m, 1], [w.v ? 'vertical portrait' : 'horizontal landscape', 1]]) })).filter(x => x.s).sort((a, b) => b.s - a.s);
     const pages = D.pages.map(p => ({ p, s: score(p, words, [[p.t, 10], [p.k, 2]]) })).filter(x => x.s).sort((a, b) => b.s - a.s);
@@ -90,7 +99,7 @@
     if (!box) build();
     opener = from || document.activeElement;
     box.classList.add('open'); document.documentElement.style.overflow = 'hidden';
-    input.focus(); input.select(); run();
+    centre(); input.focus(); input.select(); run();
   }
   function close() {
     if (!box || !box.classList.contains('open')) return;
