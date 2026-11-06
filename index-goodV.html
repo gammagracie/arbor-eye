@@ -554,7 +554,7 @@ class Component extends DCLogic {
 <script src="body-fit.js?v=4"></script>
 <script>
 // (2026-11-06) the header placed on the painting: the logo's Tree of Life (138.7px into the 216.43px logo) over the painting's left
-// edge, the C of CONTACT over its right edge (desktop, 1280px up); the same sums as the stylesheet's --hw
+// edge, the last T of CONTACT over its right edge (desktop, 1280px up); the same sums as the stylesheet's --hw
 (function () {
   const root = document.documentElement;
   function fit() {
@@ -565,9 +565,10 @@ class Component extends DCLogic {
     const W = root.clientWidth, H = innerHeight, hh = bar.offsetHeight, side = W * (W > 2500 ? 0.08 : 0.10), hang = W > 2500 ? 59 : 45;
     const hw = Math.min(W - 2 * side, (0.86 * (H - hh) - hang) * 1.7673), right = (W - hw) / 2 + hw;   // CONTACT where the sum puts it
     const left = (W - Math.min(1.1 * hw, W - 301.4)) / 2;   // (later) the logo moved so its Tree of Life is over the 10%-larger painting's left edge (the painting never so wide that the logo comes closer than 12px to the screen's edge)
-    const D = Math.max(...icons.map(e => e.getBoundingClientRect().right)) - c.getBoundingClientRect().left;
+    const cr = c.getBoundingClientRect().right - (parseFloat(getComputedStyle(c).letterSpacing) || 0);   // the last T of CONTACT (its trailing letter-spacing left off)
+    const D = Math.max(...icons.map(e => e.getBoundingClientRect().right)) - cr;   // the icons past that T
     bar.style.paddingLeft = Math.max(0, left - 138.7).toFixed(2) + 'px';
-    bar.style.paddingRight = Math.max(0, W - right - D).toFixed(2) + 'px';
+    bar.style.paddingRight = Math.max(12, left - D).toFixed(2) + 'px';   // (later) the T over the painting's right edge (the mirror of the ToL's left)
   }
   let n = 0; (function early() { fit(); if (++n < 120) requestAnimationFrame(early); })();
   addEventListener('resize', fit); addEventListener('load', fit); if (document.fonts) document.fonts.ready.then(fit);
