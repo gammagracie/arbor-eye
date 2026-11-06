@@ -47,7 +47,7 @@ p, h1, h2, h3, li { text-wrap: pretty; }
    edge on the last letter of CONTACT in the nav (the search, account and bag icons stand to the right of it), the left edge the same
    distance in from the window's left. body-fit.js measures it exactly; 140px past the side margin is the fallback while it loads */
 :root { --body-pad: var(--side-pad); }
-@media (min-width: 1280px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }   /* desktop only; tablets and phones keep the side margin */
+@media (min-width: 2501px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }   /* (since 2026-11-05) over 2500px only; below that the content and footer line up with the nav (logo to bag) */
 html { scrollbar-gutter: stable; }
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
@@ -533,6 +533,6 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script src="body-fit.js?v=2"></script>
+<script src="body-fit.js?v=3"></script>
 </body>
 </html>
