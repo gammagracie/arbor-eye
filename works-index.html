@@ -18,7 +18,7 @@
 
 /* Shared site tokens: header/footer heights and side padding match the other pages */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
-@media (min-width: 2501px) { :root { --header-h: 96px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 16px taller, 8px more above and below the logo and nav (80px before) */
+@media (min-width: 2501px) { :root { --header-h: 110px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
 @media (min-width: 768px) { :root { --thumb-h: 30px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
@@ -213,6 +213,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           <a href="h77.html" data-t="H77">H77</a>
           <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
           <a href="gallery-gx2.html" data-t="GX2">GX2</a>
+          <a href="gallery-gx3.html" data-t="GX3">GX3</a>
           <a style="font-weight: 700; color: #141414" href="works-index.html" data-t="Index">Index</a>
           <a href="About.dc.html" data-t="About">About</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
@@ -231,6 +232,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <a href="h77.html">H77</a>
     <a href="gallery-filmstrip-2.html">Gallery</a>
     <a href="gallery-gx2.html">GX2</a>
+    <a href="gallery-gx3.html">GX3</a>
     <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
