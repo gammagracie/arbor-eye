@@ -21,6 +21,13 @@
 @media (min-width: 768px) { :root { --thumb-h: 30px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+/* (since 2026-11-06, every page) screens over 2500px: the header's side margins 8% of the width, as on Home, About and Contact, so the
+   header never moves between pages. The footer's content runs from the same distance in as the last letter of CONTACT over 2500px
+   (body-fit.js sets --body-pad), on the nav's lines below that */
+@media (min-width: 2501px) { :root { --side-pad: 8vw; } }
+:root { --body-pad: var(--side-pad); }
+@media (min-width: 2501px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }
+html { scrollbar-gutter: stable; }   /* (since 2026-11-06) the scrollbar's room kept as on every other page, so the header lines up wherever scrollbars take space */
 html, body { height: 100%; margin: 0; }
 body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: #141414; text-decoration: none; }
@@ -122,7 +129,7 @@ html.touch .track { touch-action: none; }
 
 /* footer */
 footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
-.foot { height: 100%; box-sizing: border-box; padding: 0 var(--side-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--body-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F; }
 .foot p { margin: 0; }
 .social { display: flex; gap: 16px; align-items: center; }
 .social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
@@ -679,5 +686,6 @@ addEventListener('wheel', e => {
 }, { passive: false });
 addEventListener('scroll', () => { if (!gliding) tY = se.scrollTop; }, { passive: true });
 </script>
+<script src="body-fit.js?v=4"></script>
 </body>
 </html>
