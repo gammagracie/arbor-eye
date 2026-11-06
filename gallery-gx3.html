@@ -989,7 +989,7 @@ if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0)
     const on = track.querySelectorAll('.thumb.on');
     if (on.length) {
       const a = on[0], b = on[on.length - 1], x = new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
-      const L = a.offsetLeft + x, W = b.offsetLeft + b.offsetWidth - a.offsetLeft, T = a.offsetTop + a.offsetHeight + 12;   // 6px under the thumbnails (the strip's own 6px padding included)
+      const L = a.offsetLeft + x, W = b.offsetLeft + b.offsetWidth - a.offsetLeft, T = a.offsetTop + a.offsetHeight + 20;   // 14px under the thumbnails (the strip's own 6px padding included; 6px until 8px lower on 2026-11-06)
       const key = L.toFixed(1) + '|' + W.toFixed(1) + '|' + T.toFixed(1);
       if (key !== last) { last = key; pill.style.transform = 'translate(' + L.toFixed(1) + 'px, ' + T.toFixed(1) + 'px)'; pill.style.width = W.toFixed(1) + 'px'; }
       pill.style.opacity = '1';
