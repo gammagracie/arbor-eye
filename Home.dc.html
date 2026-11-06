@@ -37,8 +37,8 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
-/* (since 2026-11-05; Home, About and Contact only) screens over 2500px: the header's side margins 12% of the width (10% below that) */
-@media (min-width: 2501px) { :root { --side-pad: 12vw; } }
+/* (since 2026-11-05; Home, About and Contact only) screens over 2500px: the header's side margins 8% of the width (10% below that; 12% for part of 2026-11-05) */
+@media (min-width: 2501px) { :root { --side-pad: 8vw; } }
 /* (since 2026-11-05; Home, About and Contact only) the page's content and the footer sit further in than the header: their right
    edge on the last letter of CONTACT in the nav (the search, account and bag icons stand to the right of it), the left edge the same
    distance in from the window's left. body-fit.js measures it exactly; 140px past the side margin is the fallback while it loads */
