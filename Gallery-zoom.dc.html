@@ -48,6 +48,12 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+/* (since 2026-11-06, every page) screens over 2500px: the header's side margins 8% of the width, as on Home, About and Contact, so the
+   header never moves between pages. The footer's content runs from the same distance in as the last letter of CONTACT over 2500px
+   (body-fit.js sets --body-pad), on the nav's lines below that */
+@media (min-width: 2501px) { :root { --side-pad: 8vw; } }
+:root { --body-pad: var(--side-pad); }
+@media (min-width: 2501px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }
 html { scrollbar-gutter: stable; }
 /* Tablet portrait (single-column layout, 600-767px): edition facts left, set + certificate lines on the right */
 @media (min-width: 600px) and (max-width: 767px) { .facts { grid-template-columns: 1fr auto; } .facts-cert { justify-self: end; } }
@@ -332,7 +338,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: {{ mainPad }}; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -864,5 +870,6 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script src="body-fit.js?v=4"></script>
 </body>
 </html>
