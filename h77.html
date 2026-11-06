@@ -13,13 +13,14 @@
    keep one proportion to the painting (6.255% of its width tall) */
 /* (later on 2026-11-06) the thumbnails 20% of their height lower, 110px of white above the painting and 60px under the thumbnails
    (the hover title inside that): width = (100vh - header - 203px) x 1.7048 */
-/* (latest, 2026-11-06 evening, Grace) the painting and its thumbnails fill the height under the header less 7% of it above
+/* (later still) 10% larger than that, the header widening with it (never closer than 24px to the screen's sides) */
+/* (2026-11-06 evening, Grace) the painting and its thumbnails fill the height under the header less 7% of it above
    and 7% below (0.86 of it), centred; the header on the painting's lines (the logo's A to the bag icon). Earlier: */
 /* (later on 2026-11-06, from Ned's screen) the painting and thumbnails 15% larger (x 1.15), but never so large that the
    painting with its hanging thumbnails leaves less than 40px of white above and below; the painting and thumbnails then
    centred between the header and the screen's bottom (--h77-top). The block is the frame (width / 1.7673) and the
    thumbnails hanging 32.9px + 2.074% of the width below it: 0.58658 x width + 32.9px */
-@media (min-width: 1280px) { :root { --h77-pad: max(var(--side-pad), calc((100vw - (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); --h77-top: max(36px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
+@media (min-width: 1280px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
 </style>
 <!-- H77 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
