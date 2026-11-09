@@ -41,7 +41,7 @@
   }
 
   function fit() {
-    if (NAV) navFit();
+    if (NAV) { navFit(); root.style.removeProperty('--body-pad'); return; }   // (since 2026-11-08) nav-match.css sets the margins on these pages
     const a = document.querySelector('header a[data-t="Contact"]');
     if (!a || !a.offsetWidth || !matchMedia('(min-width: 2501px)').matches) { root.style.removeProperty('--body-pad'); return; }   // screens over 2500px only
     // the link's box is as wide as its bold self on every page (a hidden bold copy under it), so the box keeps the footer in the same
