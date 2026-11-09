@@ -374,12 +374,13 @@ const VIDEOS = ['ascent_living-current.jpg', 'structure_framework.jpg', 'ascent_
 // (since 2026-11-02) films that play once instead of looping: Inner Eclipse's runs forward, then in reverse back to its first frame, and stops
 const FILM_ONCE = ['assets/videos/ascent_inner-eclipse'];
 // (since 2026-11-08, Grace) works with photographs of the framed print on a wall: the buy page shows the photograph for that frame
-// (its framing carousel, the frame swatches and the enlarged view), and a work with a wood photograph gets a wood frame option
+// (its framing carousel, the frame swatches and the enlarged view)
 const MOCKUPS = {
   'ascent_koi.jpg': { white: 'assets/frames/ascent_koi-white.webp', wood: 'assets/frames/ascent_koi-wood.webp', black: 'assets/frames/ascent_koi-black.webp' }
 };
-// the framing views of a work, in carousel order: unframed, then each frame (wood between white and black where the work has it)
-const frameViews = a => [['none', 'Unframed'], ['white', 'White frame']].concat(a && a.mock && a.mock.wood ? [['wood', 'Wood frame']] : [], [['black', 'Black frame']]);
+// the framing views of every work, in carousel order (since 2026-11-08 a wood frame on every work, drawn in #BB8958 where there is
+// no photograph): unframed, white, wood, black
+const frameViews = a => [['none', 'Unframed'], ['white', 'White frame'], ['wood', 'Wood frame'], ['black', 'Black frame']];
 const FRAME_COLOUR = { white: '#FFFFFF', wood: '#BB8958', black: '#141414' };
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
