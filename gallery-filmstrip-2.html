@@ -503,7 +503,7 @@ function fit() {
     gridTop = (SL && SL.cols === 2 && SL.per === 4 ? $('tools').querySelector('.count svg').getBoundingClientRect().bottom : iconTop) - st.top;
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
-    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches ? 1 : 1.5, GC = a => kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap
+    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches || (SL && SL.cols === 2) ? 1 : 1.5, GC = a => kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-09, Grace) a two-column series (2 x 2) the same as the rows', so its top-right work keeps clear of the menus
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
     // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
