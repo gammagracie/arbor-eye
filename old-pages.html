@@ -29,7 +29,24 @@ li a:hover { background: #F4F2EC; }
 .note { margin: 40px 0 0; font-size: 13px; line-height: 1.7; color: #8A867E; max-width: 64ch; }
 .note a { border-bottom: 1px solid #C9C5BD; }
 @media (max-width: 600px) { li a { grid-template-columns: 2rem minmax(0, 1fr); } li a .what { grid-column: 2; } }
+/* (since 2026-11-09, Grace) wider: on desktop the column runs on the homepage's lines, the logo's & to CONTACT's last T (nav-match.css
+   gives --nav-hp from the homepage's header height); over 2000px every size 25% larger, as on the site; over 2500px the list in two columns */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); }
+@media (min-width: 2501px) { :root { --header-h: 110px; } }
+@media (min-width: 1280px) { .wrap { max-width: none; padding-left: var(--nav-hp); padding-right: var(--nav-hp); } }
+@media (min-width: 2001px) {
+  .wrap { padding-top: 90px; padding-bottom: 120px; }
+  .logo, .logo img { width: 270.5px; } .logo { margin-bottom: 70px; }
+  h1 { font-size: 60px; } .lede { font-size: 18.75px; margin-bottom: 60px; }
+  li a { grid-template-columns: 2.5rem 12rem minmax(0, 1fr); gap: 5px 30px; padding: 25px 0; }
+  li a::before, .name { font-size: 16.25px; } .what { font-size: 18.75px; } .file { font-size: 15px; } .note { font-size: 16.25px; }
+}
+@media (min-width: 2501px) {
+  ol { columns: 2; column-gap: 120px; }
+  li { break-inside: avoid; }
+}
 </style>
+<link rel="stylesheet" href="nav-match.css?v=1">
 </head>
 <body>
 <div class="wrap">
