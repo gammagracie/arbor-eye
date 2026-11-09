@@ -80,3 +80,6 @@ html.mag-loupe-on, html.mag-loupe-on * { cursor: none !important; }   /* the poi
 .mm-slider { width: 180px; accent-color: #141414; }
 .mm-pct { min-width: 44px; font-size: 12px; letter-spacing: 0.08em; color: #55524C; text-align: right; }
 @media (min-width: 2501px) { .mm-side { width: 220px; padding-top: 120px; } .mm-stage { left: 220px; } .mm-tools { left: calc(50% + 110px); } .mm-map { width: 240px; } .mm-thumb img { max-height: 160px; } }
+
+/* MAG3 (since 2026-11-09): a change of view is instant, no frame drawn in or picture resizing over half a second */
+html.mag3 [aria-label="View framing options"] img { transition: none !important; animation: none !important; }

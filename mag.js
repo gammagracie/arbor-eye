@@ -103,7 +103,9 @@
     const lens = el('div', 'mag-lens'); document.body.appendChild(lens);
     const hint = el('div', 'mag-hint', 'Hover to magnify · scroll to change the strength');
     const root = document.documentElement;
-    let mx = -1, my = -1, inWin = false, power = 3, want = 3, shown = false, bg = '', ready = '', raf = 0;
+    let mx = -1, my = -1, inWin = false, power = 3, want = 3, shown = false, bg = '', raf = 0, parked = false;
+    const loaded = new Set();   // pictures already in the browser, so a change of view is instant
+    const preload = src => { if (!src || loaded.has(src)) return; const im = new Image(); im.onload = () => { loaded.add(src); kick(); }; im.src = src; if (im.complete && im.naturalWidth) loaded.add(src); };
     const wallOf = () => document.querySelector('[aria-label="View framing options"]');
     function hide() { if (shown) { shown = false; lens.classList.remove('on'); root.classList.remove('mag-loupe-on'); } }
     // the picture's drawn box on screen (inside any drawn frame and mount, and inside object-fit's bands)
@@ -121,13 +123,14 @@
       if (!inWin || !img || !img.naturalWidth) return hide();
       const b = drawn(img), x = mx - b.x, y = my - b.y;
       const over = document.elementFromPoint(mx, my);
-      if (x < 0 || y < 0 || x > b.w || y > b.h || !over || !wall.contains(over) || over.closest('button')) return hide();
+      if (x < 0 || y < 0 || x > b.w || y > b.h || !over || !wall.contains(over) || over.closest('button')) { parked = false; return hide(); }   // (leaving the picture ends an Esc)
+      if (parked) return hide();   // put away with Esc: back when the pointer next comes onto the picture
       const src = img.currentSrc || img.src;
-      if (src !== bg) {   // a new picture (another frame chosen): show the glass once it has loaded, never empty
-        bg = src; lens.style.backgroundImage = 'url("' + src + '")';
-        const pre = new Image(); pre.onload = () => { ready = src; kick(); }; pre.src = src; if (pre.complete) ready = src;
+      (window.AE_VIEWS || []).forEach(v => preload(v.src)); preload(src);
+      if (src !== bg) {   // another view chosen (swatch, dot or arrow key): the glass swaps to it at once if it is loaded, else keeps
+        if (loaded.has(src)) { bg = src; lens.style.backgroundImage = 'url("' + src + '")'; }   // the last picture until it is
+        else if (!bg) return hide();
       }
-      if (ready !== src) return hide();
       power += (want - power) * 0.25; if (Math.abs(want - power) < 0.005) power = want;
       const d = lens.offsetWidth;
       lens.style.backgroundSize = (b.w * power).toFixed(1) + 'px ' + (b.h * power).toFixed(1) + 'px';
@@ -143,6 +146,13 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) hide(); });
     addEventListener('scroll', () => { hide(); kick(); }, { passive: true });
     addEventListener('resize', kick);
+    // (2026-11-09) arrow keys change the view with the glass up (the buy page steps its carousel): redraw at once, without a move;
+    // Esc puts the glass away (the state before magnifying) until the pointer leaves the picture and comes back
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape' && shown) { parked = true; hide(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') requestAnimationFrame(kick);
+    }, true);
+    new MutationObserver(kick).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['src', 'style'] });
     // the wheel sets the strength (1.5x to 8x) while the glass shows, ahead of the page's own smooth scrolling; elsewhere it scrolls
     addEventListener('wheel', e => {
       if (!shown) return;
@@ -203,12 +213,12 @@
     slider.addEventListener('input', () => zoomAt(Math.pow(MAX, slider.value / 100)));
     minus.onclick = () => zoomAt(k / 1.5); plus.onclick = () => zoomAt(k * 1.5); fitB.onclick = () => zoomAt(1);
     const onResize = () => show(cur); addEventListener('resize', onResize);
-    const onKey = e => { const t = e.key; if (t === 'Escape') { e.stopPropagation(); removeEventListener('resize', onResize); shut(o, onKey); } else if (t === 'ArrowUp' || t === 'ArrowDown') { e.stopPropagation(); e.preventDefault(); show(cur + (t === 'ArrowDown' ? 1 : -1)); } else if (t === 'ArrowLeft' || t === 'ArrowRight') { e.stopPropagation(); show(cur + (t === 'ArrowRight' ? 1 : -1)); } else if (t === '+' || t === '=') zoomAt(k * 1.5); else if (t === '-') zoomAt(k / 1.5); else if (t === '0') zoomAt(1); };
+    const onKey = e => { const t = e.key; if (t === 'Escape') { e.stopPropagation(); if (k > 1.01) zoomAt(1); else { removeEventListener('resize', onResize); shut(o, onKey); } } else if (t === 'ArrowUp' || t === 'ArrowDown') { e.stopPropagation(); e.preventDefault(); show(cur + (t === 'ArrowDown' ? 1 : -1)); } else if (t === 'ArrowLeft' || t === 'ArrowRight') { e.stopPropagation(); show(cur + (t === 'ArrowRight' ? 1 : -1)); } else if (t === '+' || t === '=') zoomAt(k * 1.5); else if (t === '-') zoomAt(k / 1.5); else if (t === '0') zoomAt(1); };
     addEventListener('keydown', onKey, true); close.onclick = () => { removeEventListener('resize', onResize); shut(o, onKey); };
     show(cur); return () => shut(o, onKey);
   }
 
   const OPEN = { 1: spread, 2: viewer, 4: museum }[MODE];
-  if (MODE === '3') loupe();
+  if (MODE === '3') { document.documentElement.classList.add('mag3'); loupe(); }
   window.AE_MAG = OPEN ? { open: i => { if (open) return true; open = OPEN(Math.max(0, i || 0)); return true; } } : null;
 })();
