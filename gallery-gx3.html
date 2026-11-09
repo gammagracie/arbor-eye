@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Gallery (GX3)</title>
 <meta name="robots" content="noindex">
-<!-- GX3 also (since 2026-11-06): a 3px grey pill (#333 at 30%) under the featured thumbnails in the strip. -->
+<!-- GX3 also (since 2026-11-06): a 3px grey line (#333 at 30%) under the featured thumbnails in the strip; they have the same shadow as the rest. -->
 <!-- GX3 (since 2026-11-06): GX2 with its works' shadows only to the right and below (later that day reshaped from Grace's reference: a wide soft shadow that starts near the top and left edges and spreads off the right and bottom) (none on the top or left; the same reach
      right and down as GX2's, drawn with a negative spread). GX2 notes follow. -->
 <!-- GX2 (since 2026-11-06): a copy of the Gallery (G5, gallery-filmstrip-2.html) whose works' drop shadows are 1.6 times as dark (then 1.75 times that, 2026-11-06) and
@@ -182,7 +182,7 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
   .track { padding: 0 32px; } }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;   /* the swell follows the cursor softly (0.45s since 2026-10-21; was 0.16s) */ }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 5px 6px 14px -4px rgba(20,20,20,0.336); transition: box-shadow 0.35s ease; }
-.thumb.on img, .thumb.on:hover img, .thumb.on.hot img { box-shadow: none !important; }   /* (GX3, 2026-11-06) the featured thumbnails have no shadow: the pill under them marks them instead */   /* the works featured in the main area: a deeper shadow */
+/* (since 2026-11-08) the featured thumbnails have the same shadow as the rest: only the line under them marks them */
 html.touch .track { touch-action: none; }
 
 /* footer */
@@ -977,7 +977,7 @@ setWindow(start >= 0 ? start : 0, start > 0);
 stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 </script>
-<script src="body-fit.js?v=4"></script>
+<script src="body-fit.js?v=5" data-nav="home"></script>
 <script>
 // GX3 trial (since 2026-11-06): the pill under the featured thumbnails. It follows them as the set changes and as the strip
 // scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)
