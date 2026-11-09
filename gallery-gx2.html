@@ -166,6 +166,9 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
           mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
 .strip { overflow: visible; padding: 6px 0; display: flex; justify-content: safe center; }   /* (since 2026-10-20) a strip shorter than the page is centred on it */
+/* (since 2026-11-09, Grace, as on the Gallery) a thin line under the works showing above: 3px high, as wide as their thumbnails together, #333 at 30% */
+.strip { position: relative; }
+.on-pill { position: absolute; left: 0; top: 0; height: 3px; border-radius: 3px; background: rgba(51, 51, 51, 0.3); pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
 .track { display: flex; gap: var(--thumb-gap, 6px); align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
 /* desktop (since 2026-11-04; edge to edge from 2026-10-27): the filmstrip never runs past the nav, the logo's left edge to the bag's
    right, its thumbnails fading out over the last 32px as they slide past those lines; at either end of the row they rest just inside the fade */
@@ -176,7 +179,7 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
   .track { padding: 0 32px; } }
 .thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;   /* the swell follows the cursor softly (0.45s since 2026-10-21; was 0.16s) */ }
 .thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12), 2px 3px 8px rgba(20,20,20,0.336); transition: box-shadow 0.35s ease; }
-.thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.38), 4px 6px 12px rgba(20,20,20,1); }   /* the works featured in the main area: a deeper shadow */
+.thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.095), 4px 6px 12px rgba(20,20,20,0.25); }   /* the works featured in the main area: (since 2026-11-09, Grace) 25% of their earlier shadow (0.38 / 1); the line under them marks them */
 html.touch .track { touch-action: none; }
 
 /* footer */
@@ -978,5 +981,31 @@ stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 </script>
 <script src="body-fit.js?v=6" data-nav="home"></script>
+<script>
+// (since 2026-11-09, Grace, as on the Gallery) the line under the featured thumbnails. It follows them as the set changes and as the strip
+// scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)
+(function () {
+  const strip = document.getElementById('strip'), track = document.getElementById('track'); if (!strip || !track) return;
+  const pill = document.createElement('div'); pill.className = 'on-pill'; pill.setAttribute('aria-hidden', 'true'); strip.appendChild(pill);
+  // (later on 2026-11-06) when the featured set changes the pill slides to it (0.6s, eased); while the strip scrolls it follows at once
+  let cur = null, from = null, to = null, t0 = 0, last = '';
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  (function tick(now) {
+    const on = track.querySelectorAll('.thumb.on');
+    if (on.length) {
+      const a = on[0], b = on[on.length - 1], x = new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
+      const goal = { l: a.offsetLeft, w: b.offsetLeft + b.offsetWidth - a.offsetLeft, t: a.offsetTop + a.offsetHeight + 20 };   // 14px under the thumbnails
+      if (!cur) cur = Object.assign({}, goal);
+      if (!to || goal.l !== to.l || goal.w !== to.w || goal.t !== to.t) { from = Object.assign({}, cur); to = goal; t0 = now || performance.now(); }
+      const k = ease(Math.min(1, ((now || performance.now()) - t0) / 600));
+      cur = { l: from.l + (to.l - from.l) * k, w: from.w + (to.w - from.w) * k, t: from.t + (to.t - from.t) * k };
+      const key = (cur.l + x).toFixed(1) + '|' + cur.w.toFixed(1) + '|' + cur.t.toFixed(1);
+      if (key !== last) { last = key; pill.style.transform = 'translate(' + (cur.l + x).toFixed(1) + 'px, ' + cur.t.toFixed(1) + 'px)'; pill.style.width = cur.w.toFixed(1) + 'px'; }
+      pill.style.opacity = '1';
+    } else pill.style.opacity = '0';
+    requestAnimationFrame(tick);
+  })();
+})();
+</script>
 </body>
 </html>
