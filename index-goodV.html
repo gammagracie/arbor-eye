@@ -27,6 +27,7 @@
 <script src="search.js?v=2" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
+<link rel="stylesheet" href="nav-match.css?v=1">   <!-- (since 2026-11-09) the content on the homepage's lines -->
 </head>
 <body>
 <x-dc>
@@ -551,7 +552,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script src="body-fit.js?v=4"></script>
+<script src="body-fit.js?v=6" data-nav="home"></script>
 <script>
 // (2026-11-06) the header placed on the painting: the logo's Tree of Life (138.7px into the 216.43px logo) over the painting's left
 // edge, the last T of CONTACT over its right edge (desktop, 1280px up); the same sums as the stylesheet's --hw
