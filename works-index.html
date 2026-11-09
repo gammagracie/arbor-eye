@@ -202,6 +202,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <script src="search.js?v=2" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
+<link rel="stylesheet" href="nav-match.css?v=1">
 </head>
 <body>
 <div class="page index" id="page">
@@ -698,6 +699,6 @@ addEventListener('wheel', e => {
 }, { passive: false });
 addEventListener('scroll', () => { if (!gliding) tY = se.scrollTop; }, { passive: true });
 </script>
-<script src="body-fit.js?v=5" data-nav="home"></script>
+<script src="body-fit.js?v=6" data-nav="home"></script>
 </body>
 </html>

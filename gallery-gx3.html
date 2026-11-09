@@ -211,6 +211,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <script src="search.js?v=2" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
+<link rel="stylesheet" href="nav-match.css?v=1">
 </head>
 <body>
 <div class="page" id="page">
@@ -373,12 +374,15 @@ document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) a
 // tablet (768-1279px) 1 or a 2-column grid (view 2: two to four rows, as many as fit without making the works much smaller); phones a one-column
 // list of every work (the featured row is not used there). Each size remembers its own choice.
 const phone = matchMedia('(max-width: 767px)'), tab = matchMedia('(min-width: 768px) and (max-width: 1279px)');
+// (since 2026-11-08) the page's content margin: the header bar's padding from the stylesheet (--side-pad), not the inline padding
+// body-fit.js gives the header to put it in the homepage's place
+function sideLine() { const b = document.querySelector('.bar'), l = b.style.paddingLeft; b.style.paddingLeft = ''; const v = parseFloat(getComputedStyle(b).paddingLeft); b.style.paddingLeft = l; return v; }
 const askedView = +new URLSearchParams(location.search).get('view');   // ?view=1 / 3 / 9 / 2 opens in that view (the Index links open one-up)
 let deskView = [1, 3, 9].includes(askedView) ? askedView : 3, tabView = askedView === 1 ? 1 : 2;
 // 2-column grid: as many rows (2 to 4) as fit while the works stay within 8% of the largest size two rows would give
 // (the height allowed for here assumes the grid starts below the filter menus, as it does on most tablets)
 const tabRows = () => {
-  const pad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft), inner = document.documentElement.clientWidth - 2 * pad - 2 * (($('prev').querySelector('svg').getBoundingClientRect().width || 15) + 24);
+  const pad = sideLine(), inner = document.documentElement.clientWidth - 2 * pad - 2 * (($('prev').querySelector('svg').getBoundingClientRect().width || 15) + 24);
   const byW = (inner - 60) / 3, V = stage.clientHeight - 100, size = r => Math.min(byW, (V - 60 * (r - 1)) / r);
   return [4, 3, 2].find(r => size(r) >= 0.92 * size(2)) || 2; };
 const modeView = () => phone.matches ? 1 : tab.matches ? tabView : deskView;
@@ -425,7 +429,7 @@ function fit() {
   if (!slots.length || slots.some(s => s.idx < 0)) return;
   const nc = cols(), nr = rows(), grid = isGrid();
   const step = $('prev').offsetWidth, gap = grid ? 60 : count === 3 ? 40 : count > 1 ? 28 : 0, rowGap = grid ? 48 : gap, H = stage.clientHeight;
-  const sidePad = parseFloat(getComputedStyle(document.querySelector('.bar')).paddingLeft);
+  const sidePad = sideLine();
   const contentW = document.documentElement.clientWidth - 2 * sidePad;
   // the arrows are locked in the stylesheet on desktop and tablet (points on the logo's and the bag icon's outer edges);
   // phones: on the side padding, level with the logo and the menu button
@@ -977,7 +981,7 @@ setWindow(start >= 0 ? start : 0, start > 0);
 stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 </script>
-<script src="body-fit.js?v=5" data-nav="home"></script>
+<script src="body-fit.js?v=6" data-nav="home"></script>
 <script>
 // GX3 trial (since 2026-11-06): the pill under the featured thumbnails. It follows them as the set changes and as the strip
 // scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)
