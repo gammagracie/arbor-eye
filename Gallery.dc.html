@@ -373,6 +373,14 @@ const SERIES_NO = { 'Ascent': 1, 'Convergence': 2, 'Core': 3, 'Select': 4, 'Spec
 const VIDEOS = ['ascent_living-current.jpg', 'structure_framework.jpg', 'ascent_inner-eclipse.jpg', 'structure_within.jpg'];
 // (since 2026-11-02) films that play once instead of looping: Inner Eclipse's runs forward, then in reverse back to its first frame, and stops
 const FILM_ONCE = ['assets/videos/ascent_inner-eclipse'];
+// (since 2026-11-08, Grace) works with photographs of the framed print on a wall: the buy page shows the photograph for that frame
+// (its framing carousel, the frame swatches and the enlarged view), and a work with a wood photograph gets a wood frame option
+const MOCKUPS = {
+  'ascent_koi.jpg': { white: 'assets/frames/ascent_koi-white.webp', wood: 'assets/frames/ascent_koi-wood.webp', black: 'assets/frames/ascent_koi-black.webp' }
+};
+// the framing views of a work, in carousel order: unframed, then each frame (wood between white and black where the work has it)
+const frameViews = a => [['none', 'Unframed'], ['white', 'White frame']].concat(a && a.mock && a.mock.wood ? [['wood', 'Wood frame']] : [], [['black', 'Black frame']]);
+const FRAME_COLOUR = { white: '#FFFFFF', wood: '#BB8958', black: '#141414' };
 const DETAILS = {
   'Script': { medium: 'Acrylic and pastel on canvas', desc: 'Repeated strokes form a visual language.' },
   'Brilliance': { medium: 'Acrylic and pastel on canvas', desc: 'Light reveals what was always there' },
@@ -464,6 +472,7 @@ class Component extends DCLogic {
     orient: vertical ? 'Vertical' : 'Horizontal',
     src: 'assets/works-m70/' + f,
     video: VIDEOS.includes(f) ? 'assets/videos/' + f.replace('.jpg', '') : null,   // (+ .mp4 / .jpg poster)
+    mock: MOCKUPS[f] || null,   // (since 2026-11-08) photographs of the framed print, by frame
     title: t,
     series: s,
     avail: 'Available',
@@ -603,21 +612,21 @@ class Component extends DCLogic {
     this.onKey = (e) => {
       if (this.state.lightbox) {
         if (e.key === 'Escape') this.setState({ lightbox: false });
-        const n = 3 + (this.arts[this.state.sel] && this.arts[this.state.sel].video ? 1 : 0);   // (a work's film is a fourth slide)
+        const a0 = this.arts[this.state.sel], n = frameViews(a0).length + (a0 && a0.video ? 1 : 0);   // (a work's film is the last slide)
         if (e.key === 'ArrowLeft') this.setState(s => ({ lbIndex: (s.lbIndex + n - 1) % n }));
         if (e.key === 'ArrowRight') this.setState(s => ({ lbIndex: (s.lbIndex + 1) % n }));
       } else if (e.key === 'Escape' && this.state.openMenu) this.setState({ openMenu: null });
       else if (this.state.zoom) {
         if (e.key === 'Escape') this.setZoom(false);
-        const a = this.arts[this.state.sel], n = 3 + (a && a.video ? 1 : 0), i = n > 3 && this.state.zoomVid ? 3 : this.state.detailView;   // (a work's film last)
-        const go = j => this.setState(j === 3 ? { zoomVid: true, zoomLevel: 1 } : { detailView: j, zoomVid: false });
+        const a = this.arts[this.state.sel], V = frameViews(a).length, n = V + (a && a.video ? 1 : 0), i = n > V && this.state.zoomVid ? V : this.state.detailView;   // (a work's film last)
+        const go = j => this.setState(j === V ? { zoomVid: true, zoomLevel: 1 } : { detailView: j, zoomVid: false });
         if (e.key === 'ArrowLeft') go((i + n - 1) % n);
         if (e.key === 'ArrowRight') go((i + 1) % n);
       } else if (this.state.printView && this.state.sel != null && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !(e.target.closest && e.target.closest('input, textarea, select'))) {
         // (since 2026-11-02) the buy page's print carousel: the arrow keys step it as its arrows do (the frame colour follows; a work's film last)
-        const fs = ['none', 'white', 'black'], n = 3 + (this.arts[this.state.sel].video ? 1 : 0);
-        const i = n > 3 && this.state.printVid ? 3 : Math.max(0, fs.indexOf(this.state.frame)), j = (i + (e.key === 'ArrowRight' ? 1 : n - 1)) % n;
-        this.setState(j === 3 ? { printVid: true } : { frame: fs[j], printVid: false });
+        const fs = frameViews(this.arts[this.state.sel]).map(v => v[0]), n = fs.length + (this.arts[this.state.sel].video ? 1 : 0);
+        const i = n > fs.length && this.state.printVid ? fs.length : Math.max(0, fs.indexOf(this.state.frame)), j = (i + (e.key === 'ArrowRight' ? 1 : n - 1)) % n;
+        this.setState(j === fs.length ? { printVid: true } : { frame: fs[j], printVid: false });
       }
     };
     window.addEventListener('keydown', this.onKey);
@@ -674,7 +683,7 @@ class Component extends DCLogic {
     const t = !m && this.state.tablet;
     const oneCol = m || this.state.stackDetail;   // image above the text: phones, and anything below 1330px wide
     const frame = this.state.frame;
-    const views = [['none', 'Unframed'], ['white', 'White frame'], ['black', 'Black frame']];
+    const views = frameViews(sel != null ? this.arts[sel] : null);   // (since 2026-11-08) per work: a wood view where it has one
     const detailFrame = views[this.state.detailView][0] === 'none' ? 0 : 76; // frame (16px) + mount (22px) on each side
     // (since 2026-10-26, desktop and tablet) horizontals 12% smaller than before (77.4% of the largest that fits); verticals are the same
     // box turned on its side (as tall as a horizontal is wide), but never so tall that the magnify icon under them leaves the screen
@@ -694,9 +703,12 @@ class Component extends DCLogic {
     const wallShadow = '0 6px 24px rgba(20,20,20,0.20)';
     // both states share numeric border/padding values so switching frames animates smoothly
     const ease = { boxSizing: 'border-box', transition: 'border 0.5s ease, padding 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease' };
-    const framed = (f, sh = wallShadow) => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: sh } : { border: '16px solid ' + (f === 'white' ? '#FFFFFF' : '#141414'), padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + sh });
+    const framed = (f, sh = wallShadow) => Object.assign({}, ease, f === 'none' ? { border: '0 solid transparent', padding: 0, background: 'transparent', boxShadow: sh } : { border: '16px solid ' + FRAME_COLOUR[f], padding: '22px', background: '#FBFAF7', boxShadow: '0 0 0 1px rgba(20,20,20,0.12), ' + sh });
     const printShadow = '0 13.5px 54px rgba(20,20,20,0.45)';   // the buy (print) page and the original's detail image (since 2026-10-21): 2.25 times the wall shadow (three times, then 75% of that)
     const d = sel != null ? this.arts[sel] : null;
+    // (since 2026-11-08) the photograph of the framed print for frame f, where the work has one (shown as it is: no drawn frame or shadow)
+    const mockOf = f => (d && d.mock && d.mock[f]) || null;
+    const mockAlt = f => d.title + ', ' + (views.find(v => v[0] === f) || ['', ''])[1].toLowerCase() + ', on a wall';
     // the framing carousels' slides: the three framing views, then the work's film where it has one (since 2026-11-02)
     const vid = !!(d && d.video), nPc = views.length + (vid ? 1 : 0);
     const pcI = vid && this.state.printVid ? views.length : Math.max(0, views.findIndex(v => v[0] === frame));
@@ -807,13 +819,13 @@ class Component extends DCLogic {
       printThumbSize: m ? '72px' : '104px',
       printStageMin: m ? '320px' : '0',
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
-      printImg: d && (vid && this.state.printVid ? film(m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) : React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) })),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
+      printImg: d && (vid && this.state.printVid ? film(m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) : mockOf(frame) ? React.createElement('img', { key: 'mock-' + frame, src: mockOf(frame), alt: mockAlt(frame), style: Object.assign({ display: 'block' }, m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) }) : React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) })),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
       // frame swatches
-      frames: [['white', '#FFFFFF'], ['black', '#141414'], ['none', null]].map(([f, c]) => ({
+      frames: views.filter(v => v[0] !== 'none').map(v => [v[0], FRAME_COLOUR[v[0]]]).concat([['none', null]]).map(([f, c]) => ({
         pick: () => this.setState({ frame: f, printVid: false }), aria: f === 'none' ? 'Unframed' : f + ' frame',
         swatchDisplay: c ? 'block' : 'none', textDisplay: c ? 'none' : 'block', color: c || 'transparent', caret: frame === f ? 1 : 0
       })),
-      frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : 'Black',
+      frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : frame === 'wood' ? 'Wood' : 'Black',
       mountLabel: frame === 'none' ? 'None' : 'Reveal',
       // lightbox carousel of the framing views
       lightboxOpen: this.state.lightbox,
@@ -829,7 +841,7 @@ class Component extends DCLogic {
       lbPrev: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + nPc - 1) % nPc })); },
       lbNext: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + 1) % nPc })); },
       // sized from the image's own ratio so it fills the overlay without distortion
-      lightboxImg: d && (vid && this.state.lbIndex === views.length ? film({ height: 'calc(100vh - 152px)', width: 'auto', maxWidth: 'calc(100vw - 48px)', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }, (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + nPc) % nPc }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(calc(100vw - 48px), calc((100vh - 152px) * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, framed(views[this.state.lbIndex][0])) })),
+      lightboxImg: d && (vid && this.state.lbIndex === views.length ? film({ height: 'calc(100vh - 152px)', width: 'auto', maxWidth: 'calc(100vw - 48px)', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }, (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }) : React.createElement('img', { src: mockOf((views[this.state.lbIndex] || views[0])[0]) || d.src, alt: mockOf((views[this.state.lbIndex] || views[0])[0]) ? mockAlt(views[this.state.lbIndex][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onClick: (e) => { e.stopPropagation(); this.setState(s => ({ lbIndex: (s.lbIndex + (this.side(e) === 1 ? 1 : nPc - 1)) % nPc })); }, onTouchStart: (e) => this.viewTouchStart(e), onTouchEnd: (e) => this.viewSwipe(e, d2 => this.setState(s => ({ lbIndex: (s.lbIndex + d2 + nPc) % nPc }))), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }), style: Object.assign({ width: 'min(calc(100vw - 48px), calc((100vh - 152px) * ' + this.state.lbRatio + '))', height: 'auto', display: 'block', cursor: 'default' }, mockOf((views[this.state.lbIndex] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.lbIndex] || views[0])[0])) })),
       hasDesc: !!(d && d.desc),
       printPrice: ['$225', '$595', '$1,195'][this.state.size],
       sizes: ['8x12\u2033', '16x24\u2033', '24x36\u2033'].map((label, idx) => ({
@@ -848,11 +860,11 @@ class Component extends DCLogic {
       zoomOpen: this.state.zoom,
       closeZoom: () => this.setZoom(false),
       zoomHint: vid && this.state.zoomVid ? 'esc to close' : this.state.zoomLevel > 1 ? (Math.round(this.state.zoomLevel * 10) / 10) + 'x \u00b7 scroll or pinch to zoom, drag to move \u00b7 esc to close' : 'double-click, scroll or pinch to zoom in \u00b7 esc to close',
-      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 216px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 216px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : Math.floor(this.state.zoomLevel) + 1),
         onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, Math.ceil(this.state.zoomLevel) - 1)); },
         
-        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, framed(views[this.state.detailView][0])) })),
+        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, mockOf((views[this.state.detailView] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.detailView] || views[0])[0])) })),
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
       detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the zoom button when the text stacks underneath (the framing dots live on the buy page only since 2026-10-13)
       detailInfoCol: oneCol ? '1' : '2',
@@ -869,7 +881,7 @@ class Component extends DCLogic {
       detailTitleSize: m ? '34px' : '46px',   // (since 2026-11-01) the title on the detail and buy pages alike: 85% of this, less 4px (the buy page's was the full size)
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
-        style: Object.assign({ width: detailW, height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed(views[this.state.detailView][0], printShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
+        style: Object.assign({ width: detailW, height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed((views[this.state.detailView] || views[0])[0], printShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
       detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
       detailDotsW: this.state.detailDotsW,
       detailDotsL: this.state.detailImgOff.toFixed(1) + 'px',
