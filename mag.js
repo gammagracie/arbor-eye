@@ -95,33 +95,61 @@
   }
 
   // ---------- 3: Loupe ----------
+  // (2026-11-09, fixes) the glass follows the picture as drawn, not the image element: a framed photograph's element fills the
+  // whole wall with empty bands beside the photograph, where the glass used to vanish with the pointer hidden. The pointer hides
+  // only while the glass shows; the glass is drawn once a frame (no work between moves), its strength eases to the wheel's (a
+  // trackpad's many small wheel steps no longer jump it), and it closes when the pointer leaves the window or the page scrolls.
   function loupe() {
     const lens = el('div', 'mag-lens'); document.body.appendChild(lens);
-    const hint = el('div', 'mag-hint', 'Hover to magnify · scroll to change the strength'); let power = 3, target = null;
+    const hint = el('div', 'mag-hint', 'Hover to magnify · scroll to change the strength');
+    const root = document.documentElement;
+    let mx = -1, my = -1, inWin = false, power = 3, want = 3, shown = false, bg = '', ready = '', raf = 0;
     const wallOf = () => document.querySelector('[aria-label="View framing options"]');
-    function place(e) {
-      const wall = wallOf(), img = wall && wall.querySelector('img');
-      if (!img || !img.contains(e.target) && e.target !== img) { lens.classList.remove('on'); target = null; return; }
-      target = img;
+    function hide() { if (shown) { shown = false; lens.classList.remove('on'); root.classList.remove('mag-loupe-on'); } }
+    // the picture's drawn box on screen (inside any drawn frame and mount, and inside object-fit's bands)
+    function drawn(img) {
       const cs = getComputedStyle(img), r = img.getBoundingClientRect();
-      const bl = parseFloat(cs.borderLeftWidth) + parseFloat(cs.paddingLeft), bt = parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop);
-      const cw = r.width - bl - parseFloat(cs.borderRightWidth) - parseFloat(cs.paddingRight), ch = r.height - bt - parseFloat(cs.borderBottomWidth) - parseFloat(cs.paddingBottom);
-      // the picture's drawn box (object-fit: contain leaves bands either side of a photograph)
-      let dw = cw, dh = ch, ox = 0, oy = 0; const nr = img.naturalWidth / img.naturalHeight;
-      if (cs.objectFit === 'contain' && nr) { if (cw / ch > nr) { dw = ch * nr; ox = (cw - dw) / 2; } else { dh = cw / nr; oy = (ch - dh) / 2; } }
-      const x = e.clientX - r.left - bl - ox, y = e.clientY - r.top - bt - oy;
-      if (x < 0 || y < 0 || x > dw || y > dh) { lens.classList.remove('on'); return; }
-      const d = lens.offsetWidth;
-      lens.style.backgroundImage = 'url("' + (img.currentSrc || img.src) + '")';
-      lens.style.backgroundSize = (dw * power) + 'px ' + (dh * power) + 'px';
-      lens.style.backgroundPosition = (d / 2 - x * power) + 'px ' + (d / 2 - y * power) + 'px';
-      lens.style.transform = 'translate(' + (e.clientX - d / 2) + 'px,' + (e.clientY - d / 2) + 'px)';
-      lens.classList.add('on');
+      const l = parseFloat(cs.borderLeftWidth) + parseFloat(cs.paddingLeft), t = parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop);
+      const cw = r.width - l - parseFloat(cs.borderRightWidth) - parseFloat(cs.paddingRight), ch = r.height - t - parseFloat(cs.borderBottomWidth) - parseFloat(cs.paddingBottom);
+      let w = cw, h = ch, ox = 0, oy = 0; const nr = img.naturalWidth / img.naturalHeight;
+      if ((cs.objectFit === 'contain' || cs.objectFit === 'scale-down') && nr) { if (cw / ch > nr) { w = ch * nr; ox = (cw - w) / 2; } else { h = cw / nr; oy = (ch - h) / 2; } }
+      return { x: r.left + l + ox, y: r.top + t + oy, w, h };
     }
-    let last = null;
-    addEventListener('mousemove', e => { last = e; place(e); }, { passive: true });
-    addEventListener('wheel', e => { if (!target || !lens.classList.contains('on')) return; e.preventDefault(); e.stopImmediatePropagation(); power = Math.max(1.5, Math.min(8, power * (e.deltaY < 0 ? 1.12 : 1 / 1.12))); if (last) place(last); }, { passive: false, capture: true });   // first, ahead of the page's own smooth scrolling
-    addEventListener('scroll', () => lens.classList.remove('on'), { passive: true });
+    function frame() {
+      raf = 0;
+      const wall = wallOf(), img = wall && wall.querySelector('img');
+      if (!inWin || !img || !img.naturalWidth) return hide();
+      const b = drawn(img), x = mx - b.x, y = my - b.y;
+      const over = document.elementFromPoint(mx, my);
+      if (x < 0 || y < 0 || x > b.w || y > b.h || !over || !wall.contains(over) || over.closest('button')) return hide();
+      const src = img.currentSrc || img.src;
+      if (src !== bg) {   // a new picture (another frame chosen): show the glass once it has loaded, never empty
+        bg = src; lens.style.backgroundImage = 'url("' + src + '")';
+        const pre = new Image(); pre.onload = () => { ready = src; kick(); }; pre.src = src; if (pre.complete) ready = src;
+      }
+      if (ready !== src) return hide();
+      power += (want - power) * 0.25; if (Math.abs(want - power) < 0.005) power = want;
+      const d = lens.offsetWidth;
+      lens.style.backgroundSize = (b.w * power).toFixed(1) + 'px ' + (b.h * power).toFixed(1) + 'px';
+      lens.style.backgroundPosition = (d / 2 - x * power).toFixed(1) + 'px ' + (d / 2 - y * power).toFixed(1) + 'px';
+      lens.style.transform = 'translate3d(' + (mx - d / 2).toFixed(1) + 'px,' + (my - d / 2).toFixed(1) + 'px,0)';
+      if (!shown) { shown = true; lens.classList.add('on'); root.classList.add('mag-loupe-on'); }
+      if (power !== want) kick();   // still easing to the wheel's strength
+    }
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; mx = e.clientX; my = e.clientY; inWin = true; kick(); }, { passive: true });
+    document.addEventListener('mouseout', e => { if (!e.relatedTarget) { inWin = false; hide(); } });   // the pointer left the window
+    addEventListener('blur', () => { inWin = false; hide(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) hide(); });
+    addEventListener('scroll', () => { hide(); kick(); }, { passive: true });
+    addEventListener('resize', kick);
+    // the wheel sets the strength (1.5x to 8x) while the glass shows, ahead of the page's own smooth scrolling; elsewhere it scrolls
+    addEventListener('wheel', e => {
+      if (!shown) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      const dy = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+      want = Math.max(1.5, Math.min(8, want * Math.exp(-dy * 0.004))); kick();
+    }, { passive: false, capture: true });
     // the hint under the print, once the buy page has drawn it
     setInterval(() => { const w = wallOf(); if (w && !w.parentNode.querySelector('.mag-hint')) w.insertAdjacentElement('afterend', hint); }, 300);
     return null;   // a click still opens the page's own enlarged view

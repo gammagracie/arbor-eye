@@ -52,10 +52,10 @@ html.mag-lock, html.mag-lock body { overflow: hidden; }
 
 /* 3: Loupe. A round glass over the print, 3x to start (scroll to change it, 1.5x to 8x) */
 .mag-lens { position: fixed; left: 0; top: 0; z-index: 150; width: 300px; height: 300px; border-radius: 50%; pointer-events: none; background-repeat: no-repeat; background-color: #FDFDFB;
-  box-shadow: 0 0 0 2px #FDFDFB, 0 0 0 3px rgba(20,20,20,0.18), 0 14px 40px rgba(20,20,20,0.28); opacity: 0; transition: opacity 0.18s ease; }
+  box-shadow: 0 0 0 2px #FDFDFB, 0 0 0 3px rgba(20,20,20,0.18), 0 14px 40px rgba(20,20,20,0.28); opacity: 0; transition: opacity 0.18s ease; will-change: transform; }
 .mag-lens.on { opacity: 1; }
 @media (min-width: 2501px) { .mag-lens { width: 420px; height: 420px; } }
-[aria-label="View framing options"] img { cursor: none; }
+html.mag-loupe-on, html.mag-loupe-on * { cursor: none !important; }   /* the pointer hides only while the glass shows (since 2026-11-09) */
 .mag-hint { margin-top: 14px; text-align: center; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; }
 
 /* 4: Museum. Deep zoom: the views down the left, the work on pale paper, wheel / pinch / double-click / slider to zoom up to 6x,
