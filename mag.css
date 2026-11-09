@@ -1,0 +1,82 @@
+/* Magnify trials (since 2026-11-08): the four viewers in mag.js, shown on mag1-mag4. Shared pieces first. */
+html.mag-lock, html.mag-lock body { overflow: hidden; }
+.mag-ov { position: fixed; inset: 0; z-index: 200; opacity: 0; transition: opacity 0.25s ease; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; color: #141414; -webkit-font-smoothing: antialiased; }
+.mag-ov.in { opacity: 1; }
+.mag-ov button { font: inherit; color: inherit; cursor: pointer; }
+.mag-close { position: fixed; top: 24px; right: 24px; z-index: 5; width: 44px; height: 44px; border-radius: 50%; border: none; background: #FDFDFB; box-shadow: 0 2px 10px rgba(20,20,20,0.12); display: grid; place-items: center; }
+.mag-close svg { width: 18px; height: 18px; }
+@media (min-width: 2501px) { .mag-close { top: 36px; right: 36px; width: 56px; height: 56px; } .mag-close svg { width: 22px; height: 22px; } }
+
+/* 1: Spread (after Patagonia). The views side by side at full height on the print wall's colour; a round cursor; click one to
+   see it as wide as the screen and scroll down through it; round controls bottom left */
+.mag-spread { background: #F0F2EF; overflow-y: auto; cursor: none; }
+.mag-spread .ms-track { display: flex; height: 100vh; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.mag-spread .ms-track::-webkit-scrollbar { display: none; }
+.mag-spread .ms-slide { flex: none; height: 100vh; aspect-ratio: 0.8; display: grid; place-items: center; box-sizing: border-box; }
+.mag-spread .ms-img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.mag-spread .ms-slide:not(.photo) .ms-img { max-height: 76vh; max-width: calc(100% - 14vh); }   /* the work alone: as it hangs on the print wall */
+.mag-spread .ms-slide.photo .ms-img { width: 100%; height: 100%; object-fit: cover; }
+.mag-spread.zoomed .ms-track { height: auto; overflow: visible; display: block; }
+.mag-spread.zoomed .ms-slide { display: none; }
+.mag-spread.zoomed .ms-slide.on { display: block; height: auto; aspect-ratio: auto; width: 100vw; padding: 0; }
+.mag-spread.zoomed .ms-slide.on .ms-img { width: 100vw; height: auto; max-width: none; max-height: none; object-fit: fill; }
+.ms-cursor { position: fixed; left: -36px; top: -36px; width: 72px; height: 72px; border-radius: 50%; background: rgba(253,253,251,0.92); box-shadow: 0 2px 12px rgba(20,20,20,0.18); pointer-events: none; z-index: 6; display: grid; place-items: center; transition: opacity 0.2s ease; }
+.ms-cursor span, .ms-z span { position: relative; width: 16px; height: 16px; }
+.ms-cursor span::before, .ms-cursor span::after, .ms-z span::before, .ms-z span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.2px; margin-top: -0.6px; background: #141414; }
+.ms-cursor span::after, .ms-z span::after { transform: rotate(90deg); }
+.mag-spread.zoomed .ms-cursor span::after, .mag-spread.zoomed .ms-z span::after { display: none; }   /* zoomed: a minus, to go back */
+.ms-cursor.hide { opacity: 0; }
+.ms-ctl { position: fixed; left: 24px; bottom: 24px; z-index: 5; display: flex; gap: 10px; }
+.ms-b { width: 44px; height: 44px; border-radius: 50%; border: none; background: #FDFDFB; box-shadow: 0 2px 10px rgba(20,20,20,0.12); display: grid; place-items: center; cursor: pointer !important; }
+.ms-b svg { width: 7px; height: 19px; }
+.mag-spread .mag-close, .mag-spread button { cursor: pointer; }
+
+/* 2: Viewer (after Ray-Ban). One view on pale paper, the counter top left, thin arrows at the sides, a progress bar under it;
+   click to zoom in 2.5x and the picture follows the mouse; the controls step aside while zoomed */
+.mag-viewer { background: #F7F7F5; }
+.mv-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; cursor: zoom-in; }
+.mv-img { display: block; max-width: calc(100vw - 280px); max-height: calc(100vh - 180px); width: auto; height: auto; transform-origin: 0 0; transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.mag-viewer.zoomed .mv-stage { cursor: zoom-out; }
+.mag-viewer.zoomed .mv-img { transition: transform 0.12s linear; }
+.mv-count { position: fixed; top: 34px; left: 32px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; white-space: pre; }
+.mv-arrow { position: fixed; top: 50%; margin-top: -40px; width: 64px; height: 80px; border: none; background: none; display: grid; place-items: center; }
+.mv-arrow.l { left: 24px; } .mv-arrow.r { right: 24px; }
+.mv-arrow svg { width: 15px; height: 42px; }
+.mv-bar { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); display: flex; gap: 4px; }
+.mv-seg { width: 48px; height: 14px; border: none; background: none; padding: 6px 0; }
+.mv-seg::before { content: ""; display: block; height: 2px; background: #D6D3CC; transition: background 0.3s ease; }
+.mv-seg.on::before { background: #141414; }
+.mag-viewer .mv-count, .mag-viewer .mv-arrow, .mag-viewer .mv-bar { transition: opacity 0.3s ease; }
+.mag-viewer.zoomed .mv-count, .mag-viewer.zoomed .mv-arrow, .mag-viewer.zoomed .mv-bar { opacity: 0; pointer-events: none; }
+@media (min-width: 2501px) { .mv-count { top: 46px; left: 48px; font-size: 16px; } .mv-arrow svg { width: 19px; height: 53px; } .mv-seg { width: 72px; } .mv-img { max-width: calc(100vw - 400px); max-height: calc(100vh - 240px); } }
+
+/* 3: Loupe. A round glass over the print, 3x to start (scroll to change it, 1.5x to 8x) */
+.mag-lens { position: fixed; left: 0; top: 0; z-index: 150; width: 300px; height: 300px; border-radius: 50%; pointer-events: none; background-repeat: no-repeat; background-color: #FDFDFB;
+  box-shadow: 0 0 0 2px #FDFDFB, 0 0 0 3px rgba(20,20,20,0.18), 0 14px 40px rgba(20,20,20,0.28); opacity: 0; transition: opacity 0.18s ease; }
+.mag-lens.on { opacity: 1; }
+@media (min-width: 2501px) { .mag-lens { width: 420px; height: 420px; } }
+[aria-label="View framing options"] img { cursor: none; }
+.mag-hint { margin-top: 14px; text-align: center; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; }
+
+/* 4: Museum. Deep zoom: the views down the left, the work on pale paper, wheel / pinch / double-click / slider to zoom up to 6x,
+   drag to move, and an overview map (bottom right) showing the part on screen; drag in the map to move there */
+.mag-museum { background: #F4F3EF; }
+.mm-stage { position: absolute; left: 168px; right: 0; top: 0; bottom: 0; overflow: hidden; cursor: grab; touch-action: none; }
+.mm-stage.drag { cursor: grabbing; }
+.mm-img { position: absolute; left: 0; top: 0; max-width: none; height: auto; transform-origin: 0 0; user-select: none; }
+.mm-side { position: absolute; left: 0; top: 0; bottom: 0; width: 168px; box-sizing: border-box; padding: 96px 24px 24px; display: flex; flex-direction: column; gap: 22px; background: #FDFDFB; border-right: 1px solid #E7E4DE; overflow-y: auto; }
+.mm-thumb { border: none; background: none; padding: 0; display: grid; gap: 8px; justify-items: center; opacity: 0.55; transition: opacity 0.2s ease; }
+.mm-thumb.on, .mm-thumb:hover { opacity: 1; }
+.mm-thumb img { display: block; max-width: 100%; max-height: 120px; width: auto; height: auto; border-width: 4px !important; padding: 5px !important; box-shadow: none !important; }
+.mm-thumb span { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.mm-map { position: absolute; right: 24px; bottom: 88px; width: 180px; background: #FDFDFB; box-shadow: 0 4px 18px rgba(20,20,20,0.16); padding: 6px; cursor: crosshair; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; touch-action: none; }
+.mm-map.show { opacity: 1; pointer-events: auto; }
+.mm-map img { display: block; width: 100%; object-fit: contain; pointer-events: none; }
+.mm-box { position: absolute; margin: 6px; box-sizing: border-box; border: 1.5px solid #141414; box-shadow: 0 0 0 999px rgba(253,253,251,0.45); pointer-events: none; }
+.mm-map { overflow: hidden; }
+.mm-tools { position: absolute; left: calc(50% + 84px); bottom: 28px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: #FDFDFB; border-radius: 26px; box-shadow: 0 2px 12px rgba(20,20,20,0.12); }
+.mm-t { width: 32px; height: 32px; border: none; background: none; font-size: 18px; line-height: 1; }
+.mm-fit { width: auto; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 0 6px; }
+.mm-slider { width: 180px; accent-color: #141414; }
+.mm-pct { min-width: 44px; font-size: 12px; letter-spacing: 0.08em; color: #55524C; text-align: right; }
+@media (min-width: 2501px) { .mm-side { width: 220px; padding-top: 120px; } .mm-stage { left: 220px; } .mm-tools { left: calc(50% + 110px); } .mm-map { width: 240px; } .mm-thumb img { max-height: 160px; } }
