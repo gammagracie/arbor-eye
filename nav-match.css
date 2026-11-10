@@ -1,12 +1,9 @@
-/* (since 2026-11-08, Grace) every page but the homepages and H77, desktop (1280px up): the page's content on the homepage's lines,
-   from the & of the logo (the homepage painting's left edge, 138.7px into the logo) to the last T of CONTACT (its right edge).
-   --nav-hp is index.html's --hp, the same sum: (100vw - the homepage painting's width) / 2. Both page margins take it, so whatever
-   was on the nav's old 8% / 10% lines (--side-pad) or under CONTACT (--body-pad) now sits on these. body-fit.js (data-nav="home")
-   puts the header and footer on the same lines. html:root outranks the pages' own :root rules. */
+/* (since 2026-11-08, Grace) every page but the homepages, desktop (1280px up): the page's content on the homepage's lines.
+   (since 2026-11-09) The homepage is H77: the lines are its painting's edges, where the logo's left edge and the bag icon's right
+   edge sit, --nav-hp = index.html's --h77-pad, the same sum. Both page margins take it, so whatever was on the nav's old 8% / 10%
+   lines (--side-pad) or under CONTACT (--body-pad) now sits on these. body-fit.js (data-nav="home") puts the header and footer on
+   the same lines. html:root outranks the pages' own :root rules. */
 @media (min-width: 1280px) {
-  html:root { --nav-hp: calc((100vw - min(calc(1.1 * min(calc(100vw - 2 * 10vw), calc((0.86 * (100vh - var(--header-h)) - 45px) * 1.7673))), calc(100vw - 301.4px))) / 2);
+  html:root { --nav-hp: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2));
               --side-pad: var(--nav-hp); --body-pad: var(--nav-hp); }
-}
-@media (min-width: 2501px) {
-  html:root { --nav-hp: calc((100vw - min(calc(1.1 * min(calc(100vw - 2 * 8vw), calc((0.86 * (100vh - var(--header-h)) - 59px) * 1.7673))), calc(100vw - 301.4px))) / 2); }
 }
