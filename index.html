@@ -4,12 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arbor &amp; Eye | Artwork by Ned Church</title>
-<style>:root { --hang: 45px; --hw: calc(100vw - 2 * var(--body-pad)); --hp: var(--body-pad); --h4-top: 40px; }
-@media (min-width: 2501px) { :root { --hang: 59px; } }   /* the thumbnails hang 45px (59px over 2500px) below the frame, measured */
-/* (later, Grace) the painting and thumbnails 10% larger than that (--hw), the header left where that sum put it */
-@media (min-width: 1280px) { :root { --hw0: min(calc(100vw - 2 * var(--side-pad)), calc((0.86 * (100vh - var(--header-h)) - var(--hang)) * 1.7673)); --hw: min(calc(1.1 * var(--hw0)), calc(100vw - 301.4px)); --hp: calc((100vw - var(--hw)) / 2); --h4-top: max(12px, calc((100vh - var(--header-h) - var(--hw) / 1.7673 - 1.1 * var(--hang)) / 2)); } }
+<style>:root { --h77-pad: var(--side-pad); --h77-thumb: calc((100vw - 2 * var(--side-pad)) * 0.03978); }
+/* (since 2026-11-06, Grace) desktop: the painting as large as still shows whole on load, with its thumbnails and hover title,
+   never closer to the screen's sides than the other pages' header; the header and the footer on the painting's lines. The
+   frame (1.7673:1) plus the 40px above it and the band below (78.5px + 0.0271 of its width, the thumbnails hanging from it and
+   the title) fit the height under the header with 20px to spare: width = (100vh - header - 140px) x 1.6866. The thumbnails
+   keep one proportion to the painting (6.255% of its width tall) */
+/* (later on 2026-11-06) the thumbnails 20% of their height lower, 110px of white above the painting and 60px under the thumbnails
+   (the hover title inside that): width = (100vh - header - 203px) x 1.7048 */
+/* (later still) 10% larger than that, the header widening with it (never closer than 24px to the screen's sides) */
+/* (2026-11-06 evening, Grace) the painting and its thumbnails fill the height under the header less 7% of it above
+   and 7% below (0.86 of it), centred; the header on the painting's lines (the logo's A to the bag icon). Earlier: */
+/* (later on 2026-11-06, from Ned's screen) the painting and thumbnails 15% larger (x 1.15), but never so large that the
+   painting with its hanging thumbnails leaves less than 40px of white above and below; the painting and thumbnails then
+   centred between the header and the screen's bottom (--h77-top). The block is the frame (width / 1.7673) and the
+   thumbnails hanging 32.9px + 2.074% of the width below it: 0.58658 x width + 32.9px */
+@media (min-width: 1280px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
 </style>
-<!-- H4 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
+<!-- H77 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
      quietest top-to-bottom paths, the drawn shapes, rough edges and paper border untouched); the frame as tall as the
      homepage's and correspondingly wider, past the nav lines where need be, but at least 40px in from the screen's edges -->
@@ -137,7 +149,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </sc-if>
 </nav>
 
-<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--hp); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: flex-start" data-screen-label="Home — Gallery">
+<main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--h77-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: flex-start" data-screen-label="Home — Gallery">
   <h1 class="sr-only">Arbor &amp; Eye, artwork by Ned Church</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
@@ -170,7 +182,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </main>
 
 <footer style="position: {{ footerPos }}; left: 0; right: 0; bottom: 0; z-index: 20; border-top: 1px solid #E7E4DE; background: #FAF9F5; height: var(--footer-h); box-sizing: border-box; margin-top: auto" data-screen-label="Footer">
-  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--hp); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--h77-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F">
     <p style="margin: 0">Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
     <div style="display: flex; gap: 16px; align-items: center">
       <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram" style="display: flex; opacity: 0.85" style-hover="opacity: 1">
@@ -307,7 +319,7 @@ class Component extends DCLogic {
   // the excess cut off at the opening's edge on that side only (cq units: the frame is the size container; Ned's paper texture
   // shows in the border wherever a scan's own paper is cut away or runs short)
   paperImg(a, B) {
-    if (a.baked) { const fade = 'linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 5%, #000 95%, transparent)'; return { left: '50px', top: 'calc(50cqh - (100cqw - 100px) / 3418 * 1934 / 2)', width: 'calc(100cqw - 100px)', height: 'calc((100cqw - 100px) / 3418 * 1934)', maskImage: fade, WebkitMaskImage: fade, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }; }   // H4: 50px more paper left and right (2026-11-06)   // v2: the picture is the whole frame, border and all
+    if (a.baked) return { left: 0, top: 0, width: '100cqw', height: '100cqh' };   // v2: the picture is the whole frame, border and all
     const [x0, x1, y0, y1] = a.paint || a.fit, pw = x1 - x0, ph = y1 - y0, P = (1.5 * pw / ph).toFixed(4);
     const IW = 'calc(100cqw - 2 * ' + B + ')', IH = 'calc(100cqh - 2 * ' + B + ')';
     const PW = 'max(min(' + IW + ', calc(' + IH + ' * ' + P + ')), calc(max(' + IW + ', calc(' + IH + ' * ' + P + ')) / 1.01))', PH = 'calc(' + PW + ' / ' + P + ')';
@@ -392,7 +404,7 @@ class Component extends DCLogic {
     const smallFit = m ? 'calc((100vh - var(--header-h) - var(--footer-h) - 166px) * ' + FRAME.toFixed(4) + ')' : 'calc((100vh - var(--header-h) - 112px) * ' + FRAME.toFixed(4) + ')';   // tablet: 14px of the height kept for the tray's 9px nudge, so the hover title stays on screen
     // thumbnails never shrink as the screen widens: phones 44px; 768-1279px grows steadily from 44px to 53px, meeting
     // desktop's 5.2% of the image width (53px at 1280px, 60px at 1440px) without a step
-    const thumbH = m ? '33.66px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.765)' : 'calc((100vw - 2 * var(--side-pad)) * 0.043758)';   // (since 2026-10-22 85% of the 21 October size, itself 90% of 1c's)   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
+    const thumbH = m ? '33.66px' : this.state.tablet ? 'calc((44px + (100vw - 768px) * 0.0176) * 0.765)' : 'var(--h77-thumb)';   // (since 2026-10-22 85% of the 21 October size, itself 90% of 1c's)   // (since 2026-10-21 the homepage's thumbnails 90% of their earlier size; the tray still hangs the same 14px below the painting)
     const deskH = 'calc(100vh - var(--header-h) - 55px - 0.35 * ' + thumbH + ' - 37px)'; // height left for the image on desktop: 55 = 35px above it + 20px below the tray, plus the tray's overhang (35% of a thumbnail + 10px) and room for the tray's 9px nudge, so the hover title stays on screen with a few px to spare
     // desktop framing for this trial (tablet and phones keep the homepage's): the frame's width, height and shape, the space above
     // and below the block, and how far in from the frame's edge the painting sits (a paper edge shows in that band)
@@ -411,8 +423,8 @@ class Component extends DCLogic {
       : VARIANT === '0a2' ? (() => {
           const band = 'calc(' + (this.state.xwide ? 35 : 25) + 'px + 0.15 * ' + thumbH + ' + ' + (this.state.wide ? 14 : 7) + 'px + 1.2 * min(calc(' + thumbH + ' * 0.23), 22px) + 24px)';
           const capH = 'min(calc(100vh - var(--header-h) - 130px), calc(100vh - var(--header-h) - 40px - ' + band + '))';
-          const R = this.arts[i].ratio || 1.655, hh = 'calc(var(--hw) / ' + R.toFixed(4) + ')';   // H2: the homepage's height, the wider painting's width
-          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: 'var(--h4-top) 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
+          const R = this.arts[i].ratio || 1.655, hh = 'calc((100vw - 2 * var(--h77-pad)) / ' + R.toFixed(4) + ')';   // H2: the homepage's height, the wider painting's width
+          return { w: 'calc(' + hh + ' * ' + R.toFixed(4) + ')', h: hh, ratio: 'auto', pad: 'var(--h77-top, 110px) 0 max(75px, ' + band + ')', inset: 0, paper: '4.5cqw' };
         })()
       : VARIANT[0] === '0' ? { w: VARIANT === '0a1' ? '100%' : VARIANT === '0a2' ? 'min(calc(100% - 83.2px), calc((100vh - var(--header-h) - 130px) * 1.655))' : 'calc(100% + 2 * var(--side-pad))', h: VARIANT === '0' || VARIANT === '0d' ? 'calc(100vh - var(--header-h) - 130px)' : 'min(calc((100vw - 2 * var(--side-pad)' + (VARIANT === '0a2' ? ' - 83.2px' : '') + ') * 0.6041), calc(100vh - var(--header-h) - 130px))', ratio: 'auto', pad: '40px 0 75px', inset: 0, paper: VARIANT === '0' ? null : '4.5cqw' }   /* 1b / 1c: a 4.5% border on every side, the frame 1.655:1 (its opening 1.77:1) where the screen allows (since 2026-10-20) */
       : VARIANT === '2' ? { w: '100%', h: 'calc(100vh - var(--header-h) - 25px - 0.35 * ' + thumbH + ' - 19px - 40px)', ratio: 'auto', pad: '25px 0 40px', inset: 10 }
@@ -447,7 +459,7 @@ class Component extends DCLogic {
       headerIconsDisplay: m ? 'none' : 'flex',
       badgeDisplay: cartCount > 0 ? 'inline-flex' : 'none',
       closeMenu: () => this.setMenu(false),
-      mainPad: '0 var(--side-pad)',
+      mainPad: '0 var(--h77-pad)',   // H77: the header on the painting's lines
       heroLift: desk && !VF ? 'translateY(-15px)' : 'none',   // (the trial framings place the block themselves)   // desktop: the image and thumbnails sit 15px higher (a visual shift; sizes and centring unchanged)
       heroPaper: 'none',   // H2: a thin edge of Ned's paper round the cropped painting
       heroFrameShadow: 'none',
@@ -506,7 +518,7 @@ class Component extends DCLogic {
       // scaled to 72% with the other pages' hover titles)
       tipShift: (this.tipX != null ? this.tipX : this.state.tipX || 0).toFixed(1) + 'px',
       hoverTitleScale: desk ? '0.75' : '0.54',   // (since 2026-10-29 25% smaller: was 1 / 0.72)
-      railNudge: m ? 'none' : this.state.tablet ? 'translateY(9px)' : 'translateY(24px)',   // (since 2026-11-06, Grace) desktop 15px lower again (was 9px)   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
+      railNudge: m ? 'none' : this.state.tablet ? 'translateY(9px)' : 'translateY(calc(24px + 0.2 * var(--h77-thumb)))',   // (since 2026-11-06, Grace) desktop 15px lower again (was 9px)   // desktop and tablet: the arrows and thumbnail tray sit 9px lower (a visual nudge, so the image and the centring are unchanged)
       hoverTitlePlus: desk && !this.state.wide ? '2px' : '0px',   // (since 2026-10-29) desktop up to 2000px: every hover title 2px larger
       hoverTitleSize: desk ? 'min(calc(' + thumbH + ' * 0.23), 22px)' : this.state.wide ? '26.2px' : 'clamp(16px, calc(1.12vw + 4.8px), 27.2px)',   // H0 desktop: about as wide as the thumbnail above it (23% of a thumbnail's height; the longest title, Emergence, is 6.9em), at most 22px so it stays in the 50px band   // the galleries' hover title size, 1px smaller over 2000px
       hoverTitleMargin: mp ? '17px 0 0' : m ? '7px 0 0' : VF ? (this.state.wide ? 8 : 1) + 'px 0 0'   /* (since 2026-11-06, Grace) desktop: 8px higher (was 16 / 9) */   /* (2026-10-29: 4px, then 7px lower, as every hover title) */   /* (since 2026-10-29 the swell grows upward, so no room is kept for it here) */   /* (since 2026-10-26) 5px higher: 7px under a fully swollen thumbnail, 14px over 2000px */ : '8px 0 0',   /* (2026-11-06: 8px higher, was 16px) */   /* 7px lower again over 2000px (since 2026-10-23) */   // (since 2026-10-22) the title 12px under a hovered thumbnail at its full swell (the swell, 130% from the centre, adds 15% of a thumbnail's height below it)   // H0 desktop: 8px under the thumbnails, inside the 50px band   // 5px lower since 2026-10-19  // 2px lower than before at every size (portrait phones 22px clear of the thumbnails; desktop and tablet hang from the tray's nudged place)
@@ -549,29 +561,6 @@ class Component extends DCLogic {
     };
   }
 }
-</script>
-<script src="body-fit.js?v=4"></script>
-<script>
-// (2026-11-06) the header placed on the painting: the logo's Tree of Life (138.7px into the 216.43px logo) over the painting's left
-// edge, the last T of CONTACT over its right edge (desktop, 1280px up); the same sums as the stylesheet's --hw
-(function () {
-  const root = document.documentElement;
-  function fit() {
-    const bar = document.querySelector('header > div'), logo = bar && bar.querySelector('a'), c = document.querySelector('header a[data-t="Contact"]');
-    const icons = [...document.querySelectorAll('header svg')].filter(e => e.getBoundingClientRect().width > 0 && !e.closest('.prev-box'));
-    if (!bar || !logo || !c || !icons.length) return;
-    if (!matchMedia('(min-width: 1280px)').matches) { bar.style.paddingLeft = bar.style.paddingRight = ''; return; }
-    const W = root.clientWidth, H = innerHeight, hh = bar.offsetHeight, side = W * (W > 2500 ? 0.08 : 0.10), hang = W > 2500 ? 59 : 45;
-    const hw = Math.min(W - 2 * side, (0.86 * (H - hh) - hang) * 1.7673), right = (W - hw) / 2 + hw;   // CONTACT where the sum puts it
-    const left = (W - Math.min(1.1 * hw, W - 301.4)) / 2;   // (later) the logo moved so its Tree of Life is over the 10%-larger painting's left edge (the painting never so wide that the logo comes closer than 12px to the screen's edge)
-    const cr = c.getBoundingClientRect().right - (parseFloat(getComputedStyle(c).letterSpacing) || 0);   // the last T of CONTACT (its trailing letter-spacing left off)
-    const D = Math.max(...icons.map(e => e.getBoundingClientRect().right)) - cr;   // the icons past that T
-    bar.style.paddingLeft = Math.max(0, left - 138.7).toFixed(2) + 'px';
-    bar.style.paddingRight = Math.max(12, left - D).toFixed(2) + 'px';   // (later) the T over the painting's right edge (the mirror of the ToL's left)
-  }
-  let n = 0; (function early() { fit(); if (++n < 120) requestAnimationFrame(early); })();
-  addEventListener('resize', fit); addEventListener('load', fit); if (document.fonts) document.fonts.ready.then(fit);
-})();
 </script>
 </body>
 </html>
