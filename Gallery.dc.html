@@ -56,7 +56,11 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 /* (since 2026-11-06) the detail page's vertical works over 2500px: 80% of their earlier size, and the framed work never taller than
    the screen less the header and 50px above and below */
 :root { --vert-k: 1; --vert-cap: 100000px; }
-@media (min-width: 2501px) { :root { --vert-k: 0.8; --vert-cap: calc(100vh - var(--header-h) - 100px); } }
+/* (since 2026-11-09, Grace) 15% larger: 0.8 x 1.15 */
+/* and 32px higher (no gap under the "Go back" link's row, which sits left of the work) so the magnify icon under it stays on screen */
+:root { --vert-gap: 32px; }
+@media (min-width: 2501px) { :root { --vert-gap: 0px; } }
+@media (min-width: 2501px) { :root { --vert-k: 0.92; --vert-cap: calc(100vh - var(--header-h) - 100px); } }
 :root { --body-pad: var(--side-pad); }
 @media (min-width: 2501px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }
 html { scrollbar-gutter: stable; }
@@ -227,7 +231,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     </section>
   </sc-if>
   <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
-    <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 32px; align-content: start">
+    <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; flex: 1; display: grid; grid-template-rows: auto 1fr; gap: {{ detailGap }}; align-content: start">
       <div>
         <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
       </div>
@@ -876,6 +880,7 @@ class Component extends DCLogic {
       // framing views carousel (dots below the image)
       viewTouchStart: (e) => this.viewTouchStart(e),
       enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
+      detailGap: !m && this.state.detailRatio < 1 ? 'var(--vert-gap)' : '32px',   // (since 2026-11-09) verticals over 2500px sit 32px higher, see --vert-gap
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',   // (since 2026-11-01) the title on the detail and buy pages alike: 85% of this, less 4px (the buy page's was the full size)
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
