@@ -1,0 +1,25 @@
+/* Accessibility basics shared by every page (since 2026-11-09, WCAG 2.2 AA). Loaded last in <head>, so it wins over page styles. */
+
+/* Keyboard focus: a thin dark ring wherever Tab lands. :focus-visible means mouse clicks don't show it; text fields always
+   show it while typing. !important because some controls clear the outline inline (the Contact form's fields). */
+:where(a, button, input, select, textarea, summary, [tabindex], [role="tab"], [role="button"]):focus-visible {
+  outline: 2px solid #141414 !important;
+  outline-offset: 3px !important;
+}
+:where(input, textarea, select):focus-visible { outline-offset: 2px !important; }
+
+/* Headings and labels that are there for screen readers only (each page's h1 where the design shows no title) */
+.sr-only {
+  position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important;
+  overflow: hidden !important; clip: rect(0 0 0 0) !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important;
+}
+
+/* Reduce motion: for anyone whose computer asks for less movement, slides, glides, swells and zooms happen at once.
+   (JavaScript-driven glides check the same setting in a11y.js and on each page.) */
+@media (prefers-reduced-motion: reduce) {
+  html, html * { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important;
+  }
+}

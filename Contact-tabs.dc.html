@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,11 @@
 <script src="alt-text.js?v=7" data-auto></script>
 <script src="centre-content.js?v=3"></script>
 <script src="search-data.js?v=1" defer></script>
-<script src="search.js?v=3" defer></script>
+<script src="search.js?v=4" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="nav-match.css?v=1">
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <x-dc>
@@ -158,6 +160,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </nav>
 
 <main class="ct-main" style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); flex: 1" data-screen-label="Contact (tabs)">
+  <h1 class="sr-only">Contact</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
   <sc-if value="{{ narrowLayout }}" hint-placeholder-val="{{ false }}">
   <section style="padding-top: 48px">
     <picture>
@@ -186,16 +189,16 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       </sc-if>
       <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ true }}">
       <div class="contact-form" style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
-        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+        <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
       </div>
       </sc-if>
     </div>
     <div style="grid-column: 1; grid-row: 2; display: {{ sendDisplay }}">
         <div style="position: relative; display: grid; justify-items: start">
           <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
-          <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: calc(13px * var(--fs)); color: #8A867E">{{ formNote }}</p>
+          <p style="position: absolute; top: 100%; left: 0; margin: 14px 0 0; font-size: calc(13px * var(--fs)); color: #6E6A63">{{ formNote }}</p>
         </div>
     </div>
     <div style="grid-column: {{ formImgCol }}; grid-row: {{ formImgRow }}; max-width: {{ formImgMax }}">
@@ -224,7 +227,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         </div>
       </div>
       <p style="margin: 0 0 40px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
-      <p style="margin: 0 0 20px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Good to know</p>
+      <p style="margin: 0 0 20px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Good to know</p>
       <div style="display: grid; gap: 20px; font-size: calc(14px * var(--fs)); line-height: 1.7; color: #55524C">
         <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
         <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
@@ -303,12 +306,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         </sc-if>
         <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ true }}">
         <div class="contact-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px">
-          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-          <label style="display: block; grid-column: 1 / -1"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; height: 170px"></textarea></label>
+          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+          <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
+          <label style="display: block; grid-column: 1 / -1"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; height: 170px"></textarea></label>
           <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 24px">
             <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
-            <p style="margin: 0; font-size: calc(13px * var(--fs)); color: #8A867E">{{ formNote }}</p>
+            <p style="margin: 0; font-size: calc(13px * var(--fs)); color: #6E6A63">{{ formNote }}</p>
           </div>
         </div>
         </sc-if>
@@ -459,8 +462,8 @@ class Component extends DCLogic {
         },
         // desktop: a link swaps the photograph for its section; the open link again brings the photograph back
         toggle: () => this.setState({ deskTab: this.state.deskTab === k ? null : k }), deskSelected: this.state.deskTab === k,
-        deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#8A867E', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
-        weight: this.state.deskTab === k ? 600 : 400, color: this.state.deskTab === k ? '#141414' : '#8A867E', border: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent'
+        deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#6E6A63', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
+        weight: this.state.deskTab === k ? 600 : 400, color: this.state.deskTab === k ? '#141414' : '#6E6A63', border: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent'
       })),
       tabContact: this.state.deskTab === 'contact',
       tabShipping: this.state.deskTab === 'shipping',

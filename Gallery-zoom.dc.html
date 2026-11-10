@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,10 +15,12 @@
 <script src="alt-text.js?v=7"></script>
 <script src="zoom-trial.js?v=3" defer></script>
 <script src="search-data.js?v=1" defer></script>
-<script src="search.js?v=3" defer></script>
+<script src="search.js?v=4" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="nav-match.css?v=1">
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <x-dc>
@@ -243,11 +245,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}; width: {{ detailTextW }}; max-width: {{ detailTextMax }}; justify-self: {{ detailTextJustify }}">
           <!-- (since 2026-10-22) in this order: ORIGINAL, the title, the description in quotation marks, the series (a link to G5
                showing that series), medium and size, the edition and certificate lines, then the two links -->
-          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Original</p>
+          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #6E6A63">Original</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs) * 0.85 - 4px); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
           <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
-          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
+          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #6E6A63; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
           <div class="facts" style="width: 100%; display: grid; column-gap: 32px; row-gap: 8px; font-size: calc(14px * var(--fs)); color: #6E6B66; padding-top: 8px">
             <div style="display: grid; gap: 8px">
@@ -297,13 +299,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           </div>
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
-          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E">Print</p>
+          <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #6E6A63">Print</p>
           <h1 style="margin: 0; font-family: 'EB Garamond', serif; font-weight: 400; font-style: normal; font-size: calc({{ detailTitleSize }} * var(--fs) * 0.85 - 4px); letter-spacing: 0.1em; text-transform: uppercase; color: #646464">{{ detailTitle }}</h1>
           <!-- (since 2026-10-24) under the title, as on the detail page: the description in quotation marks, then the series (a link to
                G5 showing that series), then the price -->
           <p style="margin: 0; font-size: calc(15px * var(--fs)); font-weight: 600; letter-spacing: 0.01em; padding-top: 8px; max-width: {{ detailDescMax }}; text-wrap: pretty; display: {{ quoteDisplay }}; color: #646464; padding-left: 0.444em; text-indent: -0.444em">{{ detailQuote }}</p>
           <sc-if value="{{ hasSeries }}" hint-placeholder-val="{{ true }}">
-          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #8A867E; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
+          <a href="{{ seriesHref }}" style="font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #6E6A63; border-bottom: 1px solid #C9C5BD; padding-bottom: 2px" style-hover="color: #141414">{{ detailSeries }}</a>
           </sc-if>
           <p style="margin: 0; font-size: calc(16px * var(--fs)); letter-spacing: 0.08em">{{ printPrice }}</p>
           <div style="display: grid; gap: 14px; padding-top: 16px">
@@ -320,7 +322,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
               <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
                   <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 12px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
-                  <span style="display: {{ fr.textDisplay }}; font-size: calc(14px * var(--fs)); letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; line-height: 14px">Unframed</span>
+                  <span style="display: {{ fr.textDisplay }}; font-size: calc(14px * var(--fs)); letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A63; line-height: 14px">Unframed</span>
                   <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); display: block; line-height: 0; color: #141414; opacity: {{ fr.caret }}"><svg width="16" height="7" viewBox="0 0 16 7" fill="none" stroke="currentColor" stroke-width="1.1" style="display: block"><polyline points="1 6.5 8 1 15 6.5"></polyline></svg></span>
                 </button>
               </sc-for>
@@ -574,7 +576,7 @@ class Component extends DCLogic {
     window.addEventListener('wheel', this.onWheel, { passive: false });
   }
   componentDidMount() {
-    this.easeScroll();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) this.easeScroll();   // no eased wheel scrolling with reduce motion on (since 2026-11-09)
     this.onResize = () => this.measureDetail(); window.addEventListener('resize', this.onResize);
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
@@ -751,11 +753,11 @@ class Component extends DCLogic {
       seriesLabel: this.state.series === 'All' ? 'Series' : this.state.series,
       availLabel: this.state.avail === 'All' ? 'Availability' : this.state.avail,
       seriesOptions: [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']].map(([v, label]) => ({
-        label: label || v, selected: this.state.series === v, color: this.state.series === v ? '#8A867E' : '#141414',
+        label: label || v, selected: this.state.series === v, color: this.state.series === v ? '#6E6A63' : '#141414',
         pick: (e) => { e.stopPropagation(); this.shuffleTo({ series: v }); }
       })),
       availOptions: [['All', 'All Works'], ['Available'], ['Sold']].map(([v, label]) => ({
-        label: label || v, selected: this.state.avail === v, color: this.state.avail === v ? '#8A867E' : '#141414',
+        label: label || v, selected: this.state.avail === v, color: this.state.avail === v ? '#6E6A63' : '#141414',
         pick: (e) => { e.stopPropagation(); this.shuffleTo({ avail: v }); }
       })),
       // Vertical filter: one more column than usual, taller row gaps, square cells so the tall works keep their size

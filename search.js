@@ -14,7 +14,7 @@
 .srch-row { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #141414; padding-bottom: 10px; }
 .srch-row svg { flex: none; color: #141414; }
 .srch input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(28px * var(--fs, 1)); letter-spacing: 0.06em; color: #141414; padding: 4px 0; }
-.srch input::placeholder { color: #8A867E; }
+.srch input::placeholder { color: #6E6A63; }
 .srch-x { position: fixed; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 9999px; border: none; padding: 0; background: #FFFFFF; color: #1C1C1C; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
 .srch-count { margin: 14px 0 0; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.16em; text-transform: uppercase; color: #6E6B66; }
 .srch h2 { margin: 36px 0 10px; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-weight: 400; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: #6E6B66; }

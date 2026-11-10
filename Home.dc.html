@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,10 +11,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
 <script src="search-data.js?v=1" defer></script>
-<script src="search.js?v=3" defer></script>
+<script src="search.js?v=4" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="nav-match.css?v=1">   <!-- (since 2026-11-09) the content on the homepage's lines -->
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <x-dc>
@@ -128,6 +130,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </nav>
 
 <main style="width: 100%; box-sizing: border-box; margin: 0 auto; padding: 0 var(--body-pad); overflow-x: clip; flex: 1; min-height: {{ mainMinH }}; display: flex; flex-direction: column; justify-content: center" data-screen-label="Home — Gallery">
+  <h1 class="sr-only">Arbor &amp; Eye, artwork by Ned Church</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
     <a href="{{ heroHref }}" style="display: block; width: {{ heroW }}; height: {{ heroH }}; aspect-ratio: {{ heroRatio }}; justify-self: center; position: relative; background: {{ heroPaper }}; box-shadow: {{ heroFrameShadow }}">
       <img src="uploads/arbor-mark.png" alt="" aria-hidden="true" style="position: absolute; left: calc(50% + 25px); top: 50%; transform: translate(-50%, -50%); height: 46%; width: auto; opacity: {{ treeOpacity }}; transition: opacity 0.3s ease; pointer-events: none">
