@@ -106,6 +106,9 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - **Typography helpers**: `text-wrap: pretty` on all text to avoid single-word last lines.
 - **Breakpoints**: phone < 768, tablet 768–1279, desktop ≥ 1280 (gallery grid also switches at 1000, side padding at 1024).
 
+- **Index spacing and top row, since 2026-11-09** (Grace): the works in the all-series view are 4px closer, across and down (`--idx-gap` = 5% of a thumbnail's height less 4px, at least 1px: 5.8px at 3840, 2.6px at 2560, 1px at 1920). Every work in the top row (11 at 3840) now swells from its centre instead of up from its base; this used to apply only to the five under the series name. The script marks them (`markTop`) whenever the row can re-wrap.
+- **Vertical works on the detail page, since 2026-11-09** (Grace; over 2500px): 15% larger (`--vert-k` 0.92, was 0.8): at 3840x1834, 1552px tall (was 1349). The row with the "Go back" link has no gap under it for verticals (`--vert-gap`), so the work sits 32px higher and the magnify icon under it ends at 1827px, on screen.
+
 ## Home
 
 - **Homepage and H1 tray, desktop (since 2026-10-26)**: the chevrons are a 1px line. Since 2026-10-27 (chosen from H1's trial, on both homepages and the Brilliance test page) they are dark grey (#55524C, black on hover) in a soft 70% white glow (two 3px blurs), in place of the light grey with a 1px offset white shadow. They appear only while the pointer is on the thumbnail tray: they fade in (0.45s) while drifting 30px outward (0.9s, a soft ease out); when the pointer leaves they fade out where they are and only then return, unseen. The hover title sits 7px under a fully swollen thumbnail (14px over 2000px), 5px higher than before, and is always on screen: where the screen is too short, the painting gives up just enough height to keep the tray's overhang, the swell, the title and 24px under it (on the homepage only from about 3840 x 2000; the 16:9 sizes are unchanged).
