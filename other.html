@@ -24,12 +24,14 @@ li a { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 4px 24p
 li a:hover { background: #F4F2EC; }
 .name { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; padding-top: 2px; }
 .what { font-size: 15px; line-height: 1.6; color: #55524C; }
-.file { display: block; margin-top: 4px; font-size: 12px; color: #9A968E; }
-h2 { margin: 56px 0 16px; font-size: 12px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E; }
-.note { margin: 40px 0 0; font-size: 13px; line-height: 1.7; color: #8A867E; max-width: 64ch; }
+.file { display: block; margin-top: 4px; font-size: 12px; color: #6E6A63; }
+h2 { margin: 56px 0 16px; font-size: 12px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63; }
+.note { margin: 40px 0 0; font-size: 13px; line-height: 1.7; color: #6E6A63; max-width: 64ch; }
 .note a { border-bottom: 1px solid #C9C5BD; }
 @media (max-width: 600px) { li a { grid-template-columns: 1fr; } }
 </style>
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <div class="wrap">

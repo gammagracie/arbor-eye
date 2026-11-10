@@ -20,7 +20,7 @@ a { color: #141414; }
 .logo img { display: block; width: 188px; height: auto; }
 h1 { margin: 0 0 12px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: 0.06em; text-transform: uppercase; }
 .lede { margin: 0 0 48px; max-width: 64ch; font-size: 15px; line-height: 1.7; color: #55524C; }
-h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: #9A968E; border-bottom: 1px solid #E7E4DE; padding-bottom: 12px; }
+h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63; border-bottom: 1px solid #E7E4DE; padding-bottom: 12px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 600px), 1fr)); gap: 32px; }
 .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }   /* the three wordmark options side by side (since 2026-10-30) */
 @media (max-width: 1100px) { .grid.three { grid-template-columns: 1fr; } }
@@ -39,7 +39,7 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 .info { padding: 16px 20px 20px; display: grid; gap: 6px; align-content: start; }
 .name { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
 .what { font-size: 14px; line-height: 1.6; color: #55524C; }
-.file { font-size: 12px; color: #9A968E; overflow-wrap: anywhere; }
+.file { font-size: 12px; color: #6E6A63; overflow-wrap: anywhere; }
 .file a { color: inherit; border-bottom: 1px solid #D6D2CA; }
 .file a:hover { color: #141414; border-color: #141414; }
 .replay { justify-self: start; margin-top: 6px; border: 1px solid #141414; background: transparent; padding: 7px 14px; font: inherit; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; }
@@ -64,6 +64,8 @@ h2 { margin: 64px 0 20px; font-size: 12px; font-weight: 400; letter-spacing: 0.2
 .tabbar.dark { background: #2B2A28; }
 .tabbar img { display: block; }
 </style>
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <div class="wrap">

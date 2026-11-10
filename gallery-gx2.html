@@ -205,10 +205,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </style>
 <script src="alt-text.js?v=7"></script>
 <script src="search-data.js?v=1" defer></script>
-<script src="search.js?v=3" defer></script>
+<script src="search.js?v=4" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="nav-match.css?v=1">
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <div class="page" id="page">
@@ -261,6 +263,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </div>
 
   <main class="stage" id="stage">
+  <h1 class="sr-only">Gallery</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
     <div class="row" id="row"></div>
     <div class="edge-fade t" aria-hidden="true"></div><div class="edge-fade b" aria-hidden="true"></div><div class="edge-fade l" aria-hidden="true"></div><div class="edge-fade r" aria-hidden="true"></div>
     <button class="step prev" id="prev" aria-label="Previous work"><svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.2"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
@@ -987,7 +990,7 @@ if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0)
   const pill = document.createElement('div'); pill.className = 'on-pill'; pill.setAttribute('aria-hidden', 'true'); strip.appendChild(pill);
   // (later on 2026-11-06) when the featured set changes the pill slides to it (0.6s, eased); while the strip scrolls it follows at once
   let cur = null, from = null, to = null, t0 = 0, last = '';
-  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const ease = t => matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   (function tick(now) {
     const on = track.querySelectorAll('.thumb.on');
     if (on.length) {

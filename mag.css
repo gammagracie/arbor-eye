@@ -56,7 +56,7 @@ html.mag-lock, html.mag-lock body { overflow: hidden; }
 .mag-lens.on { opacity: 1; }
 @media (min-width: 2501px) { .mag-lens { width: 420px; height: 420px; } }
 html.mag-loupe-on, html.mag-loupe-on * { cursor: none !important; }   /* the pointer hides only while the glass shows (since 2026-11-09) */
-.mag-hint { margin-top: 14px; text-align: center; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A867E; }
+.mag-hint { margin-top: 14px; text-align: center; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A63; }
 
 /* 4: Museum. Deep zoom: the views down the left, the work on pale paper, wheel / pinch / double-click / slider to zoom up to 6x,
    drag to move, and an overview map (bottom right) showing the part on screen; drag in the map to move there */

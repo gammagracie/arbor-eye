@@ -199,10 +199,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 </style>
 <script src="alt-text.js?v=7"></script>
 <script src="search-data.js?v=1" defer></script>
-<script src="search.js?v=3" defer></script>
+<script src="search.js?v=4" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="nav-match.css?v=1">
+<link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=1"></script>
 </head>
 <body>
 <div class="page index" id="page">
@@ -251,6 +253,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </div>
 
   <main class="idx" id="idx" aria-label="Index of works by series">
+  <h1 class="sr-only">Index of works</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
     <p class="idx-series" id="idxSeries" aria-live="polite"></p>
     <p class="idx-title" id="idxTitle" aria-hidden="true"></p>
     <section class="idx-row" data-s="Ascent" aria-label="Series 1, Ascent">
@@ -695,6 +698,7 @@ addEventListener('wheel', e => {
   const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1;
   if (!gliding) tY = se.scrollTop;
   tY = Math.max(0, Math.min(maxY(), tY + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit * 0.6));
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { se.scrollTop = tY; return; }   // reduce motion: no glide (since 2026-11-09)
   glide();
 }, { passive: false });
 addEventListener('scroll', () => { if (!gliding) tY = se.scrollTop; }, { passive: true });
