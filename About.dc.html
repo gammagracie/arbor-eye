@@ -9,11 +9,10 @@
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <script src="./support.js"></script>
 <script src="alt-text.js?v=7" data-auto></script>
-<script src="centre-content.js?v=3"></script>
 <script src="search-data.js?v=1" defer></script>
 <script src="search.js?v=5" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
-<link rel="stylesheet" href="nav-match.css?v=2">
+<link rel="stylesheet" href="nav-match.css?v=3">
 <link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=1"></script>
 <script src="footer-peek.js?v=1"></script>
@@ -31,7 +30,7 @@
 :root { --ab-top: clamp(32px, 2.2vw, 120px); --ab-gap: clamp(40px, 3vw, 160px); --ab-tabgap: clamp(16px, 0.9vw, 44px); --ab-tabfs: clamp(12px, 0.6vw, 30px);
   --ab-body: clamp(15px, 0.9vw, 44px); --ab-head: clamp(22px, 1.35vw, 70px); --ab-measure: calc(var(--ab-body) * 50);
   --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(49px + var(--tab-fs) * 1.2);
-  --ab-h: calc(100vh - var(--header-h) - 50px - 28px - var(--tab-h) - 32px);
+  --ab-h: calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px));
   /* (since 2026-11-01) every tab runs the nav's full width, logo's left edge to bag icon's right (--ab-w; 83.2px narrower before);
      the pictures take the extra room and the copy keeps the width it had (--bio-text, --tol-text, --proc-text: the old widths) */
   --ab-w: calc(100vw - 2 * var(--side-pad));
@@ -88,7 +87,8 @@ main p, main blockquote { line-height: 1.75; }
 main h1, main h2 { line-height: 1.2; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
-@media (min-width: 2501px) { :root { --header-h: 110px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
+@media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
+@media (min-width: 2501px) { :root { --header-h: 102px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
 /* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
@@ -107,7 +107,9 @@ html { scrollbar-gutter: stable; }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 /* (since 2026-10-29) from 768px up the footer sits just below the fold, as on the homepage: there when you scroll, seen only at the very bottom */
-@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; } }
+@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; }
+.ab-pin > :first-child { align-self: start; }   /* (since 2026-11-13, Grace) the picture's top always on the homepage painting's top, whatever the copy's height; the copy stays centred on the row */
+@media (min-width: 1000px) and (hover: hover) and (pointer: fine) { .shell { min-height: 100vh !important; } }   /* (since 2026-11-13) desktop: the footer is hidden below the window (footer-peek.js), so no room is kept for it: nothing scrolls */ }
 /* (since 2026-11-02) every lightbox's controls, as on Tappan: previous and next in 44px white circles, close in a 56px one
    between them, 18px apart and 40px above the bottom of the screen; on hover the icon slides out and back in */
 .tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 41; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
@@ -321,10 +323,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
        or less on a short screen), and under it the tab bar exactly where Contact's is; the footer follows (on screen on load) -->
   <sc-if value="{{ wideAbout }}" hint-placeholder-val="{{ true }}">
   <sc-if value="{{ tabBio }}" hint-placeholder-val="{{ true }}">
-  <section data-screen-label="About — Biography (desktop)" style="margin-block: auto; padding: 50px 0 32px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
+  <section data-screen-label="About — Biography (desktop)" style="margin-block: 0; padding: var(--home-top, 50px) 0 0">
+      <div style="min-height: var(--ab-h); display: grid; align-content: start; margin-bottom: 28px">
         <!-- Biography: the portrait (3:4, as tall as the box, or smaller where the copy needs its width; since 2026-11-01) at the box's top-left corner, on the logo's left edge, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
-        <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
+        <div class="ab-pin" style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
           <div class="ab-portrait-crop"><img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top"></div>
           <div class="ab-bio" style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Biography</h2>
@@ -341,11 +343,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </section>
   </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 50px 0 32px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
+  <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: 0; padding: var(--home-top, 50px) 0 0">
+      <div style="min-height: var(--ab-h); display: grid; align-content: start; margin-bottom: 28px">
         <!-- Tree of Life: the fresco photo with the two insignia sculptures (since 2026-11-13, Grace's new version, 2000 x 1647), 75% of the size that fills the box's height (or leaves the copy its room) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
-        <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
+        <div class="ab-pin" style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
           <img src="uploads/about/pierodellafrancesca-sculptures-2.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(calc(var(--ab-h) * 1.2143), calc(var(--ab-w) - var(--ab-gap) - var(--tol-text))); height: auto">
           <div style="justify-self: start; max-width: var(--tol-text)">
             <h2 class="ab-head">Tree of Life</h2>
@@ -361,8 +363,8 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </section>
   </sc-if>
   <sc-if value="{{ tabProcess }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Process (desktop)" style="margin-block: auto; padding: 50px 0 32px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
+  <section data-screen-label="About — Process (desktop)" style="margin-block: 0; padding: var(--home-top, 50px) 0 0">
+      <div style="min-height: var(--ab-h); display: grid; align-content: start; margin-bottom: 28px">
         <!-- Process: flipped: the copy on the left from the box's left edge, centred on the photo; the photo (40.9% of the screen's width, at most the box's
              height less the dots row) at the box's top-right corner. Since 2026-10-24 the photo is a strip, as on Studio: since 2026-11-01 two slides, the brush roll, then
              the camera and tripod at the end of the work table (the three light-box photos came out; more to come); dots under it, a sideways swipe (finger or
@@ -412,8 +414,8 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </section>
   </sc-if>
   <sc-if value="{{ tabStudio }}" hint-placeholder-val="{{ false }}">
-  <section data-screen-label="About — Studio (desktop)" style="margin-block: auto; padding: 50px 0 32px">
-      <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
+  <section data-screen-label="About — Studio (desktop)" style="margin-block: 0; padding: var(--home-top, 50px) 0 0">
+      <div style="min-height: var(--ab-h); display: grid; align-content: start; margin-bottom: 28px">
         <!-- Studio (since 2026-10-21): the heading, then a two-slide strip (since 2026-11-01; the film and the camera-over-the-table
              slides came out): the three studio photos side by side across the box, then the three light-box photos; dots under the
              middle photo, a sideways swipe (finger or trackpad) or the left / right arrow keys move between them -->

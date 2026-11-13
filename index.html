@@ -20,6 +20,9 @@
    centred between the header and the screen's bottom (--h77-top). The block is the frame (width / 1.7673) and the
    thumbnails hanging 32.9px + 2.074% of the width below it: 0.58658 x width + 32.9px */
 @media (min-width: 1280px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.06255); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
+
+/* (since 2026-11-13, Grace) desktop: no scrolling; the painting, thumbnails and hover title fit the window, only white lies below */
+@media (min-width: 1280px) and (hover: hover) and (pointer: fine) { html, body { overflow-y: hidden; } }
 </style>
 <!-- H77 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
@@ -59,7 +62,8 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
-@media (min-width: 2501px) { :root { --header-h: 110px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
+@media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
+@media (min-width: 2501px) { :root { --header-h: 102px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
 /* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }

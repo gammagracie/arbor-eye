@@ -5,5 +5,8 @@
    the same lines. html:root outranks the pages' own :root rules. */
 @media (min-width: 1280px) {
   html:root { --nav-hp: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2));
-              --side-pad: var(--nav-hp); --body-pad: var(--nav-hp); }
+              --side-pad: var(--nav-hp); --body-pad: var(--nav-hp);
+              /* (since 2026-11-13, Grace) Home, About and Contact start at the same height: the homepage painting's top, the white under
+                 the header that centres H77's painting and thumbnails; the same white is left under About's and Contact's tab bar */
+              --home-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--nav-hp)) * 0.58658 - 38.9px) / 2)); --home-bot: calc(var(--home-top) + 1px); }
 }
