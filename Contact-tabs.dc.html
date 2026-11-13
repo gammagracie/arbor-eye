@@ -145,7 +145,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   <a href="About.dc.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">About</a>
   <a href="#tabs" onClick="{{ goContact }}" style="font-weight: 700; color: #141414; padding: 28px 0; border-bottom: 1px solid #F0EDE7">Contact</a>
   <a href="#tabs" onClick="{{ goShipping }}" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Shipping</a>
-  <a href="#tabs" onClick="{{ goReturns }}" style="padding: 28px 0">Returns &amp; Exchanges</a>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
     <a href="#" style="padding: 28px 0; border-top: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px">
@@ -207,29 +206,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   <section style="display: grid; grid-template-columns: {{ shippingCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Shipping Policy">
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(40px * var(--fs)); line-height: 1.1">Shipping Policy</h2>
-      <p style="margin: 0 0 36px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 52ch">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
-      <div style="margin-bottom: 48px">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
-          <span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
-          <span>United States</span><span style="color: #6E6B66">3–5 business days</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
-          <span>Europe</span><span style="color: #6E6B66">5–7 business days</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE; font-size: calc(14px * var(--fs))">
-          <span>Production time</span><span style="color: #6E6B66">3–6 working days</span>
-        </div>
-      </div>
+      <p style="margin: 0 0 36px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 52ch">Our prints are dispatched within 2–3 business days.</p>
       <p style="margin: 0 0 40px; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
       <p style="margin: 0 0 20px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Good to know</p>
       <div style="display: grid; gap: 20px; font-size: calc(14px * var(--fs)); line-height: 1.7; color: #55524C">
         <p style="margin: 0">Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</p>
         <p style="margin: 0">Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</p>
         <p style="margin: 0">If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</p>
-        <p style="margin: 0">It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</p>
-        <p style="margin: 0">Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</p>
       </div>
     </div>
     <div>
@@ -238,30 +221,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </section>
 
   </sc-if>
-  <sc-if value="{{ tabReturns }}" hint-placeholder-val="{{ false }}">
-  <section style="display: grid; grid-template-columns: {{ returnsCols }}; gap: {{ sectionGap }}; padding: {{ panelPad }}" data-screen-label="Returns &amp; Exchanges">
-    <div style="order: {{ returnsImgOrder }}">
-      <img src="assets/box.png" alt="Packaged order on a woven rug" style="display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; position: {{ imagePosition }}; top: 40px">
-    </div>
-    <div>
-      <h2 style="margin: 0 0 40px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc(40px * var(--fs)); line-height: 1.1">Returns &amp; Exchanges</h2>
-      <div style="display: grid; gap: 0">
-        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Damaged or wrong item</p>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com?subject=Returns%20%26%20Exchanges" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
-        </div>
-        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Cancellations</p>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com?subject=Cancellations" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> before production of the item has started.</p>
-        </div>
-        <div style="padding: 28px 0; border-top: 1px solid #E7E4DE; border-bottom: 1px solid #E7E4DE">
-          <p style="margin: 0 0 10px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase">Made to order</p>
-          <p style="margin: 0; font-size: calc(15px * var(--fs)); line-height: 1.7; color: #55524C">Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  </sc-if>
+  <!-- (Returns & Exchanges removed 2026-11-13, Grace) -->
   <!-- under 1100px (since 2026-11-02): the links below the section they open, none open at first -->
     <div id="tabs" role="tablist" style="display: flex; gap: {{ tabGap }}; flex-wrap: wrap; padding: 32px 0 8px; scroll-margin-top: 40px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
@@ -320,42 +280,19 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); color: #55524C" data-screen-label="Shipping Policy">
         <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
           <h2 class="ct-head">Shipping Policy</h2>
-          <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days. Overall delivery times, including production and shipping:</p>
-          <div class="bt-table" style="color: #141414; margin: 0 0 calc(clamp(15px, 0.9vw, 44px) * 1.1)">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United Kingdom</span><span style="color: #6E6B66">3–5 business days</span></div>
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>United States</span><span style="color: #6E6B66">3–5 business days</span></div>
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2"><span>Europe</span><span style="color: #6E6B66">5–7 business days</span></div>
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 1px solid #DEDAD2; border-bottom: 1px solid #DEDAD2"><span>Production time</span><span style="color: #6E6B66">3–6 working days</span></div>
-          </div>
+          <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days.</p>
           <p style="color: #2A2A28">Every order includes tracking. Tracking details will be sent to your email once your order ships.</p>
           <ul>
             <li>Once your item ships, you will receive an email with your tracking information. Please keep an eye on your tracking, especially for international orders.</li>
             <li>Arbor &amp; Eye works with production partners with facilities in the USA, EU, and Australia. Your order will be produced at the facility closest to your shipping address.</li>
             <li>If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</li>
-            <li>It is the customer's responsibility to provide the correct shipping address. arboreye.com is not responsible for orders lost due to incorrect or incomplete addresses. You may update your address before your order ships by contacting us at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a>.</li>
-            <li>Import fees and taxes may apply upon arrival. Arbor &amp; Eye is not responsible for these charges or for any delays caused by customs.</li>
           </ul>
         </div>
         <img src="uploads/ampersand-sculpture.webp" alt="Arbor &amp; Eye Tree of Life sculpture" style="display: block; width: 100%; height: 100%; object-fit: cover">
       </div>
       </sc-if>
 
-      <sc-if value="{{ deskReturns }}" hint-placeholder-val="{{ false }}">
-      <!-- (since 2026-10-22) Shipping's format flipped: the photograph of the packaged order filling the left half, the text in one
-           column on the right -->
-      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); color: #55524C" data-screen-label="Returns &amp; Exchanges">
-        <img src="assets/box.png" alt="Packaged order on a woven rug" style="display: block; width: 100%; height: 100%; object-fit: cover">
-        <div class="bt" style="padding: 5% 10% 5% 8%; align-self: center">
-          <h2 class="ct-head">Returns &amp; Exchanges</h2>
-          <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Damaged or wrong item</p>
-          <p>If your order arrives damaged or you receive the wrong item, you can request a replacement within 30 days of receiving your order. Simply contact us at <a href="mailto:hello@arborandeye.com?subject=Returns%20%26%20Exchanges" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> with photos of the issue and your order number, and we'll arrange this for you.</p>
-          <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Cancellations</p>
-          <p>If you would like to cancel your order, this may be possible if you contact us at <a href="mailto:hello@arborandeye.com?subject=Cancellations" style="border-bottom: 1px solid #C9C5BD; font-weight: 600">hello@arborandeye.com</a> before production of the item has started.</p>
-          <p class="lbl" style="margin: 0 0 8px; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414">Made to order</p>
-          <p>Every print is specially made to order, therefore we are unable to offer exchanges or returns. Please be sure to read the product description and any size charts carefully before placing your order.</p>
-        </div>
-      </div>
-      </sc-if>
+      <!-- (Returns & Exchanges removed 2026-11-13, Grace) -->
 
       <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">
         <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
@@ -401,7 +338,7 @@ class Component extends DCLogic {
   componentDidMount() {
     // #shipping / #returns deep links open that tab
     const h = location.hash.slice(1);
-    if (h === 'shipping' || h === 'returns') this.setState({ tab: h, deskTab: h });
+    if (h === 'shipping') this.setState({ tab: h, deskTab: h });
     if (h === 'contact') this.setState({ deskTab: 'contact' });
     this.mq = window.matchMedia('(max-width: 767px)');
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
@@ -451,7 +388,7 @@ class Component extends DCLogic {
       panelPad: m ? '48px 0 88px' : '72px 0 140px',
       tabGap: m ? '24px' : '40px',
       // tabs: Contact (default) | Shipping | Returns & Exchanges
-      tabs: [['contact', 'Get in touch'], ['shipping', 'Shipping'], ['returns', 'Returns & Exchanges']].map(([k, label]) => ({
+      tabs: [['contact', 'Get in touch'], ['shipping', 'Shipping']].map(([k, label]) => ({
         label, selected: this.state.deskTab === k, pick: () => {   // under 1100px (since 2026-11-02): as on desktop, nothing opens until a link is tapped, and the open link again closes it; an opened section is scrolled to, under the header
           const open = this.state.deskTab === k ? null : k; this.setState({ tab: open || 'contact', deskTab: open });
           if (open) requestAnimationFrame(() => { const a = document.getElementById('ct-panel'), hd = document.querySelector('header'); if (a) window.scrollTo({ top: a.getBoundingClientRect().top + scrollY - (hd ? hd.offsetHeight : 0) - 16, behavior: 'instant' }); });
