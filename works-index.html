@@ -205,6 +205,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="nav-match.css?v=2">
 <link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=1"></script>
+<script src="footer-peek.js?v=1"></script>
 </head>
 <body>
 <div class="page index" id="page">
@@ -213,7 +214,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
       <div class="right">
         <nav class="main">
-          <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
           <a href="gallery-gx2.html" data-t="GX2">GX2</a>
           <a href="gallery-gx3.html" data-t="GX3">GX3</a>
           <a style="font-weight: 700; color: #141414" href="works-index.html" data-t="Index">Index</a>
@@ -231,7 +231,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="gallery-filmstrip-2.html">Gallery</a>
     <a href="gallery-gx2.html">GX2</a>
     <a href="gallery-gx3.html">GX3</a>
     <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
@@ -413,7 +412,7 @@ function genie(row, x, item, peak = PEAK) {
   line.forEach((it, k) => {
     const shift = acc + extra[k] / 2 - pivot + fit; acc += extra[k];
     it._dx = shift; it._sc = sc[k];
-    it.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.45s ease';
+    it.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s ease';   // (since 2026-11-13, Grace) half the speed (was 0.45s)
     it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
     it.style.zIndex = String(Math.round(sc[k] * 100));
   });
@@ -423,7 +422,7 @@ function genie(row, x, item, peak = PEAK) {
   placeTitle(row);
 }
 function settle(row) {   // (one series and Vertical keep their own CSS easing, so every hover there grows the same way)
-  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it._sc = 1; it.style.transition = mode === 's' || mode === 'v' ? '' : 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
+  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it._sc = 1; it.style.transition = mode === 's' || mode === 'v' ? '' : 'transform 1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
 }
 const fine = matchMedia('(hover: hover) and (pointer: fine)');
 document.querySelectorAll('.idx-row').forEach(row => {
@@ -655,12 +654,12 @@ function applyFilter() {
     });
     void idx.offsetWidth;
     requestAnimationFrame(() => {
-      moving.forEach(a => { a.style.transition = 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)'; a.style.transform = ''; });
-      items.filter(a => next.has(a) && !first.has(a)).forEach(a => { a.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s'; a.style.opacity = ''; });
+      moving.forEach(a => { a.style.transition = 'transform 1.333s cubic-bezier(0.22, 1, 0.36, 1)';   /* (since 2026-11-13, Grace) a series' entrance at 60% of its speed: every time here / 0.6 */ a.style.transform = ''; });
+      items.filter(a => next.has(a) && !first.has(a)).forEach(a => { a.style.transition = 'opacity 1s cubic-bezier(0.4, 0, 0.2, 1) 0.417s'; a.style.opacity = ''; });
     });
-    clearTimeout(flipT); flipT = setTimeout(() => { items.forEach(a => { a.style.transition = ''; a.style.transformOrigin = ''; }); flipping = false; }, 900);
+    clearTimeout(flipT); flipT = setTimeout(() => { items.forEach(a => { a.style.transition = ''; a.style.transformOrigin = ''; }); flipping = false; }, 1500);
   };
-  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); setTimeout(go, 300); }
+  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); setTimeout(go, 500); }
   else go();
 }
 addEventListener('resize', () => { if (mode !== 'all') layout(); else { liftLabel(); markTop(); } });
