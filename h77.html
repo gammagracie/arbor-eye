@@ -38,6 +38,7 @@
 <link rel="stylesheet" href="hover-title.css?v=1">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=1"></script>
+<script src="footer-peek.js?v=1"></script>
 </head>
 <body>
 <x-dc>
@@ -97,7 +98,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <div style="display: flex; gap: 40px; align-items: {{ headerAlign }}">
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
-          <a href="gallery-filmstrip-2.html" data-t="Gallery">Gallery</a>
           <a href="gallery-gx2.html" data-t="GX2">GX2</a>
           <a href="gallery-gx3.html" data-t="GX3">GX3</a>
           <a href="works-index.html" data-t="Index">Index</a>
@@ -131,7 +131,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </div>
 </header>
 <nav style="position: fixed; top: var(--header-h); bottom: var(--footer-h); left: 0; right: 0; z-index: 20; background: #FDFDFB; transform: {{ menuTransform }}; visibility: {{ menuVis }}; transition: transform 0.3s ease, visibility 0.3s; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase" data-screen-label="Mobile menu">
-  <a href="gallery-filmstrip-2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Gallery</a>
   <a href="gallery-gx2.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">GX2</a>
   <a href="gallery-gx3.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">GX3</a>
   <a href="works-index.html" style="padding: 28px 0; border-bottom: 1px solid #F0EDE7">Index</a>
@@ -175,7 +174,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftR }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="1 1 21 30.66 1 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }} + {{ hoverTitlePlus }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1), transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
+      <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }} + {{ hoverTitlePlus }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1), transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -233,7 +232,7 @@ class Component extends DCLogic {
     let acc = 0;
     btns.forEach((btn, k) => {
       const shift = acc + extra[k] / 2 - total / 2; acc += extra[k];
-      btn.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // (since 2026-10-21) the swell follows the cursor softly (was 0.14s)
+      btn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.35s ease, border-color 0.35s ease';   // (since 2026-10-21) the swell follows the cursor softly (was 0.14s)
       btn.style.transformOrigin = 'center bottom';
       btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
       btn.style.zIndex = String(Math.round(scales[k] * 100));
