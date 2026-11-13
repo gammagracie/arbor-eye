@@ -151,7 +151,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <button onClick="{{ next }}" aria-label="Next artwork" style="position: relative; z-index: 3; opacity: {{ arrowOpacity }}; transform: {{ arrowShiftR }}; transition: {{ arrowTrans }}; border: none; background: transparent; cursor: pointer; padding: 8px 8px {{ arrowPadBottom }} 8px; color: {{ arrowColor }}; display: flex" style-hover="color: #141414">
         <svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5" style="width: {{ arrowW }}; height: {{ arrowH }}; overflow: visible; filter: {{ arrowFilterR }}"><polyline vector-effect="non-scaling-stroke" style="stroke: {{ arrowHaloColor }}; stroke-width: {{ arrowHalo }}; stroke-linecap: round; stroke-linejoin: round" points="1 1 21 30.66 1 59"></polyline><polyline vector-effect="non-scaling-stroke" style="stroke-width: {{ arrowStroke }}" points="1 1 21 30.66 1 59"></polyline></svg>
       </button>
-      <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }} + {{ hoverTitlePlus }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1), transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)">{{ hoverTitle }}</p>
+      <p data-tip style="position: absolute; top: 100%; left: 0; right: 0; margin: {{ hoverTitleMargin }}; line-height: 1.2; text-align: center; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc({{ hoverTitleSize }} * {{ hoverTitleScale }} + {{ hoverTitlePlus }}); transform: translateX({{ tipShift }}); font-weight: 400; letter-spacing: 0.1em; padding-left: 0.1em; text-transform: uppercase; box-sizing: border-box; color: #141414; pointer-events: none; opacity: {{ hoverTitleOpacity }}; transition: opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1)">{{ hoverTitle }}</p>
     </div>
   </section>
 </main>
@@ -218,15 +218,21 @@ class Component extends DCLogic {
     // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
     const hov = e.target && e.target.closest ? e.target.closest('button') : null, k = btns.indexOf(hov),   // (the re-application after a glide passes no target: the title then stays put)
           rail = strip.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
-    if (k >= 0 && hov === this.tipBtn && rail) {   // (only for the thumbnail whose name is showing: a new one fades in under it, see enter)
-      let acc2 = 0; for (let j = 0; j < k; j++) acc2 += extra[j];
-      const r = rail.getBoundingClientRect();
-      this.tipX = base[k].cx + acc2 + extra[k] / 2 - total / 2 - (r.left + r.width / 2);
-      if (tip && this.tipFresh) {   // a name that has just appeared goes straight to where the swell will put it, so it only fades in
-        const t = tip.style.transition; tip.style.transition = 'opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1)';   /* (since 2026-11-06) the title fades as G5's does (was 0.45s ease) */ tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
-        void tip.offsetWidth; tip.style.transition = t; this.tipFresh = false;
-      } else if (tip) tip.style.transform = 'translateX(' + this.tipX.toFixed(1) + 'px)';
-    }
+    if (k >= 0 && hov === this.tipBtn && rail) this.followTip();   // (since 2026-11-13) the title is placed each frame under the thumbnail's actual centre
+  }
+  // (since 2026-11-13, Grace) the hover title always exactly centred under the thumbnail it names: every frame while the pointer is
+  // over the tray (and for a second after), it is put under that thumbnail's actual centre, through its swell and any glide
+  followTip() {
+    this.tipSeen = performance.now(); if (this.tipRaf) return;
+    const step = () => {
+      const btn = this.tipBtn, rail = btn && btn.isConnected && btn.closest('[data-rail]'), tip = rail && rail.querySelector('[data-tip]');
+      if (rail && rail.matches(':hover')) this.tipSeen = performance.now();
+      if (!tip || performance.now() - this.tipSeen > 1000) { this.tipRaf = 0; return; }
+      const b = btn.getBoundingClientRect(), r = rail.getBoundingClientRect(), x = (b.left + b.width / 2) - (r.left + r.width / 2);
+      if (Math.abs(x - (this.tipX || 0)) > 0.05) { this.tipX = x; tip.style.transform = 'translateX(' + x.toFixed(2) + 'px)'; }
+      this.tipRaf = requestAnimationFrame(step);
+    };
+    this.tipRaf = requestAnimationFrame(step);
   }
   // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
   relaxDock() {
@@ -529,7 +535,7 @@ class Component extends DCLogic {
             const t = tip.style.transition; tip.style.transition = 'none'; tip.style.opacity = '0'; tip.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
             void tip.offsetWidth; tip.style.transition = t; tip.style.opacity = '1'; this.tipFresh = true;
           }
-          this.tipX = x; this.tipBtn = el; this.lastTip = k; this.setState({ tip: k });
+          this.tipX = x; this.tipBtn = el; this.lastTip = k; this.setState({ tip: k }); this.followTip();
         }
       }))
     };

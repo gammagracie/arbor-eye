@@ -800,7 +800,7 @@ class Component extends DCLogic {
         let fromOtherPage = false;
         try { const u = new URL(document.referrer); fromOtherPage = u.origin === location.origin && !/Gallery\.dc\.html$/.test(u.pathname); } catch (e) {}
         if (fromOtherPage && history.length > 1) { history.back(); return; }
-        document.body.style.overflow = ''; this.setState({ sel: null, zoom: false, zoomLevel: 1, printView: false });
+        location.href = 'gallery-gx3.html';   // (since 2026-11-13, Grace) otherwise to GALLERY (GX3)
       },
       openPrint: () => { this.setState({ printView: true, printVid: false }); window.scrollTo(0, 0); },
       viewOriginal: () => { this.setState({ printView: false }); window.scrollTo(0, 0); },
@@ -893,7 +893,7 @@ class Component extends DCLogic {
       // series number and name, as in Ned's documentation decks (Series 1, Ascent ... Series 8, Tonal); works outside the eight series keep "Original"
       detailSeries: d && SERIES_NO[d.series] ? 'Series ' + SERIES_NO[d.series] + ', ' + d.series : d ? d.series : '',   // the series line (Outliers has no number)
       hasSeries: !!(d && d.series),
-      seriesHref: d ? 'gallery-filmstrip-2.html?view=9&series=' + encodeURIComponent(d.series) : '#',   // G5's grid, filtered to that series
+      seriesHref: d ? 'gallery-gx3.html?view=9&series=' + encodeURIComponent(d.series) : '#',   // (since 2026-11-13) GALLERY's (GX3's) grid, filtered to that series
       detailTitle: d ? d.title : '',
       detailMedium: d ? d.medium : '',
       detailSize: d ? d.size : '',
