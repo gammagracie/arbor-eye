@@ -1002,5 +1002,17 @@ if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0)
   })();
 })();
 </script>
+<!-- (since 2026-11-13, Grace) a hovered work is never cut off by a hard line: while the pointer is on a work, the stage lets it grow
+     past its edges (220px above for tall portraits, 80px elsewhere) and sits above the header; the clip comes back 0.95s after the
+     pointer leaves, once the work has shrunk back -->
+<style>@media (hover: hover) and (pointer: fine) { .stage.lift { overflow: visible !important; clip-path: inset(-220px -80px -80px -80px) !important; z-index: 40; } }</style>
+<script>
+(() => {
+  const st = document.querySelector('.stage'); if (!st || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  let t = 0;
+  st.addEventListener('mouseover', e => { if (e.target.closest && e.target.closest('.art')) { clearTimeout(t); st.classList.add('lift'); } });
+  st.addEventListener('mouseout', e => { const a = e.target.closest && e.target.closest('.art'); if (a && !(e.relatedTarget && a.contains(e.relatedTarget))) { clearTimeout(t); t = setTimeout(() => st.classList.remove('lift'), 950); } });
+})();
+</script>
 </body>
 </html>
