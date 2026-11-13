@@ -35,10 +35,11 @@
      the pictures take the extra room and the copy keeps the width it had (--bio-text, --tol-text, --proc-text: the old widths) */
   --ab-w: calc(100vw - 2 * var(--side-pad));
   --bio-text: min(calc(var(--ab-para) * 52), var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.6 * var(--ab-h)));
-  --tol-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.975 * min(calc(var(--ab-h) * 1.0989), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px))));
+  --tol-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.975 * min(calc(var(--ab-h) * 1.2143), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px))));
   --proc-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.7 * min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px)))); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
-.ab-portrait { height: min(var(--ab-h), calc((var(--ab-w) - var(--ab-gap) - var(--bio-text)) * 4 / 3)); }   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
+.ab-portrait-crop { height: min(var(--ab-h), calc((var(--ab-w) - var(--ab-gap) - var(--bio-text)) * 4 / 3)); overflow: hidden; }   /* (since 2026-11-01) the portrait's box as tall as the tab's box, or as large as leaves the copy its width */
+.ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
 /* the paragraphs of every desktop tab, and of Contact's Shipping and Returns (since 2026-10-22; class bt), styled as Biography's
    always were: 14.5px on a 1.75 line, 0.99vw apart (19px at 1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px
    wide), 1.1em apart; one column (Biography ran in two over 2000px on 2026-10-20 and 21) */
@@ -242,7 +243,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   </sc-if>
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ true }}">
   <section data-screen-label="About — Tree of Life" style="padding: {{ treePad }}; display: grid; grid-template-columns: {{ treeCols }}; gap: {{ twoColGap }}; align-items: center">
-    <img src="uploads/about/pierodellafrancesca-sculptures.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
+    <img src="uploads/about/pierodellafrancesca-sculptures-2.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="width: 100%; height: auto; display: block">
     <div>
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc({{ headingSize }} * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Tree of Life</h2>
       <div class="copy" style="display: grid; font-size: calc(14px * var(--fs)); line-height: 1.75; text-align: left; max-width: 620px; margin: 0 auto">
@@ -327,7 +328,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
         <!-- Biography: the portrait (3:4, as tall as the box, or smaller where the copy needs its width; since 2026-11-01) at the box's top-left corner, on the logo's left edge, where Contact's photo starts; the heading and copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top">
+          <div class="ab-portrait-crop"><img class="ab-portrait" src="uploads/about/ned-portrait.webp" alt="Ned Church beside his plexiglass painting easel" style="display: block; width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top"></div>
           <div class="ab-bio" style="justify-self: start; max-width: var(--ab-measure)">
             <h2 class="ab-head">Biography</h2>
             <div class="ab-copy bt"><p>I am a Vermont-born watercolor painter whose practice began in the wake of a childhood accident that left me with a spinal cord injury. Painting with a brush held in my mouth became both an outlet and a way of rediscovering what was possible. My father, Gilbert “Geebo” Church, an artist himself, recognized in watercolor the possibility of a new form of expression and independence — a practice still physical, yet largely my own — and offered the guidance and encouragement that helped bring it&nbsp;forward.</p>
@@ -345,10 +346,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   <sc-if value="{{ tabTree }}" hint-placeholder-val="{{ false }}">
   <section data-screen-label="About — Tree of Life (desktop)" style="margin-block: auto; padding: 50px 0 32px">
       <div style="min-height: var(--ab-h); display: grid; align-content: center; margin-bottom: 28px">
-        <!-- Tree of Life: the fresco photo with the two insignia sculptures (since 2026-10-30, 2000 x 1820), 75% of the size that fills the box's height (or leaves the copy its room) from the box's top-left corner,
+        <!-- Tree of Life: the fresco photo with the two insignia sculptures (since 2026-11-13, Grace's new version, 2000 x 1647), 75% of the size that fills the box's height (or leaves the copy its room) from the box's top-left corner,
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
         <div style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
-          <img src="uploads/about/pierodellafrancesca-sculptures.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(calc(var(--ab-h) * 1.0989), calc(var(--ab-w) - var(--ab-gap) - var(--tol-text))); height: auto">
+          <img src="uploads/about/pierodellafrancesca-sculptures-2.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(calc(var(--ab-h) * 1.2143), calc(var(--ab-w) - var(--ab-gap) - var(--tol-text))); height: auto">
           <div style="justify-self: start; max-width: var(--tol-text)">
             <h2 class="ab-head">Tree of Life</h2>
             <div class="ab-copy bt"><p>The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
