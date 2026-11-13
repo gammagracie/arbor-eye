@@ -14,3 +14,12 @@
   });
   if (Element.prototype.scrollIntoView) Element.prototype.scrollIntoView = strip(Element.prototype.scrollIntoView);
 })();
+
+// (since 2026-11-13, Grace) the focus ring only while the keyboard is in use: Tab turns it on (html.kbd, see a11y.css), any mouse,
+// pen or touch press turns it off, and so does coming back to a page (Back, reload)
+(function () {
+  const r = document.documentElement;
+  addEventListener('keydown', e => { if (e.key === 'Tab') r.classList.add('kbd'); }, true);
+  addEventListener('pointerdown', () => r.classList.remove('kbd'), true);
+  addEventListener('pageshow', () => r.classList.remove('kbd'));
+})();

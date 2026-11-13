@@ -2,11 +2,14 @@
 
 /* Keyboard focus: a thin dark ring wherever Tab lands. :focus-visible means mouse clicks don't show it; text fields always
    show it while typing. !important because some controls clear the outline inline (the Contact form's fields). */
-:where(a, button, input, select, textarea, summary, [tabindex], [role="tab"], [role="button"]):focus-visible {
+/* (since 2026-11-13, Grace) links and buttons show it only once Tab has been pressed (a11y.js adds html.kbd; any mouse or touch
+   press takes it off), so a link that gets focus back after a keyboard shortcut (Back, reload) shows no box around it */
+html.kbd :where(a, button, summary, [tabindex], [role="tab"], [role="button"]):focus-visible {
   outline: 2px solid #141414 !important;
   outline-offset: 3px !important;
 }
-:where(input, textarea, select):focus-visible { outline-offset: 2px !important; }
+html:not(.kbd) :where(a, button, summary, [tabindex], [role="tab"], [role="button"]):focus-visible { outline: none !important; }
+:where(input, textarea, select):focus-visible { outline: 2px solid #141414 !important; outline-offset: 2px !important; }
 
 /* Headings and labels that are there for screen readers only (each page's h1 where the design shows no title) */
 .sr-only {
