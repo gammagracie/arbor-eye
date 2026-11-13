@@ -14,11 +14,10 @@
 </script>
 <script src="./support.js"></script>
 <script src="alt-text.js?v=7" data-auto></script>
-<script src="centre-content.js?v=3"></script>
 <script src="search-data.js?v=1" defer></script>
 <script src="search.js?v=5" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
-<link rel="stylesheet" href="nav-match.css?v=2">
+<link rel="stylesheet" href="nav-match.css?v=3">
 <link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=1"></script>
 <script src="footer-peek.js?v=1"></script>
@@ -43,7 +42,8 @@ a:hover { color: #6E6B66; }
 p, h1, h2, h3, li { text-wrap: pretty; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
-@media (min-width: 2501px) { :root { --header-h: 110px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
+@media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
+@media (min-width: 2501px) { :root { --header-h: 102px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
 /* Side padding, shared by header, main and footer on every page: 24px phone, 48px tablet, 10% from 1024px up */
 :root { --side-pad: 24px; }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
@@ -67,7 +67,7 @@ html { scrollbar-gutter: stable; }
    and a section whose text needs more room grows to hold it.
    The tab labels 11.5px; headings the body's sans-serif in spaced capitals, as About's */
 :root { --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(51px + var(--tab-fs) * 1.2);
-  --ct-w: calc(100vw - 2 * var(--body-pad));   /* (since 2026-11-05) the body's width, under the nav's CONTACT on the right (2026-11-01 to 11-04 the nav's full width) */ --ct-h: min(calc(100vh - var(--header-h) - 50px - 28px - var(--tab-h) - 32px), calc(var(--ct-w) * 0.75));
+  --ct-w: calc(100vw - 2 * var(--body-pad));   /* (since 2026-11-05) the body's width, under the nav's CONTACT on the right (2026-11-01 to 11-04 the nav's full width) */ --ct-h: min(calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) + 10px), calc(var(--ct-w) * 0.75));
   --ct-head: clamp(22px, 1.35vw, 70px); }
 .ct-head { margin: 0 0 calc(var(--ct-head) * 0.8) !important; font-family: inherit !important; font-weight: 400; font-size: var(--ct-head) !important; line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; color: #141414; }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
@@ -86,7 +86,8 @@ html { scrollbar-gutter: stable; }
 /* Phones in portrait: footer twice as tall */
 @media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } }
 /* (since 2026-10-29) from 768px up the footer sits just below the fold, as on the homepage: there when you scroll, seen only at the very bottom */
-@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; } }
+@media (min-width: 768px) { .shell { min-height: calc(100vh + var(--footer-h)) !important; }
+@media (min-width: 1000px) and (hover: hover) and (pointer: fine) { .shell { min-height: 100vh !important; } }   /* (since 2026-11-13) desktop: the footer is hidden below the window (footer-peek.js), so no room is kept for it: nothing scrolls */ }
 /* Solid CTA hover: a pale fill sweeps in from the left and the text darkens; on leaving it withdraws out through the right */
 .cta { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #141414 !important; transition: color 0.35s ease; }
 .cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FDFDFB; transform: scaleX(0); transform-origin: right; transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1); }
@@ -279,7 +280,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
        brings the photograph back. Since 2026-10-30 the photograph has 10px trimmed off its top and bottom (the space
        stays, so the tab bar doesn't move). -->
   <sc-if value="{{ wideLayout }}" hint-placeholder-val="{{ true }}">
-  <section style="padding: 50px 0 32px; margin: auto calc(-1 * var(--body-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
+  <section style="padding: calc(var(--home-top, 50px) - 10px) 0 0; margin: 0 calc(-1 * var(--body-pad)); display: grid; justify-items: center" data-screen-label="Contact (desktop)">
     <div style="width: var(--ct-w)">
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <!-- (Contact 2, 2026-11-13, Grace) the photo with 7% of its left side trimmed off: drawn 1/0.93 as large from its right edge, so it

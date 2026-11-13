@@ -35,7 +35,8 @@ li.mag a:hover { background: #E9E0D0; }
 /* (since 2026-11-09, Grace) wider: on desktop the column runs on the homepage's lines, the logo's & to CONTACT's last T (nav-match.css
    gives --nav-hp from the homepage's header height); over 2000px every size 25% larger, as on the site; over 2500px the list in two columns */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); }
-@media (min-width: 2501px) { :root { --header-h: 110px; } }
+@media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
+@media (min-width: 2501px) { :root { --header-h: 102px; } }
 @media (min-width: 1280px) { .wrap { max-width: none; padding-left: var(--nav-hp); padding-right: var(--nav-hp); } }
 @media (min-width: 2001px) {
   .wrap { padding-top: 90px; padding-bottom: 120px; }
@@ -49,7 +50,7 @@ li.mag a:hover { background: #E9E0D0; }
   li { break-inside: avoid; }
 }
 </style>
-<link rel="stylesheet" href="nav-match.css?v=2">
+<link rel="stylesheet" href="nav-match.css?v=3">
 <link rel="stylesheet" href="a11y.css?v=1">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=1"></script>
 <script src="footer-peek.js?v=1"></script>
