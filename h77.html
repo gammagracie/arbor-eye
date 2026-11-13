@@ -365,7 +365,7 @@ class Component extends DCLogic {
     this.introTimer = setTimeout(() => { this.setState({ intro: 'tree' });
       this.introTimer = setTimeout(() => { this.setState({ intro: 'treeOut' });
         this.introTimer = setTimeout(() => { this.setState({ intro: 'mark' });
-          this.introTimer = setTimeout(() => this.setState({ intro: false }), 3200); }, 1600); }, 3400); }, 150);
+          this.introTimer = setTimeout(() => this.setState({ intro: false }), 30000);   // TEMPORARY (2026-11-13, Grace): the wordmark stays 30s to review its shadow; back to 3200 }, 1600); }, 3400); }, 150);
     this.mqPortrait = window.matchMedia('(orientation: portrait)');
     this.onMqPortrait = () => this.setState({ portrait: this.mqPortrait.matches });
     this.mqPortrait.addEventListener('change', this.onMqPortrait);
