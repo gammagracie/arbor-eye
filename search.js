@@ -4,7 +4,7 @@
 // Keyboard: / opens it, Escape closes, the up / down arrows move through the results and Enter opens one.
 (function () {
   const css = `
-.srch { position: fixed; inset: 0; z-index: 1000; background: rgba(253, 253, 251, 0.98); overflow: auto; display: none; }
+.srch { position: fixed; inset: 0; z-index: 1000; background: rgba(253, 253, 251, 0.8);   /* (since 2026-11-13, Grace) 80%: the page shows faintly behind */ overflow: auto; display: none; }
 .srch.open { display: block; }
 .srch-in { width: min(760px, calc(100vw - 48px)); margin: 0 auto; padding: calc(var(--header-h, 80px) + 32px) 0 80px; box-sizing: border-box; }
 /* (since 2026-11-06) with nothing typed the search field sits dead centre on the screen (--srch-mid, set from the field's own height);
@@ -19,6 +19,9 @@
 .srch-count { margin: 14px 0 0; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.16em; text-transform: uppercase; color: #6E6B66; }
 .srch h2 { margin: 36px 0 10px; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-weight: 400; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: #6E6B66; }
 .srch ul { list-style: none; margin: 0; padding: 0; }
+/* (since 2026-11-13, Grace) the results (or "nothing matches") on a white box, 40px inside it */
+.srch.q #srch-list { background: #FFFFFF; padding: 40px; margin-top: 24px; }
+.srch.q #srch-list > :first-child { margin-top: 0; }
 .srch li a { display: flex; align-items: center; gap: 18px; padding: 10px 8px; color: #141414; text-decoration: none; border-radius: 2px; }
 .srch li a:hover, .srch li a[aria-selected="true"] { background: #F0F2EF; }
 .srch li a:focus-visible { outline: 2px solid #141414; outline-offset: 2px; }
