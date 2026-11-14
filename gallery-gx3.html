@@ -131,6 +131,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
 .row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
 .art { position: relative; flex: none; display: block; box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+html:not(.touch) .page:not(.multi) .art:hover { transform: scale(1.03); }   /* (since 2026-11-13, Grace) one work showing: a gentler growth (3%), so it never reaches its title 33px below */
 html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.667); }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth); since 2026-11-02 the shadow 170% as dark (0.14 at rest) */
 .art { background: transparent center / contain no-repeat; }   /* the small copy behind the large image, so a work is never a blank frame while it loads (since 2026-10-23) */
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
@@ -513,6 +514,9 @@ function fit() {
     // (since 2026-11-04) every page of the plain grid is sized for three landscape rows (its pages are cut to fit that height, see
     // buildPages), so a work is the same size on every page; a page with room to spare is centred in the height
     const units = SL ? used : Math.max(used, tall.reduce((t, f) => t + f, 0));   // rows in heights of a landscape
+    // (since 2026-11-13, Grace) between two rows there is always room for the hover title under a work (33px below it, the
+    // caption's own height) and 14px more, so a title never lands on the row below; the works shrink a little to make room
+    const ROWNEED = 33 + ((document.querySelector('.caption') || {}).offsetHeight || 40) + 14;
     const sizeFor = (maxW, V) => {
       const byH = wideGaps && V / (units + (used - 1) / 4) / 4 >= 60 ? V / (units + (used - 1) / 4) : (V - 60 * (used - 1)) / units;
       const byW = wideGaps && maxW / (boxR * nc + kc * (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + kc * (nc - 1) / 4) : (maxW - 60 * kc * (nc - 1)) / (boxR * nc);
@@ -525,7 +529,7 @@ function fit() {
         const byH3 = wideGaps && V / 3.5 / 4 >= 60 ? V / 3.5 : (V - 120) / 3, byW3 = wideGaps && maxW / (boxR * 3 + 0.5 * kc) / 4 >= 60 ? maxW / (boxR * 3 + 0.5 * kc) : (maxW - 120 * kc) / (boxR * 3);
         a = (a + Math.min(byH3, byW3)) / 2;
       }
-      if (SL && SL.grow) a = Math.min(a * SL.grow, (V - 24 * (used - 1)) / used);   // grow: that much larger, the rows drawing closer (24px at least) to fit
+      if (SL && SL.grow) a = Math.min(a * SL.grow, (V - ROWNEED * (used - 1)) / used);   // grow: that much larger, the rows drawing closer to fit, but never so close that a title lands on the row below (ROWNEED)
       return a; };
     const gridW = a => boxR * nc * a + GC(a) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
@@ -547,7 +551,7 @@ function fit() {
         if (aBelow > aNarrow) { gridTop = topBelow; V = bottom - topBelow; a = aBelow; } else a = aNarrow;
       }
     }
-    const g = G(a), gRow = SL && SL.grow && used > 1 ? Math.max(24, Math.min(g, (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
+    const g = G(a), gRow = SL && SL.grow && used > 1 ? Math.max(ROWNEED, Math.min(g, (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
       Object.assign(row.style, { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: (gridW(a) + 2).toFixed(1) + 'px', gridTemplateColumns: '' });   // (+2px so rounding never wraps a full row)
     } else {
