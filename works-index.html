@@ -574,6 +574,25 @@ function layout() {
     items.forEach(a => a.classList.toggle('lastrow', a.offsetTop === items[n - 1].offsetTop));
     // moved up (SERIES_TUNE dy): from its centred place, never closer than its usual gap under the series name
     if (T.dy) { const rh = row.offsetHeight; row.style.marginTop = Math.max(0, (ah - rh) / 2 + T.dy).toFixed(1) + 'px'; row.style.marginBottom = 'auto'; }
+  } else if (mode === 'v' && fSeries === 'All') {
+    // (since 2026-11-13, Grace) one year: each series on its own row, centred, every work the same size, as large as fits on the
+    // screen (never more than one series' largest); a year of a single series with 6 or more works in two rows. The rows only as
+    // far apart as a hovered work's growth and its title need, and the whole block centred between the menus and the screen's foot
+    const zY = ZOOM, lists = shown.map(row => [...row.querySelectorAll('.idx-item:not([hidden])')]);
+    const v = lists[0][0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;   // (each year's works share one shape)
+    const cols = lists.map(l => shown.length === 1 && l.length >= 6 ? Math.ceil(l.length / 2) : l.length);
+    const R = lists.reduce((t, l, k) => t + Math.ceil(l.length / cols[k]), 0), most = Math.max(...cols);
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const top0 = fb + 24, ah = innerHeight - top0 - 24;
+    const gapFor = h => (zY - 1) / 2 * h + TGAP + th + 10;
+    const gxY = Math.max(16, aw * 0.009);   // (works closer side by side than elsewhere, so a long row's works can be larger)
+    let h = Math.min(2.83 * (v ? 1.5 * H : H), (aw * 0.98 - (most - 1) * gxY) / most / r);
+    for (let i = 0; i < 4; i++) { const need = R * h + (R - 1) * gapFor(h) + TGAP + th + (zY - 1) / 2 * h; if (need <= ah + 0.5) break; h *= ah / need; }
+    const ry = gapFor(h), block = R * h + (R - 1) * ry + TGAP + th;
+    shown.forEach((row, k) => { set(row, v ? h / 1.5 : h, cols[k], h * r, gxY, ry); row.style.setProperty('--hz', zY); });
+    idx.style.gap = ry.toFixed(1) + 'px';
+    shown[0].style.marginTop = (top0 + Math.max(0, (ah - block) / 2) - flow - ry).toFixed(1) + 'px';
   } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
     // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
     // (later that day) the gap between the two series the same as between Ascent's rows, and the white space between the menus
@@ -638,7 +657,7 @@ function applyFilter() {
     const first = new Map([...was].filter(a => next.has(a)).map(a => [a, a.getBoundingClientRect()]));
     items.forEach(a => { a.hidden = !next.has(a); a.style.opacity = ''; });
     rows.forEach(row => { row.hidden = !row.querySelector('.idx-item:not([hidden])'); });
-    mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : 'all';
+    mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';   // (a year: laid out like Vertical, see layout)
     layout();
     if (mode !== 'all') { se.scrollTop = 0; tY = 0; }
     const moving = [];
