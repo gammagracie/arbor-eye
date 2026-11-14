@@ -67,7 +67,7 @@ html { scrollbar-gutter: stable; }
    and a section whose text needs more room grows to hold it.
    The tab labels 11.5px; headings the body's sans-serif in spaced capitals, as About's */
 :root { --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(51px + var(--tab-fs) * 1.2);
-  --ct-w: calc(100vw - 2 * var(--body-pad));   /* (since 2026-11-05) the body's width, under the nav's CONTACT on the right (2026-11-01 to 11-04 the nav's full width) */ --ct-h: min(calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) + 10px), calc(var(--ct-w) * 0.75));
+  --ct-w: calc(100vw - 2 * var(--body-pad));   /* (since 2026-11-05) the body's width, under the nav's CONTACT on the right (2026-11-01 to 11-04 the nav's full width) */ --ct-h: min(calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) + 12px), calc(var(--ct-w) * 0.75));
   --ct-head: clamp(22px, 1.35vw, 70px); }
 .ct-head { margin: 0 0 calc(var(--ct-head) * 0.8) !important; font-family: inherit !important; font-weight: 400; font-size: var(--ct-head) !important; line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; color: #141414; }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
@@ -245,7 +245,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <sc-if value="{{ deskImage }}" hint-placeholder-val="{{ true }}">
       <!-- (Contact 2, 2026-11-13, Grace) the photo with 7% of its left side trimmed off: drawn 1/0.93 as large from its right edge, so it
            still runs from the logo's left edge to the bag icon's right -->
-      <div style="overflow: hidden; margin-bottom: 28px; clip-path: inset(10px 0)"><picture>
+      <div style="overflow: hidden; margin-bottom: 28px; clip-path: inset(10px 0 0 0)"><picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
         <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="100vw">
         <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); object-fit: cover; transform: scale(1.0753); transform-origin: right center">
@@ -297,7 +297,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 
       <!-- (Returns & Exchanges removed 2026-11-13, Grace) -->
 
-      <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">
+      <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 21px 0 19px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">   <!-- (since 2026-11-14) 1px less above: the row's baseline alignment puts the labels 1px lower than About's, so they now sit level with them -->
         <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
           <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
             <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
