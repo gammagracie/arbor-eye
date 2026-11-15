@@ -159,7 +159,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx.hovering .idx-row { opacity: 0.25; }   /* (since 2026-10-29, as martonperlaki.com/thumbnails) the other rows fade to 25% over 0.3s while one is hovered; the names fade in over 0.6s on the same curve */
 .idx.hovering .idx-row.on { opacity: 1; }
 .idx-row { --ih: var(--idx-h); display: flex; flex-wrap: wrap; gap: var(--idx-gap); }
-.idx-item { position: relative; display: block; flex: none; height: var(--ih); transform-origin: center bottom; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+.idx-item { position: relative; display: block; flex: none; height: var(--ih); transform-origin: center center; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
 /* the genie, as on G5 (since 2026-10-29): the thumbnail under the cursor swells most (150%), its neighbours less along a wide
    bell curve, each growing up from its own base and nudged sideways so they never overlap (set by the script below) */
 /* (since 2026-11-09, Grace: the whole top row, marked by the script below; since 2026-11-02 Koi, Artifact and Overlook, under the series
@@ -189,7 +189,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-11-02) one series and Vertical: every hover grows and shrinks the same way, as G5's works do: 0.9s on a gentle
    ease both ways (0.5s, quick then settling, earlier that day) */
 .idx.m-s .idx-item, .idx.m-v .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
-.idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
+html:not(.touch) .idx-item.hot { transform: scale(1.075); }   /* (since 2026-11-14, Grace) every hover on INDEX as on GALLERY: the work under the pointer alone grows 7.5% from its centre, 0.9s on a gentle ease both ways; its neighbours stay put */   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
 /* (since 2026-11-04) the header nav: each link as wide as its bold self (a hidden bold copy under it), so the current page's bold
@@ -360,67 +360,28 @@ function capMid() {
   const m = capCtx.measureText('H'), content = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
   return (title.offsetHeight - content) / 2 + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent / 2;
 }
-const TGAP = 25, HOV_S = 1.3;   // HOV_S: a work's hover size in one series (since 2026-10-30; Vertical's is 1.075). TGAP: a hover title's gap under its work, in the spread-out layouts (4px, then 7px more since 2026-10-29)
+const TGAP = 25, HOV_S = 1.3, HZ = 1.075;   /* HZ: the hover size, GALLERY's (since 2026-11-14) */   // HOV_S: a work's hover size in one series (since 2026-10-30; Vertical's is 1.075). TGAP: a hover title's gap under its work, in the spread-out layouts (4px, then 7px more since 2026-10-29)
 function placeTitle(row) {
   const box = idx.getBoundingClientRect(), pad = parseFloat(getComputedStyle(idx).paddingRight);
   let x, y;
   if (mode === 'all') {   // to the right of the row: 24px past its last thumbnail, centred on the row
     const items = row.querySelectorAll('.idx-item:not([hidden])'), last = items[items.length - 1];   // (its resting place, plus the genie's push)
     y = last.offsetTop + last.offsetHeight / 2 - capMid();   // (since 2026-10-29) its capitals centred on the row (they were 5, then 9px below)
-    x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+    x = Math.min(last.offsetLeft + last.offsetWidth + (row._hot === last ? (HZ - 1) / 2 * last.offsetWidth : 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
   } else {   // under the hovered work, centred on it (following it where the genie nudges it)
     const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
-    y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + ((it._sc || 1) - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
-      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((parseFloat(getComputedStyle(it).getPropertyValue('--hz')) || 1.075) - 1) / 2) + TGAP - 8;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward; 8px higher since 2026-11-02)
+    y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + (HZ - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
+      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + (HZ - 1) / 2) + TGAP - 8;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward; 8px higher since 2026-11-02)
   }
   const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
   if (jump) title.style.transition = 'none';
   title.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
   if (jump) { void title.offsetWidth; title.style.transition = ''; }
 }
-// the genie, as on G5 (since 2026-10-29; it was 120% from each centre): the thumbnails on the cursor's line of its row swell
-// along a bell curve centred on the cursor (150% at its peak, spreading 1.7 thumbnails either way), each growing up from its
-// base and nudged sideways so they never overlap, the thumbnail under the cursor staying under it; following the cursor
-// softly (0.45s); leaving the row lets them settle back (0.5s)
-const PEAK = 0.5;
-function genie(row, x, item, peak = PEAK) {
-  const box = idx.getBoundingClientRect(), line = [...row.querySelectorAll('.idx-item:not([hidden])')].filter(it => it.offsetTop === item.offsetTop);
-  const base = line.map(it => ({ cx: box.left + it.offsetLeft + it.offsetWidth / 2, w: it.offsetWidth }));
-  const slot = base.reduce((t, b) => t + b.w, 0) / base.length;
-  let sc = base.map(b => 1 + peak * Math.exp(-Math.pow((x - b.cx) / (1.7 * slot), 2)));
-  if (mode === 's') {   // (since 2026-11-01) a line too wide to swell fully within 96px of the screen's edges swells only as much as fits
-    const room = document.documentElement.clientWidth - 2 * 96, rest = base[base.length - 1].cx + base[base.length - 1].w / 2 - base[0].cx + base[0].w / 2;
-    const grow = sc.reduce((t, v, k) => t + (v - 1) * base[k].w, 0);
-    if (rest + grow > room) { const f = Math.max(0, (room - rest) / grow); sc = sc.map(v => 1 + (v - 1) * f); }
-  }
-  const extra = sc.map((v, k) => (v - 1) * base[k].w), total = extra.reduce((a, b) => a + b, 0);
-  let pivot = 0;   // the growth left of the cursor, taken off every shift so the thumbnail under the cursor stays put
-  base.forEach((b, k) => { pivot += extra[k] * Math.max(0, Math.min(1, (x - b.cx + b.w / 2) / b.w)); });
-  // one series (since 2026-11-01): its few large works swell wide, so the whole line slides to stay 96px clear of the screen's edges
-  // (centred on the screen if the swell is wider than that)
-  let fit = 0;
-  if (mode === 's') {
-    let a2 = 0, L = Infinity, R = -Infinity;
-    base.forEach((b, k) => { const c = b.cx + a2 + extra[k] / 2 - pivot; a2 += extra[k]; L = Math.min(L, c - b.w * sc[k] / 2); R = Math.max(R, c + b.w * sc[k] / 2); });
-    const m = 96, W = document.documentElement.clientWidth;
-    fit = R - L <= W - 2 * m ? Math.max(0, m - L) - Math.max(0, R - (W - m)) : (W - L - R) / 2;
-  }
-  let acc = 0;
-  line.forEach((it, k) => {
-    const shift = acc + extra[k] / 2 - pivot + fit; acc += extra[k];
-    it._dx = shift; it._sc = sc[k];
-    it.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s ease';   // (since 2026-11-13, Grace) half the speed (was 0.45s)
-    it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
-    it.style.zIndex = String(Math.round(sc[k] * 100));
-  });
-  // the row's last thumbnail ends up the swell right of the cursor further right: the title keeps clear of it
-  const all = row.querySelectorAll('.idx-item:not([hidden])');
-  row._titleShift = line.includes(all[all.length - 1]) ? total - pivot + fit : 0;
-  placeTitle(row);
-}
-function settle(row) {   // (one series and Vertical keep their own CSS easing, so every hover there grows the same way)
-  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it._sc = 1; it.style.transition = mode === 's' || mode === 'v' ? '' : 'transform 1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
+const PEAK = 0.5;   /* the old genie's peak, still used to space Horizontal's rows */
+function settle(row) {   // (since 2026-11-14) every mode keeps the CSS easing, GALLERY's
+  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it._sc = 1; it.style.transition = ''; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
 }
 const fine = matchMedia('(hover: hover) and (pointer: fine)');
 document.querySelectorAll('.idx-row').forEach(row => {
@@ -431,9 +392,8 @@ document.querySelectorAll('.idx-row').forEach(row => {
     // (since 2026-11-02) a work the pointer was already resting on when a series finished arriving gets no mouseenter: moving over it
     // brings its title up all the same
     if (mode !== 'all' && (title._for !== it || !title.classList.contains('show')) && !titleSwap) it.dispatchEvent(new MouseEvent('mouseenter'));
-    if (mode === 'v' || mode === 's') placeTitle(row);   // the enlarged works grow a little from their centres, as G5's grid does (CSS; one series since 2026-11-02, the genie before)
-    else genie(row, e.clientX, it);
     row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot');
+    placeTitle(row);   // (since 2026-11-14) in every mode the work grows from its centre (CSS), as on GALLERY
   });
   row.addEventListener('mouseleave', () => { settle(row); row._titleShift = 0; });
   row.querySelectorAll('.idx-item').forEach(item => item.addEventListener('mouseenter', () => {
