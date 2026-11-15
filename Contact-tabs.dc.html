@@ -15,7 +15,7 @@
 <script src="alt-text.js?v=7" data-auto></script>
 <script src="search-data.js?v=1" defer></script>
 <script src="search.js?v=5" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="nav-match.css?v=3">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
@@ -186,7 +186,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <div class="contact-form" style="flex: 1; display: flex; flex-direction: column; gap: 28px; max-width: 560px">
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
         <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea></label>
+        <label style="flex: 1; display: flex; flex-direction: column"><span style="display: block; margin: 0 0 4px; font-size: calc(11px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 10px 0; font-family: inherit; font-size: calc(15px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; flex: {{ messageFlex }}; height: {{ messageH }}; min-height: 96px"></textarea><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"></label>
       </div>
       </sc-if>
     </div>
@@ -216,7 +216,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       </div>
     </div>
     <div>
-      <img src="uploads/ampersand-sculpture.webp" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; width: 100%; aspect-ratio: 419 / 627; object-fit: cover; position: {{ imagePosition }}; top: 40px">
+      <img src="uploads/tol-sculpture-square.webp" alt="Arbor &amp; Eye ampersand sculpture" style="display: block; width: 100%; aspect-ratio: 419 / 627; object-fit: cover; position: {{ imagePosition }}; top: 40px">
     </div>
   </section>
 
@@ -264,7 +264,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div class="contact-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px">
           <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Name</span><input type="text" name="name" autocomplete="name" value="{{ nameVal }}" onChange="{{ setName }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
           <label style="display: block"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Email</span><input type="email" name="email" autocomplete="email" value="{{ emailVal }}" onChange="{{ setEmail }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0"></label>
-          <label style="display: block; grid-column: 1 / -1"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; height: 170px"></textarea></label>
+          <label style="display: block; grid-column: 1 / -1"><span style="display: block; margin: 0 0 4px; font-size: calc(12px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #6E6A63">Message</span><textarea name="message" value="{{ messageVal }}" onChange="{{ setMessage }}" style="width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #C9C5BD; background: transparent; padding: 12px 0; font-family: inherit; font-size: calc(17px * var(--fs)); color: #141414; outline: none; border-radius: 0; resize: none; line-height: 1.6; height: 170px"></textarea><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"></label>
           <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 24px">
             <button class="cta" onClick="{{ send }}" style="background: #141414; color: #FFFFFF; border: none; padding: 16px 40px; font-family: inherit; font-size: calc(13px * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Send</button>
             <p style="margin: 0; font-size: calc(13px * var(--fs)); color: #6E6A63">{{ formNote }}</p>
@@ -277,7 +277,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
       <!-- (since 2026-10-22) the text in one column on the left, the Tree of Life sculpture filling the right; paragraphs styled as
            Biography's on About (class bt). Since 2026-11-01 the text takes 60%, the sculpture 40% -->
-      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); color: #55524C" data-screen-label="Shipping Policy">
+      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); color: #55524C" data-screen-label="Shipping Policy">
         <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
           <h2 class="ct-head">Shipping Policy</h2>
           <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days.</p>
@@ -288,7 +288,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             <li>If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</li>
           </ul>
         </div>
-        <img src="uploads/ampersand-sculpture.webp" alt="Arbor &amp; Eye Tree of Life sculpture" style="display: block; width: 100%; height: 100%; object-fit: cover">
+        <img src="uploads/tol-sculpture-square.webp" alt="Arbor &amp; Eye Tree of Life sculpture" style="display: block; width: 100%; height: 100%; object-fit: cover">
       </div>
       </sc-if>
 
@@ -418,12 +418,32 @@ class Component extends DCLogic {
       formNote: this.state.note,
       // after a successful send the fields and button give way to a thank-you note in the same spot
       formSent: this.state.sent, formOpen: !this.state.sent, sendDisplay: this.state.sent ? 'none' : 'block',
-      send: () => {
+      /* (since 2026-11-14, Grace) the form sends from the page itself through Web3Forms (a plain POST, so the same code works on
+         GitHub Pages and inside a Shopify theme). CONTACT_KEY is the Web3Forms access key, which carries the address the messages go
+         to; until it is filled in, Send opens the visitor's mail app as before. On Shopify this can stay, or be swapped for the
+         theme's own {% form 'contact' %} with the same fields. */
+      send: async () => {
+        const CONTACT_KEY = '';
         const { name, email, message } = this.state;
         if (!name.trim() || !email.trim() || !message.trim()) { this.setState({ note: 'Please fill in your name, email and message.' }); return; }
-        location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website Inquiry') +   // (since 2026-10-24 every email from this page is headed "Website Inquiry")
-           '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
-        this.setState({ note: '', sent: true });
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { this.setState({ note: 'Please check your email address.' }); return; }
+        if (!CONTACT_KEY) {
+          location.href = 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Website Inquiry') +   /* every email from this page is headed "Website Inquiry" (since 2026-10-24) */
+             '&body=' + encodeURIComponent(message + '\n\n' + name + '\n' + email);
+          this.setState({ note: '', sent: true }); return;
+        }
+        if (this.sending) return; this.sending = true; this.setState({ note: 'Sending\u2026' });
+        const trap = document.querySelector('input[name="botcheck"]');
+        try {
+          const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ access_key: CONTACT_KEY, subject: 'Website Inquiry', from_name: 'Arbor & Eye website', name: name.trim(), email: email.trim(), replyto: email.trim(), message, botcheck: trap && trap.checked ? true : '' }) });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok || !j.success) throw new Error(j.message || r.status);
+          this.setState({ note: '', sent: true });
+        } catch (e) {
+          this.setState({ note: 'Sorry, your message didn\u2019t send. Please try again, or email NSChurch@gmail.com.' });
+        }
+        this.sending = false;
       }
     };
   }

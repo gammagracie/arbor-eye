@@ -11,7 +11,7 @@
 <script src="alt-text.js?v=7" data-auto></script>
 <script src="search-data.js?v=1" defer></script>
 <script src="search.js?v=5" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=1">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="nav-match.css?v=3">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
@@ -258,8 +258,8 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <div onClick="{{ procTap }}" onTouchStart="{{ procTouchStart }}" onTouchEnd="{{ procTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ procD0 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/painting-process.webp" alt="Leather roll of watercolor brushes on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
         <div style="grid-area: 1 / 1; opacity: {{ procD1 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and finished postcards laid out on the table" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-        <div style="grid-area: 1 / 1; opacity: {{ procD2 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted loop playsinline preload="metadata" aria-label="Peeling the tape from a finished painting on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
-        <div style="grid-area: 1 / 1; opacity: {{ procD3 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted loop playsinline preload="metadata" aria-label="Peeling the tape from a painting and lifting it from its mount" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD2 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" data-src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted loop playsinline preload="none" aria-label="Peeling the tape from a finished painting on the work table" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
+        <div style="grid-area: 1 / 1; opacity: {{ procD3 }}; transition: opacity 0.7s ease; aspect-ratio: 4 / 3"><video class="ab-film" data-src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted loop playsinline preload="none" aria-label="Peeling the tape from a painting and lifting it from its mount" style="width: 100%; height: 100%; object-fit: cover; display: block"></video></div>
       </div>
       <div style="display: flex; align-items: center; justify-content: center; gap: 12px">
         <button onClick="{{ procPrev }}" aria-label="Previous photo" style="border: none; background: transparent; cursor: pointer; color: #ADA9A2; display: flex; padding: 6px" style-hover="color: #6E6B66"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 1 1 30.66 21 59"></polyline></svg></button>
@@ -386,10 +386,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
                   <img src="uploads/about/process-table.webp" alt="The camera and tripod at the end of the work table, the painting laid out with paints and brushes" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover">
                 </div>
                 <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide2 }}">
-                  <video class="ab-film" src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted loop playsinline preload="metadata" aria-label="Peeling the tape from a finished painting on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
+                  <video class="ab-film" data-src="uploads/about/process-film-1.mp4" poster="uploads/about/process-film-1.jpg" muted loop playsinline preload="none" aria-label="Peeling the tape from a finished painting on the work table" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
                 </div>
                 <div style="width: 25%; aspect-ratio: 4 / 3" aria-hidden="{{ procDeskHide3 }}">
-                  <video class="ab-film" src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted loop playsinline preload="metadata" aria-label="Peeling the tape from a painting and lifting it from its mount" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
+                  <video class="ab-film" data-src="uploads/about/process-film-2.mp4" poster="uploads/about/process-film-2.jpg" muted loop playsinline preload="none" aria-label="Peeling the tape from a painting and lifting it from its mount" style="display: block; width: 100%; height: 100%; object-fit: cover"></video>
                 </div>
               </div>
             </div>
@@ -483,7 +483,7 @@ class Component extends DCLogic {
     this.setState({ menuOpen: open });
   }
   componentDidMount() {
-    setTimeout(() => this.playFilms(), 0);
+    setTimeout(() => this.playFilms(), 0); addEventListener('scroll', () => this.playFilms(), { passive: true });
     // #biography / #tree / #process / #studio deep links open that tab (Biography is the one on landing)
     const pick = () => { const h = location.hash.slice(1); if (h === 'biography') this.setState({ tab: 'bio' }); else if (['tree', 'process', 'studio'].includes(h)) this.setState({ tab: h }); };
     pick(); this.onHash = pick; window.addEventListener('hashchange', this.onHash);
@@ -530,7 +530,7 @@ class Component extends DCLogic {
   }
   componentDidUpdate() { this.measureBio(); this.playFilms(); }
   // (since 2026-11-02) the Process films: muted (so they may play on their own), looping
-  playFilms() { const stop = this.state.filmsPaused; document.querySelectorAll('video.ab-film').forEach(v => { v.muted = true; if (stop) { if (!v.paused) v.pause(); } else if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } }); }
+  playFilms() { const stop = this.state.filmsPaused; /* (since 2026-11-14) lazy: a film's file loads only once it is on screen and its slide is showing; until then its poster stands in */ const near = v => { if (!v.getClientRects().length) return false; const pe = v.parentElement; if (pe && pe.style.opacity === '0') return false; const r = v.getBoundingClientRect(); return r.bottom > -200 && r.top < innerHeight + 200; }; document.querySelectorAll('video.ab-film').forEach(v => { if (!v.getAttribute('src')) { if (!near(v)) return; v.src = v.dataset.src; } v.muted = true; if (stop) { if (!v.paused) v.pause(); } else if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } }); }
   // Biography opener: the heading and copy are centred on the photo unless they are more than 80px taller than it; then
   // (shorter, narrower screens) the two line up at the top instead, so the photo is not pushed down under the pinned tabs
   measureBio() {

@@ -1,5 +1,11 @@
-/* TEST (since 2026-11-06, Grace; may be taken out): the header stays at the top of the screen while the page scrolls.
-   Linked from every page with the site header. To take it out, remove the <link href="sticky-nav.css"> line from the pages
-   (or empty this file). */
+/* (since 2026-11-06, Grace; kept for good since 2026-11-14) the header stays at the top of the screen while the page scrolls.
+   Linked from every page with the site header. */
 header { position: sticky !important; top: 0; z-index: 30; }
 html { scroll-padding-top: var(--header-h, 80px); }   /* jump links (About, Contact tabs) land below the header, not under it */
+
+/* (since 2026-11-14, Grace) the icons' visible ink on the right line: the bag's outline ends 1.875 of its 24 viewBox units short
+   of the svg's right edge (its path stops at x 21.5, half the 1.25 stroke past it), so all three icons shift right by that much
+   (7.8125% of their own width), keeping their spacing. The logo's ink already starts on the left line. Desktop lines only. */
+@media (min-width: 1280px) {
+  header [aria-label="Search"] svg, header [aria-label="Account"] svg, header [aria-label="Cart"] svg { transform: translateX(7.8125%); }
+}
