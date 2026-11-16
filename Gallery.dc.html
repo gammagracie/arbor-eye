@@ -800,6 +800,7 @@ class Component extends DCLogic {
       back: () => {
         let fromOtherPage = false;
         try { const u = new URL(document.referrer); fromOtherPage = u.origin === location.origin && !/Gallery\.dc\.html$/.test(u.pathname); } catch (e) {}
+        try { sessionStorage.setItem('ae-gallery-return', '1'); } catch (e) {}   /* (since 2026-11-15) the gallery reopens as it was left */
         if (fromOtherPage && history.length > 1) { history.back(); return; }
         location.href = 'gallery-gx3.html';   // (since 2026-11-13, Grace) otherwise to GALLERY (GX3)
       },
