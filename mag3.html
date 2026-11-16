@@ -614,6 +614,12 @@ class Component extends DCLogic {
     const want = decodeURIComponent(location.hash.slice(1)) || 'ascent_koi.jpg';   // MAG: Koi by default
     const k = this.arts.findIndex(a => a.title === want || a.src.split('/').pop() === want); // by title or by file name
     if (k >= 0) this.setState({ sel: k, printView: true });   // MAG: straight to the buy page
+    /* (since 2026-11-15, Grace) a search result clicked while a work is already open changes only the hash: open that work too */
+    addEventListener('hashchange', () => {
+      const w = decodeURIComponent(location.hash.slice(1)); if (!w) return;
+      const j = this.arts.findIndex(a => a.title === w || a.src.split('/').pop() === w);
+      if (j >= 0) { this.setState({ sel: j, zoom: false, printView: false, lightbox: false, openMenu: null }); window.scrollTo(0, 0); }
+    });
     this.onKey = (e) => {
       if (this.state.lightbox) {
         if (e.key === 'Escape') this.setState({ lightbox: false });
