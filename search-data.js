@@ -354,14 +354,6 @@ window.SEARCH_DATA = {
 "v": false
 },
 {
-"t": "Ascent 1",
-"s": "Ascent",
-"d": "",
-"m": "",
-"f": "ascent_ascent-1.jpg",
-"v": true
-},
-{
 "t": "Artifact",
 "s": "Ascent",
 "d": "Surface and structure converge, bearing the language of an ancient object.",
