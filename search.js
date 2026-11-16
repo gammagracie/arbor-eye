@@ -13,6 +13,9 @@
 @media (prefers-reduced-motion: no-preference) { .srch-in { transition: padding-top 0.4s cubic-bezier(0.22, 1, 0.36, 1); } }
 .srch-row { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #141414; padding-bottom: 10px; }
 .srch-row svg { flex: none; color: #141414; }
+/* (since 2026-11-15, Grace) the field sits on solid white reaching 10px past the row on every side (a spread shadow, so nothing moves), and the search box has no focus outline: the open panel and the caret already show where typing goes */
+.srch-row { background: #FFFFFF; box-shadow: 0 0 0 10px #FFFFFF; }
+.srch input:focus, .srch input:focus-visible { outline: none !important; box-shadow: none !important; }
 .srch input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(28px * var(--fs, 1)); letter-spacing: 0.06em; color: #141414; padding: 4px 0; }
 .srch input::placeholder { color: #6E6A63; }
 .srch-x { position: fixed; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 9999px; border: none; padding: 0; background: #FFFFFF; color: #1C1C1C; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
