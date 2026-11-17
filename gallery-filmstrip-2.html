@@ -764,7 +764,7 @@ let pos = 0, target = 0, vel = 0, cap = 0, drive = null, running = false, mouseX
 // GLIDE: ms to close ~63% of the gap when settling on a chosen thumbnail; CRUISE: top speed (px per second);
 // ACCEL: ms for the row to pick up / shed speed (keep under GLIDE / 4 so it never overshoots)
 // BRAKE: ms time constant for coming to rest once the cursor stops moving (stopped within about 1s)
-const GLIDE = 1200, CRUISE = 120, ACCEL = 260, BRAKE = 280, DEAD = 0.30;
+const GLIDE = 1200, CRUISE = 720,   /* (since 2026-11-17, Grace) six times as fast at the edges (was 120); the squared curve below still builds the speed the further out the cursor goes */ ACCEL = 260, BRAKE = 280, DEAD = 0.30;
 const maxPan = () => Math.max(0, track.scrollWidth - strip.clientWidth);
 function run() {
   if (running) return; running = true;
@@ -1016,14 +1016,18 @@ if (restored && restored.sy) scrollTo(0, restored.sy);   /* (since 2026-11-15) a
   (function tick(now) {
     const on = track.querySelectorAll('.thumb.on');
     if (on.length) {
-      const a = on[0], b = on[on.length - 1], x = new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
-      const goal = { l: a.offsetLeft, w: b.offsetLeft + b.offsetWidth - a.offsetLeft, t: a.offsetTop + a.offsetHeight + 20 };   // 14px under the thumbnails
+      const a = on[0];
+      // (since 2026-11-17, Grace) measured from where the featured thumbnails are on screen, so the pill stays under them while
+      // the cursor swells and pushes them aside (it kept to their resting place and could sit 60px off); a new set still slides it over 0.6s
+      const sr = strip.getBoundingClientRect(); let L = Infinity, R = -Infinity;
+      on.forEach(t => { const r = t.getBoundingClientRect(); L = Math.min(L, r.left); R = Math.max(R, r.right); });
+      const goal = { l: L - sr.left, w: R - L, t: a.offsetTop + a.offsetHeight + 20 }, set = [...on].map(t => t.dataset.i || t.getAttribute('aria-label')).join('|');   // 14px under the thumbnails
       if (!cur) cur = Object.assign({}, goal);
-      if (!to || goal.l !== to.l || goal.w !== to.w || goal.t !== to.t) { from = Object.assign({}, cur); to = goal; t0 = now || performance.now(); }
+      if (set !== to) { from = Object.assign({}, cur); to = set; t0 = now || performance.now(); }
       const k = ease(Math.min(1, ((now || performance.now()) - t0) / 600));
-      cur = { l: from.l + (to.l - from.l) * k, w: from.w + (to.w - from.w) * k, t: from.t + (to.t - from.t) * k };
-      const key = (cur.l + x).toFixed(1) + '|' + cur.w.toFixed(1) + '|' + cur.t.toFixed(1);
-      if (key !== last) { last = key; pill.style.transform = 'translate(' + (cur.l + x).toFixed(1) + 'px, ' + cur.t.toFixed(1) + 'px)'; pill.style.width = cur.w.toFixed(1) + 'px'; }
+      cur = k >= 1 ? goal : { l: from.l + (goal.l - from.l) * k, w: from.w + (goal.w - from.w) * k, t: from.t + (goal.t - from.t) * k };
+      const key = cur.l.toFixed(1) + '|' + cur.w.toFixed(1) + '|' + cur.t.toFixed(1);
+      if (key !== last) { last = key; pill.style.transform = 'translate(' + cur.l.toFixed(1) + 'px, ' + cur.t.toFixed(1) + 'px)'; pill.style.width = cur.w.toFixed(1) + 'px'; }
       pill.style.opacity = '1';
     } else pill.style.opacity = '0';
     requestAnimationFrame(tick);
