@@ -185,6 +185,9 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
   .index .tools::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: var(--band-ext, 14px); background: #FDFDFB; pointer-events: none; }
   .index .idx-series { position: sticky; z-index: 201; }
 }
+/* (since 2026-11-17, Grace) the header above everything on the page, so a thumbnail swelling as it scrolls under the band never shows
+   over the header (the genie lifts thumbnails as high as z-index 150; the header was 30). The header keeps its own #FDFDFB background */
+.index header { z-index: 300 !important; }
 .idx-row[hidden], .idx-item[hidden] { display: none; }
 /* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
    Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as

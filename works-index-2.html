@@ -676,7 +676,8 @@ function glide() {
     const dt = Math.min(64, now - lastT); lastT = now;
     const cur = se.scrollTop, d = tY - cur;
     if (Math.abs(d) < 0.5) { se.scrollTop = tY; gliding = false; return; }
-    se.scrollTop = cur + d * (1 - Math.exp(-dt / 340));
+    const stepY = d * (1 - Math.exp(-dt / 340));   // (since 2026-11-17) at least 1px a frame: the last tiny steps rounded away, so the glide stalled a few px short and never ended
+    se.scrollTop = Math.abs(stepY) < 1 ? cur + Math.sign(d) * Math.min(1, Math.abs(d)) : cur + stepY;
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);

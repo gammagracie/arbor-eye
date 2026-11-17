@@ -399,7 +399,8 @@ function glide() {
     const dt = Math.min(64, now - last); last = now;
     const cur = scroller.scrollTop, d = target - cur;
     if (Math.abs(d) < 0.5) { scroller.scrollTop = target; gliding = false; return; }
-    scroller.scrollTop = cur + d * (1 - Math.exp(-dt / 340));   // a long, soft glide (slower since 2026-10-23: 340ms, was 220)
+    const stepY = d * (1 - Math.exp(-dt / 340));   // (since 2026-11-17) at least 1px a frame: the last tiny steps rounded away, so the glide stalled a few px short and never ended
+    scroller.scrollTop = Math.abs(stepY) < 1 ? cur + Math.sign(d) * Math.min(1, Math.abs(d)) : cur + stepY;   // a long, soft glide (slower since 2026-10-23: 340ms, was 220)
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
