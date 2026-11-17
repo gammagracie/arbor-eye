@@ -235,13 +235,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: center; position: relative; top: {{ detailLift }}">
         <div class="detail-img" onClick="{{ detailDblClick }}" style="grid-column: 1; grid-row: 1; position: relative; cursor: {{ detailCursor }}">
           {{ detailImg }}
-          <div style="position: absolute; top: 100%; left: {{ detailDotsL }}; width: {{ detailDotsW }}; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
+          <div class="zoom-dock" style="position: absolute; top: 100%; left: {{ detailDotsL }}; width: {{ detailDotsW }}; margin-top: 36px; display: grid; justify-items: center; gap: 10px">
             <button onClick="{{ toggleZoom }}" aria-label="{{ zoomLabel }}" style="border: none; background: transparent; cursor: pointer; color: #141414; display: {{ zoomDisplay }}; padding: 6px" style-hover="color: #6E6B66">
               <svg width="37.4" height="37.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 8v5M8 10.5h5"></path></svg>
             </button>
           </div>
         </div>
-        <div style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}; width: {{ detailTextW }}; max-width: {{ detailTextMax }}; justify-self: {{ detailTextJustify }}">
+        <div class="detail-text" style="grid-column: {{ detailInfoCol }}; grid-row: {{ detailInfoRow }}; display: grid; gap: 20px; align-content: start; justify-items: start; transform: {{ detailTextShift }}; width: {{ detailTextW }}; max-width: {{ detailTextMax }}; justify-self: {{ detailTextJustify }}">
           <!-- (since 2026-10-22) in this order: ORIGINAL, the title, the description in quotation marks, the series (a link to G5
                showing that series), medium and size, the edition and certificate lines, then the two links -->
           <p style="margin: 0; font-size: calc(13px * var(--fs)); letter-spacing: 0.3em; text-transform: uppercase; color: #6E6A63">Original</p>
@@ -895,7 +895,7 @@ class Component extends DCLogic {
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
       detailImg: d && React.createElement('img', { src: d.src, alt: d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ detailRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         style: Object.assign({ width: this.state.detailGrow ? 'calc(' + detailW + ' + ' + this.state.detailGrow.toFixed(1) + 'px)' : detailW, height: 'auto', display: 'block', boxSizing: 'border-box', margin: oneCol ? '0 auto' : '0 0 0 ' + this.state.detailImgOff.toFixed(1) + 'px' }, framed((views[this.state.detailView] || views[0])[0], detailShadow)) }),   // desktop / tablet: 88% of the largest that fits, starting on the logo's line
-      detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)',
+      detailTextShift: 'translateX(-' + this.state.detailShift.toFixed(1) + 'px)' + (oneCol ? '' : ' translateY(-25px)'),   // (since 2026-11-17, Grace) side by side: the text 25px higher
       detailDotsW: this.state.detailDotsW,
       detailDotsL: this.state.detailImgOff.toFixed(1) + 'px',
       // series number and name, as in Ned's documentation decks (Series 1, Ascent ... Series 8, Tonal); works outside the eight series keep "Original"
@@ -913,5 +913,23 @@ class Component extends DCLogic {
 }
 </script>
 <script src="body-fit.js?v=7" data-nav="home"></script>
+<script>
+// (since 2026-11-17, Grace) side by side (desktop): the magnify icon sits right of the work, its ink left-aligned with the text above it
+// and its bottom level with the bottom of the work; stacked layouts keep it centred under the work. Placed every frame from what is on
+// screen, so it follows the work and the text whatever their size.
+(function place() {
+  const dock = document.querySelector('.zoom-dock'), img = document.querySelector('.detail-img img'), text = document.querySelector('.detail-text');
+  if (dock && img && text) {
+    const box = dock.parentElement.getBoundingClientRect(), ir = img.getBoundingClientRect(), tr = text.getBoundingClientRect(), svg = dock.querySelector('svg');
+    if (svg && tr.left > ir.right && ir.height) {
+      const sr = svg.getBoundingClientRect(), dr = dock.getBoundingClientRect(), u = sr.width / 24;
+      const inkL = sr.left - dr.left + 3.25 * u, inkB = dr.bottom - (sr.top + 21.05 * u);   // the circle's left edge and the handle's end, in the 24-unit icon
+      if (!dock._orig) dock._orig = dock.style.cssText;
+      Object.assign(dock.style, { top: 'auto', marginTop: '0px', width: 'auto', justifyItems: 'start', left: (tr.left - box.left - inkL).toFixed(1) + 'px', bottom: (box.bottom - ir.bottom - inkB).toFixed(1) + 'px' });
+    } else if (dock._orig) { dock.style.cssText = dock._orig; dock._orig = null; }
+  }
+  requestAnimationFrame(place);
+})();
+</script>
 </body>
 </html>
