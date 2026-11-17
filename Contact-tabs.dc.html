@@ -294,13 +294,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 
       <!-- (Returns & Exchanges removed 2026-11-13, Grace) -->
 
-      <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 21px 0 19px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">   <!-- (since 2026-11-14) 1px less above: the row's baseline alignment puts the labels 1px lower than About's, so they now sit level with them -->
+      <div id="tabsDesk" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px 40px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid #E7E4DE; scroll-margin-top: 40px">   <!-- (since 2026-11-17) About's padding exactly; the Email / Instagram text on the right has line-height 1 and -8px above it so it never makes the row taller, and the labels and the rule sit where About's do -->
         <div role="tablist" style="display: flex; gap: 40px; align-items: baseline">
-          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <sc-for list="{{ deskTabs }}" as="t" hint-placeholder-count="3">
             <button onClick="{{ t.toggle }}" role="tab" aria-selected="{{ t.deskSelected }}" style="border: none; background: transparent; padding: 0 0 6px; font-family: inherit; font-size: var(--tab-fs); line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; color: {{ t.deskColor }}; font-weight: {{ t.deskWeight }}; border-bottom: {{ t.deskBorder }}">{{ t.label }}</button>
           </sc-for>
         </div>
-        <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); padding-bottom: 6px">
+        <div style="display: flex; gap: 16px 40px; color: #6E6B66; font-size: calc(13px * var(--fs)); line-height: 1; padding-bottom: 6px; margin-top: -8px">
           <span>Email &nbsp;<a href="mailto:NSChurch@gmail.com?subject=Website%20Inquiry" style="color: #141414; border-bottom: 1px solid #C9C5BD">NSChurch@gmail.com</a></span>
           <span>Instagram &nbsp;<a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" style="color: #141414; border-bottom: 1px solid #C9C5BD">@arbor.eye</a></span>
         </div>
@@ -398,6 +398,13 @@ class Component extends DCLogic {
         deskWeight: this.state.deskTab === k ? 700 : 400, deskColor: this.state.deskTab === k ? '#141414' : '#6E6A63', deskBorder: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent',
         weight: this.state.deskTab === k ? 600 : 400, color: this.state.deskTab === k ? '#141414' : '#6E6A63', border: this.state.deskTab === k ? '1px solid #141414' : '1px solid transparent'
       })),
+      // desktop links (since 2026-11-17, Grace): Email first, the page as it opens (Ned's photograph), underlined while nothing else is open,
+      // as About opens on Biography; Get in touch and Shipping swap the photograph for their section, and the open one again brings it back
+      deskTabs: [[null, 'Email'], ['contact', 'Get in touch'], ['shipping', 'Shipping']].map(([k, label]) => {
+        const on = this.state.deskTab === k;
+        return { label, toggle: () => this.setState({ deskTab: k === null || on ? null : k }), deskSelected: on,
+          deskWeight: on ? 700 : 400, deskColor: on ? '#141414' : '#6E6A63', deskBorder: on ? '1px solid #141414' : '1px solid transparent' };
+      }),
       tabContact: this.state.deskTab === 'contact',
       tabShipping: this.state.deskTab === 'shipping',
       tabReturns: this.state.deskTab === 'returns',
