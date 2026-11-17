@@ -177,6 +177,14 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-10-28) Series and Year menus at the top right, on the bag icon's line, as on G5: a series shows only its row,
    Horizontal / Vertical and a year only the matching works, each remaining row still on its own line */
 .index .tools { padding-top: 14px; }
+/* (since 2026-11-17, Grace) desktop: the menus' line, where the hovered series' name also shows, stays on screen under the header;
+   the thumbnails slide under it as the page scrolls. The band reaches 14px below that line (--band-ext, set by the script) on the
+   page's own background; the series name sticks with it */
+@media (hover: hover) and (pointer: fine) {
+  .index .tools { position: sticky; top: var(--band-top, 0px); z-index: 200; background: #FDFDFB; }
+  .index .tools::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: var(--band-ext, 14px); background: #FDFDFB; pointer-events: none; }
+  .index .idx-series { position: sticky; z-index: 201; }
+}
 .idx-row[hidden], .idx-item[hidden] { display: none; }
 /* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
    Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as
@@ -710,7 +718,8 @@ function glide() {
     const dt = Math.min(64, now - lastT); lastT = now;
     const cur = se.scrollTop, d = tY - cur;
     if (Math.abs(d) < 0.5) { se.scrollTop = tY; gliding = false; return; }
-    se.scrollTop = cur + d * (1 - Math.exp(-dt / 340));
+    const stepY = d * (1 - Math.exp(-dt / 340));   // (since 2026-11-17) at least 1px a frame: the last tiny steps rounded away, so the glide stalled a few px short and never ended
+    se.scrollTop = Math.abs(stepY) < 1 ? cur + Math.sign(d) * Math.min(1, Math.abs(d)) : cur + stepY;
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -725,6 +734,39 @@ addEventListener('wheel', e => {
   glide();
 }, { passive: false });
 addEventListener('scroll', () => { if (!gliding) tY = se.scrollTop; }, { passive: true });
+// (since 2026-11-17, Grace) the sticky band (menus' line and series name, see the CSS): kept under the header, the name kept on its line
+const tools = document.querySelector('.tools'), hdr = document.querySelector('header');
+let bandExt = 14;
+function band() {
+  if (!fine.matches) return;
+  const hb = hdr ? hdr.getBoundingClientRect().height : 0;
+  document.documentElement.style.setProperty('--band-top', hb.toFixed(1) + 'px');
+  const tr = tools.getBoundingClientRect(), lr = label.getBoundingClientRect(), ty = parseFloat((label.style.transform.match(/-?[\d.]+/) || [0])[0]) || 0;
+  label.style.top = (hb + (lr.top - ty) - tr.top).toFixed(1) + 'px';   // the name sticks at the same moment as the menus' line
+  bandExt = Math.max(0, lr.bottom - tr.bottom) + 14;
+  tools.style.setProperty('--band-ext', bandExt.toFixed(1) + 'px');
+}
+const liftLabel0 = liftLabel;
+liftLabel = function () { liftLabel0(); band(); };
+addEventListener('resize', band); band(); document.fonts && document.fonts.ready.then(band);
+// once scrolled, a thumbnail partly under the band that the pointer comes to rest on (moving or wheeling over its visible part)
+// glides down until it shows whole at its hover size, 8px clear of the band
+function hoverTop(it) {
+  const cs = getComputedStyle(it), oy = parseFloat(cs.transformOrigin.split(' ')[1]) || 0;
+  const sc = mode === 'all' || mode === 'h' ? 1 + PEAK : (parseFloat(cs.getPropertyValue('--hz')) || 1.075);
+  const top = it.offsetParent === idx ? idx.getBoundingClientRect().top + it.offsetTop : it.getBoundingClientRect().top;
+  return top + oy * (1 - sc);
+}
+let pX = null, pY = null, revealT = 0;
+function reveal() {
+  if (gliding) { clearTimeout(revealT); revealT = setTimeout(reveal, 100); return; }   // wait for the wheel's glide to finish
+  if (!fine.matches || flipping || pX === null || se.scrollTop <= 0) return;
+  const el = document.elementFromPoint(pX, pY), it = el && el.closest && el.closest('.idx-item'); if (!it) return;
+  const need = tools.getBoundingClientRect().bottom + bandExt + 8 - hoverTop(it);
+  if (need > 0.5) { tY = Math.max(0, se.scrollTop - need); if (matchMedia('(prefers-reduced-motion: reduce)').matches) se.scrollTop = tY; else glide(); }
+}
+addEventListener('mousemove', e => { if (e.clientX === pX && e.clientY === pY) return; pX = e.clientX; pY = e.clientY; clearTimeout(revealT); revealT = setTimeout(reveal, 120); }, { passive: true });
+addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(reveal, 260); }, { passive: true });
 </script>
 <script src="body-fit.js?v=7" data-nav="home"></script>
 </body>
