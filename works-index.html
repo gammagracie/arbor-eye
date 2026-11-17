@@ -409,7 +409,7 @@ function genie(row, x, item, peak = PEAK) {
   line.forEach((it, k) => {
     const shift = acc + extra[k] / 2 - pivot + fit; acc += extra[k];
     it._dx = shift; it._sc = sc[k];
-    it.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s ease';   // (since 2026-11-13, Grace) half the speed (was 0.45s)
+    it.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.6s ease';   /* (since 2026-11-17, Grace) quicker to react: 0.6s, moving at once and settling softly (0.9s on a slow-starting ease before) */   // (since 2026-11-13, Grace) half the speed (was 0.45s)
     it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
     it.style.zIndex = String(Math.round(sc[k] * 100));
   });
@@ -637,7 +637,7 @@ function layout() {
 }
 // changing the filter: works leaving fade out (0.3s); the rest glide from where they were to where they now go, growing or
 // shrinking on the way (0.8s), and works arriving fade in
-let flipping = false, flipT = 0;
+let flipping = false, flipT = 0, goT = 0;   // goT: a filter change waiting for its leavers to fade (since 2026-11-17 a newer pick cancels it, so quick picks no longer race)
 function applyFilter() {
   const rows = [...document.querySelectorAll('.idx-row')], items = [...document.querySelectorAll('.idx-item')];
   rows.forEach(settle); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show');
@@ -675,7 +675,8 @@ function applyFilter() {
     });
     clearTimeout(flipT); flipT = setTimeout(() => { items.forEach(a => { a.style.transition = ''; a.style.transformOrigin = ''; }); flipping = false; }, 1500);
   };
-  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); setTimeout(go, 500); }
+  clearTimeout(goT); goT = 0;
+  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); goT = setTimeout(() => { goT = 0; go(); }, 500); }
   else go();
 }
 addEventListener('resize', () => { if (mode !== 'all') layout(); else { liftLabel(); markTop(); } });
