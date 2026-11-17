@@ -183,7 +183,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 @media (hover: hover) and (pointer: fine) {
   .index .tools { position: sticky; top: var(--band-top, 0px); z-index: 200; background: #FDFDFB; }
   .index .tools::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: var(--band-ext, 14px); background: #FDFDFB; pointer-events: none; }
-  .index .idx-series { position: sticky; z-index: 201; }
+  .index .idx-series { position: sticky; z-index: 201; pointer-events: none; }   /* (it runs the full width on the menus' line: clicks pass through to the menus) */
 }
 /* (since 2026-11-17, Grace) the header above everything on the page, so a thumbnail swelling as it scrolls under the band never shows
    over the header (the genie lifts thumbnails as high as z-index 150; the header was 30). The header keeps its own #FDFDFB background */
