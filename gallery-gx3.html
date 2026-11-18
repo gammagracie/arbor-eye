@@ -407,8 +407,12 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // (since 2026-11-18, Grace) desktop: Ascent's grid is one row across, in pages of 4, 3 and 3 (pages), each work 30% larger than in
 // its old 2 x 2 (cap30), or as large as the width within the arrows allows where that is less (Ascent's three-work pages the same
 // size, centred)
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true } };
-const curSeries = () => { try { return fSeries; } catch (e) { return 'All'; } };   // (the filter's state is declared further down)
+// (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) in one page, eight across over
+// seven centred under them; a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true },
+  'year:2025': { cols: 8, per: 15, below: true } };
+const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
+const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && (!tab.matches && SERIES_DESK[curSeries()] || SERIES_LAYOUT[curSeries()]) || null;
 const viewCount = () => { const L = seriesLayout(); return L ? L.per : countOf(view); };
 const cols = () => seriesLayout() ? seriesLayout().cols : view === 9 ? 3 : view === 2 ? 2 : count, rows = () => Math.ceil(count / cols());
@@ -898,10 +902,12 @@ addEventListener('resize', fit);
 // 3 x 3 for the plain grid, or a series' own columns and rows (Vertical's four across, Tonal's three by two, the 2 x 2 series...)
 function gridIcon() {
   const b = document.querySelector('.count[data-n="9"]'); if (!b) return;
-  const L = phone.matches ? null : (!tab.matches && SERIES_DESK[fSeries]) || SERIES_LAYOUT[fSeries] || null;
-  const c = L ? L.cols : 3, r = L ? Math.ceil(L.per / L.cols) : 3, w = (18 - 2 * (c - 1)) / c, h = (18 - 2 * (r - 1)) / r;
+  const L = phone.matches ? null : (!tab.matches && SERIES_DESK[layoutKey()]) || SERIES_LAYOUT[layoutKey()] || null;
+  // (a short last row is drawn centred, as the works are: Tonal's 3 over 2, 2025's 8 over 7; many columns draw closer)
+  const c = L ? L.cols : 3, r = L ? Math.ceil(L.per / L.cols) : 3, gp = c > 4 ? 1 : 2, w = (18 - gp * (c - 1)) / c, h = (18 - 2 * (r - 1)) / r;
   let rects = '';
-  for (let y = 0; y < r; y++) for (let x = 0; x < c; x++) rects += '<rect x="' + (x * (w + 2)).toFixed(2) + '" y="' + (y * (h + 2)).toFixed(2) + '" width="' + w.toFixed(2) + '" height="' + h.toFixed(2) + '"></rect>';
+  for (let y = 0; y < r; y++) { const n = y < r - 1 || !L ? c : L.per - c * (r - 1), off = (c - n) * (w + gp) / 2;
+    for (let x = 0; x < n; x++) rects += '<rect x="' + (off + x * (w + gp)).toFixed(2) + '" y="' + (y * (h + 2)).toFixed(2) + '" width="' + w.toFixed(2) + '" height="' + h.toFixed(2) + '"></rect>'; }
   b.setAttribute('aria-label', (L ? L.per : 9) + ' works at a time');
   const key = c + 'x' + r; if (b.dataset.icon === key) return; b.dataset.icon = key;
   b.innerHTML = '<svg viewBox="0 0 18 18">' + rects + '</svg>';
@@ -974,7 +980,7 @@ function applyFilter() {
   const few = list.length <= 3; page.classList.toggle('few', few);
   // a series laid out in pages of 2 x 2 (Ascent, Convergence, Core, Outliers, Select, The Turning, Spectrum, Vertical): the grid icon shows 2 x 2
   const two = !!(SERIES_LAYOUT[fSeries] && SERIES_LAYOUT[fSeries].cols === 2 && SERIES_LAYOUT[fSeries].per === 4);
-  page.classList.toggle('vert', two); page.classList.toggle('four', !!SERIES_DESK[fSeries]); document.querySelector('.count[data-n="9"]').setAttribute('aria-label', two ? '4 works at a time' : '9 works at a time');
+  page.classList.toggle('vert', two); page.classList.toggle('four', !!SERIES_DESK[layoutKey()]); document.querySelector('.count[data-n="9"]').setAttribute('aria-label', two ? '4 works at a time' : '9 works at a time');
   if (!tab.matches && !phone.matches) {
     if (few && view === 9) { view = deskView = 3; gridWas = true; } else if (!few && gridWas) { view = deskView = 9; gridWas = false; }
     [...document.querySelectorAll('.count')].forEach(b => b.classList.toggle('on', +b.dataset.n === view));
