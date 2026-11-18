@@ -401,7 +401,10 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // the 3 x 3 it replaced; the grid icon shows 2 x 2 while that filter is on
 // (since 2026-11-17, Grace) desktop: Vertical's grid is one row of four, side by side (tablets keep its 2 x 2); the grid icon shows
 // four columns while it is on
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 } };
+// (since 2026-11-18, Grace) desktop: Tonal's grid is three across in two rows (its five works: three, then two centred under them),
+// as large as the width within the arrows allows (asked for 30% larger; that is reached at 1920 wide, about 25% at 2560 and 21%
+// at 3840, where the arrows are the limit); below: the grid starts under the SERIES / YEAR menus rather than shrinking to clear them
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true } };
 const curSeries = () => { try { return fSeries; } catch (e) { return 'All'; } };   // (the filter's state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && (!tab.matches && SERIES_DESK[curSeries()] || SERIES_LAYOUT[curSeries()]) || null;
 const viewCount = () => { const L = seriesLayout(); return L ? L.per : countOf(view); };
@@ -511,7 +514,7 @@ function fit() {
     gridTop = (SL && SL.cols === 2 && SL.per === 4 ? $('tools').querySelector('.count svg').getBoundingClientRect().bottom : iconTop) - st.top;
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
-    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches || SL && SL.cols === 2 ? 1 : SL && SL.per === SL.cols ? 0.6 : 1.5, GC = a => kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-17, Grace) a series in 2 x 2 the same as the rows' gap, so its right column sits further from the menus
+    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches || SL && (SL.cols === 2 || SL.below) ? 1 : SL && SL.per === SL.cols ? 0.6 : 1.5, GC = a => kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-17, Grace) a series in 2 x 2 the same as the rows' gap, so its right column sits further from the menus
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
     // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
@@ -548,7 +551,9 @@ function fit() {
       // width within the arrows: its portraits about 25% larger, the gaps between them 60% of the rows' gap (since 2026-11-18: 65% of the gap shown before, which was the rows' gap at a smaller size)
       // (since 2026-11-17, Grace) a series in 2 x 2 keeps its right column a full gap (the rows' gap) clear of the menus, not 24px
       const clear = SL && SL.cols === 2 ? G(a) : 24;
-      if (!(SL && SL.per === SL.cols) && cx + gridW(a) / 2 + clear > menusLeft) a = sizeFor(2 * (menusLeft - clear - cx), V);
+      if (SL && SL.below && cx + gridW(a) / 2 + 24 > menusLeft) {
+        const topBelow = Math.max(fs.bottom, fy.bottom) + 24 - st.top; gridTop = topBelow; V = bottom - topBelow; a = sizeFor(inner, V);
+      } else if (!(SL && SL.per === SL.cols) && cx + gridW(a) / 2 + clear > menusLeft) a = sizeFor(2 * (menusLeft - clear - cx), V);
     } else if (cx + gridW(a) / 2 + 24 > fs.left) {
       filters.classList.add('stacked');
       const stackLeft = fy.right - Math.max(fs.width, fy.width);
