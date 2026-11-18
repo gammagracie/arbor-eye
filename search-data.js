@@ -258,14 +258,6 @@ window.SEARCH_DATA = {
 "v": false
 },
 {
-"t": "The Turning 6",
-"s": "The Turning",
-"d": "",
-"m": "",
-"f": "the-turning_the-turning-6.jpg",
-"v": false
-},
-{
 "t": "Current",
 "s": "Tonal",
 "d": "Everything flows.",
@@ -322,14 +314,6 @@ window.SEARCH_DATA = {
 "v": false
 },
 {
-"t": "Convergence 6",
-"s": "Convergence",
-"d": "",
-"m": "",
-"f": "convergence_convergence-6.jpg",
-"v": false
-},
-{
 "t": "Counterpart",
 "s": "Convergence",
 "d": "Corresponding forms mirror across a shared divide.",
@@ -352,14 +336,6 @@ window.SEARCH_DATA = {
 "m": "",
 "f": "convergence_convergence-7.jpg",
 "v": false
-},
-{
-"t": "Artifact",
-"s": "Ascent",
-"d": "Surface and structure converge, bearing the language of an ancient object.",
-"m": "",
-"f": "ascent_artifact.jpg",
-"v": true
 },
 {
 "t": "Canyons",

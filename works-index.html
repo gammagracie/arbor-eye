@@ -203,6 +203,11 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-11-02) one series and Vertical: every hover grows and shrinks the same way, as G5's works do: 0.9s on a gentle
    ease both ways (0.5s, quick then settling, earlier that day) */
 .idx.m-s .idx-item, .idx.m-v .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+/* (since 2026-11-19, Grace) a year in rows set by hand (YEAR_ROWS): its series rows flow as one block; the other series' works fade while one is hovered */
+.idx-yr { display: flex; flex-wrap: wrap; justify-content: center; margin-inline: auto; flex: none; }
+.idx-yr > .idx-row { display: contents; }
+.idx-yr .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.idx.hovering .idx-yr .idx-row:not(.on) .idx-item { opacity: 0.25; }
 .idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
 .idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
 @media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
@@ -273,7 +278,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item v" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_origin.jpg"><img src="assets/thumbs-m70/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin" data-alt-title="Origin" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
-      <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_artifact.jpg"><img src="assets/thumbs-m70/ascent_artifact.jpg" style="aspect-ratio: 2 / 3" alt="Artifact" data-alt-title="Artifact" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="gallery-filmstrip-2.html?view=1&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
     </section>
@@ -283,7 +287,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Convergence#convergence_counterline.jpg"><img src="assets/thumbs-m70/convergence_counterline.jpg" style="aspect-ratio: 3 / 2" alt="Counterline" data-alt-title="Counterline" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Convergence#convergence_counterpart.jpg"><img src="assets/thumbs-m70/convergence_counterpart.jpg" style="aspect-ratio: 3 / 2" alt="Counterpart" data-alt-title="Counterpart" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Convergence#convergence_counterform.jpg"><img src="assets/thumbs-m70/convergence_counterform.jpg" style="aspect-ratio: 3 / 2" alt="Counterform" data-alt-title="Counterform" data-alt-size="s"></a>
-      <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Convergence#convergence_convergence-6.jpg"><img src="assets/thumbs-m70/convergence_convergence-6.jpg" style="aspect-ratio: 3 / 2" alt="Convergence 6" data-alt-title="Convergence 6" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Convergence#convergence_convergence-7.jpg"><img src="assets/thumbs-m70/convergence_convergence-7.jpg" style="aspect-ratio: 3 / 2" alt="Convergence 7" data-alt-title="Convergence 7" data-alt-size="s"></a>
     </section>
     <section class="idx-row" data-s="Core" aria-label="Series 3, Core">
@@ -327,7 +330,6 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=The%20Turning#the-turning_character.jpg"><img src="assets/thumbs-m70/the-turning_character.jpg" style="aspect-ratio: 3 / 2" alt="Character" data-alt-title="Character" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=The%20Turning#the-turning_discovery.jpg"><img src="assets/thumbs-m70/the-turning_discovery.jpg" style="aspect-ratio: 3 / 2" alt="Discovery" data-alt-title="Discovery" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=The%20Turning#the-turning_horizon.jpg"><img src="assets/thumbs-m70/the-turning_horizon.jpg" style="aspect-ratio: 3 / 2" alt="Horizon" data-alt-title="Horizon" data-alt-size="s"></a>
-      <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=The%20Turning#the-turning_the-turning-6.jpg"><img src="assets/thumbs-m70/the-turning_the-turning-6.jpg" style="aspect-ratio: 3 / 2" alt="The Turning 6" data-alt-title="The Turning 6" data-alt-size="s"></a>
     </section>
     <section class="idx-row" data-s="Tonal" aria-label="Series 8, Tonal">
       <a class="idx-item" data-y="2024" href="gallery-filmstrip-2.html?view=1&amp;series=Tonal#tonal_firelight.jpg"><img src="assets/thumbs-m70/tonal_firelight.jpg" style="aspect-ratio: 3 / 2" alt="Firelight" data-alt-title="Firelight" data-alt-size="s"></a>
@@ -476,7 +478,10 @@ const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.qu
 // one series on its own: works per row (the last row centred under the others)
 const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 3 };   // (Tonal 3/2 since 2026-10-30; it was 2/2/1)
 // rows set by hand where the plain split would differ, each centred: Convergence's seven works 3/1/3 (2026-10-29; sized as Core is)
-const SERIES_ROWS = { 'Convergence': [3, 1, 3] };
+const SERIES_ROWS = { 'The Turning': [4, 3] };   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
+// (since 2026-11-19, Grace) a year's works in rows of these lengths, in order, series running on into the next row where they
+// must (2025: 7 + 7; 2024: 5, 4, 4, 5), each row centred; laid out in one block (#idxYear, see layout) whose series rows flow
+const YEAR_ROWS = { '2025': [7, 7], '2024': [5, 4, 4, 5] };
 // sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
 // scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
 // rows of 2 (2026-10-30)
@@ -526,6 +531,7 @@ addEventListener('load', markTop);
 document.querySelectorAll('.idx-item img').forEach(i => i.addEventListener('load', markTop));
 function layout() {
   const rows = [...document.querySelectorAll('.idx-row')];
+  const yw = document.getElementById('idxYear'); if (yw) { while (yw.firstChild) idx.insertBefore(yw.firstChild, yw); yw.remove(); }   // a year's block, taken apart again
   rows.forEach(r => r.removeAttribute('style'));
   document.querySelectorAll('.idx-item').forEach(a => { a.style.marginLeft = a.style.marginRight = ''; });
   idx.style.gap = '';
@@ -597,8 +603,9 @@ function layout() {
     // far apart as a hovered work's growth and its title need, and the whole block centred between the menus and the screen's foot
     const zY = ZOOM, lists = shown.map(row => [...row.querySelectorAll('.idx-item:not([hidden])')]);
     const v = lists[0][0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;   // (each year's works share one shape)
-    const cols = lists.map(l => shown.length === 1 && l.length >= 6 ? Math.ceil(l.length / 2) : l.length);
-    const R = lists.reduce((t, l, k) => t + Math.ceil(l.length / cols[k]), 0), most = Math.max(...cols);
+    const flat = lists.flat(), ys = YEAR_ROWS[fYear] && YEAR_ROWS[fYear].reduce((a, b) => a + b, 0) === flat.length ? YEAR_ROWS[fYear] : null;
+    const cols = ys ? [Math.max(...ys)] : lists.map(l => shown.length === 1 && l.length >= 6 ? Math.ceil(l.length / 2) : l.length);
+    const R = ys ? ys.length : lists.reduce((t, l, k) => t + Math.ceil(l.length / cols[k]), 0), most = Math.max(...cols);
     const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
     const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
     const top0 = fb + 24, ah = innerHeight - top0 - 24;
@@ -607,9 +614,17 @@ function layout() {
     let h = Math.min(2.83 * (v ? 1.5 * H : H), (aw * 0.98 - (most - 1) * gxY) / most / r);
     for (let i = 0; i < 4; i++) { const need = R * h + (R - 1) * gapFor(h) + TGAP + th + (zY - 1) / 2 * h; if (need <= ah + 0.5) break; h *= ah / need; }
     const ry = gapFor(h), block = R * h + (R - 1) * ry + TGAP + th;
+    if (ys) {   // the year's rows set by hand: its series rows gathered into one centred block, flowing as one; a short row held in by equal margins on its outer works
+      const w = document.createElement('div'); w.id = 'idxYear'; w.className = 'idx-yr'; idx.insertBefore(w, shown[0]); shown.forEach(row => w.appendChild(row));
+      shown.forEach(row => { row.style.setProperty('--ih', (v ? h / 1.5 : h).toFixed(2) + 'px'); row.style.setProperty('--hz', zY); });
+      set(w, v ? h / 1.5 : h, most, h * r, gxY, ry);
+      let i = 0; ys.forEach(k => { const pad = ((most - k) * (h * r + gxY) / 2).toFixed(2) + 'px'; flat[i].style.marginLeft = pad; flat[i + k - 1].style.marginRight = pad; i += k; });
+      w.style.marginTop = (top0 + Math.max(0, (ah - block) / 2) - flow - ry).toFixed(1) + 'px';
+    } else {
     shown.forEach((row, k) => { set(row, v ? h / 1.5 : h, cols[k], h * r, gxY, ry); row.style.setProperty('--hz', zY); });
-    idx.style.gap = ry.toFixed(1) + 'px';
     shown[0].style.marginTop = (top0 + Math.max(0, (ah - block) / 2) - flow - ry).toFixed(1) + 'px';
+    }
+    idx.style.gap = ry.toFixed(1) + 'px';
   } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
     // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
     // (later that day) the gap between the two series the same as between Ascent's rows, and the white space between the menus

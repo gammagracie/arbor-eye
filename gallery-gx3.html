@@ -333,7 +333,6 @@ const WORKS = [
   {"f": "the-turning_the-calling.jpg", "s": "The Turning", "y": 2024, "t": "The Calling", "r": 1.5, "g": "Purpose awaits."},
   {"f": "the-turning_horizon.jpg", "s": "The Turning", "y": 2024, "t": "Horizon", "r": 1.5, "g": "Beyond awaits."},
   {"f": "the-turning_revelation.jpg", "s": "The Turning", "y": 2024, "t": "Revelation", "r": 1.5, "g": "The ordinary made extraordinary."},
-  {"f": "the-turning_the-turning-6.jpg", "s": "The Turning", "y": 2024, "t": "The Turning 6", "r": 1.5, "g": ""},
   {"f": "tonal_current.jpg", "s": "Tonal", "y": 2024, "t": "Current", "r": 1.5, "g": "Everything flows."},
   {"f": "tonal_firelight.jpg", "s": "Tonal", "y": 2024, "t": "Firelight", "r": 1.5, "g": "Warmth endures."},
   {"f": "tonal_vesper-2.jpg", "s": "Tonal", "y": 2024, "t": "Vesper", "r": 1.5, "g": "The quiet deepens."},
@@ -341,11 +340,9 @@ const WORKS = [
   {"f": "convergence_counterform.jpg", "s": "Convergence", "y": 2024, "t": "Counterform", "r": 1.5, "g": "Complementary forms establish a shared structure."},
   {"f": "convergence_synthesis.jpg", "s": "Convergence", "y": 2024, "t": "Synthesis", "r": 1.5, "g": "Independent elements become something greater."},
   {"f": "convergence_counterline.jpg", "s": "Convergence", "y": 2024, "t": "Counterline", "r": 1.5, "g": "A shared boundary preserves distinction."},
-  {"f": "convergence_convergence-6.jpg", "s": "Convergence", "y": 2024, "t": "Convergence 6", "r": 1.5, "g": ""},
   {"f": "convergence_counterpart.jpg", "s": "Convergence", "y": 2024, "t": "Counterpart", "r": 1.5, "g": "Corresponding forms mirror across a shared divide."},
   {"f": "convergence_counterpoint.jpg", "s": "Convergence", "y": 2024, "t": "Counterpoint", "r": 1.5, "g": "Independent gestures create a shared rhythm."},
   {"f": "convergence_convergence-7.jpg", "s": "Convergence", "y": 2024, "t": "Convergence 7", "r": 1.5, "g": ""},
-  {"f": "ascent_artifact.jpg", "s": "Ascent", "y": 2025, "t": "Artifact", "r": 0.667, "g": "Surface and structure converge, bearing the language of an ancient object."},
   {"f": "ascent_canyons.jpg", "s": "Ascent", "y": 2025, "t": "Canyons", "r": 0.667, "g": "Ancient channels carve the landscape, exposing a terrain shaped from within."},
   {"f": "ascent_verdance.jpg", "s": "Ascent", "y": 2025, "t": "Verdance", "r": 0.667, "g": "Layers of green and violet gather into a landscape alive with quiet renewal."},
   {"f": "ascent_living-current.jpg", "s": "Ascent", "y": 2025, "t": "Living Current", "r": 0.667, "g": "Movement gathers, divides, and begins again, revealing a form that is never fixed."},
@@ -408,7 +405,7 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // (since 2026-11-18, Grace) desktop: Tonal's grid is three across in two rows (its five works: three, then two centred under them),
 // as large as the width within the arrows allows (asked for 30% larger; that is reached at 1920 wide, about 25% at 2560 and 21%
 // at 3840, where the arrows are the limit); below: the grid starts under the SERIES / YEAR menus rather than shrinking to clear them
-// (since 2026-11-18, Grace) desktop: Ascent's grid is one row across, in pages of 4, 3 and 3 (pages), each work 30% larger than in
+// (since 2026-11-18, Grace) desktop: Ascent's grid is one row across, in pages of 4, 3 and 3 (pages; 3, 3 and 3 since 2026-11-19, when Artifact left the site), each work 30% larger than in
 // its old 2 x 2 (cap30), or as large as the width within the arrows allows where that is less (Ascent's three-work pages the same
 // size, centred)
 // (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) two rows of five at a time, the
@@ -417,7 +414,7 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // height; (later that day) its works 15% larger (grow) and the columns closer, 60% of the rows' gap (gc); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
 // k (since 2026-11-19, Grace, desktop): the works that much of the size worked out (Tonal 12% smaller; Structure 5% smaller; Vertical
 // 7% smaller, then later that day 10% larger than that, 0.93 x 1.1; Ascent the same size as Vertical, its 30% cap (cap30) dropped)
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 1.023 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], k: 1.023 },
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 1.023 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [3, 3, 3], k: 1.023 },
   'year:2025': { cols: 5, per: 10, step: 5, below: true, grow: 1.15, gc: 0.6 } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
@@ -708,7 +705,7 @@ function buildPages() {
   PAGES = [];
   const L = seriesLayout();
   if (L && L.pages) { let j = 0; L.pages.forEach(n => { if (j < WORKS.length) PAGES.push(WORKS.slice(j, j + n).map((w, i) => j + i)); j += n; }); for (; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
-  if (L && L.step && WORKS.length > L.per) { for (let j = 0; ; j += L.step) { const e = Math.min(j + L.per, WORKS.length), b = e - L.per; PAGES.push(WORKS.slice(b, e).map((w, i) => b + i)); if (e >= WORKS.length) return; } }   // overlapping pages, one row (step) on each time; the last ends on the last work
+  if (L && L.step && WORKS.length > L.per) { for (let j = 0; ; j += L.step) { const e = Math.min(j + L.per, WORKS.length), b = j; PAGES.push(WORKS.slice(b, e).map((w, i) => b + i)); if (e >= WORKS.length) return; } }   // overlapping pages, one row (step) on each time (2025's fourteen since 2026-11-19: 1-10, then 6-14, its short last row centred)
   if (L) { for (let j = 0; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
   // the plain grid (since 2026-10-21): pages of a full grid in order, the last one holding what is left (its short last row centred)
   // (since 2026-11-04) every work the same size on every page: a page takes rows of three in gallery order while they fit the
