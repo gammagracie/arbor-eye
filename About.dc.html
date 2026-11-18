@@ -289,7 +289,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <div style="display: grid; gap: 16px">
       <div onClick="{{ stuTap }}" onTouchStart="{{ stuTouchStart }}" onTouchEnd="{{ stuTouchEnd }}" style="display: grid; overflow: hidden; touch-action: pan-y; cursor: pointer">
         <div style="grid-area: 1 / 1; opacity: {{ stuD0 }}; transition: opacity 0.7s ease; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: {{ studioGap }}">
-          <div style="position: relative"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
+          <div style="position: relative"><img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: left center"><!-- (since 2026-11-18, Grace) cropped from the left so Ned stays whole; the trim comes off the window side --></div>
           <div style="position: relative"><img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
           <div style="position: relative"><img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover"></div>
         </div>
@@ -422,7 +422,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div class="stu-slider" onClick="{{ openLb }}" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((var(--ab-w) - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
           <div style="display: flex; width: 200%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
             <div style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
-              <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+              <img src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: left center"><!-- (since 2026-11-18, Grace) cropped from the left so Ned stays whole; the trim comes off the window side -->
               <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
               <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
             </div>
