@@ -323,6 +323,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
                   <span style="display: {{ fr.swatchDisplay }}; width: 100px; height: 12px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
                   <span style="display: {{ fr.textDisplay }}; font-size: calc(14px * var(--fs)); letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A63; line-height: 14px">Unframed</span>
+                  <svg width="100" height="12" viewBox="0 0 100 12" fill="none" stroke="#141414" stroke-width="1" aria-hidden="true" style="display: {{ fr.customDisplay }}"><rect x="0.5" y="0.5" width="99" height="11"></rect><line x1="4" y1="12" x2="16" y2="0"></line><line x1="24" y1="12" x2="36" y2="0"></line><line x1="44" y1="12" x2="56" y2="0"></line><line x1="64" y1="12" x2="76" y2="0"></line><line x1="84" y1="12" x2="96" y2="0"></line></svg>
                   <span aria-hidden="true" style="position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); display: block; line-height: 0; color: #141414; opacity: {{ fr.caret }}"><svg width="16" height="7" viewBox="0 0 16 7" fill="none" stroke="currentColor" stroke-width="1.1" style="display: block"><polyline points="1 6.5 8 1 15 6.5"></polyline></svg></span>
                 </button>
               </sc-for>
@@ -691,7 +692,7 @@ class Component extends DCLogic {
     const sel = this.state.sel;
     const t = !m && this.state.tablet;
     const oneCol = m || this.state.stackDetail;   // image above the text: phones, and anything below 1330px wide
-    const frame = this.state.frame;
+    const custom = this.state.frame === 'custom', frame = custom ? 'none' : this.state.frame;   // (since 2026-11-17) Custom shows the work unframed
     const views = frameViews(sel != null ? this.arts[sel] : null);   // (since 2026-11-08) per work: a wood view where it has one
     const detailFrame = views[this.state.detailView][0] === 'none' ? 0 : 76; // frame (16px) + mount (22px) on each side
     // (since 2026-10-26, desktop and tablet) horizontals 12% smaller than before (77.4% of the largest that fits); verticals are the same
@@ -832,12 +833,14 @@ class Component extends DCLogic {
       printThumb: d && React.createElement('img', { src: d.src, alt: '', onError: this.ph(d), style: { maxWidth: '100%', maxHeight: '100%', display: 'block' } }),
       printImg: d && (vid && this.state.printVid ? film(m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) : mockOf(frame) ? React.createElement('img', { key: 'mock-' + frame, src: mockOf(frame), alt: mockAlt(frame), style: Object.assign({ display: 'block' }, m ? { maxWidth: '100%', maxHeight: 'min(58vh, 680px)', width: 'auto', height: 'auto' } : { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }) }) : React.createElement('img', { src: d.src, alt: d ? d.title : '', 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), style: Object.assign({ maxWidth: '100%', maxHeight: m ? 'min(58vh, 680px)' : '100%', width: 'auto', height: 'auto', display: 'block', boxSizing: 'border-box' }, !m && d.orient === 'Vertical' ? { maxHeight: 'none', height: 'min(45.75cqw, calc(min(calc(61cqw * 820 / 773), calc(100vh - var(--header-h) - 150px)) - 48px))' } : {}, framed(frame, printShadow)) })),   // (since 2026-10-24) a portrait print as tall as a landscape print is wide (the wall's width less its 12.5% margins), 24px clear of the wall's top and bottom at least   // desktop: the print fills the wall inside its margin
       // frame swatches
-      frames: views.filter(v => v[0] !== 'none').map(v => [v[0], FRAME_COLOUR[v[0]]]).concat([['none', null]]).map(([f, c]) => ({
-        pick: () => this.setState({ frame: f, printVid: false }), aria: f === 'none' ? 'Unframed' : f + ' frame',
-        swatchDisplay: c ? 'block' : 'none', textDisplay: c ? 'none' : 'block', color: c || 'transparent', caret: frame === f ? 1 : 0
+      // (since 2026-11-17, Grace) Unframed first, then White, Black, Natural (wood), then Custom: a bar like the others, outlined, with
+      // five black lines at 45 degrees; Custom shows the work unframed, with Frame and Mount reading Custom
+      frames: [['none', null]].concat(['white', 'black', 'wood'].filter(f => views.some(v => v[0] === f)).map(f => [f, FRAME_COLOUR[f]])).concat([['custom', null]]).map(([f, c]) => ({
+        pick: () => this.setState({ frame: f, printVid: false }), aria: f === 'none' ? 'Unframed' : f === 'custom' ? 'Custom frame' : (f === 'wood' ? 'natural' : f) + ' frame',
+        swatchDisplay: c ? 'block' : 'none', textDisplay: f === 'none' ? 'block' : 'none', customDisplay: f === 'custom' ? 'block' : 'none', color: c || 'transparent', caret: this.state.frame === f ? 1 : 0
       })),
-      frameLabel: frame === 'none' ? 'None' : frame === 'white' ? 'White' : frame === 'wood' ? 'Wood' : 'Black',
-      mountLabel: frame === 'none' ? 'None' : 'Reveal',
+      frameLabel: custom ? 'Custom' : frame === 'none' ? 'None' : frame === 'white' ? 'White' : frame === 'wood' ? 'Wood' : 'Black',
+      mountLabel: custom ? 'Custom' : frame === 'none' ? 'None' : 'Reveal',
       // lightbox carousel of the framing views
       lightboxOpen: this.state.lightbox,
       openLightbox: () => this.setState({ lightbox: true, lbIndex: pcI }),
