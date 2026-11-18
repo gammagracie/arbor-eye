@@ -407,10 +407,10 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // (since 2026-11-18, Grace) desktop: Ascent's grid is one row across, in pages of 4, 3 and 3 (pages), each work 30% larger than in
 // its old 2 x 2 (cap30), or as large as the width within the arrows allows where that is less (Ascent's three-work pages the same
 // size, centred)
-// (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) in one page, eight across over
-// seven centred under them; a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
+// (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) in one page, three rows of five
+// (briefly eight over seven); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
 const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true },
-  'year:2025': { cols: 8, per: 15, below: true } };
+  'year:2025': { cols: 5, per: 15, below: true } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && (!tab.matches && SERIES_DESK[curSeries()] || SERIES_LAYOUT[curSeries()]) || null;
