@@ -154,8 +154,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-11-06, Grace; screens over 2500px) the all-series block of thumbnails moved right so its left edge is on the About page's
    image, the body margin (--body-pad, under CONTACT's last letter); the block keeps its width, so nothing re-wraps */
 @media (min-width: 2501px) { .idx:not(.m-s):not(.m-v):not(.m-h) { padding-left: var(--body-pad); padding-right: calc(2 * var(--side-pad) - var(--body-pad)); } }
-.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(13px * var(--fs)); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-.idx-series.show { opacity: 1; }
+.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(12px * var(--fs) + 2px); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.idx-series.show { opacity: 1; }   /* (since 2026-11-19, Grace) the series name 2px larger than the SERIES / YEAR menus' text (it was 13px x --fs, 1px x --fs larger) */
 .idx-row { transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .idx.hovering .idx-row { opacity: 0.25; }   /* (since 2026-10-29, as martonperlaki.com/thumbnails) the other rows fade to 25% over 0.3s while one is hovered; the names fade in over 0.6s on the same curve */
 .idx.hovering .idx-row.on { opacity: 1; }
@@ -178,6 +178,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-10-28) Series and Year menus at the top right, on the bag icon's line, as on G5: a series shows only its row,
    Horizontal / Vertical and a year only the matching works, each remaining row still on its own line */
 .index .tools { padding-top: 14px; }
+/* (since 2026-11-19, Grace) desktop: the SERIES / YEAR menus 7px lower; the series name sits on their baseline (liftLabel) */
+@media (min-width: 768px) { .index .filters { position: relative; top: 7px; } }
 /* (since 2026-11-17, Grace) desktop: the menus' line, where the hovered series' name also shows, stays on screen under the header;
    the thumbnails slide under it as the page scrolls. The band reaches 14px below that line (--band-ext, set by the script) on the
    page's own background; the series name sticks with it */
@@ -500,10 +502,14 @@ const thumbH = () => Math.min(197, Math.max(42, innerWidth * 0.05133));   // --i
 // first row's genie (150%, growing upward) stays 12px clear of it
 function liftLabel() {   // (Horizontal and Vertical: the name on the menus' line too, the rows then closing up under it)
   label.style.transform = label.style.marginBottom = '';
-  if (mode === 's' || innerWidth < 768) return;
+  if (innerWidth < 768) return;
+  // (since 2026-11-19, Grace) the name's baseline on the menus' baseline, in every mode (a single series too: it used to stay below
+  // the menus there), so it always shows in the same place
+  const base = el => { const m = document.createElement('span'); m.style.cssText = 'display: inline-block; width: 0; height: 0; vertical-align: baseline'; el.appendChild(m); const y = m.getBoundingClientRect().top; m.remove(); return y; };
   const f = document.querySelector('.filters').getBoundingClientRect(), l = label.getBoundingClientRect();
-  const d = (l.top + l.height / 2) - (f.top + f.height / 2);
-  label.style.transform = 'translateY(' + (-d).toFixed(1) + 'px)';
+  const d = (l.top + l.height / 2) - (f.top + f.height / 2), db = base(label) - base(document.querySelector('#fmSeries .fm-btn span'));
+  label.style.transform = 'translateY(' + (-db).toFixed(1) + 'px)';
+  if (mode === 's') return;
   if (mode !== 'all') return;
   const row = [...idx.querySelectorAll('.idx-row')].find(r => !r.hidden); if (!row) return;
   const hmax = Math.max(...[...row.querySelectorAll('.idx-item:not([hidden])')].map(a => a.offsetHeight));
