@@ -1,10 +1,10 @@
 /* (since 2026-11-18, Grace) the header nav reads GALLERY · ABOUT · CONTACT; INDEX sits just before the search icon as a small
-   button: the nav's letters 1px smaller, white on a dark rounded box (the Send button's #141414; light grey #EEECE7 with dark
-   letters for its first day). The space from CONTACT to it is twice the old space from
+   button: the nav's letters 1px smaller, semibold white on a grey rounded box (#5B5B5B, since 2026-11-19: 70% of the
+   #141414 it had for a day; light grey #EEECE7 with dark letters on its first day). The space from CONTACT to it is twice the old space from
    CONTACT to the search icon (40px became 80px: the row's 40px gap plus a 40px margin); it is the icons' 20px from the search icon.
    Desktop and tablet; phones keep INDEX in their menu. */
-header a.nav-index { display: block !important; flex: none; width: max-content; margin-left: 40px; padding: 0.59em 0.62em 0.33em 0.8em; border-radius: 3px; background: #141414;
-  font-size: calc(13px * var(--fs, 1) - 1px); line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; transition: background 0.2s ease; }
+header a.nav-index { display: block !important; flex: none; width: max-content; margin-left: 40px; padding: 0.59em 0.62em 0.33em 0.8em; border-radius: 3px; background: #5B5B5B;
+  font-size: calc(13px * var(--fs, 1) - 1px); line-height: 1; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; transition: background 0.2s ease; }
 header a.nav-index::after { content: none !important; display: none !important; }
 header a.nav-index:hover { background: #3A3936; }
 /* (since 2026-11-18, Grace) the header icons (search, account, bag: the 19px icons) centred on the middle of the nav's capitals; they

@@ -93,6 +93,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
 .fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
 .filter-menu.open .fm-list { display: grid; }
+.tools:has(.filter-menu.open) { z-index: 400 !important; }   /* (since 2026-11-19, Grace) an open SERIES / YEAR list is always on top of everything (the works, a hovered work, the series labels) */
 .fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }   /* the chosen option in black, bold (since 2026-10-23; it was a paler grey) */
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
@@ -220,7 +221,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=2">
+<link rel="stylesheet" href="nav-index.css?v=3">
 </head>
 <body>
 <div class="page" id="page">
@@ -394,8 +395,11 @@ const isGrid = () => view === 9 || view === 2;
 // works are paged in that series' own arrangement: per = works on a page, cols = works across, a short last row centred under
 // the full ones with the same spacing; scale = the works' size against the plain grid's for that series (capped by the space).
 // An all-portrait series is laid out in portrait-shaped boxes rather than the grid's landscape columns.
-const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence': { cols: 2, per: 4 }, 'Core': { cols: 2, per: 4 }, 'Outliers': { cols: 2, per: 4 },
-  'Select': { cols: 2, per: 4 }, 'The Turning': { cols: 2, per: 4 }, 'Spectrum': { cols: 2, per: 4 }, 'Structure': { cols: 3, per: 5, scale: 1.3 },
+// same (since 2026-11-19, Grace, desktop): The Turning's 2 x 2 5% larger, and Spectrum, Select, Core and Convergence the same size
+// as it; the size no longer depends on the length of the series' name in the SERIES menu (it used to: the grid kept clear of the
+// menu, so a short name such as Core gave larger works): every one is sized as if the menu read THE TURNING
+const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence': { cols: 2, per: 4, same: 1.05 }, 'Core': { cols: 2, per: 4, same: 1.05 }, 'Outliers': { cols: 2, per: 4 },
+  'Select': { cols: 2, per: 4, same: 1.05 }, 'The Turning': { cols: 2, per: 4, same: 1.05 }, 'Spectrum': { cols: 2, per: 4, same: 1.05 }, 'Structure': { cols: 3, per: 5, scale: 1.3 },
   'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 2, per: 4, mid: true } };
 // mid (since 2026-10-21, Vertical): the desktop grid is 2 x 2, its works halfway in size between the largest a 2 x 2 allows and
 // the 3 x 3 it replaced; the grid icon shows 2 x 2 while that filter is on
@@ -411,7 +415,8 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // works larger than in the three rows of five it had first (and briefly eight over seven); its pages move one row at a time
 // (step): the next page drops the top row and brings in the row below (works 1-10, then 6-15), the rows sliding up by one row's
 // height; (later that day) its works 15% larger (grow) and the columns closer, 60% of the rows' gap (gc); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true },
+// k (since 2026-11-19, Grace, desktop): the works that much of the size worked out (Vertical 7% smaller, Tonal 12% smaller)
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 0.93 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true },
   'year:2025': { cols: 5, per: 10, step: 5, below: true, grow: 1.15, gc: 0.6 } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
@@ -469,7 +474,8 @@ function fit() {
   if (count === 1) h = Math.min(h, H - 2 * lift - 40);   // and keeps 40px for the title under it
   // (since 2026-11-06, Grace) three-up: the works 90% of that size; portraits below are matched to the landscapes (their height
   // the landscapes' width)
-  const K3 = count === 3 && !grid ? 0.9 : 1;
+  // (since 2026-11-19, Grace) desktop, YEAR 2024 picked: the three-up works 7% smaller, so the outer ones sit further in from the arrows
+  const K3 = count === 3 && !grid ? 0.9 * (curSeries() === 'year:2024' && !tab.matches && !phone.matches ? 0.93 : 1) : 1;
   h *= K3;
   // (since 2026-10-23) one-up and three-up: a portrait (or a set of them) is never larger than a landscape (set) would be in the same
   // place, turned upright: its height at most the width a landscape would have there
@@ -564,6 +570,13 @@ function fit() {
       if (SL && SL.below && cx + gridW(a) / 2 + 24 > menusLeft) {
         const topBelow = Math.max(fs.bottom, fy.bottom) + 24 - st.top; gridTop = topBelow; V = bottom - topBelow; a = sizeFor(inner, V);
       } else if (!(SL && SL.per === SL.cols) && cx + gridW(a) / 2 + clear > menusLeft) a = sizeFor(2 * (menusLeft - clear - cx), V);
+      if (SL && SL.same) {   // sized as if the SERIES menu read THE TURNING (its left edge moved by the difference in the name's width), then scaled; never more than the height allows
+        const sp = $('fmSeries').querySelector('.fm-btn span'), t0 = sp.textContent, w0 = sp.getBoundingClientRect().width;
+        sp.textContent = 'The Turning'; const w1 = sp.getBoundingClientRect().width; sp.textContent = t0;
+        const refLeft = Math.min(fs.left + (w0 - w1), fy.right - listW), aMax = sizeFor(inner, V);
+        let r = aMax; if (cx + gridW(r) / 2 + clear > refLeft) r = sizeFor(2 * (refLeft - clear - cx), V);
+        a = Math.min(SL.same * r, aMax);
+      }
     } else if (cx + gridW(a) / 2 + 24 > fs.left) {
       filters.classList.add('stacked');
       const stackLeft = fy.right - Math.max(fs.width, fy.width);
@@ -575,6 +588,7 @@ function fit() {
         if (aBelow > aNarrow) { gridTop = topBelow; V = bottom - topBelow; a = aBelow; } else a = aNarrow;
       }
     }
+    if (SL && SL.k && !tab.matches) a *= SL.k;
     if (SL && SL.cap30) {   // at most 30% larger than the old 2 x 2 (Ascent's: two rows from the bottom of the view icons, drawn close enough for a title between them)
       const vOld = bottom - ($('tools').querySelector('.count svg').getBoundingClientRect().bottom - st.top);
       const aCap = 1.3 * (vOld - ROWNEED) / 2;
