@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
+<link rel="stylesheet" href="nav-index.css?v=1">
 </head>
 <body>
 <x-dc>
@@ -66,14 +67,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
           <a href="gallery-gx3.html" data-t="Gallery">Gallery</a>
-          <a href="works-index.html" data-t="Index">Index</a>
           <a href="About.dc.html" data-t="About">About</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
       </sc-if>
       <div style="display: flex; gap: 20px; align-items: {{ headerAlign }}">
         <div style="display: {{ headerIconsDisplay }}; gap: 20px; align-items: {{ headerAlign }}">
-        <button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
+        <a class="nav-index" href="works-index.html" data-t="Index">Index</a><button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
         <a href="#" aria-label="Account" style="display: flex; color: #141414">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>
         </a>
