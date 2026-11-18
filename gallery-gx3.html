@@ -220,7 +220,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=1">
+<link rel="stylesheet" href="nav-index.css?v=2">
 </head>
 <body>
 <div class="page" id="page">
@@ -407,10 +407,12 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // (since 2026-11-18, Grace) desktop: Ascent's grid is one row across, in pages of 4, 3 and 3 (pages), each work 30% larger than in
 // its old 2 x 2 (cap30), or as large as the width within the arrows allows where that is less (Ascent's three-work pages the same
 // size, centred)
-// (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) in one page, three rows of five
-// (briefly eight over seven); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
+// (since 2026-11-18, Grace) desktop: the year 2025 (its fifteen portraits, Ascent and Structure) two rows of five at a time, the
+// works larger than in the three rows of five it had first (and briefly eight over seven); its pages move one row at a time
+// (step): the next page drops the top row and brings in the row below (works 1-10, then 6-15), the rows sliding up by one row's
+// height; (later that day) its works 15% larger (grow) and the columns closer, 60% of the rows' gap (gc); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
 const SERIES_DESK = { 'Vertical': { cols: 4, per: 4 }, 'Tonal': { cols: 3, per: 5, below: true }, 'Ascent': { cols: 4, per: 4, pages: [4, 3, 3], cap30: true },
-  'year:2025': { cols: 5, per: 15, below: true } };
+  'year:2025': { cols: 5, per: 10, step: 5, below: true, grow: 1.15, gc: 0.6 } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
 const seriesLayout = () => isGrid() && !phone.matches && (!tab.matches && SERIES_DESK[curSeries()] || SERIES_LAYOUT[curSeries()]) || null;
@@ -522,7 +524,7 @@ function fit() {
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
     let gcFix = null;
-    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = tab.matches || SL && (SL.cols === 2 || SL.below) ? 1 : SL && SL.per === SL.cols ? 0.6 : 1.5, GC = a => gcFix != null ? gcFix : kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-17, Grace) a series in 2 x 2 the same as the rows' gap, so its right column sits further from the menus
+    const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = SL && SL.gc && !tab.matches ? SL.gc : tab.matches || SL && (SL.cols === 2 || SL.below) ? 1 : SL && SL.per === SL.cols ? 0.6 : 1.5, GC = a => gcFix != null ? gcFix : kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-17, Grace) a series in 2 x 2 the same as the rows' gap, so its right column sits further from the menus
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
     // as tall), so a row holding one is 1.5 times as tall; each page is sized to fit its own rows (a landscape-only page as before)
@@ -638,7 +640,7 @@ function assign(slot, k) {
 // like a belt. d = +1 for the right arrow (the works travel to the right, the new set arriving from the left),
 // -1 for the left arrow; the incoming images are decoded before anything moves
 let outRow = null, slideFadeT = 0;
-async function slideTo(ks, d, axis, preOut) {
+async function slideTo(ks, d, axis, preOut, byRow) {
   busy(1900);   // from the moment of the request, through loading and the slide
   if (outRow) { outRow.remove(); outRow = null; row.style.transition = 'none'; row.style.transform = ''; }
   const outW = row.getBoundingClientRect().width;
@@ -657,7 +659,10 @@ async function slideTo(ks, d, axis, preOut) {
   const vert = axis === 'y', outH = out.getBoundingClientRect().height;
   // (since 2026-11-06, Grace) up / down: 150px between the set leaving and the set arriving (was 28px), so a hovered work's growth
   // and the shadows never bring them together
-  const dist = vert ? outH / 2 + 150 + row.getBoundingClientRect().height / 2 : outW / 2 + 28 + row.getBoundingClientRect().width / 2;
+  const dist0 = vert ? outH / 2 + 150 + row.getBoundingClientRect().height / 2 : outW / 2 + 28 + row.getBoundingClientRect().width / 2;
+  // (since 2026-11-18, Grace) a layout paged one row at a time (2025): both sets move by one row's height, so the row they share
+  // stays in place under itself as it rises, the top row leaving (and fading) and the new row coming up from below
+  const nc = seriesLayout() ? seriesLayout().cols : 0, dist = byRow && slots[nc] ? slots[nc].a.getBoundingClientRect().top - slots[0].a.getBoundingClientRect().top : dist0;
   const from = vert ? 'translateY(' + (d * dist) + 'px)' : 'translateX(' + (-d * dist) + 'px)', to = vert ? 'translateY(' + (-d * dist) + 'px)' : 'translateX(' + (d * dist) + 'px)';
   row.style.transition = 'none'; row.style.transform = 'translate(-50%, -50%) ' + from;
   void row.offsetWidth;
@@ -688,6 +693,7 @@ function buildPages() {
   PAGES = [];
   const L = seriesLayout();
   if (L && L.pages) { let j = 0; L.pages.forEach(n => { if (j < WORKS.length) PAGES.push(WORKS.slice(j, j + n).map((w, i) => j + i)); j += n; }); for (; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
+  if (L && L.step && WORKS.length > L.per) { for (let j = 0; ; j += L.step) { const e = Math.min(j + L.per, WORKS.length), b = e - L.per; PAGES.push(WORKS.slice(b, e).map((w, i) => b + i)); if (e >= WORKS.length) return; } }   // overlapping pages, one row (step) on each time; the last ends on the last work
   if (L) { for (let j = 0; j < WORKS.length; j += L.per) PAGES.push(WORKS.slice(j, j + L.per).map((w, i) => j + i)); return; }
   // the plain grid (since 2026-10-21): pages of a full grid in order, the last one holding what is left (its short last row centred)
   // (since 2026-11-04) every work the same size on every page: a page takes rows of three in gallery order while they fit the
@@ -726,8 +732,9 @@ function setWindow(f, scrollIntoView, dir, axis) {
   else { f = Math.max(0, Math.min(WORKS.length - slots.length, f)); ks = slots.map((s, i) => f + i); }
   const moving = (preOut || slots[0].idx >= 0) && f !== first;
   const d0 = dir || (f > (slots[0].idx >= 0 ? slots[0].idx : first) ? 1 : -1);
+  const SLs = seriesLayout(), byRow = !!(SLs && SLs.step && sets() && axis === 'y' && f - first === d0 * SLs.step);   // a layout paged one row at a time, moving to the next (or previous) page: slide by one row
   first = current = f;
-  if (moving) slideTo(ks, d0, axis, preOut); else slots.forEach((s, i) => assign(s, ks[i]));
+  if (moving) slideTo(ks, d0, axis, preOut, byRow); else slots.forEach((s, i) => assign(s, ks[i]));
   [...track.children].forEach((b, i) => { const on = ks.includes(i); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
   $('capTitle').textContent = WORKS[f].t; capDx = 0; placeCaption();
   // the filmstrip moves only under the cursor on desktop: a new set no longer glides the strip along (touch screens, with no
