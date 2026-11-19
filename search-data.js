@@ -421,7 +421,7 @@ window.SEARCH_DATA = {
 "pages": [
 {
 "t": "Gallery",
-"u": "gallery-filmstrip-2.html",
+"u": "index-archive.html",
 "k": "gallery works paintings originals prints series"
 },
 {
