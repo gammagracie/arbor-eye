@@ -725,10 +725,16 @@ function menu(id, label, opts, get, set) {
     btn.classList.toggle('chosen', get() !== 'All');
     list.innerHTML = '';
     opts().forEach(([v, l]) => { const o = document.createElement('button'); o.setAttribute('role', 'option'); o.textContent = l || v; o.classList.toggle('on', get() === v); o.setAttribute('aria-selected', get() === v);
-      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); menuRenders.forEach(r => r()); applyFilter(); }); list.appendChild(o); });
+      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); menuRenders.forEach(r => r()); applyFilter(); keepAddress(); }); list.appendChild(o); });
   };
   btn.addEventListener('click', e => { e.stopPropagation(); const open = !m.classList.contains('open'); close(); m.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); });
   render(); menuRenders.push(render);
+}
+// (since 2026-11-19, Grace) the address follows the Series / Year choice (works-index.html?series=<name> or ?year=<year>), as on
+// GALLERY, so a reload or a copied link opens the same choice
+function keepAddress() {
+  const q = new URLSearchParams(); if (fSeries !== 'All') q.set('series', fSeries); else if (fYear !== 'All') q.set('year', fYear);
+  history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
 }
 function close() { document.querySelectorAll('.filter-menu.open').forEach(x => { x.classList.remove('open'); x.querySelector('.fm-btn').setAttribute('aria-expanded', 'false'); }); }
 menu('fmSeries', 'Series', () => SERIES_OPTS, () => fSeries, v => { fSeries = v; if (v !== 'All') fYear = 'All'; });
@@ -802,6 +808,9 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
   addEventListener('pagehide', () => { try { sessionStorage.setItem(KEY, JSON.stringify({ s: fSeries, y: fYear, sy: se.scrollTop })); } catch (e) {} });
   let r = null;
   try { const n = performance.getEntriesByType('navigation')[0]; if (n && (n.type === 'reload' || n.type === 'back_forward')) r = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  // (since 2026-11-19) no saved state (a copied link, or storage off): the choice in the address, from the top
+  const qs = new URLSearchParams(location.search), aS = qs.get('series'), aY = qs.get('year');
+  if (!r && (aS || aY)) r = { s: aS || 'All', y: aS ? 'All' : aY || 'All', sy: 0 };
   if (!r) return;
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   const okS = v => v === 'All' || SERIES_OPTS.some(o => o[0] === v), okY = v => v === 'All' || yearOpts().some(o => o[0] === v);
@@ -817,6 +826,7 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
     mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';
     layout();
   }
+  keepAddress();
   const sy = +r.sy || 0, put = () => { se.scrollTop = sy; tY = se.scrollTop; };
   put(); setTimeout(put, 0); document.fonts && document.fonts.ready.then(put); addEventListener('load', put, { once: true });
 })();
