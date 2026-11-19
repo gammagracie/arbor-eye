@@ -392,10 +392,12 @@ const isGrid = () => view === 9 || view === 2;
 // works are paged in that series' own arrangement: per = works on a page, cols = works across, a short last row centred under
 // the full ones with the same spacing; scale = the works' size against the plain grid's for that series (capped by the space).
 // An all-portrait series is laid out in portrait-shaped boxes rather than the grid's landscape columns.
+// step (since 2026-11-19, Grace): Convergence's six works always four at a time, the pages one row apart (1-4, then 3-6; the rows slide
+// up by one row, as 2025's do)
 // same (since 2026-11-19, Grace, desktop): The Turning's 2 x 2 5% larger, and Spectrum, Select, Core and Convergence the same size
 // as it; the size no longer depends on the length of the series' name in the SERIES menu (it used to: the grid kept clear of the
 // menu, so a short name such as Core gave larger works): every one is sized as if the menu read THE TURNING
-const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence': { cols: 2, per: 4, same: 1.05 }, 'Core': { cols: 2, per: 4, same: 1.05 }, 'Outliers': { cols: 2, per: 4 },
+const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence': { cols: 2, per: 4, same: 1.05, step: 2 }, 'Core': { cols: 2, per: 4, same: 1.05 }, 'Outliers': { cols: 2, per: 4 },
   'Select': { cols: 2, per: 4, same: 1.05 }, 'The Turning': { cols: 2, per: 4, same: 1.05 }, 'Spectrum': { cols: 2, per: 4, same: 1.05 }, 'Structure': { cols: 3, per: 5, scale: 1.3, k: 0.95 },
   'Tonal': { cols: 2, per: 5 }, 'Vertical': { cols: 2, per: 4, mid: true } };
 // mid (since 2026-10-21, Vertical): the desktop grid is 2 x 2, its works halfway in size between the largest a 2 x 2 allows and
@@ -414,7 +416,7 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // height; (later that day) its works 15% larger (grow) and the columns closer, 60% of the rows' gap (gc); a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
 // k (since 2026-11-19, Grace, desktop): the works that much of the size worked out (Tonal 12% smaller; Structure 5% smaller; Vertical
 // 7% smaller, then later that day 10% larger than that, 0.93 x 1.1; Ascent the same size as Vertical, its 30% cap (cap30) dropped)
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 1.023 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [3, 3, 3], k: 1.023 },
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 1.023 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [3, 3, 3], k: 1.023, icon: 3 },
   'year:2025': { cols: 5, per: 10, step: 5, below: true, grow: 1.15, gc: 0.6 } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
@@ -923,11 +925,12 @@ function gridIcon() {
   const b = document.querySelector('.count[data-n="9"]'); if (!b) return;
   const L = phone.matches ? null : (!tab.matches && SERIES_DESK[layoutKey()]) || SERIES_LAYOUT[layoutKey()] || null;
   // (a short last row is drawn centred, as the works are: Tonal's 3 over 2, 2025's 8 over 7; many columns draw closer)
-  const c = L ? L.cols : 3, r = L ? Math.ceil(L.per / L.cols) : 3, gp = c > 4 ? 1 : 2, w = (18 - gp * (c - 1)) / c, h = (18 - 2 * (r - 1)) / r;
+  const c = L ? L.icon || L.cols : 3, r = L ? (L.icon ? 1 : Math.ceil(L.per / L.cols)) : 3,   // icon: (since 2026-11-19, Grace) a one-row layout whose pages hold fewer than its columns (Ascent's 3, sized as four across) shows that many bars
+    gp = c > 4 ? 1 : 2, w = (18 - gp * (c - 1)) / c, h = (18 - 2 * (r - 1)) / r;
   let rects = '';
-  for (let y = 0; y < r; y++) { const n = y < r - 1 || !L ? c : L.per - c * (r - 1), off = (c - n) * (w + gp) / 2;
+  for (let y = 0; y < r; y++) { const n = y < r - 1 || !L || L.icon ? c : L.per - c * (r - 1), off = (c - n) * (w + gp) / 2;
     for (let x = 0; x < n; x++) rects += '<rect x="' + (off + x * (w + gp)).toFixed(2) + '" y="' + (y * (h + 2)).toFixed(2) + '" width="' + w.toFixed(2) + '" height="' + h.toFixed(2) + '"></rect>'; }
-  b.setAttribute('aria-label', (L ? L.per : 9) + ' works at a time');
+  b.setAttribute('aria-label', (L ? L.icon || L.per : 9) + ' works at a time');
   const key = c + 'x' + r; if (b.dataset.icon === key) return; b.dataset.icon = key;
   b.innerHTML = '<svg viewBox="0 0 18 18">' + rects + '</svg>';
 }
