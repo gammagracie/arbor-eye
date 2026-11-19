@@ -965,14 +965,14 @@ addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 // (since 2026-10-22) ?series=<name> opens with that series chosen in the filter (the detail pages' series links)
 const askedSeries = new URLSearchParams(location.search).get('series');
 const reloaded = (() => { try { const n = performance.getEntriesByType('navigation')[0]; return !!n && n.type === 'reload'; } catch (e) { return false; } })();
-if (askedSeries && ALL.some(w => w.s === askedSeries) && !reloaded) {
+if (askedSeries && SERIES_OPTS.some(o => o[0] === askedSeries && o[0] !== 'All') && !reloaded) {
   const h = location.hash; fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); history.replaceState(null, '', location.pathname + location.search + h);   // (the work named after # is still the one opened)
   // (since 2026-10-23) arriving this way (the Index, a detail page's series link), the Series menu opens, the series chosen in it;
   // a click anywhere else closes it as usual
   const sm = $('fmSeries'); sm.classList.add('open'); sm.querySelector('.fm-btn').setAttribute('aria-expanded', 'true');
 }
 // (since 2026-11-19) a reload keeps the series (the menu stays shut) and ?year=<year> opens with that year chosen
-if (askedSeries && reloaded && ALL.some(w => w.s === askedSeries)) { fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); }
+if (askedSeries && reloaded && SERIES_OPTS.some(o => o[0] === askedSeries && o[0] !== 'All')) { fSeries = askedSeries; menuRenders.forEach(r => r()); applyFilter(); }
 const askedYear = new URLSearchParams(location.search).get('year');
 if (askedYear && fSeries === 'All' && ALL.some(w => String(w.y) === askedYear)) { fYear = askedYear; menuRenders.forEach(r => r()); applyFilter(); }
 // start on the work named in the URL, else the first work
