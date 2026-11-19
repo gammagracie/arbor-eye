@@ -496,7 +496,8 @@ const Z = f => 1 + 0.075 * f, ZOOM = Z(2.5);
 const SERIES_TUNE = {
   'Ascent': { k: 0.9, row2: 20, cx: 2 },
   'Convergence': { k: 1.15, dy: -30, cx: 2 }, 'Core': { k: 1.15, dy: -30, cx: 2 },
-  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 2 },
+  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 2, row1: 15 },   // row1 (since 2026-11-19, Grace): the top row that much lower (drawn there; the layout is unchanged)
+ 
   'Spectrum': { k: 0.9, cxRow: true, zoom: Z(2.5 * 0.8) },
   'The Turning': { k: 1.15, cx: 2 },
   'Tonal': { dy: -50, cx: 2, cy: 2 }
@@ -533,7 +534,7 @@ function layout() {
   const rows = [...document.querySelectorAll('.idx-row')];
   const yw = document.getElementById('idxYear'); if (yw) { while (yw.firstChild) idx.insertBefore(yw.firstChild, yw); yw.remove(); }   // a year's block, taken apart again
   rows.forEach(r => r.removeAttribute('style'));
-  document.querySelectorAll('.idx-item').forEach(a => { a.style.marginLeft = a.style.marginRight = ''; });
+  document.querySelectorAll('.idx-item').forEach(a => { a.style.marginLeft = a.style.marginRight = a.style.position = a.style.top = ''; });
   idx.style.gap = '';
   idx.classList.remove('m-s', 'm-h', 'm-v');
   liftLabel();
@@ -595,6 +596,7 @@ function layout() {
     }
     // (since 2026-10-30) the last row's works grow upward from their base, so their titles stay on screen
     items.forEach(a => a.classList.toggle('lastrow', a.offsetTop === items[n - 1].offsetTop));
+    if (T.row1) { const t0 = items[0].offsetTop; [...items].filter(a => a.offsetTop === t0).forEach(a => { a.style.position = 'relative'; a.style.top = T.row1 + 'px'; }); }
     // moved up (SERIES_TUNE dy): from its centred place, never closer than its usual gap under the series name
     if (T.dy) { const rh = row.offsetHeight; row.style.marginTop = Math.max(0, (ah - rh) / 2 + T.dy).toFixed(1) + 'px'; row.style.marginBottom = 'auto'; }
   } else if (mode === 'v' && fSeries === 'All') {

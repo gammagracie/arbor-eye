@@ -415,9 +415,11 @@ const SERIES_LAYOUT = { 'Ascent': { cols: 2, per: 4, grow: 1.1 }, 'Convergence':
 // (step): the next page drops the top row and brings in the row below (works 1-10, then 6-15), the rows sliding up by one row's
 // height; (later that day) its works 15% larger (grow) and the columns closer, 60% of the rows' gap (gc); (since 2026-11-19, Grace)
 // four columns, two rows at a time (works 1-8, 5-12, 9-14), still one row on per page; a year's layout is keyed 'year:<year>' and applies while that year is picked (no series)
+// (since 2026-11-19, later, Grace) Vertical four across in two rows, paged a row at a time like 2025 (pages 1-8, 5-12, 9-14),
+// 20% larger than a plain 4 x 2 would be, as far as the height allows (grow); Tonal 15% larger again (0.88 x 1.15)
 // k (since 2026-11-19, Grace, desktop): the works that much of the size worked out (Tonal 12% smaller; Structure 5% smaller; Vertical
 // 7% smaller, then later that day 10% larger than that, 0.93 x 1.1; Ascent the same size as Vertical, its 30% cap (cap30) dropped)
-const SERIES_DESK = { 'Vertical': { cols: 4, per: 4, k: 1.023 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 }, 'Ascent': { cols: 4, per: 4, pages: [3, 3, 3], k: 1.023, icon: 3 },
+const SERIES_DESK = { 'Vertical': { cols: 4, per: 8, step: 4, below: true, grow: 1.2, gc: 0.6 }, 'Tonal': { cols: 3, per: 5, below: true, k: 0.88 * 1.15 }, 'Ascent': { cols: 4, per: 4, pages: [3, 3, 3], k: 1.023, icon: 3 },
   'year:2025': { cols: 4, per: 8, step: 4, below: true, grow: 1.15, gc: 0.6 } };
 const layoutKey = () => fSeries !== 'All' ? fSeries : fYear !== 'All' ? 'year:' + fYear : 'All';
 const curSeries = () => { try { return layoutKey(); } catch (e) { return 'All'; } };   // (the filters' state is declared further down)
