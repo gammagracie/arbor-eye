@@ -763,7 +763,10 @@ function setWindow(f, scrollIntoView, dir, axis) {
   if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[ks[Math.floor((ks.length - 1) / 2)]], !stripReady);
   else if (stripReady && mouseX === null && offStrip()) centreOn(track.children[ks[Math.floor((ks.length - 1) / 2)]], false);
   (sets() ? [...(PAGES[pageIdx(f) - 1] || []), ...(PAGES[pageIdx(f) + 1] || [])] : [f - 1, f + count]).forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = workSrc() + WORKS[n].f; });   // neighbours ready for the arrows
-  history.replaceState(null, '', location.pathname + (fSeries !== 'All' ? '?series=' + encodeURIComponent(fSeries) : '') + '#' + encodeURIComponent(WORKS[f].f));   // (since 2026-11-19) the address follows the Series choice
+  // (since 2026-11-19, Grace) the address follows the view and the Series / Year choice, so a reload (or a copied link) opens the same
+  const q = new URLSearchParams(); if (!phone.matches) q.set('view', tab.matches ? tabView : deskView);
+  if (fSeries !== 'All') q.set('series', fSeries); else if (fYear !== 'All') q.set('year', fYear);
+  history.replaceState(null, '', location.pathname + '?' + q.toString() + '#' + encodeURIComponent(WORKS[f].f));
 }
 // arrows, keys and swipes move by a whole window (one-up wraps round at the ends; wider windows stop at them)
 function stepBy(d, axis) {
@@ -1054,6 +1057,9 @@ if (askedSeries && ALL.some(w => w.s === askedSeries) && !reloaded) {
   // a click anywhere else closes it as usual
   const sm = $('fmSeries'); sm.classList.add('open'); sm.querySelector('.fm-btn').setAttribute('aria-expanded', 'true');
 }
+// (since 2026-11-19) ?year=<year> opens with that year chosen (the address keeps it, see setWindow)
+const askedYear = new URLSearchParams(location.search).get('year');
+if (askedYear && fSeries === 'All' && ALL.some(w => String(w.y) === askedYear)) { fYear = askedYear; menuRenders.forEach(r => r()); applyFilter(); }
 // start on the work named in the URL, else the first work
 /* (since 2026-11-15, Grace) "Back" from a work's detail page lands on the gallery as it was left: the same view (1, 3 or 3 x 3),
    the same Series / Year filter and the same works showing. The state is kept per page in sessionStorage whenever the page is
