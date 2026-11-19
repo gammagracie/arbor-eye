@@ -478,14 +478,15 @@ const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.qu
 // one series on its own: works per row (the last row centred under the others)
 const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 3 };   // (Tonal 3/2 since 2026-10-30; it was 2/2/1)
 // rows set by hand where the plain split would differ, each centred: Convergence's seven works 3/1/3 (2026-10-29; sized as Core is)
-const SERIES_ROWS = { 'The Turning': [4, 3], 'Ascent': [5, 4] };   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
+const SERIES_ROWS = { 'The Turning': [4, 3], 'Ascent': [5, 4], 'Structure': [5] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
 // (since 2026-11-19, Grace) a year's works in rows of these lengths, in order, series running on into the next row where they
 // must (2025: 7 + 7; 2024: 5, 4, 4, 5), each row centred; laid out in one block (#idxYear, see layout) whose series rows flow
 const YEAR_ROWS = { '2025': [7, 7], '2024': [5, 4, 4, 5] };
 // sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
 // scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
 // rows of 2 (2026-10-30)
-const SERIES_SIZE = { 'Ascent': [6, 1.15], 'Spectrum': [2, 1.35 * 1.2 * 0.9], 'Tonal': [2, 1.25] };
+const SERIES_SIZE = { 'Structure': [5, 1.35], 'Ascent': [6, 1.15],   // (Structure since 2026-11-19, Grace: one row of five, about 12% larger than its 3 + 2 had been)
+  'Spectrum': [2, 1.35 * 1.2 * 0.9], 'Tonal': [2, 1.25] };
 // (since 2026-11-02) each series' own adjustments on top of that: k = size, cx / cy = the space between columns / rows, dy = moved up (-)
 // or down, row2 = the second row that much lower, zoom = the hovered work's size (the growth over 1.075's 7.5%: Ascent 1.25 times,
 // Convergence, Core, Select and Structure 2.5 times, Tonal 1.75 times); Spectrum's columns as far apart as its rows.
@@ -496,7 +497,7 @@ const Z = f => 1 + 0.075 * f, ZOOM = Z(2.5);
 const SERIES_TUNE = {
   'Ascent': { k: 0.9, row2: 20, cx: 2 },
   'Convergence': { k: 1.15, dy: -30, cx: 2 }, 'Core': { k: 1.15, dy: -30, cx: 2 },
-  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 2, row1: 15 },   // row1 (since 2026-11-19, Grace): the top row that much lower (drawn there; the layout is unchanged)
+  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 0.9 },   // (since 2026-11-19, Grace) one row of five (SERIES_ROWS), the columns closer (0.9, was 2) so the works can be larger within the content width; row1 = the top row that much lower (Structure's 15px while it was 3 + 2)
  
   'Spectrum': { k: 0.9, cxRow: true, zoom: Z(2.5 * 0.8) },
   'The Turning': { k: 1.15, cx: 2 },
