@@ -235,7 +235,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
       <div class="right">
         <nav class="main">
-          <a href="gallery-gx3.html" data-t="Gallery">Gallery</a>
+          <a href="gallery.html" data-t="Gallery">Gallery</a>
           <a href="About.dc.html" data-t="About">About</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
@@ -250,7 +250,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     </div>
   </header>
   <nav class="menu" aria-label="Mobile menu">
-    <a href="gallery-gx3.html">Gallery</a>
+    <a href="gallery.html">Gallery</a>
     <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
     <a href="About.dc.html">About</a>
     <a href="Contact-tabs.dc.html">Contact</a>
@@ -795,6 +795,31 @@ function reveal() {
 }
 addEventListener('mousemove', e => { if (e.clientX === pX && e.clientY === pY) return; pX = e.clientX; pY = e.clientY; clearTimeout(revealT); revealT = setTimeout(reveal, 120); }, { passive: true });
 addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(reveal, 260); }, { passive: true });
+/* (since 2026-11-19, Grace) a reload (or the browser's Back) puts the Index back as it was: the same Series / Year choice and the
+   same scroll, at once, with no fade. Kept in sessionStorage as the page is left; a fresh visit from the nav starts at the top. */
+(function () {
+  const KEY = 'ae-index:' + location.pathname;
+  addEventListener('pagehide', () => { try { sessionStorage.setItem(KEY, JSON.stringify({ s: fSeries, y: fYear, sy: se.scrollTop })); } catch (e) {} });
+  let r = null;
+  try { const n = performance.getEntriesByType('navigation')[0]; if (n && (n.type === 'reload' || n.type === 'back_forward')) r = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!r) return;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const okS = v => v === 'All' || SERIES_OPTS.some(o => o[0] === v), okY = v => v === 'All' || yearOpts().some(o => o[0] === v);
+  if ((r.s !== 'All' && okS(r.s)) || (r.y !== 'All' && okY(r.y))) {
+    fSeries = okS(r.s) ? r.s : 'All'; fYear = okY(r.y) ? r.y : 'All';
+    menuRenders.forEach(f => f());
+    const rows = [...document.querySelectorAll('.idx-row')];
+    rows.forEach(row => {
+      const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
+      row.querySelectorAll('.idx-item').forEach(a => { const v = a.classList.contains('v'); a.hidden = !(inSeries && (fSeries !== 'Horizontal' || !v) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)); });
+      row.hidden = !row.querySelector('.idx-item:not([hidden])');
+    });
+    mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';
+    layout();
+  }
+  const sy = +r.sy || 0, put = () => { se.scrollTop = sy; tY = se.scrollTop; };
+  put(); setTimeout(put, 0); document.fonts && document.fonts.ready.then(put); addEventListener('load', put, { once: true });
+})();
 </script>
 <script src="body-fit.js?v=7" data-nav="home"></script>
 </body>
