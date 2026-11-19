@@ -663,10 +663,12 @@ function layout() {
     shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
     shown.forEach(row => set(row, h, 0, 0, g, g));
   }
-  // works shown larger than their 600px thumbnails swap to the full-size image once it has loaded
+  // works shown larger than their thumbnails swap to the full-size image once it has loaded (since 2026-11-19 measured against the
+  // thumbnail's own width, 600px landscape but 400px portrait: portraits up to 540px wide stayed soft on Ned's screen)
   const dpr = devicePixelRatio || 1;
   shown.forEach(row => row.querySelectorAll('.idx-item:not([hidden]) img').forEach(img => {
-    if (img.dataset.big || img.closest('.idx-item').offsetWidth * dpr <= 600 * 0.9) return;
+    const tw = img.naturalWidth || (img.closest('.idx-item').classList.contains('v') ? 400 : 600);
+    if (img.dataset.big || img.closest('.idx-item').offsetWidth * dpr <= tw * 0.9) return;
     img.dataset.big = 1; const big = img.getAttribute('src').replace('assets/thumbs-m70/', 'assets/works-m70/'), pre = new Image();
     pre.onload = () => { img.src = big; }; pre.src = big;
   }));
