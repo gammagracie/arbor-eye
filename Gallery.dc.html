@@ -17,7 +17,9 @@
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=3">
+<link rel="stylesheet" href="nav-index.css?v=4">
+<style>/* (since 2026-11-19, Grace) "Go back to gallery": its clickable area 5px larger on every side (the link itself, and its underline, unmoved) */
+.back-link { position: relative; } .back-link::before { content: ''; position: absolute; inset: -5px; }</style>
 </head>
 <body>
 <x-dc>
@@ -230,7 +232,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
     <section data-screen-label="Gallery — Artwork detail" style="padding: {{ topPad }} 0 72px; flex: 1; display: grid; grid-template-rows: auto 1fr; gap: {{ detailGap }}; align-content: start">
       <div>
-        <button onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
+        <button class="back-link" onClick="{{ back }}" style="border: none; background: transparent; cursor: pointer; padding: 0 0 3px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; border-bottom: 1px solid #141414" style-hover="color: #6E6B66">&lt; Go back to gallery</button>
       </div>
       <div style="display: grid; grid-template-columns: {{ detailCols }}; column-gap: {{ printGap }}; row-gap: {{ detailRowGap }}; align-items: center; align-self: {{ detailAlign }}; position: relative; top: {{ detailLift }}">
         <div class="detail-img" onClick="{{ detailDblClick }}" style="grid-column: 1; grid-row: 1; position: relative; cursor: {{ detailCursor }}">
