@@ -753,7 +753,11 @@ function setWindow(f, scrollIntoView, dir, axis) {
   $('capTitle').textContent = WORKS[f].t; capDx = 0; placeCaption();
   // the filmstrip moves only under the cursor on desktop: a new set no longer glides the strip along (touch screens, with no
   // hover, still bring the featured thumbnails into view); on first load the strip is simply placed on the featured work
+  // (since 2026-11-19, Grace) desktop as well: when the works now showing (their thumbnails and the pill under them) are off the
+  // visible part of the strip, the strip glides to bring them to its middle (it never moves while the pointer is on it)
+  const offStrip = () => { const a = track.children[ks[0]], b = track.children[ks[ks.length - 1]]; if (!a || !b || maxPan() <= 0) return false; const m = 24; return a.offsetLeft - pos < m || b.offsetLeft + b.offsetWidth - pos > strip.clientWidth - m; };
   if (scrollIntoView && (stripReady === false || document.documentElement.classList.contains('touch'))) centreOn(track.children[ks[Math.floor((ks.length - 1) / 2)]], !stripReady);
+  else if (stripReady && mouseX === null && offStrip()) centreOn(track.children[ks[Math.floor((ks.length - 1) / 2)]], false);
   (sets() ? [...(PAGES[pageIdx(f) - 1] || []), ...(PAGES[pageIdx(f) + 1] || [])] : [f - 1, f + count]).forEach(n => { if (n >= 0 && n < WORKS.length) new Image().src = workSrc() + WORKS[n].f; });   // neighbours ready for the arrows
   history.replaceState(null, '', '#' + encodeURIComponent(WORKS[f].f));
 }
