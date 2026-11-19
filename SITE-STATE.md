@@ -310,7 +310,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 - Photo carousels (Biography, Process, Studio): crossfade 0.7s; chevron arrows; dots (150% since 2026-11-02, as every carousel's dots site-wide: 7px became 10.5px, 8px became 12px; About, Gallery and Gallery-zoom); tap right/left half or swipe to move.
 
 ## Works removed (2026-11-19, Grace)
-Artifact (Ascent), Convergence 6 and The Turning 6 are off the site: out of every page's works list (gallery pages, the Index, the detail and zoom pages, MAG1-4, search, and the 101626 snapshot) and their images deleted from `assets/` (thumbs, thumbs-m70, works, works-m70, works-m70-2000; still in git history). The site now has 52 works: Ascent 9 (the Gallery grid pages 3, 3, 3), Convergence 6 (the Index series view 3 + 3), The Turning 7 (Index series view 4 + 3), 2025 14, 2024 18. The old prototypes in `archive/` were left as they are.
+Artifact (Ascent), Convergence 6 and The Turning 6 are off the site: out of every page's works list (gallery pages, the Index, the detail and zoom pages, MAG1-4, search, and the 101626 snapshot) and their images deleted from `assets/` (thumbs, thumbs-m70, works, works-m70, works-m70-2000; still in git history). The site now has 52 works: Ascent 9 (the Gallery grid pages 3, 3, 3; the Index series view 5 + 4 since 2026-11-19, Grace: 377 x 565 at 3840 x 1834, 216 x 324 at 1920), Convergence 6 (the Index series view 3 + 3), The Turning 7 (Index series view 4 + 3), 2025 14, 2024 18. The old prototypes in `archive/` were left as they are.
 
 ## Header nav (every page)
 
