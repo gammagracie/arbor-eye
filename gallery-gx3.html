@@ -930,13 +930,16 @@ function gridIcon() {
   const b = document.querySelector('.count[data-n="9"]'); if (!b) return;
   const L = phone.matches ? null : (!tab.matches && SERIES_DESK[layoutKey()]) || SERIES_LAYOUT[layoutKey()] || null;
   // (a short last row is drawn centred, as the works are: Tonal's 3 over 2, 2025's 8 over 7; many columns draw closer)
-  const c = L ? L.icon || L.cols : 3, r = L ? (L.icon ? 1 : Math.ceil(L.per / L.cols)) : 3,   // icon: (since 2026-11-19, Grace) a one-row layout whose pages hold fewer than its columns (Ascent's 3, sized as four across) shows that many bars
+  // (since 2026-11-19, Grace) drawn from the works the first page actually holds: a list shorter than a page (2004's eight works:
+  // 3 + 3 + 2; 2003's six: 3 + 3) draws only those, its short last row centred
+  const c = L ? L.icon || L.cols : 3, total = L ? L.icon || Math.min(L.per, WORKS.length) : Math.min(9, WORKS.length),
+    r = L && L.icon ? 1 : Math.max(1, Math.ceil(total / c)),   // icon: (since 2026-11-19, Grace) a one-row layout whose pages hold fewer than its columns (Ascent's 3, sized as four across) shows that many bars
     gp = c > 4 ? 1 : 2, w = (18 - gp * (c - 1)) / c, h = (18 - 2 * (r - 1)) / r;
   let rects = '';
-  for (let y = 0; y < r; y++) { const n = y < r - 1 || !L || L.icon ? c : L.per - c * (r - 1), off = (c - n) * (w + gp) / 2;
+  for (let y = 0; y < r; y++) { const n = y < r - 1 ? c : total - c * (r - 1), off = (c - n) * (w + gp) / 2;
     for (let x = 0; x < n; x++) rects += '<rect x="' + (off + x * (w + gp)).toFixed(2) + '" y="' + (y * (h + 2)).toFixed(2) + '" width="' + w.toFixed(2) + '" height="' + h.toFixed(2) + '"></rect>'; }
-  b.setAttribute('aria-label', (L ? L.icon || L.per : 9) + ' works at a time');
-  const key = c + 'x' + r; if (b.dataset.icon === key) return; b.dataset.icon = key;
+  b.setAttribute('aria-label', total + ' works at a time');
+  const key = c + 'x' + r + ':' + total; if (b.dataset.icon === key) return; b.dataset.icon = key;
   b.innerHTML = '<svg viewBox="0 0 18 18">' + rects + '</svg>';
 }
 addEventListener('resize', () => { try { gridIcon(); } catch (e) {} });
