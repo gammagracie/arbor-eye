@@ -321,6 +321,10 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
   - **Pictures:** one of each state at 3840.
   - **Git tag:** `ultrawide-lock-2026-11-19`.
 - **To check:** `node lock.mjs check` (or `check <word>`) lists anything that moved more than 1px. `node lock.mjs audit` scans 3840 x 1834 for soft images, overflow, clipped text and works under the arrows. If Grace asks for an ultra-wide change on purpose, re-record just those states: `node lock.mjs record <word>`. Re-record after new works are added.
+- **Changed on purpose, 2026-11-20 (Grace), wider than 2000px, `gallery.html` only:**
+  - **Three-up:** the works are as large as the space between the arrows allows, with the 80px gaps kept, where they were 90%. On Ned's 3840 screen the landscapes are about 800px wide, up from about 750. YEAR 2024 keeps its 7% smaller size.
+  - **Plain grid** (All Series and the years): the top row starts 40px below the view icons, where it was level with their top, so it no longer sits against the menus' line. The works are a little smaller as a result.
+  - The lock was re-recorded for the three-up and grid states.
 - **Index thumbnails on big screens:** a work shown larger than its thumbnail switches to the full-size image once it has loaded. Since 2026-11-19 this is measured against the thumbnail's own width: 600px for landscape, but 400px for portrait. Before that, portraits up to 540px wide stayed soft on Ned's screen (Structure's row of five, at 507px).
 
 ## Detail page back link
@@ -380,6 +384,9 @@ Artifact (Ascent), Convergence 6 and The Turning 6 are off the site: out of ever
 - Fallback: a light green box shows if any artwork file is missing.
 
 ## Open items
+
+- **New About photos from Ned** (2026-11-20): these look soft on Ned's 4K screen. Studio: the desk, watercolors and tools photos. Process: the brush-roll photo and the two films. The list with sizes is `~/Desktop/art-arbor-gallery-NED/_review/2026-11-20/ned-new-photos-list.md`. Grace is writing to Ned; until then the current photos stay.
+- **PREV square** (the small green square in the top-right corner of every page except Prev, linking to `old-pages.html`): it is for review only and should be removed before launch.
 
 - **Accessibility, still to do** (should-fix, from the 2026-11-09 review): a "Skip to content" link; hover titles also on keyboard focus; announce gallery changes to screen readers (Index already does); the Contact form's required / error messages and autocomplete; focus kept inside the MAG viewers, and a keyboard route for the MAG3 loupe; the phone menu's hidden links out of the tab order; About's grey photo arrows (#ADA9A2, 2.3:1, under the 3:1 for controls); the films button on the stacked About layout. A full automated pass (axe or Lighthouse) and a screen-reader test are still to run.
 
