@@ -7,3 +7,6 @@
   :root { --hover-title: calc(min(100vw * 0.84 * 0.03978 * 0.23, 22px) * 0.75); }   /* (the 84% is the width inside the 8% side margins, written out so every page gets the same size whatever its own margins) the homepage's: 14.76px at 2560, 16.5px from about 2980 up */
   p[data-tip], #capTitle, .idx-title, .work-title, .work .side span { font-size: var(--hover-title) !important; letter-spacing: 0.1em !important; }
 }
+/* (since 2026-11-22, Grace) the Gallery's and the Index's hover titles carry a soft white outer glow, so they stay clear over a
+   work's shadow or the row below (every screen width; the homepage tray's titles are left as they are) */
+#capTitle, .idx-title, .work-title, .work .side span { text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 14px #fff, 0 0 22px rgba(255, 255, 255, 0.9); }

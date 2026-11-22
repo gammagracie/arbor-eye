@@ -163,6 +163,7 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
   - Vertical and 2025 keep their size, and the grid sits 20px lower.
   - The 2 x 2 series (Convergence, Core, Outliers, Select, The Turning, Spectrum) and Structure also sit 20px lower.
   - Any grid-view change for 2025 also applies to Vertical, and the other way round (Grace, 2026-11-22).
+- **Hover titles glow (since 2026-11-22, Grace, every width):** the Gallery's and the Index's hover titles have a soft white outer glow (`text-shadow` in `hover-title.css`, now `?v=2` on every page). The homepage tray's titles are unchanged.
 - **Bottom-row shadows never cut (since 2026-11-22, Grace, global, every width):** in the grid, the stage's clip now reaches 60px below the stage, so the bottom row's shadow fades out naturally instead of ending in a straight line.
   - Screens over 2000px are unchanged.
 
