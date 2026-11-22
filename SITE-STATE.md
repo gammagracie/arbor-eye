@@ -161,6 +161,9 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
   - Not changed: Structure, Tonal, 2025 and 1994.
   - Where three rows no longer fit the height, the gap between rows closes to no less than 52px, which keeps a hovered work's title clear of the row below. The grid then runs a little lower.
   - Vertical and 2025 keep their size, and the grid sits 20px lower.
+  - The 2 x 2 series (Convergence, Core, Outliers, Select, The Turning, Spectrum) and Structure also sit 20px lower.
+  - Any grid-view change for 2025 also applies to Vertical, and the other way round (Grace, 2026-11-22).
+- **Bottom-row shadows never cut (since 2026-11-22, Grace, global, every width):** in the grid, the stage's clip now reaches 60px below the stage, so the bottom row's shadow fades out naturally instead of ending in a straight line.
   - Screens over 2000px are unchanged.
 
 - Filters: **Series** and **Availability** as styled dropdown panels (white panel, thin dark rule on top, 14px light text, soft shadow), always right-aligned; close on pick, outside click or Escape. **Changing a filter (desktop and tablet)** shuffles the grid rather than redrawing it: the works that are leaving shrink away first (0.3s), then the ones that stay glide to their new places (0.7s, soft ease) while the newcomers rise in behind them, each a beat after the last. Both panels are the same 240px box, opening on the content's right edge (the bag icon's line) with the text 32px in, so the two menus appear in exactly the same place.
