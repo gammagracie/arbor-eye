@@ -21,6 +21,11 @@
    thumbnails hanging 32.9px + 2.074% of the width below it: 0.58658 x width + 32.9px */
 @media (min-width: 1280px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.05473125); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
 
+/* (since 2026-11-22, Grace, from 1728 x 1000) desktops up to 2000px: the painting and thumbnails 18px lower than centred, nearer the
+   Gallery's line (her pick: same size, as low as the hover title under the thumbnails allows); less on short windows so the title
+   still shows (9px at 720 tall). At 1728 x 1000 the painting's top 112px (was 94; the Gallery's work 135) */
+@media (min-width: 1280px) and (max-width: 2000px) { :root { --h77-top: calc(max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)) + max(0px, min(18px, calc(4.3vh - 22px)))); } }
+
 /* (since 2026-11-13, Grace) desktop: no scrolling; the painting, thumbnails and hover title fit the window, only white lies below */
 @media (min-width: 1280px) and (hover: hover) and (pointer: fine) { html, body { overflow-y: hidden; } }
 </style>
