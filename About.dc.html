@@ -39,14 +39,14 @@
   --tol-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.975 * min(calc(var(--ab-h) * 1.2143), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px))));
   --proc-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.7 * min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px)))); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
-/* (since 2026-11-20, Grace) over 2000px: Process's photos and films square, as tall as the Biography portrait (the box's height, or less where the copy needs 600px); their sides cropped; the copy takes the rest */
-@media (min-width: 2001px) { :root { --proc-sq: min(var(--ab-h), calc(var(--ab-w) - var(--ab-gap) - 600px)); --proc-text: min(var(--ab-measure), calc(var(--ab-w) - var(--ab-gap) - var(--proc-sq))); }
+/* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px: Process's photos and films square, as tall as the Biography portrait (the box's height, or less where the copy needs 600px); their sides cropped; the copy takes the rest */
+@media (min-width: 1280px) { :root { --proc-sq: min(var(--ab-h), calc(var(--ab-w) - var(--ab-gap) - 600px)); --proc-text: min(var(--ab-measure), calc(var(--ab-w) - var(--ab-gap) - var(--proc-sq))); }
   .ab-proc-media { width: var(--proc-sq) !important; } .ab-proc-slide { aspect-ratio: 1 / 1 !important; } }
-/* (since 2026-11-20, Grace) over 2000px: the Process block (photo and copy) centred up and down in the box */
-@media (min-width: 2001px) { .ab-proc-box { align-content: center !important; } }
-/* (since 2026-11-20, Grace) over 2000px, Studio: two photos a slide (Ned at his desk and the third light-box photo come out), each as tall as the Biography portrait
+/* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px: the Process block (photo and copy) centred up and down in the box */
+@media (min-width: 1280px) { .ab-proc-box { align-content: center !important; } }
+/* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px, Studio: two photos a slide (Ned at his desk and the third light-box photo come out), each as tall as the Biography portrait
    (the box's height; less only where the width runs out), the heading to their left (4.3 times the heading size kept for it: "STUDIO" is about 4 times as wide), centred on them, the dots under them */
-@media (min-width: 2001px) {
+@media (min-width: 1280px) {
   .ab-stu-box { grid-template-columns: minmax(0, 1fr) auto; column-gap: 60px; align-content: center !important; }
   .ab-stu-box > .ab-head { grid-column: 1; grid-row: 1; align-self: center; margin: 0 !important; }
   .ab-stu-box > .stu-slider { grid-column: 2; grid-row: 1; --stu-h: min(var(--ab-h), calc((var(--ab-w) - 60px - var(--ab-head) * 4.3 - clamp(25px, 1.6vw, 80px)) * 2 / 3)) !important;

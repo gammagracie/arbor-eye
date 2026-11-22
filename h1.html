@@ -202,6 +202,19 @@ class Component extends DCLogic {
       btn.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + scales[k].toFixed(3) + ')';
       btn.style.zIndex = String(Math.round(scales[k] * 100));
     });
+    // (since 2026-11-21, Grace) desktop: the arrows move out with the swell, as far as the outermost showing thumbnail reaches
+    // past where it rests, so a swelling thumbnail never runs into an arrow
+    // (a thumbnail counts as showing when its resting centre is between the arrows' resting inner edges; the rest are faded out)
+    const rest = lab => { const a = document.querySelector('button[aria-label="' + lab + ' artwork"]'); if (!a) return null; const r = a.getBoundingClientRect(), m = new DOMMatrix(getComputedStyle(a).transform); return { l: r.left - m.m41, r: r.right - m.m41 }; };
+    const aL = rest('Previous'), aR = rest('Next');
+    let acc2 = 0, restL = Infinity, restR = -Infinity, newL = Infinity, newR = -Infinity;
+    btns.forEach((btn, k) => {
+      const sh = acc2 + extra[k] / 2 - total / 2; acc2 += extra[k];
+      if (getComputedStyle(btn).visibility === 'hidden' || (aL && aR && (base[k].cx < aL.r || base[k].cx > aR.l))) return;
+      const c = base[k].cx, hw = base[k].w / 2;
+      restL = Math.min(restL, c - hw); restR = Math.max(restR, c + hw); newL = Math.min(newL, c + sh - hw * scales[k]); newR = Math.max(newR, c + sh + hw * scales[k]);
+    });
+    this.dockOut(Math.max(0, restL - newL), Math.max(0, newR - restR));
     // (since 2026-10-22) the hover title follows the hovered thumbnail to where the swell is taking it (its resting centre plus
     // its sideways nudge), moving with it at the same pace, so it sits centred under it rather than where it was mid-glide
     const hov = e.target && e.target.closest ? e.target.closest('button') : null, k = btns.indexOf(hov),   // (the re-application after a glide passes no target: the title then stays put)
@@ -218,6 +231,7 @@ class Component extends DCLogic {
   }
   // the magnification put down at once (before a glide), and taken up again from the cursor's last place once the tray settles
   relaxDock() {
+    if (this.state.dockOutL || this.state.dockOutR) this.setState({ dockOutL: 0, dockOutR: 0 });
     if (this.dockStrip) Array.from(this.dockStrip.children).forEach(btn => { btn.style.transition = 'none'; btn.style.transform = ''; btn.style.zIndex = ''; });
     this.dock = null;
   }
@@ -225,8 +239,12 @@ class Component extends DCLogic {
     this.relaxDock();
     if (this.dockStrip && this.dockX != null) { void this.dockStrip.offsetWidth; this.dockMove({ currentTarget: this.dockStrip, clientX: this.dockX }); }
   }
+  dockOut(l, r) {   // (since 2026-11-21) how far the arrows stand out for the swell; only re-set when it changes by a pixel
+    if (!isFinite(l)) l = 0; if (!isFinite(r)) r = 0;
+    if (Math.abs(l - (this.state.dockOutL || 0)) > 1 || Math.abs(r - (this.state.dockOutR || 0)) > 1 || (!l && this.state.dockOutL) || (!r && this.state.dockOutR)) this.setState({ dockOutL: l, dockOutR: r });
+  }
   dockLeave(e) {
-    this.setState({ tip: null });   // the hover title fades (it keeps the last name while it does)
+    this.setState({ tip: null, dockOutL: 0, dockOutR: 0 });   // the hover title fades (it keeps the last name while it does)
     this.dockX = null;
     Array.from(e.currentTarget.children).forEach(btn => {
       btn.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, border-color 0.35s ease';   // settles back as on G5 (0.5s since 2026-10-29)
@@ -466,7 +484,7 @@ class Component extends DCLogic {
       arrowOpacity: !desk || this.state.railHover ? 1 : 0,
       // (since 2026-10-26) desktop: on the tray the chevrons drift 30px outward as they fade in (softly, 0.9s); off it they fade out
       // where they are and only then go back, unseen
-      arrowShiftL: desk && this.state.railHover ? 'translateX(-30px)' : 'none', arrowShiftR: desk && this.state.railHover ? 'translateX(30px)' : 'none',
+      arrowShiftL: desk && this.state.railHover ? 'translateX(' + (-30 - (this.state.dockOutL || 0)).toFixed(1) + 'px)' : 'none', arrowShiftR: desk && this.state.railHover ? 'translateX(' + (30 + (this.state.dockOutR || 0)).toFixed(1) + 'px)' : 'none',   // (since 2026-11-21, Grace) plus however far a hover swell reaches out past the end thumbnails
       arrowTrans: desk && this.state.railHover ? 'opacity 0.45s ease, transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.45s ease, transform 0s 0.45s',
       // H0 desktop: the chevrons sit on the painting, so they are white with a soft dark shadow (elsewhere grey with a 1px white edge)
       arrowColor: desk && !(VF && VF.paper) ? '#FFFFFF' : desk ? '#55524C' : '#ADA9A2',   // (the paper versions keep the grey chevrons: white would vanish on the paper)
