@@ -606,7 +606,17 @@ function fit() {
       // where the cap leaves width spare, the gaps take it, up to the rows' gap (so the works are not crowded)
       if (aCap < a) { a = aCap; gcFix = Math.min(G(a), (inner - nc * boxR * a) / (nc - 1)); }
     }
-    const g = G(a), gRow = SL && SL.grow && used > 1 ? Math.max(ROWNEED, Math.min(g, (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
+    // (since 2026-11-22, Grace, 1920 notes) desktops up to 2000px wide: the grid's works 10% larger, except Structure, Tonal, the
+    // years 2025 and 1994 and Vertical; never wider than the arrows allow. Where the rows no longer fit the height, the gap between
+    // them closes (never below 52px, so a hovered work's title stays clear of the row below) and the grid runs a little lower
+    const key = curSeries(), midDesk = !tab.matches && document.documentElement.clientWidth <= 2000;
+    let gMid = null;
+    if (midDesk && !['Structure', 'Tonal', 'year:2025', 'year:1994', 'Vertical'].includes(key)) {
+      const gc = GC(a), aW = (inner - gc * (nc - 1)) / (boxR * nc);
+      a = Math.min(a * 1.1, aW); gcFix = gc;
+      if (!(SL && SL.grow) && used > 1 && units * a + G(a) * (used - 1) > V) { gMid = Math.max(52, (V - units * a) / (used - 1)); V = Math.max(V, units * a + gMid * (used - 1)); }
+    }
+    const g = gMid != null ? gMid : G(a), gRow = SL && SL.grow && used > 1 ? Math.max(ROWNEED, Math.min(G(a), (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
       Object.assign(row.style, { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: (gridW(a) + 2).toFixed(1) + 'px', gridTemplateColumns: '' });   // (+2px so rounding never wraps a full row)
     } else {
@@ -623,6 +633,8 @@ function fit() {
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
     rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + gRow * (usedNow - 1);
     // (since 2026-10-21) the arrows level with the grid's middle (the middle row of a 3 x 3), the same on every page of it
+    // (since 2026-11-22, Grace) desktops up to 2000px wide: Vertical and 2025 the same size, the grid 20px lower
+    if (midDesk && (key === 'Vertical' || key === 'year:2025')) gridTop += 20;
     $('prev').style.top = $('next').style.top = (gridTop + V / 2).toFixed(1) + 'px';
     if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';

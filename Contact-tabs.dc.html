@@ -69,6 +69,13 @@ html { scrollbar-gutter: stable; }
 :root { --tab-fs: calc(11.5px * var(--fs)); --tab-h: calc(51px + var(--tab-fs) * 1.2);
   --ct-w: calc(100vw - 2 * var(--body-pad));   /* (since 2026-11-05) the body's width, under the nav's CONTACT on the right (2026-11-01 to 11-04 the nav's full width) */ --ct-h: min(calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) + 12px), calc(var(--ct-w) * 0.75));
   --ct-head: clamp(22px, 1.35vw, 70px); }
+/* (since 2026-11-22, Grace, 1920 notes) desktops up to 2000px wide: the photo and the two coloured boxes the same height and place as
+   About's Biography portrait (top on the same line, 15px further down at the bottom), so nothing jumps between the tabs and pages;
+   the tab bar stays put */
+@media (min-width: 1000px) and (max-width: 2000px) {
+  .ct-photo { height: calc(var(--ct-h) + 15px) !important; margin-bottom: 13px !important; }
+  .ct-box { margin-top: 10px !important; min-height: calc(var(--ct-h) + 5px) !important; margin-bottom: 13px !important; }
+}
 .ct-head { margin: 0 0 calc(var(--ct-head) * 0.8) !important; font-family: inherit !important; font-weight: 400; font-size: var(--ct-head) !important; line-height: 1.1; letter-spacing: 0.14em; text-transform: uppercase; color: #141414; }
 /* (since 2026-10-22) paragraphs styled exactly as About's Biography (class bt): 14.5px on a 1.75 line, 0.99vw apart (19px at
    1920) up to 2000px wide; over 2000px 24px (21px from 2001 to 2350px wide), 1.1em apart. Bulleted lists the same. */
@@ -245,12 +252,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <picture>
         <source media="(min-width: 2001px)" type="image/webp" srcset="assets/hero-3600.webp">
         <source type="image/webp" srcset="assets/hero-1600.webp 1600w, assets/hero-2400.webp 2400w" sizes="100vw">
-        <img src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); margin-bottom: 28px; object-fit: cover; clip-path: inset(10px 0 0 0)">   <!-- (since 2026-11-14, Grace) 10px off the top only: the photo runs down to the same line as About's pictures, the same gap above the tab links -->
+        <img class="ct-photo" src="assets/hero-1600.webp" alt="Ned Church painting at his window overlooking the lake" style="display: block; width: 100%; height: var(--ct-h); margin-bottom: 28px; object-fit: cover; clip-path: inset(10px 0 0 0)">   <!-- (since 2026-11-14, Grace) 10px off the top only: the photo runs down to the same line as About's pictures, the same gap above the tab links -->
       </picture>
       </sc-if>
 
       <sc-if value="{{ deskContact }}" hint-placeholder-val="{{ false }}">
-      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center; align-items: center" data-screen-label="Contact — Get in touch">
+      <div class="ct-box" style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; padding: 5% 6%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 8%; align-content: center; align-items: center" data-screen-label="Contact — Get in touch">
         <div>
           <h2 class="ct-head">Get in touch</h2>
           <p style="margin: 0; font-size: calc(17px * var(--fs)); line-height: 1.7; color: #2A2A28; max-width: 34ch">Questions about a piece, a print, or a commission? Send a note and I will reply as soon as I can.</p>
@@ -277,7 +284,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <sc-if value="{{ deskShipping }}" hint-placeholder-val="{{ false }}">
       <!-- (since 2026-10-22) the text in one column on the left, the Tree of Life sculpture filling the right; paragraphs styled as
            Biography's on About (class bt). Since 2026-11-01 the text takes 60%, the sculpture 40% -->
-      <div style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); color: #55524C" data-screen-label="Shipping Policy">
+      <div class="ct-box" style="min-height: var(--ct-h); margin-bottom: 28px; box-sizing: border-box; background: #F4F2EC; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); color: #55524C" data-screen-label="Shipping Policy">
         <div class="bt" style="padding: 2.5% 8% 2.5% 10%; align-self: center">
           <h2 class="ct-head">Shipping Policy</h2>
           <p style="color: #2A2A28">Our prints are dispatched within 2–3 business days.</p>

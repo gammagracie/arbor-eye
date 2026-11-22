@@ -156,6 +156,13 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Gallery (grid)
 
+- **Grid view, desktops up to 2000px (since 2026-11-22, Grace, 1920 notes):**
+  - The works are 10% larger in every series and year, but never wider than the space between the arrows allows.
+  - Not changed: Structure, Tonal, 2025 and 1994.
+  - Where three rows no longer fit the height, the gap between rows closes to no less than 52px, which keeps a hovered work's title clear of the row below. The grid then runs a little lower.
+  - Vertical and 2025 keep their size, and the grid sits 20px lower.
+  - Screens over 2000px are unchanged.
+
 - Filters: **Series** and **Availability** as styled dropdown panels (white panel, thin dark rule on top, 14px light text, soft shadow), always right-aligned; close on pick, outside click or Escape. **Changing a filter (desktop and tablet)** shuffles the grid rather than redrawing it: the works that are leaving shrink away first (0.3s), then the ones that stay glide to their new places (0.7s, soft ease) while the newcomers rise in behind them, each a beat after the last. Both panels are the same 240px box, opening on the content's right edge (the bag icon's line) with the text 32px in, so the two menus appear in exactly the same place.
 - Grid-size switcher (3 / 2 / 1 columns) shown from 768px up; hidden on phones.
 - Three-column layout drops to two columns under 1000px. Phones use two columns.
@@ -289,6 +296,11 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## About
 
+- **Biography, Tree of Life and Process, desktops up to 2000px (since 2026-11-22, Grace):**
+  - The Biography portrait and the Tree of Life photo are 15px taller, growing downward only. The top and the tab bar stay put, and the copy narrows to suit.
+  - The Process photos and films are as tall as the Studio photos, unless that would leave the copy less than 480px.
+  - At 1920 x 950: Biography and Tree of Life run from 95 to 852px, and Process and Studio from 95 to 837px.
+
 - **Process and Studio on every desktop (since 2026-11-21):** the layout from 20 Nov now applies from 1280px up, where it was over 2000px only.
   - Process: a square photo as tall as the Biography portrait, the copy to its left, centred up and down.
   - Studio: two photos a slide, each as tall as the portrait, with the heading to their left.
@@ -350,6 +362,8 @@ Artifact (Ascent), Convergence 6 and The Turning 6 are off the site: out of ever
 - **Icons centred on the nav text (since 2026-11-18, Grace)**: the search, account and bag icons (and the INDEX box) are centred on the middle of the nav's capitals, within 0.2px at 1920 and 3840 (the icons were 5px too high at 1920, 4px at 2560 and up). `nav-index.css`: `header svg[width="19"]` moved down by 9.5px - 0.339 x the nav font size.
 
 ## Contact
+
+- **Desktops up to 2000px (since 2026-11-22, Grace):** the photo and the Get in touch and Shipping boxes match the About Biography portrait. Their top is on the same line and their bottom is 15px lower, so nothing jumps between tabs and pages; the tab bar stays put. This is set by the `.ct-photo` and `.ct-box` classes.
 
 - **Form sending (since 2026-11-14, Grace)**: Send posts the form from the page to Web3Forms (`api.web3forms.com/submit`, plain fetch: name, email, message, subject "Website Inquiry", reply-to the sender), so the same code runs on GitHub Pages and inside a Shopify theme; on Shopify it can stay or be swapped for the theme's `{% form 'contact' %}` with the same fields. The access key is `CONTACT_KEY` in the `send` handler of `Contact-tabs.dc.html` and `contact-2.html`; it is empty until Grace gets one (web3forms.com, made with the address the messages should go to), and while it is empty Send opens the visitor's mail app to NSChurch@gmail.com as before. Also new: an email-format check, "Sending…" while it goes, an error note naming NSChurch@gmail.com if it fails, and a hidden `botcheck` box for spam. Note the Shipping text still names hello@arboreye.com.
 - **Under 1100px** (since 2026-11-02; tablets and phones): the photograph and the email / Instagram row first, then nothing until a link is tapped, as on desktop (Get in touch used to show at once); the links (Get in touch, Shipping, Returns & Exchanges) sit below the open section, and tapping the open link again closes it. An opened section is scrolled to, just under the header.
