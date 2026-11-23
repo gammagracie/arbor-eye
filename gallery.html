@@ -224,7 +224,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=9">
+<link rel="stylesheet" href="nav-index.css?v=10">
 </head>
 <body>
 <div class="page" id="page">
@@ -545,6 +545,8 @@ function fit() {
     const used = SL ? Math.ceil(SL.per / nc) : PAGES.length > 1 ? Math.ceil(count / nc) : Math.ceil(slots.length / nc), bottom = H - Math.max(34, 16 + $('capTitle').offsetHeight);
     let V = bottom - gridTop;
     let gcFix = null;
+    // (since 2026-11-23, Grace) the plain 3 x 3 grid on desktop: rows and columns 15px further apart (EX), the works a little smaller to keep the grid in the same space
+    const EX = !SL && !tab.matches ? 15 : 0;
     const wideGaps = document.documentElement.clientWidth >= 2800, G = a => wideGaps ? Math.max(60, a / 4) : 60, kc = SL && SL.gc && !tab.matches ? SL.gc : tab.matches || SL && (SL.cols === 2 || SL.below) ? 1 : SL && SL.per === SL.cols ? 0.6 : 1.5, GC = a => gcFix != null ? gcFix : kc * G(a);   // GC: (since 2026-11-02, desktop) the columns 150% of the rows' gap; (since 2026-11-17, Grace) a series in 2 x 2 the same as the rows' gap, so its right column sits further from the menus
     // the largest work height whose rows fill V and whose columns fit within maxW, with even gaps
     // (since 2026-10-22) in the plain grid a portrait is a landscape's box turned upright (as wide as a landscape is tall, 1.5 times
@@ -556,7 +558,7 @@ function fit() {
     // (since 2026-11-13, Grace) between two rows there is always room for the hover title under a work (33px below it, the
     // caption's own height) and 14px more, so a title never lands on the row below; the works shrink a little to make room
     const ROWNEED = 33 + ((document.querySelector('.caption') || {}).offsetHeight || 40) + 14;
-    const sizeFor = (maxW, V) => {
+    const sizeFor0 = (maxW, V) => {
       const byH = wideGaps && V / (units + (used - 1) / 4) / 4 >= 60 ? V / (units + (used - 1) / 4) : (V - 60 * (used - 1)) / units;
       const byW = wideGaps && maxW / (boxR * nc + kc * (nc - 1) / 4) / 4 >= 60 ? maxW / (boxR * nc + kc * (nc - 1) / 4) : (maxW - 60 * kc * (nc - 1)) / (boxR * nc);
       let a = Math.min(byH, byW);
@@ -570,7 +572,8 @@ function fit() {
       }
       if (SL && SL.grow) a = Math.min(a * SL.grow, (V - ROWNEED * (used - 1)) / used);   // grow: that much larger, the rows drawing closer to fit, but never so close that a title lands on the row below (ROWNEED)
       return a; };
-    const gridW = a => boxR * nc * a + GC(a) * (nc - 1);
+    const sizeFor = (maxW, V) => sizeFor0(maxW - EX * (nc - 1), V - EX * (used - 1));
+    const gridW = a => boxR * nc * a + (GC(a) + EX) * (nc - 1);
     const cx = st.left + st.width / 2, fs = $('fmSeries').getBoundingClientRect(), fy = $('fmYear').getBoundingClientRect();
     let a = sizeFor(inner, V);
     if (!tab.matches) {
@@ -616,26 +619,28 @@ function fit() {
     const key = curSeries(), midDesk = !tab.matches && document.documentElement.clientWidth <= 2000;
     let gMid = null;
     if (midDesk && !['Structure', 'Tonal', 'year:2025', 'year:1994', 'Vertical'].includes(key)) {
-      const gc = GC(a), aW = (inner - gc * (nc - 1)) / (boxR * nc);
+      const gc = GC(a), aW = (inner - (gc + EX) * (nc - 1)) / (boxR * nc);
       a = Math.min(a * 1.1, aW); gcFix = gc;
-      if (!(SL && SL.grow) && used > 1 && units * a + G(a) * (used - 1) > V) { gMid = Math.max(52, (V - units * a) / (used - 1)); V = Math.max(V, units * a + gMid * (used - 1)); }
+      if (!(SL && SL.grow) && used > 1 && units * a + (G(a) + EX) * (used - 1) > V) { gMid = Math.max(52 + EX, (V - units * a) / (used - 1));   // (the plain grid: at least 67px since 2026-11-23)
+      V = Math.max(V, units * a + gMid * (used - 1)); }
     }
     const g = gMid != null ? gMid : G(a), gRow = SL && SL.grow && used > 1 ? Math.max(ROWNEED, Math.min(G(a), (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
+    const gRowX = gMid != null ? gRow : gRow + EX;
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
       Object.assign(row.style, { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: (gridW(a) + 2).toFixed(1) + 'px', gridTemplateColumns: '' });   // (+2px so rounding never wraps a full row)
     } else {
       // (since 2026-10-21) the grid in half columns, each work spanning two, so a short last row (the end of a filtered list)
       // can sit centred under the full rows with the same spacing
       Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' });
-      row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - GC(a)) / 2).toFixed(2) + 'px)';
+      row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - GC(a) - EX) / 2).toFixed(2) + 'px)';
     }
-    row.style.columnGap = GC(a).toFixed(1) + 'px'; row.style.rowGap = gRow.toFixed(1) + 'px';
+    row.style.columnGap = (GC(a) + EX).toFixed(1) + 'px'; row.style.rowGap = gRowX.toFixed(1) + 'px';
     const up = s => !SL && WORKS[s.idx] && WORKS[s.idx].r < 1;   // a portrait in the plain grid: the landscape box turned upright
     slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : up(s) ? 1 : R(s)) + 'px'; s.a.style.height = a * (up(s) ? 1.5 : 1) + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
     const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;
     if (!SL && short < nc && slots[lastStart]) slots[lastStart].a.style.gridColumn = (nc - short + 1) + ' / span 2';
     const usedNow = Math.ceil(slots.length / nc);   // this page's rows (a short last page may have fewer)
-    rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + gRow * (usedNow - 1);
+    rowH = a * (SL ? usedNow : tall.reduce((t, f) => t + f, 0)) + gRowX * (usedNow - 1);
     // (since 2026-10-21) the arrows level with the grid's middle (the middle row of a 3 x 3), the same on every page of it
     // (since 2026-11-22, Grace) desktops up to 2000px wide: Vertical and 2025 the same size, the grid 20px lower; the same for every
     // series in 2 x 2 (Convergence, Core, Outliers, Select, The Turning, Spectrum) and for Structure (its 3 over 2)
@@ -975,6 +980,16 @@ function gridIcon() {
   b.innerHTML = '<svg viewBox="0 0 18 18">' + rects + '</svg>';
 }
 addEventListener('resize', () => { try { gridIcon(); } catch (e) {} });
+// (since 2026-11-23, Grace, on Ned's screen) the view icons start exactly on the logo's left edge: the row's left padding is taken from
+// where the logo really sits (the header's side padding is set separately, by body-fit.js, and the two could drift apart), less the
+// icon button's own 2px padding, so the first icon's edge is on the logo's A. Desktop and tablet; phones hide the row
+function alignTools() {
+  const t = document.getElementById('tools'), l = document.querySelector('header a[aria-label="Arbor & Eye"]');
+  if (!t || !l || innerWidth < 768) { if (t) t.style.paddingLeft = ''; return; }
+  t.style.paddingLeft = Math.max(0, l.getBoundingClientRect().left - 2).toFixed(2) + 'px';
+}
+addEventListener('resize', () => requestAnimationFrame(alignTools)); addEventListener('load', alignTools); requestAnimationFrame(alignTools);
+if (document.fonts) document.fonts.ready.then(alignTools);
 new ResizeObserver(fit).observe(stage);
 
 $('prev').addEventListener('click', () => stepBy(-1, 'y'));

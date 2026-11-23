@@ -1,10 +1,8 @@
-/* (since 2026-11-23, Grace, global) the header nav reads GALLERY · ABOUT · INDEX · CONTACT: INDEX back in the line-up as a plain link,
-   90% of the other links' size and slightly heavier (Neuzeit has no weight between Regular and Bold, so Regular with a fine 0.3px
-   outline); on the Index page itself bold like any current page. Before: from 2026-11-18 a small boxed button just before the search
-   icon (white with a 2px #6E6E6E border, filled #6E6E6E on the Index page). Desktop and tablet; phones keep INDEX in their menu. */
+/* (since 2026-11-23, Grace, global) the header nav reads GALLERY · ABOUT · INDEX · CONTACT: INDEX in the line-up as a plain link, (later
+   that day) the same size and weight as the others (for a few hours it was 90% of their size with a fine 0.3px outline); on the Index
+   page itself bold like any current page. Before: from 2026-11-18 a small boxed button just before the search icon. Desktop and
+   tablet; phones keep INDEX in their menu. */
 header nav { align-items: baseline; }
-header a.nav-index { font-size: 0.9em; -webkit-text-stroke: 0.3px currentColor; }
-header a.nav-index[aria-current="page"] { -webkit-text-stroke: 0; }
 /* (since 2026-11-18, Grace) the header icons (search, account, bag: the 19px icons) centred on the middle of the nav's capitals; they
    sat with their foot on the text's baseline, 5px too high at 1920 and 4px at 2560 and up (the nav letters grow with --fs) */
 @media (min-width: 768px) { header svg[width="19"] { transform: translateY(calc(9.5px - 0.339 * 13px * var(--fs, 1))); } }

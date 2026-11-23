@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=9">
+<link rel="stylesheet" href="nav-index.css?v=10">
 <style>/* (since 2026-11-19, Grace) "Go back to gallery": its clickable area 5px larger on every side (the link itself, and its underline, unmoved) */
 .back-link { position: relative; } .back-link::before { content: ''; position: absolute; inset: -5px; }</style>
 </head>
@@ -45,13 +45,15 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 .work:hover img { box-shadow: 0 8px 24px rgba(20,20,20,0.17) !important; }
 /* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
 .pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
-/* (since 2026-11-23, Grace) the zoom view's scale: a white pill on the right, + at the top, the slider (1x at the bottom, 4x at the top), - and the level */
-.zoom-scale { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); z-index: 41; justify-items: center; gap: 10px; padding: 14px 8px 12px; border-radius: 9999px; background: #FFFFFF; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); }
+/* (since 2026-11-23, Grace) the zoom view's scale: a white pill, (later that day) across the foot of the screen just above the previous /
+   close / next buttons, centred on them: -, the slider (1x at the left, 4x at the right), + and the level, in the place the hint
+   ("scroll, pinch or use the scale to zoom...") had, the hint gone. It was upright on the right at first */
+.zoom-scale { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); z-index: 41; grid-auto-flow: column; align-items: center; justify-items: center; gap: 10px; padding: 7px 18px 7px 8px; border-radius: 9999px; background: #FFFFFF; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); }
 .zs-btn { width: 30px; height: 30px; border: none; border-radius: 50%; padding: 0; background: transparent; color: #1C1C1C; cursor: pointer; display: grid; place-items: center; }
 .zs-btn:hover { background: #F0EEEA; }
-.zs-range { writing-mode: vertical-lr; direction: rtl; width: 20px; height: 200px; margin: 0; accent-color: #141414; cursor: pointer; }
-.zs-val { font-size: calc(11px * var(--fs)); letter-spacing: 0.08em; color: #6E6B66; font-variant-numeric: tabular-nums; }
-@media (min-width: 2501px) { .zoom-scale { right: 80px; } .zs-range { height: 320px; } }
+.zs-range { width: 200px; height: 20px; margin: 0; accent-color: #141414; cursor: pointer; }
+.zs-val { min-width: 3.2em; text-align: right; font-size: calc(11px * var(--fs)); letter-spacing: 0.08em; color: #6E6B66; font-variant-numeric: tabular-nums; }
+@media (min-width: 2501px) { .zs-range { width: 320px; } }
 .zoom-arrow { opacity: 0; transition: opacity 0.2s ease; } .zoombox:hover ~ .zoom-arrow, .zoom-arrow:hover, .zoom-arrow:focus-visible { opacity: 1; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
@@ -277,7 +279,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         </div>
       </div>
       <sc-if value="{{ zoomOpen }}" hint-placeholder-val="{{ false }}">
-        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: #FFFFFF; overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 160px; box-sizing: border-box">
+        <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: #FFFFFF; overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 200px; box-sizing: border-box">   <!-- (bottom 200px since 2026-11-23, room for the scale; 160 before) -->
           {{ zoomImg }}
         </div>
         <div class="tp-bar">
@@ -285,13 +287,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           <button class="tp-btn xl" onClick="{{ closeZoom }}" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
           <button class="tp-btn next" onClick="{{ zoomNext }}" aria-label="Next"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
         </div>
-        <div style="position: fixed; left: 0; right: 0; bottom: 86px; z-index: 41; display: grid; justify-items: center; pointer-events: none">
-          <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
-        </div>
         <div class="zoom-scale" style="display: {{ zoomScaleDisplay }}">
-          <button class="zs-btn" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 0v14M0 7h14" stroke="currentColor"></path></svg></button>
-          <input class="zs-range" type="range" min="1" max="4" step="0.05" value="{{ zoomScaleVal }}" onChange="{{ zoomScaleInput }}" aria-label="Zoom level">
           <button class="zs-btn" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M0 7h14" stroke="currentColor"></path></svg></button>
+          <input class="zs-range" type="range" min="1" max="4" step="0.05" value="{{ zoomScaleVal }}" onChange="{{ zoomScaleInput }}" aria-label="Zoom level">
+          <button class="zs-btn" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 0v14M0 7h14" stroke="currentColor"></path></svg></button>
           <span class="zs-val">{{ zoomScaleLabel }}</span>
         </div>
       </sc-if>
@@ -920,10 +919,10 @@ class Component extends DCLogic {
       zoomScaleInput: (e) => this.zoomMid(parseFloat(e.target.value)),
       zoomIn: () => this.zoomMid(Math.min(4, Math.floor(this.state.zoomLevel * 2 + 0.001) / 2 + 0.5)),
       zoomOut: () => this.zoomMid(Math.max(1, Math.ceil(this.state.zoomLevel * 2 - 0.001) / 2 - 0.5)),
-      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 216px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
+      zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 256px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         draggable: false,
 
-        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'grab' : 'default' }, mockOf((views[this.state.detailView] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.detailView] || views[0])[0])) })),
+        style: Object.assign({ width: 'calc(min(90vw, (100vh - 256px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'grab' : 'default' }, mockOf((views[this.state.detailView] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.detailView] || views[0])[0])) })),
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
       detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the zoom button when the text stacks underneath (the framing dots live on the buy page only since 2026-10-13)
       detailInfoCol: oneCol ? '1' : '2',
@@ -938,7 +937,7 @@ class Component extends DCLogic {
       enquireHref: 'mailto:NSChurch@gmail.com?subject=' + encodeURIComponent('Inquiry: ' + (d ? d.title : '')),
       detailGap: !m && this.state.detailRatio < 1 ? (oneCol ? 'var(--vert-gap)' : '0px') : '32px',   // (since 2026-11-17) side by side, verticals start right on the underline
       detailAlign: !m && !oneCol && this.state.detailRatio < 1 ? 'start' : 'center',
-      detailLift: '0px',   // (2026-11-15 to 11-17 verticals sat 15px higher to keep the magnify icon on screen; undone once the icon moved beside the work)   // (since 2026-11-09) verticals over 2500px sit 32px higher, see --vert-gap
+      detailLift: this.state.tablet ? '0px' : '-1.0905vh',   // (since 2026-11-23, Grace) desktop: the artwork and its text 20px higher on Ned's 3840 x 1834, the same share of the height on other desktops (about 8px at 1280 x 720)   // (2026-11-15 to 11-17 verticals sat 15px higher to keep the magnify icon on screen; undone once the icon moved beside the work)   // (since 2026-11-09) verticals over 2500px sit 32px higher, see --vert-gap
       detailInfoPad: m ? '0' : '48px',
       detailTitleSize: m ? '34px' : '46px',   // (since 2026-11-01) the title on the detail and buy pages alike: 85% of this, less 4px (the buy page's was the full size)
       // never taller than the screen: the framed box is capped at 84vh below the header (about 8% of the screen clear above and below), so vertical works stop at the viewport instead of running off it
