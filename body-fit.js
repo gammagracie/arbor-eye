@@ -23,7 +23,9 @@
     // right edge (the footer's copy too) on the edges of its painting: --h77-pad, the same sum as index.html's stylesheet
     bar.style.paddingLeft = bar.style.paddingRight = '';
     const W = root.clientWidth, H = innerHeight, hH = bar.getBoundingClientRect().height;   // var(--header-h)
-    const pad = Math.max(24, (W - 1.1 * (0.86 * (H - hH) - 32.9) * 1.7048) / 2).toFixed(2) + 'px';
+    // (since 2026-11-23, Grace, at 1280) 1280-1439px wide: the margins at 80%, as --nav-hp in nav-index.css
+    const k = W < 1440 ? 0.8 : 1;
+    const pad = (k * Math.max(24, (W - 1.1 * (0.86 * (H - hH) - 32.9) * 1.7048) / 2)).toFixed(2) + 'px';
     bar.style.paddingLeft = bar.style.paddingRight = pad;
     shift = 0;
     if (foot && foot.style.paddingLeft !== pad) foot.style.paddingLeft = foot.style.paddingRight = pad;

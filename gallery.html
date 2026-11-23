@@ -224,7 +224,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=7">
+<link rel="stylesheet" href="nav-index.css?v=8">
 </head>
 <body>
 <div class="page" id="page">
@@ -1118,7 +1118,7 @@ stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 if (restored && restored.sy) scrollTo(0, restored.sy);   /* (since 2026-11-15) and scrolled where it was */
 </script>
-<script src="body-fit.js?v=7" data-nav="home"></script>
+<script src="body-fit.js?v=8" data-nav="home"></script>
 <script>
 // GX3 trial (since 2026-11-06): the pill under the featured thumbnails. It follows them as the set changes and as the strip
 // scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)
