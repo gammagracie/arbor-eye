@@ -537,6 +537,7 @@ class Component extends DCLogic {
   }
   // detail view (desktop and tablet): the text block moves left to the midpoint of the white space between it and the artwork
   measureDetail() {
+    if (this.state.zoom) return;   // (since 2026-11-23) not under the zoom view: opening it hides the page's scrollbar, and re-measuring the hidden page then looped
     const img = document.querySelector('[data-screen-label="Gallery \u2014 Artwork detail"] img');
     const text = img && img.parentElement.nextElementSibling;
     // the text block sits 105px to the right of the artwork on desktop (120px on tablet), and the framing dots centre under the
@@ -556,7 +557,9 @@ class Component extends DCLogic {
       x = Math.max(0, text.offsetLeft - (wrap.offsetLeft + off + iw + g + GAP));
       dots = (iw + g) + 'px';
     }
-    if (Math.abs(x - this.state.detailShift) > 0.5 || Math.abs(off - this.state.detailImgOff) > 0.5 || Math.abs(g - (this.state.detailGrow || 0)) > 0.5 || dots !== this.state.detailDotsW || tw !== this.state.detailTextW || tmax !== this.state.detailTextMax) this.setState({ detailGrow: g, detailShift: x, detailDotsW: dots, detailImgOff: off, detailTextW: tw, detailTextMax: tmax });
+    // (since 2026-11-23) sizes compared to the pixel, so a sub-pixel wobble (a scrollbar coming and going) cannot loop
+    const diffPx = (a, b) => { const p = parseFloat(a), q = parseFloat(b); return isNaN(p) || isNaN(q) ? a !== b : Math.abs(p - q) > 1; };
+    if (Math.abs(x - this.state.detailShift) > 0.5 || Math.abs(off - this.state.detailImgOff) > 0.5 || Math.abs(g - (this.state.detailGrow || 0)) > 0.5 || diffPx(dots, this.state.detailDotsW) || diffPx(tw, this.state.detailTextW) || tmax !== this.state.detailTextMax) this.setState({ detailGrow: g, detailShift: x, detailDotsW: dots, detailImgOff: off, detailTextW: tw, detailTextMax: tmax });
   }
   shows(a, st) { return !a.hidden && (st.series === 'All' || a.series === st.series || a.orient === st.series) && (st.avail === 'All' || a.avail === st.avail); }
   // ---- Filter change (desktop and tablet): the works leaving shrink away first; then the ones that stay glide to their new
