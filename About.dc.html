@@ -77,8 +77,14 @@
 :root { --ab-para: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); }
 @media (min-width: 2001px) { :root { --ab-para: calc(14.5px * var(--fs) + 6px); } }
 @media (min-width: 2001px) and (max-width: 2350px) { :root { --ab-para: calc(14.5px * var(--fs) + 3px); } }
+/* (since 2026-11-23, Grace) Tree of Life, every desktop width: the copy 25px further left (nearer the photo) and wider, its right
+   edge on the bag icon's line (the box's right edge); it was 25-51px short of it at 1728, 2560 and 3840 */
+@media (min-width: 1280px) { .ab-tol-text { margin-left: -25px; max-width: calc(100% + 25px) !important; justify-self: stretch !important; } }
 .ab-bio { max-width: calc(var(--ab-para) * 52) !important; }
 @media (min-width: 1000px) { .ab-bio { max-width: var(--bio-text) !important; } }   /* (since 2026-11-01) desktop: the width the copy had before the tabs widened */
+/* (since 2026-11-23, Grace, from 1280) Biography on desktops up to 1440px wide: the copy 2px smaller (12.5px at 1280-1440), the column
+   as wide as before, so the text runs shorter on short laptop screens */
+@media (min-width: 1280px) and (max-width: 1440px) { .ab-bio .bt p { font-size: calc(clamp(12px, 1.14vw, 14.5px) - 2px); } }
 .bt ul { margin: 0; padding-left: 1.2em; } .bt > :last-child, .bt li:last-child { margin-bottom: 0; }
 @media (min-width: 2001px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 6px); margin-bottom: 1.1em; } }
 @media (min-width: 2001px) and (max-width: 2350px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 3px); } }
@@ -376,7 +382,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
              level with the portrait on Biography; the copy close to its right, left-aligned, centred on it -->
         <div class="ab-pin" style="display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ab-gap); align-items: center">
           <img class="ab-tol-img" src="uploads/about/pierodellafrancesca-sculptures-2.webp" alt="Piero della Francesca's Resurrection fresco beside the Arbor &amp; Eye insignia sculptures" style="display: block; width: min(calc(var(--ab-h) * 1.2143), calc(var(--ab-w) - var(--ab-gap) - var(--tol-text))); height: auto">
-          <div style="justify-self: start; max-width: var(--tol-text)">
+          <div class="ab-tol-text" style="justify-self: start; max-width: var(--tol-text)">
             <h2 class="ab-head">Tree of Life</h2>
             <div class="ab-copy bt"><p>The Arbor &amp; Eye insignia evolved from a sculpture inspired by imagery in Piero della Francesca’s fresco <em>The Resurrection of Christ</em> in Sansepolcro. Its form draws from the living trees, Arbor Vitae, to the right of Christ and combines the vertical line of the tree trunk with the spear held by the sleeping guard.</p>
         <p>The original pin was designed and fabricated by Sharon Church shortly after her nephew Ned was injured in a car accident. Over time, the insignia evolved into the foundation for the name Arbor &amp; Eye and its broader visual identity, gradually coming to embody endurance, renewal, and continuity within Ned Church’s work.</p></div>
