@@ -44,6 +44,8 @@
   .ab-proc-media { width: var(--proc-sq) !important; } .ab-proc-slide { aspect-ratio: 1 / 1 !important; } }
 /* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px: the Process block (photo and copy) centred up and down in the box */
 @media (min-width: 1280px) { .ab-proc-box { align-content: center !important; } }
+/* (since 2026-11-23, Grace) desktop: the Process copy's last paragraph without its bottom margin, so the heading-to-last-line text is centred on the photo (it sat 13px high at 3840) */
+@media (min-width: 1280px) { .ab-proc-box .ab-copy > p:last-child { margin-bottom: 0 !important; } }
 /* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px, Studio: two photos a slide (Ned at his desk and the third light-box photo come out), each as tall as the Biography portrait
    (the box's height; less only where the width runs out), the heading to their left (4.3 times the heading size kept for it: "STUDIO" is about 4 times as wide), centred on them, the dots under them */
 @media (min-width: 1280px) {
@@ -317,8 +319,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <div style="padding-bottom: {{ procTextLift }}">
       <h2 style="margin: 0 0 28px; font-family: 'EB Garamond', serif; font-weight: 400; font-size: calc({{ headingSize }} * var(--fs)); letter-spacing: 0.14em; text-transform: uppercase; text-align: center">Process</h2>
       <div class="copy" style="display: grid; font-size: calc(14px * var(--fs)); line-height: 1.75; text-align: left; max-width: 620px; margin: 0 auto">
-        <p style="margin: 0">Each painting develops through layering, revision, and response over time.</p>
-        <p style="margin: 0">Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
+        <p style="margin: 0">Each painting develops through layering, revision, and response over time. Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p style="margin: 0">The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p>
       </div>
     </div>
@@ -415,8 +416,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ab-gap); align-items: center">
           <div style="justify-self: start; max-width: var(--proc-text)">
             <h2 class="ab-head">Process</h2>
-            <div class="ab-copy bt"><p>Each painting develops through layering, revision, and response over time.</p>
-        <p>Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
+            <div class="ab-copy bt"><p>Each painting develops through layering, revision, and response over time. Using watercolor, I allow the movement of pigment, transparency, and unintended shifts within the material to shape my compositions. The process remains open and iterative, balancing structure with unpredictability.</p>
         <p>The small scale of the work creates a slower and more intimate process, where subtle changes in tone, texture, and balance become increasingly important over time.</p></div>
           </div>
           <div class="ab-proc-media" style="position: relative; width: min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - var(--ab-gap) - var(--proc-text)))">
@@ -722,5 +722,24 @@ class Component extends DCLogic {
 }
 </script>
 <script src="body-fit.js?v=8" data-nav="home"></script>
+<script>
+// (since 2026-11-23, Grace, Ned's screen) over 2000px wide: the Tree of Life text starts exactly under the nav's GALLERY. The text's place
+// comes from the picture and GALLERY's from the nav's right end, so they only met by chance; the left margin is measured to close the gap
+// (the text's right edge stays on the bag icon's line, the text narrowing or widening to suit)
+(function () {
+  let busy = false;
+  function alignTol() {
+    const t = [...document.querySelectorAll('.ab-tol-text')].find(e => e.offsetParent), g = document.querySelector('header nav a[data-t="Gallery"]');
+    if (!t || !g) return;
+    busy = true; t.style.marginLeft = '';
+    if (innerWidth > 2000) { const d = g.getBoundingClientRect().left - t.getBoundingClientRect().left; t.style.marginLeft = 'calc(-25px + ' + d.toFixed(2) + 'px)'; }
+    busy = false;
+  }
+  const go = () => { if (!busy) requestAnimationFrame(alignTol); };
+  addEventListener('resize', go); addEventListener('load', go); addEventListener('hashchange', go);
+  new MutationObserver(go).observe(document.body, { childList: true, subtree: true });
+  if (document.fonts) document.fonts.ready.then(go);
+})();
+</script>
 </body>
 </html>
