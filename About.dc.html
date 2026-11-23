@@ -174,6 +174,9 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
    all round it as well, so it is easier to hit */
 :where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"]) { position: relative; }   /* (no weight: an arrow's own position wins) */
 :where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"])::before { content: ""; position: absolute; inset: -5px; }
+/* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the content centred top to bottom between the header and the foot of
+   the screen (at 1280 x 720 the content (picture top to tab-bar rule) 43px below the header and 43px above the screen's foot, was 12 / 73) */
+@media (min-width: 1280px) and (max-width: 1439px) { .ab-main { justify-content: center; } .ab-main > section { padding-top: 0 !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -473,11 +476,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             </div>
           </div>
         </div>
-        <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it).
-             (2026-11-22, Grace) back to these static dots, so Ned can compare them with Process's pill dots -->
-        <div class="ab-stu-dots" style="display: flex; justify-content: center; gap: 18px; padding-top: 14px; margin-bottom: -6px">
+        <!-- (since 2026-11-23, Grace) Process's animated pill dots: every dot the same gray, 12px apart; the current one stretches to a 24px pill,
+             animating on click; each a 24px-tall target (a 6px clear border round what it draws). 2026-11-06 to 11-22: static round dots, the current one black -->
+        <div class="ab-stu-dots" style="display: flex; justify-content: center; gap: 0; padding-top: 14px; margin-bottom: -6px">
           <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-clip: padding-box; padding: 0; cursor: pointer; background: {{ d.bg }}; transition: background 0.35s ease"></button>
+            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: {{ d.w }}; height: 24px; box-sizing: border-box; border-radius: 12px; border: 6px solid transparent; background-color: #C9C5BD; background-clip: padding-box; padding: 0; cursor: pointer; transition: width 0.4s cubic-bezier(0.65, 0, 0.35, 1)"></button>
           </sc-for>
         </div>
       </div>

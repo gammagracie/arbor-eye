@@ -114,6 +114,9 @@ html { scrollbar-gutter: stable; }
 a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
 a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
 .prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
+/* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the content centred top to bottom between the header and the foot of
+   the screen (at 1280 x 720 the photo 38px below the header and the tab-bar rule 38px above the screen's foot, was 2 / 73) */
+@media (min-width: 1280px) and (max-width: 1439px) { .ct-main { justify-content: center; } .ct-main > section { padding-top: 0 !important; } }
 </style>
 </helmet>
 
