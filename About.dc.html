@@ -57,6 +57,11 @@
 }
 .ab-portrait-crop { height: var(--ab-h); width: calc((var(--ab-h) + 60px) * 3 / 4); overflow: hidden; }   /* (since 2026-11-18, Grace) the portrait's sides are never cropped: it is always its full width, and the copy takes what is left up to the bag icon's line (the gap unchanged), narrowing where it must */   /* (since 2026-11-17, Grace) always as tall as Contact's photo, top and bottom level with it; where the copy needs its width (2560 x 1440, say) the portrait's sides are cropped rather than the whole picture shrinking. Before: as large as left the copy its width */   /* (since 2026-11-01) the portrait's box as tall as the tab's box, or as large as leaves the copy its width */
 .ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; width: 100% !important; object-fit: cover; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
+/* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: every tab's pictures 60px shorter, so the tab bar under them sits
+   60px higher, always above the fold (it was 13px from the window's bottom); the copy beside them is unchanged */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  :root:root { --ab-h: calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) - 60px); }
+}
 /* (since 2026-11-22, Grace, 1920 notes) desktops up to 2000px wide: Biography's portrait and Tree of Life's photo 15px taller, growing
    downward only (the top and the tab bar stay put), so the space under them is closer to the space above; the copy narrows to suit.
    Process's photos and films as tall as Studio's photos (less only where the copy would drop under 480px) */
