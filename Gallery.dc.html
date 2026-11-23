@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=5">
+<link rel="stylesheet" href="nav-index.css?v=6">
 <style>/* (since 2026-11-19, Grace) "Go back to gallery": its clickable area 5px larger on every side (the link itself, and its underline, unmoved) */
 .back-link { position: relative; } .back-link::before { content: ''; position: absolute; inset: -5px; }</style>
 </head>
@@ -318,9 +318,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
               </sc-for>
             </div>
           </div>
-          <div style="display: grid; gap: 18px; padding-top: 20px">
+          <div class="frame-pick" style="display: grid; gap: 18px; padding-top: 20px; width: 100%; max-width: 420px">
             <p style="margin: 0; font-size: calc(14px * var(--fs)); font-weight: 400; letter-spacing: 0.1em">Choose Your Frame Color</p>
-            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
+            <!-- (since 2026-11-22, Grace) the options spread across the column: Unframed on the left edge, the last swatch's right side on the Add to Cart button's -->
+            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap; justify-content: space-between">
               <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="3">
                 <button onClick="{{ fr.pick }}" aria-label="{{ fr.aria }}" style="position: relative; border: none; background: transparent; padding: 0 0 16px; cursor: pointer; display: block; font-family: inherit">
                   <!-- (since 2026-11-22, Grace) the frame swatches at 60% of their earlier 100 x 12px --><span style="display: {{ fr.swatchDisplay }}; width: 60px; height: 7.2px; background: {{ fr.color }}; border: 1px solid #141414; box-sizing: border-box"></span>
