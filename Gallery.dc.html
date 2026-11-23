@@ -45,6 +45,13 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 .work:hover img { box-shadow: 0 8px 24px rgba(20,20,20,0.17) !important; }
 /* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
 .pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
+/* (since 2026-11-23, Grace) the zoom view's scale: a white pill on the right, + at the top, the slider (1x at the bottom, 4x at the top), - and the level */
+.zoom-scale { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); z-index: 41; justify-items: center; gap: 10px; padding: 14px 8px 12px; border-radius: 9999px; background: #FFFFFF; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); }
+.zs-btn { width: 30px; height: 30px; border: none; border-radius: 50%; padding: 0; background: transparent; color: #1C1C1C; cursor: pointer; display: grid; place-items: center; }
+.zs-btn:hover { background: #F0EEEA; }
+.zs-range { writing-mode: vertical-lr; direction: rtl; width: 20px; height: 200px; margin: 0; accent-color: #141414; cursor: pointer; }
+.zs-val { font-size: calc(11px * var(--fs)); letter-spacing: 0.08em; color: #6E6B66; font-variant-numeric: tabular-nums; }
+@media (min-width: 2501px) { .zoom-scale { right: 80px; } .zs-range { height: 320px; } }
 .zoom-arrow { opacity: 0; transition: opacity 0.2s ease; } .zoombox:hover ~ .zoom-arrow, .zoom-arrow:hover, .zoom-arrow:focus-visible { opacity: 1; }
 /* Header and footer grow with the viewport from 1280px (72px / 43px) to 1920px (80px / 54px) */
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ }
@@ -281,6 +288,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div style="position: fixed; left: 0; right: 0; bottom: 86px; z-index: 41; display: grid; justify-items: center; pointer-events: none">
           <p style="margin: 0; padding: 7px 14px 6px 16px; background: rgba(255, 255, 255, 0.5); font-size: calc(11px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #ADA9A2">{{ zoomHint }}</p>
         </div>
+        <div class="zoom-scale" style="display: {{ zoomScaleDisplay }}">
+          <button class="zs-btn" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 0v14M0 7h14" stroke="currentColor"></path></svg></button>
+          <input class="zs-range" type="range" min="1" max="4" step="0.05" value="{{ zoomScaleVal }}" onChange="{{ zoomScaleInput }}" aria-label="Zoom level">
+          <button class="zs-btn" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M0 7h14" stroke="currentColor"></path></svg></button>
+          <span class="zs-val">{{ zoomScaleLabel }}</span>
+        </div>
       </sc-if>
     </section>
   </sc-if>
@@ -482,9 +495,22 @@ class Component extends DCLogic {
     size: vertical ? '6\u2033 x 4\u2033' : '4\u2033 x 6\u2033',   // (since 2026-10-22) every original: 4" x 6" for horizontals, 6" x 4" for verticals
     desc: tag || (DETAILS[t] || {}).desc || ''
   }));
+  // (since 2026-11-23, Grace) the zoom view opens already magnified (2x), centred on the work; the scale on the right, the wheel or a
+  // pinch change it (1x to 4x) and a drag moves the work; clicks on the work do nothing (the double-click steps are gone)
   setZoom(open) {
     document.body.style.overflow = open ? 'hidden' : '';
-    this.setState({ zoom: open, zoomLevel: 1, zoomVid: false });
+    this.setState({ zoom: open, zoomLevel: open ? 2 : 1, zoomVid: false }, () => { if (open) this.zoomCentre(); });
+  }
+  zoomCentre() {
+    let n = 0; const go = () => { const box = document.querySelector('.zoombox'), img = box && box.querySelector('img');
+      if (img && img.complete && img.naturalWidth) { box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; box.scrollTop = (box.scrollHeight - box.clientHeight) / 2; }
+      if (++n < 12) requestAnimationFrame(go); };
+    requestAnimationFrame(go);
+  }
+  // zoom about the middle of the view (the scale and its + / - buttons)
+  zoomMid(level) {
+    const box = document.querySelector('.zoombox'); if (!box) return;
+    const b = box.getBoundingClientRect(); this.zoomTo(level, b.left + b.width / 2, b.top + (b.height - 104) / 2);
   }
   // step the zoom level, then scroll the lightbox so the point that was clicked stays in view
   zoomStep(e, level) {
@@ -655,11 +681,11 @@ class Component extends DCLogic {
       }));
     };
     this.onZoomWheel = (e) => {
-      const inZoom = this.state.zoom && e.target.closest && e.target.closest('.zoombox');
+      const inZoom = this.state.zoom && e.target.closest && (e.target.closest('.zoombox') || e.target.closest('.zoom-scale'));
       if (inZoom) {
         e.preventDefault();
-        const dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 400 : 1);
-        this.zoomTo(this.state.zoomLevel * Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.002)), e.clientX, e.clientY);
+        const dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 400 : 1), to = this.state.zoomLevel * Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.002));
+        if (e.target.closest('.zoom-scale')) this.zoomMid(to); else this.zoomTo(to, e.clientX, e.clientY);
       } else if (e.ctrlKey && e.deltaY < 0 && !this.state.zoom && !this.state.mobile && e.target.closest && e.target.closest('.detail-img')) {
         e.preventDefault(); this.setZoom(true);
       }
@@ -880,15 +906,20 @@ class Component extends DCLogic {
       detailDblClick: () => { if (!this.state.mobile) this.setZoom(true); },   // (since 2026-11-06) a single click on the work opens the magnified view, as the magnify icon does (it took a double click)
       detailCursor: m ? 'default' : 'zoom-in',
       zoomLabel: 'Enlarge artwork',
-      // magnified view: white lightbox with the framing dots; double-click steps the zoom 1x -> 2x -> 3x -> 1x, option-click steps it down
+      // magnified view: white lightbox with the framing dots; opens at 2x; the scale on the right, the wheel or a pinch zoom it (1x-4x)
       zoomOpen: this.state.zoom,
       closeZoom: () => this.setZoom(false),
-      zoomHint: vid && this.state.zoomVid ? 'esc to close' : this.state.zoomLevel > 1 ? (Math.round(this.state.zoomLevel * 10) / 10) + 'x \u00b7 scroll or pinch to zoom, drag to move \u00b7 esc to close' : 'double-click, scroll or pinch to zoom in \u00b7 esc to close',
+      zoomHint: vid && this.state.zoomVid ? 'esc to close' : 'scroll, pinch or use the scale to zoom \u00b7 drag to move \u00b7 esc to close',
+      zoomScaleDisplay: vid && this.state.zoomVid ? 'none' : 'grid',
+      zoomScaleVal: String(Math.round(this.state.zoomLevel * 100) / 100),
+      zoomScaleLabel: (Math.round(this.state.zoomLevel * 10) / 10) + 'x',
+      zoomScaleInput: (e) => this.zoomMid(parseFloat(e.target.value)),
+      zoomIn: () => this.zoomMid(Math.min(4, Math.floor(this.state.zoomLevel * 2 + 0.001) / 2 + 0.5)),
+      zoomOut: () => this.zoomMid(Math.max(1, Math.ceil(this.state.zoomLevel * 2 - 0.001) / 2 - 0.5)),
       zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 216px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
-        onDoubleClick: (e) => this.zoomStep(e, this.state.zoomLevel >= 3 ? 1 : Math.floor(this.state.zoomLevel) + 1),
-        onClick: (e) => { if (e.altKey) this.zoomStep(e, Math.max(1, Math.ceil(this.state.zoomLevel) - 1)); },
-        
-        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }, mockOf((views[this.state.detailView] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.detailView] || views[0])[0])) })),
+        draggable: false,
+
+        style: Object.assign({ width: 'calc(min(90vw, (100vh - 216px) * ' + this.state.lbRatio + ') * ' + this.state.zoomLevel + ')', height: 'auto', display: 'block', flex: 'none', touchAction: 'manipulation', cursor: this.state.zoomLevel > 1 ? 'grab' : 'default' }, mockOf((views[this.state.detailView] || views[0])[0]) ? { boxShadow: 'none' } : framed((views[this.state.detailView] || views[0])[0])) })),
       detailCols: oneCol ? '1fr' : 'minmax(0, 1fr) auto',
       detailRowGap: m ? '68px' : oneCol ? '116px' : '0', // room below the image for the zoom button when the text stacks underneath (the framing dots live on the buy page only since 2026-10-13)
       detailInfoCol: oneCol ? '1' : '2',
