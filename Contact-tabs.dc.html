@@ -91,6 +91,10 @@ html { scrollbar-gutter: stable; }
 .bt-table { font-size: calc(clamp(12px, 1.14vw, 14.5px) * var(--fs)); } @media (min-width: 2001px) { .bt-table { font-size: calc(14.5px * var(--fs) + 3px); } }
 .bt li { margin-bottom: calc(clamp(15px, 0.9vw, 44px) * 0.55); } @media (min-width: 2001px) { .bt li { margin-bottom: 0.55em; } }   /* (since 2026-10-24) list items half a paragraph's gap apart, the line height still Biography's */
 .bt li:last-child { margin-bottom: 0; }
+/* (since 2026-11-23, Grace, at 1280) Shipping on 1280-1440px screens: its text as About's Biography, 12px on a 19px line; and the
+   square sculpture photo fills the box instead of setting its height (it made the box 527px tall at 1280 x 720, 32px taller than
+   Email's, so the tab bar dropped below the other tabs' line) */
+@media (min-width: 1280px) and (max-width: 1440px) { .bt p:not(.lbl), .bt li { font-size: 12px; line-height: 19px; } .bt + img { height: 0 !important; min-height: 100%; } }
 .bt p.lbl ~ p.lbl { padding-top: calc(clamp(15px, 0.9vw, 44px) * 1.1); } @media (min-width: 2001px) { .bt p.lbl ~ p.lbl { padding-top: calc((14.5px * var(--fs) + 6px) * 1.1); } }   /* (since 2026-10-24) Returns: each later subsection twice a paragraph's gap below the one before */
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
