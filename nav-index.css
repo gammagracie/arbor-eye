@@ -1,29 +1,20 @@
-/* (since 2026-11-18, Grace) the header nav reads GALLERY · ABOUT · CONTACT; INDEX sits just before the search icon as a small
-   button: the nav's letters 1px smaller, semibold dark letters on a white rounded box with a 2px #6E6E6E border (since 2026-11-19, later), the
-   filled look (semibold white on #6E6E6E) only on the Index page itself; before that always filled (#6E6E6E, earlier on 2026-11-19; #5B5B5B, 70% of the #141414
-   it had for a day, before that; light grey #EEECE7 with dark letters on its first day). The space from CONTACT to it is twice the old space from
-   CONTACT to the search icon (40px became 80px: the row's 40px gap plus a 40px margin); it is the icons' 20px from the search icon.
-   Desktop and tablet; phones keep INDEX in their menu. */
-header a.nav-index { display: block !important; flex: none; width: max-content; margin-left: 40px; padding: 0.59em 0.62em 0.33em 0.8em; border-radius: 3px; background: #FFFFFF; box-shadow: inset 0 0 0 2px #6E6E6E;
-  font-size: calc(13px * var(--fs, 1) - 1px); line-height: 1; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #141414; white-space: nowrap; transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
-header a.nav-index::after { content: none !important; display: none !important; }
-header a.nav-index:hover { box-shadow: inset 0 0 0 2px #3A3936; }
-/* (since 2026-11-19, Grace) the Index page itself (aria-current): the filled look, semibold white on #6E6E6E */
-header a.nav-index[aria-current="page"] { background: #6E6E6E; box-shadow: none; color: #FFFFFF; }
-header a.nav-index[aria-current="page"]:hover { background: #3A3936; }
+/* (since 2026-11-23, Grace, global) the header nav reads GALLERY · ABOUT · INDEX · CONTACT: INDEX back in the line-up as a plain link,
+   90% of the other links' size and slightly heavier (Neuzeit has no weight between Regular and Bold, so Regular with a fine 0.3px
+   outline); on the Index page itself bold like any current page. Before: from 2026-11-18 a small boxed button just before the search
+   icon (white with a 2px #6E6E6E border, filled #6E6E6E on the Index page). Desktop and tablet; phones keep INDEX in their menu. */
+header nav { align-items: baseline; }
+header a.nav-index { font-size: 0.9em; -webkit-text-stroke: 0.3px currentColor; }
+header a.nav-index[aria-current="page"] { -webkit-text-stroke: 0; }
 /* (since 2026-11-18, Grace) the header icons (search, account, bag: the 19px icons) centred on the middle of the nav's capitals; they
    sat with their foot on the text's baseline, 5px too high at 1920 and 4px at 2560 and up (the nav letters grow with --fs) */
 @media (min-width: 768px) { header svg[width="19"] { transform: translateY(calc(9.5px - 0.339 * 13px * var(--fs, 1))); } }
 @media (max-width: 767px) { header a.nav-index { display: none !important; } }
-/* (since 2026-11-22, Grace, from 1728; at every size since 2026-11-23) GALLERY, ABOUT and CONTACT further apart and CONTACT nearer INDEX,
-   GALLERY and INDEX where they were: the space from GALLERY to INDEX is shared out so the space before INDEX is 1.5 times the gap between
-   the links (as agreed at 1728). That space is the header's 40px between the nav and the icons plus INDEX's margin. Per size band:
-     1920 and up   links 40px apart, INDEX 80px away  ->  46px, INDEX 68px (margin 28)
-     900-1919      16px, 80px                         ->  32px, 48px (margin 8)
-     768-899       9px, 80px                          ->  28px, 42px (margin 2) */
-@media (min-width: 1920px) { html header nav { gap: 46px !important; } html header a.nav-index { margin-left: 28px; } }
-@media (min-width: 900px) and (max-width: 1919px) { html header nav { gap: 32px !important; } html header a.nav-index { margin-left: 8px; } }
-@media (min-width: 768px) and (max-width: 899px) { html header nav { gap: 28px !important; } html header a.nav-index { margin-left: 2px; } }
+/* (since 2026-11-22, Grace, from 1728; every size since 2026-11-23) the links further apart than the old tightening rules had them;
+   CONTACT ends the nav, the header's 40px before the search icon. Per size band: 1920 and up 46px apart (was 40); 900-1919 32px
+   (was 16); 768-899 28px (was 9). */
+@media (min-width: 1920px) { html header nav { gap: 46px !important; } }
+@media (min-width: 900px) and (max-width: 1919px) { html header nav { gap: 32px !important; } }
+@media (min-width: 768px) and (max-width: 899px) { html header nav { gap: 28px !important; } }
 /* (since 2026-11-23, Grace, at 1440) the header logo at 85% (216 x 59px becomes 184 x 50) on 1440-class screens, 1280-1511px wide;
    scaled from its left edge and vertical middle, so it keeps its line and stays centred on the nav. 1512px and up unchanged. */
 @media (min-width: 1280px) and (max-width: 1511px) { html header a[aria-label="Arbor & Eye"] { transform: scale(0.85); transform-origin: 0 50%; } }
