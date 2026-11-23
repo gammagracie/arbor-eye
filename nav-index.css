@@ -15,6 +15,12 @@ header a.nav-index[aria-current="page"]:hover { background: #3A3936; }
    sat with their foot on the text's baseline, 5px too high at 1920 and 4px at 2560 and up (the nav letters grow with --fs) */
 @media (min-width: 768px) { header svg[width="19"] { transform: translateY(calc(9.5px - 0.339 * 13px * var(--fs, 1))); } }
 @media (max-width: 767px) { header a.nav-index { display: none !important; } }
-/* (since 2026-11-22, Grace, from 1728) desktops below 1920px: GALLERY, ABOUT and CONTACT 32px apart (the tightening rule had them 16px), the
-   space coming out of the gap before INDEX, so GALLERY stays where it was and ABOUT and CONTACT move toward INDEX (CONTACT to INDEX 48px, was 80) */
-@media (min-width: 1280px) and (max-width: 1919px) { html header nav { gap: 32px !important; } html header a.nav-index { margin-left: 8px; } }
+/* (since 2026-11-22, Grace, from 1728; at every size since 2026-11-23) GALLERY, ABOUT and CONTACT further apart and CONTACT nearer INDEX,
+   GALLERY and INDEX where they were: the space from GALLERY to INDEX is shared out so the space before INDEX is 1.5 times the gap between
+   the links (as agreed at 1728). That space is the header's 40px between the nav and the icons plus INDEX's margin. Per size band:
+     1920 and up   links 40px apart, INDEX 80px away  ->  46px, INDEX 68px (margin 28)
+     900-1919      16px, 80px                         ->  32px, 48px (margin 8)
+     768-899       9px, 80px                          ->  28px, 42px (margin 2) */
+@media (min-width: 1920px) { html header nav { gap: 46px !important; } html header a.nav-index { margin-left: 28px; } }
+@media (min-width: 900px) and (max-width: 1919px) { html header nav { gap: 32px !important; } html header a.nav-index { margin-left: 8px; } }
+@media (min-width: 768px) and (max-width: 899px) { html header nav { gap: 28px !important; } html header a.nav-index { margin-left: 2px; } }
