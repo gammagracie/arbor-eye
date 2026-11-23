@@ -49,11 +49,27 @@ p, h1, h2, h3, li { text-wrap: pretty; }
    close / next buttons, centred on them: -, the slider (1x at the left, 4x at the right), + and the level, in the place the hint
    ("scroll, pinch or use the scale to zoom...") had, the hint gone. It was upright on the right at first */
 .zoom-scale { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); z-index: 41; grid-auto-flow: column; align-items: center; justify-items: center; gap: 10px; padding: 7px 18px 7px 8px; border-radius: 9999px; background: #FFFFFF; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); }
-/* (since 2026-11-23, Grace) the zoom view's buttons and the scale's pill: 60% white over a blur of the work, with a glassy bevel (a bright
-   top-left edge, a faint dark lower edge, a soft sheen) */
-.zoom-bar .tp-btn, .zoom-scale { background: linear-gradient(160deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.6) 45%, rgba(255,255,255,0.5) 100%); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); border: 1px solid rgba(255,255,255,0.55); box-shadow: inset 0 1px 1px rgba(255,255,255,0.95), inset 0 -1px 1px rgba(20,20,20,0.10), inset 1px 0 1px rgba(255,255,255,0.5), 0 4px 14px rgba(28,28,28,0.18); }
-.zoom-bar .tp-btn { box-sizing: border-box; }
-.zs-btn:hover { background: rgba(255,255,255,0.55); }
+/* (since 2026-11-23, Grace: "like Mac Liquid Glass, a translucent, dynamic design") the zoom view's buttons and the scale's pill as
+   liquid glass: mostly clear (30% white) over the work, which shows through blurred, brightened and richer in colour; a curved rim
+   of light (bright on the top-left edge, softer on the lower right) and a faint inner glow; a specular glint that follows the
+   pointer (--gx / --gy, set by the script at the page's foot); a slight swell on hover and a squeeze on press. (For an hour before:
+   60% white with a plain bevel.) True lens refraction is left out: Safari cannot draw it */
+.zoom-bar .tp-btn { position: relative; }
+.zoom-bar .tp-btn, .zoom-scale { --gx: 30%; --gy: 0%; isolation: isolate; box-sizing: border-box; border: none;
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(7px) saturate(1.9) brightness(1.08); backdrop-filter: blur(7px) saturate(1.9) brightness(1.08);
+  box-shadow: inset 1.5px 1.5px 1px -0.5px rgba(255, 255, 255, 0.95), inset -1px -1.5px 1px -0.5px rgba(255, 255, 255, 0.55),
+    inset 0 0 8px 1px rgba(255, 255, 255, 0.3), inset 0 -12px 18px -14px rgba(20, 20, 20, 0.18),
+    0 8px 24px rgba(20, 20, 20, 0.16), 0 1px 3px rgba(20, 20, 20, 0.10);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.zoom-bar .tp-btn::before, .zoom-scale::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.12) 38%, rgba(255, 255, 255, 0) 70%); }
+.zoom-bar .tp-btn::after, .zoom-scale::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.05) 60%, rgba(255, 255, 255, 0.6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.zoom-bar .tp-btn:hover { transform: scale(1.06); } .zoom-bar .tp-btn:active { transform: scale(0.94); transition-duration: 0.12s; }
+.zoom-scale > * { position: relative; z-index: 1; }
+.zs-btn:hover { background: rgba(255,255,255,0.35); box-shadow: inset 0 1px 1px rgba(255,255,255,0.9); }
 .zs-btn { width: 30px; height: 30px; border: none; border-radius: 50%; padding: 0; background: transparent; color: #1C1C1C; cursor: pointer; display: grid; place-items: center; }
 .zs-range { width: 200px; height: 20px; margin: 0; accent-color: #141414; cursor: pointer; }
 .zs-val { min-width: 3.2em; text-align: right; font-size: calc(11px * var(--fs)); letter-spacing: 0.08em; color: #6E6B66; font-variant-numeric: tabular-nums; }
@@ -986,6 +1002,16 @@ class Component extends DCLogic {
   }
   requestAnimationFrame(place);
 })();
+</script>
+<script>
+// (since 2026-11-23) the zoom view's glass: each control's glint sits where the pointer's light would fall on it
+addEventListener('pointermove', e => {
+  document.querySelectorAll('.zoom-bar .tp-btn, .zoom-scale').forEach(el => {
+    const b = el.getBoundingClientRect(); if (!b.width) return;
+    const x = Math.max(-20, Math.min(120, (e.clientX - b.left) / b.width * 100)), y = Math.max(-40, Math.min(140, (e.clientY - b.top) / b.height * 100));
+    el.style.setProperty('--gx', x.toFixed(1) + '%'); el.style.setProperty('--gy', y.toFixed(1) + '%');
+  });
+}, { passive: true });
 </script>
 </body>
 </html>
