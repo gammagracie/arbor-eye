@@ -126,6 +126,9 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
   .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
   .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
 }
+/* (since 2026-11-22, Grace, global) desktop, every size: each arrow wholly outside the nav, its two open ends on the logo's left edge
+   (the bag icon's right edge for the right arrow), its point further out (the chevron's ends sit at 21/22 of its width, its point at 1/22) */
+@media (min-width: 1280px) { :root { --step-out: calc(var(--chev-w) * 20 / 22); } }
 /* (since 2026-11-04 nothing goes past the nav: the 20px push-out on desktop from 2026-11-02 and the extra 30px for three-up over
    2000px from 2026-10-30 are gone, so the chevrons' points sit on the logo's and the bag's edges again) */
 /* the featured works sit in a centred row, all the same height, a gap apart */
