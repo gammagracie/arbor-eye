@@ -148,7 +148,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-10-20) the page fills the screen less the footer, so the footer is on screen on load whenever the index fits (as on
    Ned's 3840 x 2160 screen); the spare height is shared out as equal space around each row, so the rows sit vertically centred */
 .page.index { height: auto; min-height: 100vh; min-height: 100dvh; }   /* (since 2026-10-29) the footer always below the fold, seen only at the very bottom (it was on screen whenever the index fitted) */
-:root { --idx-h: clamp(42px, 5.133vw, 197px); --idx-gap: max(1px, calc(var(--idx-h) * 0.05 - 4px)); }   /* (since 2026-11-09, Grace: 4px less, 6px at 3840; since 2026-11-06 half the spacing, was a tenth) */   /* 74px tall on a 1440px screen, growing with the screen; (since 2026-10-29) a gap of a tenth of that between thumbnails and between rows (10px at 1920, 20px at 3840: the rows' spacing on Ned's screen) */
+:root { --idx-h: clamp(42px, 5.133vw, 197px); --idx-gap: max(3px, calc(var(--idx-h) * 0.05 - 4px)); }   /* (since 2026-11-24, Grace) at least 3px between the works, across and down (it was at least 1px: 1px at 1920) */   /* (since 2026-11-09, Grace: 4px less, 6px at 3840; since 2026-11-06 half the spacing, was a tenth) */   /* 74px tall on a 1440px screen, growing with the screen; (since 2026-10-29) a gap of a tenth of that between thumbnails and between rows (10px at 1920, 20px at 3840: the rows' spacing on Ned's screen) */
 .idx { flex: 1; display: flex; flex-direction: column; gap: var(--idx-gap); padding: 16px var(--side-pad) 50px; }   /* 50px under the rows = the 16px and the series label's 34px above them */
 .idx > .idx-row { margin-block: auto; }
 /* (since 2026-11-06, Grace; screens over 2500px) the all-series block of thumbnails moved right so its left edge is on the About page's
@@ -239,7 +239,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 @keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
 </style>
 <script src="alt-text.js?v=7"></script>
-<script src="search-data.js?v=1" defer></script>
+<script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
@@ -301,6 +301,15 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-1.jpg"><img src="assets/thumbs-m70/ascent_no-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 1" data-alt-title="Ascent No. 1" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-2.jpg"><img src="assets/thumbs-m70/ascent_no-2.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 2" data-alt-title="Ascent No. 2" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-3.jpg"><img src="assets/thumbs-m70/ascent_no-3.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 3" data-alt-title="Ascent No. 3" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-4.jpg"><img src="assets/thumbs-m70/ascent_no-4.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 4" data-alt-title="Ascent No. 4" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-5.jpg"><img src="assets/thumbs-m70/ascent_no-5.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 5" data-alt-title="Ascent No. 5" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-6.jpg"><img src="assets/thumbs-m70/ascent_no-6.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 6" data-alt-title="Ascent No. 6" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-7.jpg"><img src="assets/thumbs-m70/ascent_no-7.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 7" data-alt-title="Ascent No. 7" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-8.jpg"><img src="assets/thumbs-m70/ascent_no-8.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 8" data-alt-title="Ascent No. 8" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-9.jpg"><img src="assets/thumbs-m70/ascent_no-9.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 9" data-alt-title="Ascent No. 9" data-alt-size="s"></a>
       <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
     </section>
     <section class="idx-row" data-s="Convergence" aria-label="Series 2, Convergence">

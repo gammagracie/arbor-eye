@@ -410,6 +410,78 @@ window.SEARCH_DATA = {
 "v": true
 },
 {
+"t": "Ascent No. 1",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-1.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 2",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-2.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 3",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-3.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 4",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-4.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 5",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-5.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 6",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-6.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 7",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-7.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 8",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-8.jpg",
+"v": true
+},
+{
+"t": "Ascent No. 9",
+"s": "Ascent",
+"d": "",
+"m": "",
+"f": "ascent_no-9.jpg",
+"v": true
+},
+{
 "t": "Canopy",
 "s": "Tonal",
 "d": "Life surrounds us.",

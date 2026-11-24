@@ -207,7 +207,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 :where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"])::before { content: ""; position: absolute; inset: -5px; }
 </style>
 <script src="alt-text.js?v=7"></script>
-<script src="search-data.js?v=1" defer></script>
+<script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
 <link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
@@ -347,6 +347,15 @@ const WORKS = [
   {"f": "ascent_origin.jpg", "s": "Ascent", "y": 2025, "t": "Origin", "r": 0.667, "g": "The first instructions unfold within a single helix."},
   {"f": "ascent_koi.jpg", "s": "Ascent", "y": 2025, "t": "Koi", "r": 0.667, "g": "Beneath still waters, crimson forms weave through a landscape of quiet motion."},
   {"f": "ascent_overlook.jpg", "s": "Ascent", "y": 2025, "t": "Overlook", "r": 0.667, "g": "From above, land and water trace a landscape shaped by quiet movement."},
+  {"f": "ascent_no-1.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 1", "r": 0.667, "g": ""},
+  {"f": "ascent_no-2.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 2", "r": 0.667, "g": ""},
+  {"f": "ascent_no-3.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 3", "r": 0.667, "g": ""},
+  {"f": "ascent_no-4.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 4", "r": 0.667, "g": ""},
+  {"f": "ascent_no-5.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 5", "r": 0.667, "g": ""},
+  {"f": "ascent_no-6.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 6", "r": 0.667, "g": ""},
+  {"f": "ascent_no-7.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 7", "r": 0.667, "g": ""},
+  {"f": "ascent_no-8.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 8", "r": 0.667, "g": ""},
+  {"f": "ascent_no-9.jpg", "s": "Ascent", "y": 2025, "t": "Ascent No. 9", "r": 0.667, "g": ""},
   {"f": "tonal_canopy.jpg", "s": "Tonal", "y": 2024, "t": "Canopy", "r": 1.5, "g": "Life surrounds us."}
 ].filter(w => w.s !== 'Outliers');   // (since 2026-10-24) the Outliers are hidden from the site for now (their files stay in assets/)
 
