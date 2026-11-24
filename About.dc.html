@@ -46,17 +46,27 @@
 @media (min-width: 1280px) { .ab-proc-box { align-content: center !important; } }
 /* (since 2026-11-23, Grace) desktop: the Process copy's last paragraph without its bottom margin, so the heading-to-last-line text is centred on the photo (it sat 13px high at 3840) */
 @media (min-width: 1280px) { .ab-proc-box .ab-copy > p:last-child { margin-bottom: 0 !important; } }
-/* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px, Studio: two photos a slide (Ned at his desk and the third light-box photo come out), each as tall as the Biography portrait
-   (the box's height; less only where the width runs out), the heading to their left (4.3 times the heading size kept for it: "STUDIO" is about 4 times as wide), centred on them, the dots under them */
-@media (min-width: 1280px) {
-  .ab-stu-box { grid-template-columns: minmax(0, 1fr) auto; column-gap: 60px; align-content: center !important; }
-  .ab-stu-box > .ab-head { grid-column: 1; grid-row: 1; align-self: center; margin: 0 !important; }
-  .ab-stu-box > .stu-slider { grid-column: 2; grid-row: 1; --stu-h: min(var(--ab-h), calc((var(--ab-w) - 60px - var(--ab-head) * 4.3 - clamp(25px, 1.6vw, 80px)) * 2 / 3)) !important;
-    width: calc(var(--stu-h) * 1.5 + clamp(25px, 1.6vw, 80px)); }
-  .ab-stu-box > .ab-stu-dots { grid-column: 2; grid-row: 2; height: 0; padding-top: 0 !important; margin-bottom: 0 !important; align-items: flex-start; transform: translateY(14px); }   /* the dots hang under the photos (as on Process), so the tab bar stays where it is */
-  .ab-stu-out { display: none !important; }
-  .ab-stu-slide { grid-template-columns: repeat(2, auto) !important; }
-}
+/* (since 2026-11-24, Grace) Studio, the desktop strip: no heading; the photos fill the same box as Contact's photo and the other tabs'
+   pictures (the full width, logo's left edge to the bag icon's right; the box's height, top and bottom level with them, 15px taller up
+   to 2000px wide as Biography and Contact are), so nothing jumps between tabs. Slide 1: the work table at its own shape on the right,
+   the brush roll filling the rest, its left side cropped; slide 2: the first two light-box photos, half each, their tops and bottoms
+   cropped. The strip reaches 40px past the box on the left and 80px on the right (padded back in) so the shadows are not clipped;
+   the dots under the photos. Before: from 2026-11-23 evening both photos at one height, centred, 48px in from each side */
+.ab-stu-box { grid-template-columns: minmax(0, 1fr); align-content: start !important; }
+.ab-stu-box > .ab-head { display: none !important; }
+.ab-stu-box > .stu-slider { grid-column: 1; grid-row: 1; --stu-g: clamp(25px, 1.6vw, 80px); --stu-h: var(--ab-h) !important;
+  width: calc(100% + 120px); margin-left: -40px; overflow-x: clip !important; overflow-y: visible !important; clip-path: none !important; }
+.ab-stu-box > .ab-stu-dots { grid-column: 1; grid-row: 2; height: 0; padding-top: 0 !important; margin-bottom: 0 !important; align-items: flex-start; transform: translateY(14px); }   /* the dots hang under the photos (as on Process), so the tab bar stays where it is */
+.ab-stu-out { display: none !important; }
+.ab-stu-slide { box-sizing: border-box; padding: 0 80px 0 40px; grid-template-columns: minmax(0, 1fr) auto !important; justify-content: stretch !important; column-gap: var(--stu-g); }
+.ab-stu-slide > img:first-child { width: 100% !important; aspect-ratio: auto !important; object-position: 100% 50%; }
+.ab-stu-slide + .ab-stu-slide { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+.ab-stu-slide + .ab-stu-slide > img { width: 100% !important; aspect-ratio: auto !important; object-position: 50% 50%; }
+@media (min-width: 1000px) and (max-width: 2000px) { .ab-stu-box > .stu-slider { --stu-h: calc(var(--ab-h) + 15px) !important; margin-bottom: -15px; }
+  .ab-stu-box > .ab-stu-dots { transform: translateY(22px); } }   /* the dots 8px lower, under the taller photos */
+/* (since 2026-11-23 evening, Grace) desktop: the photos with the Gallery works' drop shadow, for depth: Biography's portrait, Tree of Life's
+   photo, Process's photo and films, Studio's photos */
+.ab-portrait-crop, .ab-tol-img, .ab-proc-media, .ab-stu-slide > img { box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); }
 .ab-portrait-crop { height: var(--ab-h); width: calc((var(--ab-h) + 60px) * 3 / 4); overflow: hidden; }   /* (since 2026-11-18, Grace) the portrait's sides are never cropped: it is always its full width, and the copy takes what is left up to the bag icon's line (the gap unchanged), narrowing where it must */   /* (since 2026-11-17, Grace) always as tall as Contact's photo, top and bottom level with it; where the copy needs its width (2560 x 1440, say) the portrait's sides are cropped rather than the whole picture shrinking. Before: as large as left the copy its width */   /* (since 2026-11-01) the portrait's box as tall as the tab's box, or as large as leaves the copy its width */
 .ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; width: 100% !important; object-fit: cover; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: every tab's pictures 60px shorter, so the tab bar under them sits
@@ -438,10 +448,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             </div>
             <!-- (the 1px clip at each side hides the hairline of the neighbouring slide the fractional track width lets through) -->
             <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
-            <!-- (since 2026-11-22, Grace, as on Studio) pill dots: every dot the same gray, 12px apart; the current one stretches to a 24px pill, animating on click. Each is still a 24px-tall target (a 6px clear border round what it draws) -->
+            <!-- (since 2026-11-23 evening, Grace) static round dots again, 12px apart: the current one filled light gray, the others a ring with a 2px gray edge. Each a 24px target (a 6px clear border round what it draws). 2026-11-22 to 11-23: animated pill dots -->
             <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 0; padding-top: 14px">
               <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="4">
-                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: {{ d.w }}; height: 24px; box-sizing: border-box; border-radius: 12px; border: 6px solid transparent; background-color: #C9C5BD; background-clip: padding-box; padding: 0; cursor: pointer; transition: width 0.4s cubic-bezier(0.65, 0, 0.35, 1)"></button>
+                <button onClick="{{ d.go }}" aria-label="{{ d.label }}" aria-current="{{ d.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ d.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ d.ring }}; padding: 0; cursor: pointer"></button>
               </sc-for>
             </div>
             <!-- (since 2026-11-09) pause / play for the two looping films, at the right under the photo, level with the dots -->
@@ -465,9 +475,8 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div class="stu-slider" onClick="{{ openLb }}" onTouchStart="{{ stuDeskTouchStart }}" onTouchEnd="{{ stuDeskTouchEnd }}" style="--stu-h: min(calc(var(--ab-h) - var(--ab-head) * 1.9 - 28px), calc((var(--ab-w) - 2 * clamp(25px, 1.6vw, 80px)) / 3 * 4 / 3)); overflow: hidden; clip-path: inset(0 1px); touch-action: pan-y">
           <div style="display: flex; width: 200%; transform: translateX({{ stuDeskShift }}); transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1)">
             <div class="ab-stu-slide" style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide0 }}">
-              <img class="ab-stu-out" src="uploads/about/studio.webp" alt="Ned Church at his desk with postcards and paints, seen through the studio window" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: left center"><!-- (since 2026-11-18, Grace) cropped from the left so Ned stays whole; the trim comes off the window side -->
-              <img src="uploads/about/watercolors.webp" alt="Watercolor palettes and postcards on the work table" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
-              <img src="uploads/about/tools.webp" alt="Brush roll and watercolor pans on the desk" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
+              <img src="uploads/about/studio-brush-roll.webp" alt="A leather roll of watercolor brushes open on the desk" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 2800 / 1900; object-fit: cover">
+              <img src="uploads/about/studio-table.webp" alt="The work table with watercolor palettes and paintings" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 2800 / 2556; object-fit: cover">
             </div>
             <div class="ab-stu-slide" style="width: 50%; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between" aria-hidden="{{ stuDeskHide1 }}">
               <img src="uploads/about/process-lightbox-1.webp" alt="The camera looking down into a light box, a painting inside it" loading="lazy" style="display: block; height: var(--stu-h); width: auto; aspect-ratio: 3 / 4; object-fit: cover">
@@ -476,11 +485,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             </div>
           </div>
         </div>
-        <!-- (since 2026-11-23, Grace) Process's animated pill dots: every dot the same gray, 12px apart; the current one stretches to a 24px pill,
-             animating on click; each a 24px-tall target (a 6px clear border round what it draws). 2026-11-06 to 11-22: static round dots, the current one black -->
+        <!-- (since 2026-11-23 evening, Grace) static round dots, as on Process: the current one filled light gray, the others a ring with a 2px gray edge;
+             each a 24px target. 2026-11-23 (day): animated pill dots; 2026-11-06 to 11-22: static round dots, the current one black -->
         <div class="ab-stu-dots" style="display: flex; justify-content: center; gap: 0; padding-top: 14px; margin-bottom: -6px">
           <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
-            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width: {{ d.w }}; height: 24px; box-sizing: border-box; border-radius: 12px; border: 6px solid transparent; background-color: #C9C5BD; background-clip: padding-box; padding: 0; cursor: pointer; transition: width 0.4s cubic-bezier(0.65, 0, 0.35, 1)"></button>
+            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" aria-current="{{ d.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ d.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ d.ring }}; padding: 0; cursor: pointer"></button>
           </sc-for>
         </div>
       </div>
@@ -598,7 +607,7 @@ class Component extends DCLogic {
     const i = this.state[key];
     const out = {};
     for (let k = 0; k < n; k++) out[key + 'D' + k] = i === k ? 1 : 0; // opacity: photos crossfade
-    out[key + 'Dots'] = Array.from({ length: n }, (_, k) => ({ bg: i === k ? '#141414' : '#C9C5BD', w: i === k ? '36px' : '24px', label: 'Show slide ' + (k + 1) + ' of ' + n, go: () => this.setState({ [key]: k }) }));
+    out[key + 'Dots'] = Array.from({ length: n }, (_, k) => ({ bg: i === k ? '#141414' : '#C9C5BD', w: i === k ? '36px' : '24px', sbg: i === k ? '#C9C5BD' : 'transparent', ring: i === k ? '#C9C5BD' : '#A8A39A', cur: i === k ? 'true' : 'false', label: 'Show slide ' + (k + 1) + ' of ' + n, go: () => this.setState({ [key]: k }) }));
     out[key + 'Shift'] = (-100 / n * i) + '%';   // the desktop Studio / Process strips: how far the track (n slides wide) has slid
     for (let k = 0; k < n; k++) out[key + 'Hide' + k] = i === k ? 'false' : 'true';
     out[key + 'Prev'] = () => this.setState(s => ({ [key]: (s[key] + n - 1) % n }));

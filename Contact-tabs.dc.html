@@ -117,6 +117,10 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the content centred top to bottom between the header and the foot of
    the screen (at 1280 x 720 the photo 38px below the header and the tab-bar rule 38px above the screen's foot, was 2 / 73) */
 @media (min-width: 1280px) and (max-width: 1439px) { .ct-main { justify-content: center; } .ct-main > section { padding-top: 0 !important; } }
+/* (since 2026-11-23 evening, Grace) desktop: the photograph and the Shipping sculpture with the Gallery works' drop shadow, for depth
+   (the photograph's 10px top trim kept; its clip opened at the sides and foot so the shadow shows) */
+.ct-photo { box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); clip-path: inset(10px -80px -80px -80px) !important; }
+.ct-ship-img { box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); position: relative; }
 </style>
 </helmet>
 
@@ -308,7 +312,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             <li>If your order shows as delivered but you have not received your parcel, please contact your local postal service first using the tracking number provided in your shipping notification. In many cases, parcels are held at your local post office for collection. If they are unable to locate your parcel, please contact Arbor &amp; Eye at <a href="mailto:hello@arboreye.com?subject=Website%20Inquiry" style="border-bottom: 1px solid #C9C5BD">hello@arboreye.com</a> so we can see if there is anything further we can do.</li>
           </ul>
         </div>
-        <img src="uploads/tol-sculpture-square.webp" alt="Arbor &amp; Eye Tree of Life sculpture" style="display: block; width: 100%; height: 100%; object-fit: cover">
+        <img class="ct-ship-img" src="uploads/tol-sculpture-square.webp" alt="Arbor &amp; Eye Tree of Life sculpture" style="display: block; width: 100%; height: 100%; object-fit: cover">
       </div>
       </sc-if>
 

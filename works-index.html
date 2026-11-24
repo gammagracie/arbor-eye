@@ -171,7 +171,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-item img { display: block; height: 100%; width: auto; }
 /* (since 2026-11-23, Grace) every work a subtle, feathered drop shadow at rest, soft and a little down and to the right (a hovered work keeps its deeper one) */
 .idx-item { box-shadow: 3px 5px 14px -4px rgba(20,20,20,0.24); }
-.idx-item.v { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
+.idx-item.v, .idx-item.tol { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
@@ -341,6 +341,16 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_vesper-2.jpg"><img src="assets/thumbs-m70/tonal_vesper-2.jpg" style="aspect-ratio: 3 / 2" alt="Vesper" data-alt-title="Vesper" data-alt-size="s"></a>
       <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_vesper-1.jpg"><img src="assets/thumbs-m70/tonal_vesper-1.jpg" style="aspect-ratio: 3 / 2" alt="Vesper" data-alt-title="Vesper" data-alt-size="s"></a>
     </section>
+    <!-- (since 2026-11-23 evening, Grace) Tree of Life: five pictures of the sculpture, all one shape (the third one's; background added at
+         the sides of 1, 2 and 4, the fifth on a white to light-gray gradient), as tall as the portraits; each opens About's Tree of Life tab.
+         Not a series of works: no year, and in neither Horizontal nor Vertical -->
+    <section class="idx-row" data-s="Tree of Life" aria-label="Tree of Life">
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_1.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_2.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_3.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_4.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_5.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+    </section>
     <!-- (since 2026-10-24) the Outliers row, hidden from the site for now; remove the comment marks to bring it back
     <section class="idx-row" aria-label="Outliers">
       <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-1.jpg"><img src="assets/thumbs-m70/outliers_outliers-1.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 1" data-alt-title="Outliers 1" data-alt-size="s"></a>
@@ -476,15 +486,23 @@ document.querySelectorAll('.idx-row').forEach(row => {
 // screen and spreads out, enlarged, in the rows below; Horizontal and Vertical centre their rows, spaced out (sizes in layout()).
 const $ = id => document.getElementById(id);
 let fSeries = 'All', fYear = 'All';
-const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Horizontal'], ['Vertical']];
+const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Tree of Life'], ['Horizontal'], ['Vertical']];
 const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.querySelectorAll('.idx-item[data-y]')].map(a => a.dataset.y))].sort((a, b) => b - a).map(y => [y]));
 // one series on its own: works per row (the last row centred under the others)
-const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 3 };   // (Tonal 3/2 since 2026-10-30; it was 2/2/1)
+const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 3, 'Tree of Life': 5 };   // (Tonal 3/2 since 2026-10-30; it was 2/2/1)
 // rows set by hand where the plain split would differ, each centred: Convergence's seven works 3/1/3 (2026-10-29; sized as Core is)
-const SERIES_ROWS = { 'The Turning': [4, 3], 'Ascent': [5, 4], 'Structure': [5] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
+// (since 2026-11-23, Grace: "match grids we have on gallery", desktop) each series in Gallery's grid columns: Convergence, Core, Select and
+// The Turning two across (Gallery's 2 x 2 pages; here every work at once, as large as fits the screen), Structure 3 over 2, Ascent 5 over 4
+// (Spectrum two across and Tonal 3 over 2 already matched). Before: Convergence 3/3, Core and Select 3/3/2, The Turning 4/3, Structure 5
+const SERIES_ROWS = { 'The Turning': [2, 2, 2, 1], 'Ascent': [5, 4], 'Structure': [3, 2], 'Convergence': [2, 2, 2], 'Core': [2, 2, 2, 2], 'Select': [2, 2, 2, 2] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
 // (since 2026-11-19, Grace) a year's works in rows of these lengths, in order, series running on into the next row where they
 // must (2025: 7 + 7; 2024: 5, 4, 4, 5), each row centred; laid out in one block (#idxYear, see layout) whose series rows flow
-const YEAR_ROWS = { '2025': [7, 7], '2024': [5, 4, 4, 5] };
+// (since 2026-11-23, Grace, matching Gallery) 2025 four across (was 7 + 7); Vertical (the same fourteen portraits) laid out the same way
+// through this block, four across, rather than a row of six per series
+// (since 2026-11-23) a grid of more than two rows: its works the size Gallery's two-row pages give them, the page scrolling to the
+// rows below (fitting every row on one screen made them about half that)
+const FIT_ROWS = 2;
+const YEAR_ROWS = { '2025': [4, 4, 4, 2], '2024': [5, 4, 4, 5], 'Vertical': [4, 4, 4, 2] };
 // sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
 // scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
 // rows of 2 (2026-10-30)
@@ -555,7 +573,7 @@ function layout() {
   };
   if (mode === 's') {   // as large as fits with room round it: up to 8 times a thumbnail's area (2.83 times as wide and tall)
     const row = shown[0]; if (!row) return;
-    const items = row.querySelectorAll('.idx-item:not([hidden])'), n = items.length, v = items[0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;
+    const items = row.querySelectorAll('.idx-item:not([hidden])'), n = items.length, tol = items[0].classList.contains('tol'), v = tol || items[0].classList.contains('v'), r = tol ? 2650 / 3084 : v ? 2 / 3 : 3 / 2;   // (Tree of Life: as tall as the portraits, its own shape)
     let split = SERIES_ROWS[row.dataset.s];
     if (!split || split.reduce((a, b) => a + b, 0) !== n) split = null;
     const cols = split ? Math.max(...split) : Math.min(n, SERIES_COLS[row.dataset.s] || 3), nr = split ? split.length : Math.ceil(n / cols);
@@ -565,7 +583,7 @@ function layout() {
     const sz = SERIES_SIZE[row.dataset.s];
     const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
     let h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
-                 : Math.min(fit(cols, nr), 2.83 * (v ? 1.5 * H : H));
+                 : Math.min(fit(cols, Math.min(nr, FIT_ROWS)), 2.83 * (v ? 1.5 * H : H));
     const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || ZOOM;
     h *= T.k || 1;
     // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
@@ -578,7 +596,7 @@ function layout() {
     apply();
     // never past the screen: the last row's title stays 16px above its bottom, so the works grow only as far as that allows (Fit
     // the screen, since 2026-11-02; the enlarged series at first, every series since the shared hover size)
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3 && nr <= FIT_ROWS; i++) {
       const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0),   // (the row starts the series list's gap below `top`)
         rh = row.offsetHeight, gaps = rh - nr * (v ? h : h);
       if (rh <= maxH + 0.5) break;
@@ -603,13 +621,13 @@ function layout() {
     if (T.row1) { const t0 = items[0].offsetTop; [...items].filter(a => a.offsetTop === t0).forEach(a => { a.style.position = 'relative'; a.style.top = T.row1 + 'px'; }); }
     // moved up (SERIES_TUNE dy): from its centred place, never closer than its usual gap under the series name
     if (T.dy) { const rh = row.offsetHeight; row.style.marginTop = Math.max(0, (ah - rh) / 2 + T.dy).toFixed(1) + 'px'; row.style.marginBottom = 'auto'; }
-  } else if (mode === 'v' && fSeries === 'All') {
+  } else if (mode === 'v' && (fSeries === 'All' || YEAR_ROWS[fSeries])) {
     // (since 2026-11-13, Grace) one year: each series on its own row, centred, every work the same size, as large as fits on the
     // screen (never more than one series' largest); a year of a single series with 6 or more works in two rows. The rows only as
     // far apart as a hovered work's growth and its title need, and the whole block centred between the menus and the screen's foot
     const zY = ZOOM, lists = shown.map(row => [...row.querySelectorAll('.idx-item:not([hidden])')]);
     const v = lists[0][0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;   // (each year's works share one shape)
-    const flat = lists.flat(), ys = YEAR_ROWS[fYear] && YEAR_ROWS[fYear].reduce((a, b) => a + b, 0) === flat.length ? YEAR_ROWS[fYear] : null;
+    const yk = fSeries === 'All' ? fYear : fSeries, flat = lists.flat(), ys = YEAR_ROWS[yk] && YEAR_ROWS[yk].reduce((a, b) => a + b, 0) === flat.length ? YEAR_ROWS[yk] : null;
     const cols = ys ? [Math.max(...ys)] : lists.map(l => shown.length === 1 && l.length >= 6 ? Math.ceil(l.length / 2) : l.length);
     const R = ys ? ys.length : lists.reduce((t, l, k) => t + Math.ceil(l.length / cols[k]), 0), most = Math.max(...cols);
     const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
@@ -618,7 +636,8 @@ function layout() {
     const gapFor = h => (zY - 1) / 2 * h + TGAP + th + 10;
     const gxY = Math.max(16, aw * 0.009);   // (works closer side by side than elsewhere, so a long row's works can be larger)
     let h = Math.min(2.83 * (v ? 1.5 * H : H), (aw * 0.98 - (most - 1) * gxY) / most / r);
-    for (let i = 0; i < 4; i++) { const need = R * h + (R - 1) * gapFor(h) + TGAP + th + (zY - 1) / 2 * h; if (need <= ah + 0.5) break; h *= ah / need; }
+    const RF = ys && YEAR_ROWS !== null && Math.max(...ys) === 4 ? Math.min(R, FIT_ROWS) : R;   // (four-across grids: Gallery's two-row size, the page scrolling)
+    for (let i = 0; i < 4; i++) { const need = RF * h + (RF - 1) * gapFor(h) + TGAP + th + (zY - 1) / 2 * h; if (need <= ah + 0.5) break; h *= ah / need; }
     const ry = gapFor(h), block = R * h + (R - 1) * ry + TGAP + th;
     if (ys) {   // the year's rows set by hand: its series rows gathered into one centred block, flowing as one; a short row held in by equal margins on its outer works
       const w = document.createElement('div'); w.id = 'idxYear'; w.className = 'idx-yr'; idx.insertBefore(w, shown[0]); shown.forEach(row => w.appendChild(row));
@@ -687,8 +706,8 @@ function applyFilter() {
   rows.forEach(row => {
     const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
     row.querySelectorAll('.idx-item').forEach(a => {
-      const v = a.classList.contains('v');
-      if (inSeries && (fSeries !== 'Horizontal' || !v) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)) next.add(a);
+      const v = a.classList.contains('v'), t = a.classList.contains('tol');
+      if (inSeries && (fSeries !== 'Horizontal' || (!v && !t)) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)) next.add(a);
     });
   });
   const leaving = [...was].filter(a => !next.has(a));
@@ -825,7 +844,7 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
     const rows = [...document.querySelectorAll('.idx-row')];
     rows.forEach(row => {
       const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
-      row.querySelectorAll('.idx-item').forEach(a => { const v = a.classList.contains('v'); a.hidden = !(inSeries && (fSeries !== 'Horizontal' || !v) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)); });
+      row.querySelectorAll('.idx-item').forEach(a => { const v = a.classList.contains('v'), t = a.classList.contains('tol'); a.hidden = !(inSeries && (fSeries !== 'Horizontal' || (!v && !t)) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)); });
       row.hidden = !row.querySelector('.idx-item:not([hidden])');
     });
     mode = fSeries === 'Horizontal' ? 'h' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';
