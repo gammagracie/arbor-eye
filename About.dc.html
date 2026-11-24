@@ -64,9 +64,9 @@
 .ab-stu-slide + .ab-stu-slide > img { width: 100% !important; aspect-ratio: auto !important; object-position: 50% 50%; }
 @media (min-width: 1000px) and (max-width: 2000px) { .ab-stu-box > .stu-slider { --stu-h: calc(var(--ab-h) + 15px) !important; margin-bottom: -15px; }
   .ab-stu-box > .ab-stu-dots { transform: translateY(22px); } }   /* the dots 8px lower, under the taller photos */
-/* (since 2026-11-23 evening, Grace) desktop: the photos with the Gallery works' drop shadow, for depth: Biography's portrait, Tree of Life's
+/* (since 2026-11-23 evening, Grace) desktop: the photos with a drop shadow for depth (since 2026-11-24 tighter than the Gallery works': 6px 7px 16px -5px, 34% black; it was theirs, 12px 14px 32px -8px): Biography's portrait, Tree of Life's
    photo, Process's photo and films, Studio's photos */
-.ab-portrait-crop, .ab-tol-img, .ab-proc-media, .ab-stu-slide > img { box-shadow: 12px 14px 32px -8px rgba(20,20,20,0.392); }
+.ab-portrait-crop, .ab-tol-img, .ab-proc-media, .ab-stu-slide > img { box-shadow: 6px 7px 16px -5px rgba(20,20,20,0.34); }
 .ab-portrait-crop { height: var(--ab-h); width: calc((var(--ab-h) + 60px) * 3 / 4); overflow: hidden; }   /* (since 2026-11-18, Grace) the portrait's sides are never cropped: it is always its full width, and the copy takes what is left up to the bag icon's line (the gap unchanged), narrowing where it must */   /* (since 2026-11-17, Grace) always as tall as Contact's photo, top and bottom level with it; where the copy needs its width (2560 x 1440, say) the portrait's sides are cropped rather than the whole picture shrinking. Before: as large as left the copy its width */   /* (since 2026-11-01) the portrait's box as tall as the tab's box, or as large as leaves the copy its width */
 .ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; width: 100% !important; object-fit: cover; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: every tab's pictures 60px shorter, so the tab bar under them sits
@@ -97,6 +97,9 @@
 /* (since 2026-11-23, Grace) Tree of Life, every desktop width: the copy 25px further left (nearer the photo) and wider, its right
    edge on the bag icon's line (the box's right edge); it was 25-51px short of it at 1728, 2560 and 3840 */
 @media (min-width: 1280px) { .ab-tol-text { margin-left: -25px; max-width: calc(100% + 25px) !important; justify-self: stretch !important; } }
+/* (since 2026-11-24, Grace) 1280-2000px: the Tree of Life text 25px further right (the -25px above undone), clear of the photo's shadow;
+   its right edge stays on the bag icon's line, so it is 25px narrower. Over 2000px it stays under GALLERY */
+@media (min-width: 1280px) and (max-width: 2000px) { .ab-tol-text { margin-left: 0; max-width: 100% !important; } }
 .ab-bio { max-width: calc(var(--ab-para) * 52) !important; }
 @media (min-width: 1000px) { .ab-bio { max-width: var(--bio-text) !important; } }   /* (since 2026-11-01) desktop: the width the copy had before the tabs widened */
 /* (since 2026-11-23, Grace, from 1280) Biography on desktops up to 1440px wide: the copy 12px (14.5px before; 12.5px earlier that day)

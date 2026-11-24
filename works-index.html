@@ -218,6 +218,25 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
 a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
 .prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
+/* (since 2026-11-24, Grace) the Tree of Life row opens its five pictures in a white lightbox over the Index, as About's Process and Studio
+   photos do (the same round controls: previous, close, next); a click on either half of the picture, the arrow keys or the controls
+   step through the five, round and round; Escape, the close circle or a click on the white closes */
+.idx-item.tol { cursor: zoom-in; }
+.tol-lb { position: fixed; inset: 0; z-index: 1000; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 24px 24px 128px; box-sizing: border-box; cursor: zoom-out; }
+.tol-lb[hidden] { display: none; }
+.tol-lb img { display: block; max-width: calc(100vw - 48px); max-height: calc(100vh - 152px); width: auto; height: auto; cursor: pointer; }
+.tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 1001; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+.tp-bar[hidden] { display: none; }
+.tp-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 9999px; background: #FFFFFF; color: #1C1C1C; border: none; padding: 0; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
+.tp-ic { display: grid; place-items: center; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; }
+.tp-btn.xl { width: 56px; height: 56px; }
+.tp-btn svg { display: block; }
+.tp-btn.prev:hover svg { animation: tp-prev 0.45s ease-in-out; }
+.tp-btn.next:hover svg { animation: tp-next 0.45s ease-in-out; }
+.tp-btn.xl:hover svg { animation: tp-close 0.45s ease-in-out; }
+@keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
+@keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+@keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
 </style>
 <script src="alt-text.js?v=7"></script>
 <script src="search-data.js?v=1" defer></script>
@@ -342,7 +361,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
       <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_vesper-1.jpg"><img src="assets/thumbs-m70/tonal_vesper-1.jpg" style="aspect-ratio: 3 / 2" alt="Vesper" data-alt-title="Vesper" data-alt-size="s"></a>
     </section>
     <!-- (since 2026-11-23 evening, Grace) Tree of Life: five pictures of the sculpture, all one shape (the third one's; background added at
-         the sides of 1, 2 and 4, the fifth on a white to light-gray gradient), as tall as the portraits; each opens About's Tree of Life tab.
+         the sides of 1, 2 and 4, the fifth on a white to light-gray gradient), as tall as the portraits; each opens in a lightbox over the Index (since 2026-11-24; it opened About's Tree of Life tab).
          Not a series of works: no year, and in neither Horizontal nor Vertical -->
     <section class="idx-row" data-s="Tree of Life" aria-label="Tree of Life">
       <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_1.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
@@ -853,6 +872,32 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
   keepAddress();
   const sy = +r.sy || 0, put = () => { se.scrollTop = sy; tY = se.scrollTop; };
   put(); setTimeout(put, 0); document.fonts && document.fonts.ready.then(put); addEventListener('load', put, { once: true });
+})();
+</script>
+<div class="tol-lb" hidden role="dialog" aria-modal="true" aria-label="Tree of Life"><img alt=""></div>
+<div class="tp-bar tol-bar" hidden>
+  <button class="tp-btn prev" aria-label="Previous"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
+  <button class="tp-btn xl" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
+  <button class="tp-btn next" aria-label="Next"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
+</div>
+<script>
+// (since 2026-11-24, Grace) the Tree of Life row's lightbox (2000px files in assets/works-m70-2000/)
+(function () {
+  const lb = document.querySelector('.tol-lb'), img = lb.querySelector('img'), bar = document.querySelector('.tol-bar');
+  const links = [...document.querySelectorAll('.idx-item.tol')], srcs = links.map(a => a.querySelector('img').getAttribute('src').replace('thumbs-m70/', 'works-m70-2000/'));
+  let i = 0, back = null;
+  const show = () => { img.src = srcs[i]; img.alt = 'Tree of Life, ' + (i + 1) + ' of ' + srcs.length; };
+  const step = d => { i = (i + d + srcs.length) % srcs.length; show(); };
+  const open = k => { i = k; back = document.activeElement; show(); lb.hidden = bar.hidden = false; document.body.style.overflow = 'hidden'; bar.querySelector('.xl').focus(); };
+  const close = () => { lb.hidden = bar.hidden = true; document.body.style.overflow = ''; if (back) back.focus(); };
+  links.forEach((a, k) => a.addEventListener('click', e => { e.preventDefault(); open(k); }));
+  lb.addEventListener('click', close);
+  img.addEventListener('click', e => { e.stopPropagation(); const r = img.getBoundingClientRect(); step(e.clientX - r.left > r.width / 2 ? 1 : -1); });
+  bar.querySelector('.prev').addEventListener('click', () => step(-1));
+  bar.querySelector('.next').addEventListener('click', () => step(1));
+  bar.querySelector('.xl').addEventListener('click', close);
+  addEventListener('keydown', e => { if (lb.hidden) return; if (['Escape', 'ArrowRight', 'ArrowLeft'].includes(e.key)) e.stopPropagation(); if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } }, true);
+  srcs.forEach(u => { const p = new Image(); p.src = u; });
 })();
 </script>
 <script src="body-fit.js?v=8" data-nav="home"></script>
