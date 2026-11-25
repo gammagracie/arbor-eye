@@ -123,8 +123,8 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 /* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
    the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
 @media (min-width: 768px) {
-  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
-  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px)); }
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px) - var(--step-3up, 0px)); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - var(--chev-w) / 22 - var(--step-out, 0px) - var(--step-3up, 0px)); }
 }
 /* (since 2026-11-22, Grace, global) desktop, every size: each arrow wholly outside the nav, its two open ends on the logo's left edge
    (the bag icon's right edge for the right arrow), its point further out (the chevron's ends sit at 21/22 of its width, its point at 1/22) */
@@ -476,6 +476,8 @@ function fit() {
   // phones: on the side padding, level with the logo and the menu button
   const sv = $('prev').querySelector('svg').getBoundingClientRect();
   $('prev').style.left = $('next').style.right = phone.matches ? '0px' : '';
+  // (since 2026-11-25, Grace) desktop three-up: the arrows a further 40px out toward the screen's sides (the works stay where they were)
+  document.documentElement.style.setProperty('--step-3up', count === 3 && !grid && innerWidth >= 1024 ? '40px' : '0px');
   // the works always stay clear of the arrows: within the content width less each chevron and 24px
   let inner = contentW - 2 * (sv.width + 24);
   // (since 2026-11-04, when the arrows came back onto the nav lines) the end works' hover growth (3.75% of a work's width a side)
