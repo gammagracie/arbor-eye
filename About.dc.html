@@ -67,6 +67,9 @@
 /* (since 2026-11-23 evening, Grace) desktop: the photos with a drop shadow for depth (since 2026-11-24 tighter than the Gallery works': 6px 7px 16px -5px, 34% black; it was theirs, 12px 14px 32px -8px): Biography's portrait, Tree of Life's
    photo, Process's photo and films, Studio's photos */
 .ab-portrait-crop, .ab-tol-img, .ab-proc-media, .ab-stu-slide > img { box-shadow: 6px 7px 16px -5px rgba(20,20,20,0.34); }
+/* (since 2026-11-24, Grace) Tree of Life's photo has a transparent ground to the right of the fresco, so its shadow follows what is
+   drawn (the fresco's edge and the two sculptures), not the rectangle */
+.ab-tol-img { box-shadow: none; filter: drop-shadow(4px 5px 6px rgba(20,20,20,0.30)); }
 .ab-portrait-crop { height: var(--ab-h); width: calc((var(--ab-h) + 60px) * 3 / 4); overflow: hidden; }   /* (since 2026-11-18, Grace) the portrait's sides are never cropped: it is always its full width, and the copy takes what is left up to the bag icon's line (the gap unchanged), narrowing where it must */   /* (since 2026-11-17, Grace) always as tall as Contact's photo, top and bottom level with it; where the copy needs its width (2560 x 1440, say) the portrait's sides are cropped rather than the whole picture shrinking. Before: as large as left the copy its width */   /* (since 2026-11-01) the portrait's box as tall as the tab's box, or as large as leaves the copy its width */
 .ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; width: 100% !important; object-fit: cover; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: every tab's pictures 60px shorter, so the tab bar under them sits
