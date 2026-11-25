@@ -522,7 +522,7 @@ const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Sp
 // (since 2026-11-23, Grace: "match grids we have on gallery", desktop) each series in Gallery's grid columns: Convergence, Core, Select and
 // The Turning two across (Gallery's 2 x 2 pages; here every work at once, as large as fits the screen), Structure 3 over 2, Ascent 5 over 4
 // (Spectrum two across and Tonal 3 over 2 already matched). Before: Convergence 3/3, Core and Select 3/3/2, The Turning 4/3, Structure 5
-const SERIES_ROWS = { 'The Turning': [2, 2, 2, 1], 'Ascent': [5, 4], 'Structure': [3, 2], 'Convergence': [2, 2, 2], 'Core': [2, 2, 2, 2], 'Select': [2, 2, 2, 2] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)
+const SERIES_ROWS = { 'The Turning': [2, 2, 2, 1], 'Ascent': [5, 4], 'Structure': [3, 2], 'Convergence': [2, 2, 2], 'Core': [3, 2, 3], 'Select': [3, 2, 3] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)   // (Core and Select 3 + 2 + 3 since 2026-11-24, Grace; they were 2/2/2/2)
 // (since 2026-11-19, Grace) a year's works in rows of these lengths, in order, series running on into the next row where they
 // must (2025: 7 + 7; 2024: 5, 4, 4, 5), each row centred; laid out in one block (#idxYear, see layout) whose series rows flow
 // (since 2026-11-23, Grace, matching Gallery) 2025 four across (was 7 + 7); Vertical (the same fourteen portraits) laid out the same way
@@ -530,6 +530,8 @@ const SERIES_ROWS = { 'The Turning': [2, 2, 2, 1], 'Ascent': [5, 4], 'Structure'
 // (since 2026-11-23) a grid of more than two rows: its works the size Gallery's two-row pages give them, the page scrolling to the
 // rows below (fitting every row on one screen made them about half that)
 const FIT_ROWS = 2;
+const FIT_ALL = { 'Core': 1, 'Select': 1 };   // (since 2026-11-24, Grace) the series of 8, in 3 + 2 + 3: as large as fits, every row on one screen
+// and no wider than the nav's margins (the logo's left edge to the bag's right)
 const YEAR_ROWS = { '2025': [4, 4, 4, 2], '2024': [5, 4, 4, 5], 'Vertical': [4, 4, 4, 2] };
 // sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
 // scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
@@ -611,7 +613,7 @@ function layout() {
     const sz = SERIES_SIZE[row.dataset.s];
     const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
     let h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
-                 : Math.min(fit(cols, Math.min(nr, FIT_ROWS)), 2.83 * (v ? 1.5 * H : H));
+                 : Math.min(fit(cols, FIT_ALL[row.dataset.s] ? nr : Math.min(nr, FIT_ROWS)), 2.83 * (v ? 1.5 * H : H));
     const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || ZOOM;
     h *= T.k || 1;
     // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
@@ -622,9 +624,18 @@ function layout() {
       set(row, v ? h / 1.5 : h, cols, h * r, gxS, gyS);
     };
     apply();
+    if (FIT_ALL[row.dataset.s]) {   // the largest size whose rows fit the screen (the last row's title 16px above its bottom) and the nav's width
+      const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0);
+      let lo = 20, hi = 3000;
+      for (let i = 0; i < 24; i++) {
+        h = (lo + hi) / 2; apply();
+        if (row.offsetHeight <= maxH + 0.5 && cols * h * r + (cols - 1) * gxS + 1 <= aw + 0.5) lo = h; else hi = h;
+      }
+      h = lo; apply();
+    }
     // never past the screen: the last row's title stays 16px above its bottom, so the works grow only as far as that allows (Fit
     // the screen, since 2026-11-02; the enlarged series at first, every series since the shared hover size)
-    for (let i = 0; i < 3 && nr <= FIT_ROWS; i++) {
+    for (let i = 0; i < 3 && (nr <= FIT_ROWS || FIT_ALL[row.dataset.s]); i++) {
       const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0),   // (the row starts the series list's gap below `top`)
         rh = row.offsetHeight, gaps = rh - nr * (v ? h : h);
       if (rh <= maxH + 0.5) break;

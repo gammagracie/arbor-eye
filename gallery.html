@@ -636,6 +636,16 @@ function fit() {
       if (!(SL && SL.grow) && used > 1 && units * a + (G(a) + EX) * (used - 1) > V) { gMid = Math.max(52 + EX, (V - units * a) / (used - 1));   // (the plain grid: at least 67px since 2026-11-23)
       V = Math.max(V, units * a + gMid * (used - 1)); }
     }
+    // (since 2026-11-24, Grace) desktop: the plain grid's works larger, 12% for a 3 x 3 and 20% for a 3 x 2 (2003's six), never wider
+    // than the arrows allow and never so large that the bottom row nears the thumbnails: the gap between the rows closes first
+    // (never below 52px, so a hovered work's title stays clear of the row below), and the works stop growing there
+    if (!SL && !tab.matches) {
+      const gc = GC(a), aW = (inner - (gc + EX) * (nc - 1)) / (boxR * nc), gMin = 52 + EX;
+      const aH = used > 1 ? (V - gMin * (used - 1)) / units : Infinity;
+      a = Math.max(a, Math.min(a * (used === 2 ? 1.2 : 1.12), aW, aH)); gcFix = gc;
+      const gNow = gMid != null ? gMid : G(a) + EX;
+      if (used > 1 && units * a + gNow * (used - 1) > V) gMid = Math.max(gMin, (V - units * a) / (used - 1));
+    }
     const g = gMid != null ? gMid : G(a), gRow = SL && SL.grow && used > 1 ? Math.max(ROWNEED, Math.min(G(a), (V - a * used) / (used - 1))) : g;   // (the rows' gap, closer for a grown layout)
     const gRowX = gMid != null ? gRow : gRow + EX;
     if (SL) {   // series layout: rows of nc, a short last row centred under the full ones, the same gaps
@@ -646,7 +656,10 @@ function fit() {
       Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' });
       row.style.gridTemplateColumns = 'repeat(' + 2 * nc + ', ' + ((a * 1.5 - GC(a) - EX) / 2).toFixed(2) + 'px)';
     }
-    row.style.columnGap = (GC(a) + EX).toFixed(1) + 'px'; row.style.rowGap = gRowX.toFixed(1) + 'px';
+    // (since 2026-11-24, Grace) desktop: more room between the rows for the hover titles. A series in 2 x 2: its top row 20px higher and
+    // its bottom row 20px lower; Tonal's 3 over 2: its second row 30px lower
+    const two2 = !tab.matches && SL && SL.cols === 2 && SL.per === 4, XG = !tab.matches ? (two2 ? 40 + (midDesk ? 25 : 0) : key === 'Tonal' ? 30 : 0) : 0;   // (2 x 2 up to 2000px wide: its bottom row 25px lower again, Grace at 1920)
+    row.style.columnGap = (GC(a) + EX).toFixed(1) + 'px'; row.style.rowGap = (gRowX + XG).toFixed(1) + 'px';
     const up = s => !SL && WORKS[s.idx] && WORKS[s.idx].r < 1;   // a portrait in the plain grid: the landscape box turned upright
     slots.forEach(s => { s.a.style.width = a * (SL ? (WORKS[s.idx] && WORKS[s.idx].r < 1 ? WORKS[s.idx].r : boxR) : up(s) ? 1 : R(s)) + 'px'; s.a.style.height = a * (up(s) ? 1.5 : 1) + 'px'; s.a.style.gridColumn = SL ? '' : 'span 2'; });
     const lastStart = Math.floor((slots.length - 1) / nc) * nc, short = slots.length - lastStart;
@@ -658,7 +671,9 @@ function fit() {
     // series in 2 x 2 (Convergence, Core, Outliers, Select, The Turning, Spectrum) and for Structure (its 3 over 2)
     if (midDesk && (key === 'Vertical' || key === 'year:2025' || key === 'Structure' || SL && SL.cols === 2 && SL.per === 4)) gridTop += 20;
     $('prev').style.top = $('next').style.top = (gridTop + V / 2).toFixed(1) + 'px';
-    if (V - rowH > 2) gridTop += (V - rowH) / 2;   // the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
+    if (V - rowH > 2) gridTop += (V - rowH) / 2;
+    if (XG && usedNow > 1) { rowH += XG * (usedNow - 1); if (two2) gridTop -= 20; }   // (the extra row gap, above: centred about the same middle for a 2 x 2, all below the top row for Tonal)
+    // (the width limits the works (tall screens such as portrait tablets): the spare height goes equally above and below the grid
     row.style.top = (gridTop + rowH / 2).toFixed(1) + 'px';
   } else { row.style.rowGap = ''; Object.assign(row.style, { display: '', flexWrap: '', justifyContent: '', alignItems: '', width: '' }); slots.forEach(s => { s.a.style.gridColumn = ''; }); $('prev').style.top = $('next').style.top = ''; }
   stage.style.overflow = gridTop !== null || tallPortrait ? 'visible' : ''; stage.style.clipPath = gridTop !== null ? 'inset(' + (Math.min(0, gridTop) - 24).toFixed(1) + 'px 0 -60px 0)' : tallPortrait ? 'inset(-200px 0 -60px 0)' : '';   // the grid may rise above the stage, up to the icons (and 24px more, so a hovered top-row work is never cut)
