@@ -590,6 +590,17 @@ function markTop() {
 }
 addEventListener('load', markTop);
 document.querySelectorAll('.idx-item img').forEach(i => i.addEventListener('load', markTop));
+// (since 2026-11-25, Grace) all series: a series too long for one line (Ascent's 18) splits into even lines (9 + 9) rather than
+// filling the first line and leaving a short one under it (13 + 5); the row is narrowed to its first half's width so it breaks there
+function balanceRows() {
+  document.querySelectorAll('.idx-row').forEach(row => {
+    row.style.maxWidth = ''; if (row.hidden) return;
+    const items = [...row.querySelectorAll('.idx-item:not([hidden])')]; if (items.length < 2) return;
+    const lines = new Set(items.map(a => a.offsetTop)).size; if (lines < 2) return;
+    const k = Math.ceil(items.length / lines), a = items[0], b = items[k - 1];
+    row.style.maxWidth = (b.offsetLeft + b.offsetWidth - a.offsetLeft + 1).toFixed(1) + 'px';
+  });
+}
 function layout() {
   const rows = [...document.querySelectorAll('.idx-row')];
   rows.forEach((r, k) => { if (r.dataset.o == null) r.dataset.o = k; });
@@ -599,7 +610,7 @@ function layout() {
   idx.style.gap = '';
   idx.classList.remove('m-s', 'm-h', 'm-v');
   liftLabel();
-  if (mode === 'all') { markTop(); return; }
+  if (mode === 'all') { balanceRows(); markTop(); return; }
   idx.classList.add('m-' + mode);
   const cs = getComputedStyle(idx), aw = idx.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   const th = parseFloat(getComputedStyle(title).fontSize) * 1.25, H = thumbH();
@@ -788,7 +799,8 @@ function applyFilter() {
   if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); goT = setTimeout(() => { goT = 0; go(); }, 500); }
   else go();
 }
-addEventListener('resize', () => { if (mode !== 'all') layout(); else { liftLabel(); markTop(); } });
+addEventListener('resize', () => { if (mode !== 'all') layout(); else { balanceRows(); liftLabel(); markTop(); } });
+addEventListener('load', () => { if (mode === 'all') { balanceRows(); markTop(); } });
 liftLabel(); document.fonts && document.fonts.ready.then(liftLabel);
 const menuRenders = [];
 function menu(id, label, opts, get, set) {

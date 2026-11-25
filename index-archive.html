@@ -438,6 +438,8 @@ function fit() {
   // phones: on the side padding, level with the logo and the menu button
   const sv = $('prev').querySelector('svg').getBoundingClientRect();
   $('prev').style.left = $('next').style.right = phone.matches ? '0px' : '';
+  // (since 2026-11-25, Grace) desktop three-up: the arrows 40px further out toward the screen's sides (the works stay where they were)
+  document.documentElement.style.setProperty('--step-out', count === 3 && !grid && innerWidth >= 1024 ? '40px' : '0px');
   // the works always stay clear of the arrows: within the content width less each chevron and 24px
   let inner = contentW - 2 * (sv.width + 24);
   // (since 2026-11-04, when the arrows came back onto the nav lines) the end works' hover growth (3.75% of a work's width a side)
