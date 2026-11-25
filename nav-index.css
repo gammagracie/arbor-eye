@@ -26,3 +26,7 @@ header nav { align-items: baseline; }
 @media (min-width: 1024px) and (max-width: 1279px) {
   html:root:root { --nav-hp: calc(0.8 * max(24px, 11.1vw, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2))); }
 }
+/* (since 2026-11-25, Grace) the word INDEX in the top nav carries a soft drop shadow, a little down and to the right (the hidden bold copy under it too, so its width is unchanged) */
+header a.nav-index, header a.nav-index::after { text-shadow: 1px 2px 3px rgba(20, 20, 20, 0.35); }
+/* (since 2026-11-25, Grace, trial) INDEX22 after INDEX in the header nav (works-index22.html); phones leave it out, as they do INDEX */
+@media (max-width: 767px) { header a.nav-index22 { display: none !important; } }

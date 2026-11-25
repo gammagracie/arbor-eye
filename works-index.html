@@ -172,6 +172,8 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 /* (since 2026-11-23, Grace) every work a subtle, feathered drop shadow at rest, soft and a little down and to the right (a hovered work keeps its deeper one) */
 .idx-item { box-shadow: 3px 5px 14px -4px rgba(20,20,20,0.24); }
 .idx-item.v, .idx-item.tol { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
+/* (since 2026-11-25, Grace) all series: the Tree of Life thumbnails as wide as the portraits (their own shape, so a little shorter than them; they were as tall as the portraits) */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.tol { height: calc(var(--ih) * 3084 / 2650); }
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
@@ -248,7 +250,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=2"></script>
-<link rel="stylesheet" href="nav-index.css?v=11">
+<link rel="stylesheet" href="nav-index.css?v=12">
 </head>
 <body>
 <div class="page index" id="page">
@@ -259,7 +261,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <nav class="main">
           <a href="gallery.html" data-t="Gallery">Gallery</a>
           <a href="About.dc.html" data-t="About">About</a>
-          <a class="nav-index" aria-current="page" style="font-weight: 700" href="works-index.html" data-t="Index">Index</a>
+          <a class="nav-index" aria-current="page" style="font-weight: 700" href="works-index.html" data-t="Index">Index</a><a class="nav-index22" href="works-index22.html" data-t="Index22">Index22</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
         <div class="icons">

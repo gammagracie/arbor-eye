@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbor &amp; Eye | Index22</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/neuzeit.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* screens over 2000px wide: every font size 25% larger (since 2026-10-19; each font-size is multiplied by --fs; the
+   logo's hidden text and H0's hover title are left out) */
+:root { --fs: 1; }
+@media (min-width: 2001px) { :root { --fs: 1.25; } }
+
+/* Shared site tokens: header/footer heights and side padding match the other pages */
+:root { --header-h: clamp(72px, 57px + 1.172vw, 80px); --footer-h: clamp(30.1px, 13.3px + 1.3013vw, 37.8px);   /* (since 2026-10-28) 70% of the earlier 43 - 54px */ --side-pad: 24px; --thumb-h: 25px; --step-w: clamp(32px, 5.8vw, 84px); }
+@media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
+@media (min-width: 2501px) { :root { --header-h: 102px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
+@media (min-width: 768px) { :root { --thumb-h: 30px; } }
+@media (min-width: 768px) { :root { --side-pad: 48px; } }
+@media (min-width: 1024px) { :root { --side-pad: 10vw; } }
+/* (since 2026-11-06, every page) screens over 2500px: the header's side margins 8% of the width, as on Home, About and Contact, so the
+   header never moves between pages. The footer's content runs from the same distance in as the last letter of CONTACT over 2500px
+   (body-fit.js sets --body-pad), on the nav's lines below that */
+@media (min-width: 2501px) { :root { --side-pad: 8vw; } }
+:root { --body-pad: var(--side-pad); }
+@media (min-width: 2501px) { :root { --body-pad: calc(var(--side-pad) + 140px); } }
+html { scrollbar-gutter: stable; }   /* (since 2026-11-06) the scrollbar's room kept as on every other page, so the header lines up wherever scrollbars take space */
+html, body { height: 100%; margin: 0; }
+body { background: #FDFDFB; color: #141414; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: #141414; text-decoration: none; }
+a:hover { color: #6E6B66; }
+button { font-family: inherit; }
+::selection { background: #E9E6DF; }
+
+/* header + work + thumbnails fill the screen exactly; the footer sits below the fold and is reached by scrolling */
+.page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+/* Phones in portrait: footer twice as tall and kept on screen (header, work and filmstrip share the rest of the height) */
+@media (max-width: 767px) and (orientation: portrait) { :root { --footer-h: 86px; } .page { height: calc(100vh - var(--footer-h)); height: calc(100dvh - var(--footer-h)); } }
+
+/* header */
+header { flex: none; border-bottom: 1px solid #E7E4DE; background: #FDFDFB; position: relative; z-index: 30; }
+.bar { height: var(--header-h); box-sizing: border-box; padding: 0 var(--side-pad); display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; justify-content: space-between; gap: 32px; }
+.logo { position: relative; display: block; width: 216.43px; overflow: visible; font-family: 'EB Garamond', serif; font-size: 29px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.logo .logo-text { visibility: hidden; }
+.logo .logo-text span { font-style: italic; text-transform: none; letter-spacing: 0; }
+.right, .icons { display: flex; align-items: baseline; }
+.right { gap: 40px; } .icons { gap: 20px; }
+nav.main { display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase; }
+nav.main .on { font-weight: 600; }
+.icons a { display: flex; position: relative; }
+.badge { position: absolute; top: -6px; right: -8px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #141414; color: #FDFDFB; font-size: calc(9px * var(--fs)); }
+.burger { display: none; border: none; background: transparent; padding: 8px 0 8px 8px; cursor: pointer; gap: 5px; }
+.burger span { display: block; width: 20px; height: 1.5px; background: #141414; transition: transform 0.2s, opacity 0.2s; }
+body.menu-open .burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+body.menu-open .burger span:nth-child(2) { opacity: 0; }
+body.menu-open .burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.menu { position: fixed; top: var(--header-h); bottom: 0; left: 0; right: 0; z-index: 20; background: #FDFDFB; display: grid; align-content: start; padding: 8px 24px 20px; font-size: calc(13px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; }
+body.menu-open .menu { transform: translateY(0); visibility: visible; }
+.menu a { padding: 28px 0; border-bottom: 1px solid #F0EDE7; display: flex; align-items: center; gap: 14px; }
+.menu a:last-child { border-bottom: none; }
+@media (max-width: 767px) {
+  .bar { align-items: center; }
+  nav.main, .icons a { display: none; }
+  .burger { display: grid; }
+}
+
+/* stage: the selected work, as large as the space allows */
+/* the work may grow past the page's side padding (out to 3% of the screen) so it is as large as the window allows */
+/* view switch (top left, lined up with the logo like the grid gallery's switcher): 1 work, 3 in a row, or 9 in three rows of three; phones are always one-up */
+.tools { flex: none; display: flex; justify-content: flex-start; align-items: center; gap: 14px; padding: 14px var(--side-pad) 0; position: relative; z-index: 6; }
+/* filter menus (top right, on the bag icon's line, as on the grid gallery): Series and Year */
+.filters { margin-left: auto; display: flex; gap: 48px; }
+.filter-menu { position: relative; }
+.fm-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 0 0 5px; font-family: inherit; font-size: calc(12px * var(--fs)); letter-spacing: 0.16em; text-transform: uppercase; color: #141414; cursor: pointer; }
+.fm-list { position: absolute; top: 100%; right: 0; z-index: 25; width: 240px; margin-top: 6px; background: #FDFDFB; border-top: 1.5px solid #141414; box-shadow: 0 14px 36px rgba(20,20,20,0.12); padding: 14px 0 12px; display: none; }
+.filter-menu.open .fm-list { display: grid; }
+.tools:has(.filter-menu.open) { z-index: 400 !important; }   /* (since 2026-11-19, Grace) an open SERIES / YEAR list is always on top of everything (the works, a hovered work, the series labels) */
+.fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
+.fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }
+.fm-btn.chosen span { font-weight: 600; }
+.fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
+@media (min-width: 1024px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow (since 2026-11-02) */
+@media (max-width: 767px) { .tools { display: none; } }
+.count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
+.count:hover { color: #6E6B66; } .count.on { color: #141414; }
+.count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.stage { flex: 1; min-height: 0; position: relative; margin: 10px var(--side-pad) 0; overflow: hidden; }
+@media (min-width: 768px) { .stage { margin: 10px max(24px, 3vw) 0; } }
+/* the arrows, locked in every view from the first paint: the left chevron's point on the logo's left edge, the right one's on
+   the bag icon's right edge (side padding, less the stage's margin, less the point's 1/22 of the chevron's width) */
+@media (min-width: 768px) {
+  .step.prev { left: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
+  .step.next { right: calc(var(--side-pad) - max(24px, 3vw) - clamp(9.75px, 1.31625vw, 19.0125px) / 22); }
+}
+/* the featured works sit in a centred row, all the same height, a gap apart */
+.row { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 28px; }
+.row.grid { display: grid; grid-template-columns: repeat(3, auto); justify-items: center; align-items: center; row-gap: 48px; column-gap: 60px; }   /* 9-up: three columns 60px apart, rows 48px apart, room under each work for its title */
+.row.grid .art img { object-fit: contain; }   /* 9-up: every landscape shares one 3:2 box so the columns line up; a scan not exactly 3:2 is fitted inside it, never trimmed */
+.art { position: relative; flex: none; display: block; box-shadow: 0 6px 16px rgba(20,20,20,0.14); cursor: pointer; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+html:not(.touch) .art:hover { transform: scale(1.075); z-index: 2; }   /* hover: a centre-out enlargement (1.03 until 2026-10-29, then 2.5 times the growth) */
+.art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.9s ease-in-out; -webkit-user-drag: none; user-select: none; }
+.stage { touch-action: pan-y; }
+.art img.on { opacity: 1; }
+/* previous / next chevrons either side of the work (placed by fit()) */
+.step { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; transition: left 0.95s cubic-bezier(0.6, 0, 0.2, 1), right 0.95s cubic-bezier(0.6, 0, 0.2, 1); width: var(--step-w); height: 150px; padding: 0; border: none; background: transparent; color: #ADA9A2; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.step:hover { color: #6E6B66; }
+.step.prev { justify-content: flex-start; } .step.next { justify-content: flex-end; }
+.step svg { width: clamp(9.75px, 1.31625vw, 19.0125px); height: auto; }   /* 65% of the earlier size since 2026-10-19 (49% of the original): 19 x 53px on a 1440px screen, scaling down with the viewport to 9.75 x 27px */
+.caption { flex: none; height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: 'EB Garamond', serif; font-size: calc(16px * var(--fs)); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.35s ease, transform 0.25s ease; }
+.caption small { font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-style: normal; font-size: calc(10px * var(--fs)); letter-spacing: 0.2em; text-transform: uppercase; color: #ADA9A2; }
+.page.hovering .caption { opacity: 1; }
+html.touch .caption { opacity: 1; }
+/* touch screens: title and arrows are hidden while anything moves (slides, crossfades, swipes, the strip, page scrolling) */
+html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; transition: opacity 0.15s ease; }
+
+/* filmstrip: every work in one row, anchored above the footer. The row is a track moved by transform (fluid,
+   eased) and thumbnails magnify under the cursor or finger; the wrap's top padding is headroom for them. */
+.strip-wrap { flex: none; position: relative; z-index: 5; margin-top: -120px; padding: 120px 0 14px; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 var(--side-pad), #000 calc(100% - var(--side-pad)), transparent); }
+.strip { overflow: visible; padding: 6px 0; }
+.track { display: flex; gap: 6px; align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
+.thumb { flex: none; height: var(--thumb-h); padding: 0; border: none; background: none; cursor: pointer; position: relative; transform-origin: center bottom; transition: transform 0.16s ease-out, opacity 0.3s ease; }
+.thumb img { display: block; height: var(--thumb-h); width: auto; box-shadow: 0 2px 8px rgba(20,20,20,0.12); transition: box-shadow 0.35s ease; }
+.thumb.on img { box-shadow: 0 4px 12px rgba(20,20,20,0.38); }   /* the works featured in the main area: a deeper shadow */
+html.touch .track { touch-action: none; }
+
+/* footer */
+footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top: 1px solid #E7E4DE; background: #FAF9F5; position: relative; z-index: 25; }
+.foot { height: 100%; box-sizing: border-box; padding: 0 var(--body-pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: calc(12px * var(--fs)); color: #0F0F0F; }
+.foot p { margin: 0; }
+.social { display: flex; gap: 16px; align-items: center; }
+.social a { display: flex; opacity: 0.85; } .social a:hover { opacity: 1; }
+.social img { display: block; width: 27.5px; height: 27.5px; }
+/* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
+@media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
+@media (min-width: 768px) and (max-width: 899px) { header nav { gap: 9px !important; font-size: calc(11px * var(--fs)) !important; letter-spacing: 0.03em !important; } }
+
+/* ---- Index: every work as a small thumbnail, one row per series in Ned's deck order (Series 1, Ascent to Series 8, Tonal,
+   then the Outliers); the thumbnails touch, each at its own shape and one height, and the rows sit directly on one another.
+   Hovering a thumbnail brings up the genie (see below), names its series once, centred above the thumbnails, and fades the other rows to 25%; a click opens
+   G5 one-up on that work, its series chosen in the filter (since 2026-10-24; on 2026-10-22 and 23 it opened the series grid). */
+/* (since 2026-10-20) the page fills the screen less the footer, so the footer is on screen on load whenever the index fits (as on
+   Ned's 3840 x 2160 screen); the spare height is shared out as equal space around each row, so the rows sit vertically centred */
+.page.index { height: auto; min-height: 100vh; min-height: 100dvh; }   /* (since 2026-10-29) the footer always below the fold, seen only at the very bottom (it was on screen whenever the index fitted) */
+:root { --idx-h: clamp(42px, 5.133vw, 197px); --idx-gap: max(3px, calc(var(--idx-h) * 0.05 - 4px)); }   /* (since 2026-11-24, Grace) at least 3px between the works, across and down (it was at least 1px: 1px at 1920) */   /* (since 2026-11-09, Grace: 4px less, 6px at 3840; since 2026-11-06 half the spacing, was a tenth) */   /* 74px tall on a 1440px screen, growing with the screen; (since 2026-10-29) a gap of a tenth of that between thumbnails and between rows (10px at 1920, 20px at 3840: the rows' spacing on Ned's screen) */
+.idx { flex: 1; display: flex; flex-direction: column; gap: var(--idx-gap); padding: 16px var(--side-pad) 50px; }   /* 50px under the rows = the 16px and the series label's 34px above them */
+.idx > .idx-row { margin-block: auto; }
+/* (since 2026-11-06, Grace; screens over 2500px) the all-series block of thumbnails moved right so its left edge is on the About page's
+   image, the body margin (--body-pad, under CONTACT's last letter); the block keeps its width, so nothing re-wraps */
+@media (min-width: 2501px) { .idx:not(.m-s):not(.m-v):not(.m-h) { padding-left: var(--body-pad); padding-right: calc(2 * var(--side-pad) - var(--body-pad)); } }
+.idx-series { margin: 0 0 14px; height: 20px; text-align: center; font-size: calc(12px * var(--fs) + 2px); letter-spacing: 0.22em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.idx-series.show { opacity: 1; }   /* (since 2026-11-19, Grace) the series name 2px larger than the SERIES / YEAR menus' text (it was 13px x --fs, 1px x --fs larger) */
+.idx-row { transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.idx.hovering .idx-row { opacity: 0.25; }   /* (since 2026-10-29, as martonperlaki.com/thumbnails) the other rows fade to 25% over 0.3s while one is hovered; the names fade in over 0.6s on the same curve */
+.idx.hovering .idx-row.on { opacity: 1; }
+.idx-row { --ih: var(--idx-h); display: flex; flex-wrap: wrap; gap: var(--idx-gap); }
+.idx-item { position: relative; display: block; flex: none; height: var(--ih); transform-origin: center bottom; transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }   /* hover growth (since 2026-10-21): slow and soft both ways, 0.9s on a gentle ease, the same coming back */
+/* the genie, as on G5 (since 2026-10-29): the thumbnail under the cursor swells most (150%), its neighbours less along a wide
+   bell curve, each growing up from its own base and nudged sideways so they never overlap (set by the script below) */
+/* (since 2026-11-09, Grace: the whole top row, marked by the script below; since 2026-11-02 Koi, Artifact and Overlook, under the series
+   name in the first row, and Canyons and Verdance either side of them) all series: swell from their centres
+   rather than up from their bases, so they stay clear of the name */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.mid { transform-origin: center center; }
+.idx-item.hot { z-index: 3; box-shadow: 0 6px 18px rgba(20,20,20,0.374); }   /* (since 2026-11-02) 170% of the earlier 0.22 */
+.idx-item img { display: block; height: 100%; width: auto; }
+/* (since 2026-11-23, Grace) every work a subtle, feathered drop shadow at rest, soft and a little down and to the right (a hovered work keeps its deeper one) */
+.idx-item { box-shadow: 3px 5px 14px -4px rgba(20,20,20,0.24); }
+.idx-item.v, .idx-item.tol { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
+/* (since 2026-11-25, Grace) all series: the Tree of Life thumbnails as wide as the portraits (their own shape, so a little shorter than them; they were as tall as the portraits) */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.tol { height: calc(var(--ih) * 1.5 * 3084 / 2650); }   /* INDEX22: as wide as a landscape (Tonal's thumbnails above), so taller than the portraits */
+/* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
+   (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
+.idx { position: relative; }
+.idx-title { position: absolute; left: 0; top: 0; margin: 0; white-space: nowrap; font-family: 'EB Garamond', serif; font-style: normal; font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54); letter-spacing: 0.1em; text-transform: uppercase; color: #141414; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events: none; }
+.idx-title.show { opacity: 1; }
+/* (since 2026-10-28) Series and Year menus at the top right, on the bag icon's line, as on G5: a series shows only its row,
+   Horizontal / Vertical and a year only the matching works, each remaining row still on its own line */
+.index .tools { padding-top: 14px; }
+/* (since 2026-11-19, Grace) desktop: the SERIES / YEAR menus 7px lower; the series name sits on their baseline (liftLabel) */
+@media (min-width: 768px) { .index .filters { position: relative; top: 7px; } }
+/* (since 2026-11-17, Grace) desktop: the menus' line, where the hovered series' name also shows, stays on screen under the header;
+   the thumbnails slide under it as the page scrolls. The band reaches 14px below that line (--band-ext, set by the script) on the
+   page's own background; the series name sticks with it */
+@media (hover: hover) and (pointer: fine) {
+  .index .tools { position: sticky; top: var(--band-top, 0px); z-index: 200; background: #FDFDFB; }
+  .index .tools::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: var(--band-ext, 14px); background: #FDFDFB; pointer-events: none; }
+  .index .idx-series { position: sticky; z-index: 201; pointer-events: none; }   /* (it runs the full width on the menus' line: clicks pass through to the menus) */
+}
+/* (since 2026-11-17, Grace) the header above everything on the page, so a thumbnail swelling as it scrolls under the band never shows
+   over the header (the genie lifts thumbnails as high as z-index 150; the header was 30). The header keeps its own #FDFDFB background */
+.index header { z-index: 300 !important; }
+.idx-row[hidden], .idx-item[hidden] { display: none; }
+/* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
+   Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as
+   G5's grid does (107.5%, 0.9s), Horizontal keeps the genie; one series has the genie too since 2026-11-01 (130% at its peak) */
+.idx.m-s .idx-row, .idx.m-h .idx-row, .idx.m-v .idx-row { justify-content: center; }
+.idx.m-s .idx-row, .idx.m-v .idx-row { margin-inline: auto; }
+.idx.m-h .idx-row { flex-wrap: nowrap; }
+.idx.m-v > .idx-row, .idx.m-h > .idx-row { margin-block: 0; }   /* Vertical and Horizontal (since 2026-10-29): the rows close under the menus, not centred */
+.idx.m-s .idx-item, .idx.m-v .idx-item, .idx.m-h .idx-item { transform-origin: center center; }   /* (Horizontal's genie too, since 2026-10-30: it swells out on all four sides) */
+/* (since 2026-11-02) one series and Vertical: every hover grows and shrinks the same way, as G5's works do: 0.9s on a gentle
+   ease both ways (0.5s, quick then settling, earlier that day) */
+.idx.m-s .idx-item, .idx.m-v .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+/* (since 2026-11-19, Grace) a year in rows set by hand (YEAR_ROWS): its series rows flow as one block; the other series' works fade while one is hovered */
+.idx-yr { display: flex; flex-wrap: wrap; justify-content: center; margin-inline: auto; flex: none; }
+.idx-yr > .idx-row { display: contents; }
+.idx-yr .idx-item { transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+/* (since 2026-11-25, Grace) no fading: as on a single series' page, only the hovered work grows (the other series' works faded to 25% before) */
+.idx.m-v.hovering .idx-row { opacity: 1; }
+.idx.m-v .idx-item.hot, .idx.m-s .idx-item.hot { transform: scale(var(--hz, 1.075)); }   /* --hz: a series' own hover size (since 2026-11-02, set by layout()) */   /* (1.03 until 2026-10-29; one series too since 2026-11-02, in place of the genie, as G5's grid) */
+.idx.m-s .idx-item.lastrow { transform-origin: center bottom; }   /* its last row grows upward, so the titles under it stay on screen */
+@media (min-width: 768px) and (max-width: 2000px) { .idx-title { font-size: calc(clamp(16px, calc(0.8vw + 4.5px), 27px) * var(--fs) * 0.54 + 2px); } }   /* (since 2026-10-29) desktop up to 2000px: hover titles 2px larger */
+/* (since 2026-11-04) the header nav: each link as wide as its bold self (a hidden bold copy under it), so the current page's bold
+   link never pushes its neighbours and the nav sits identically on every page */
+a[data-t] { display: inline-flex; flex-direction: column; align-items: center; }
+a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
+.prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
+/* (since 2026-11-24, Grace) the Tree of Life row opens its five pictures in a white lightbox over the Index, as About's Process and Studio
+   photos do (the same round controls: previous, close, next); a click on either half of the picture, the arrow keys or the controls
+   step through the five, round and round; Escape, the close circle or a click on the white closes */
+.idx-item.tol { cursor: zoom-in; }
+.tol-lb { position: fixed; inset: 0; z-index: 1000; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 24px 24px 128px; box-sizing: border-box; cursor: zoom-out; }
+.tol-lb[hidden] { display: none; }
+.tol-lb img { display: block; max-width: calc(100vw - 48px); max-height: calc(100vh - 152px); width: auto; height: auto; cursor: pointer; }
+.tp-bar { position: fixed; left: 0; right: 0; bottom: 40px; z-index: 1001; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; }
+.tp-bar[hidden] { display: none; }
+.tp-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 9999px; background: #FFFFFF; color: #1C1C1C; border: none; padding: 0; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
+.tp-ic { display: grid; place-items: center; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; }
+.tp-btn.xl { width: 56px; height: 56px; }
+.tp-btn svg { display: block; }
+.tp-btn.prev:hover svg { animation: tp-prev 0.45s ease-in-out; }
+.tp-btn.next:hover svg { animation: tp-next 0.45s ease-in-out; }
+.tp-btn.xl:hover svg { animation: tp-close 0.45s ease-in-out; }
+@keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
+@keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+@keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
+</style>
+<script src="alt-text.js?v=7"></script>
+<script src="search-data.js?v=2" defer></script>
+<script src="search.js?v=9" defer></script>
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
+<link rel="stylesheet" href="nav-match.css?v=4">
+<link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
+<script src="a11y.js?v=2"></script>
+<script src="footer-peek.js?v=2"></script>
+<link rel="stylesheet" href="nav-index.css?v=12">
+</head>
+<body>
+<div class="page index" id="page">
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Arbor &amp; Eye"><span class="logo-text">Arbor <span>&amp;</span> Eye</span><img src="uploads/logo-tol.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: -10.74px; width: 216.43px; height: 58.88px; display: block"></a>
+      <div class="right">
+        <nav class="main">
+          <a href="gallery.html" data-t="Gallery">Gallery</a>
+          <a href="About.dc.html" data-t="About">About</a>
+          <a class="nav-index" href="works-index.html" data-t="Index">Index</a><a class="nav-index22" aria-current="page" style="font-weight: 700" href="works-index22.html" data-t="Index22">Index22</a>
+          <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
+        </nav>
+        <div class="icons">
+          <button type="button" data-search-open aria-label="Search" style="display: flex; border: none; background: transparent; padding: 0; cursor: pointer; color: #141414"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.75"></circle><path d="m15.5 15.5 5.5 5.5" stroke-linecap="round"></path></svg></button>
+          <a href="#" aria-label="Account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg></a>
+          <a href="#" aria-label="Cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></a>
+          <a class="prev-box" href="old-pages.html" aria-label="Older pages" title="Older pages" style="position: fixed; top: 10px; right: 10px; z-index: 999; display: block; width: 28px; height: 28px; background: #5E7A5A"></a>
+          <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="menu" aria-label="Mobile menu">
+    <a href="gallery.html">Gallery</a>
+    <a href="works-index.html" style="font-weight: 700; color: #141414">Index</a>
+    <a href="About.dc.html">About</a>
+    <a href="Contact-tabs.dc.html">Contact</a>
+    <a href="Contact-tabs.dc.html#shipping">Shipping</a>
+    <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke-miterlimit="10"></path></svg>Login/Account</a>
+    <a href="#"><span style="position: relative; display: flex"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21.5 21.5v-15h-19v15h19ZM8 6V5a4 4 0 1 1 8 0v1"></path></svg></span>Shopping Cart</a>
+  </nav>
+
+  <div class="tools" role="group" aria-label="Filters">
+    <div class="filters">
+      <div class="filter-menu" id="fmSeries"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Series</span></button><div class="fm-list" role="listbox" aria-label="Series"></div></div>
+      <div class="filter-menu" id="fmYear"><button class="fm-btn" aria-haspopup="listbox" aria-expanded="false"><svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="#141414" stroke-width="1.2"><path d="m1 1 3.5 4L8 1"></path></svg><span>Year</span></button><div class="fm-list" role="listbox" aria-label="Year"></div></div>
+    </div>
+  </div>
+
+  <main class="idx" id="idx" aria-label="Index of works by series">
+  <h1 class="sr-only">Index of works</h1>   <!-- (since 2026-11-09) the page's heading for screen readers; the design shows no title -->
+    <p class="idx-series" id="idxSeries" aria-live="polite"></p>
+    <p class="idx-title" id="idxTitle" aria-hidden="true"></p>
+    <section class="idx-row" data-s="Ascent" aria-label="Series 1, Ascent">
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_living-current.jpg"><img src="assets/thumbs-m70/ascent_living-current.jpg" style="aspect-ratio: 2 / 3" alt="Living Current" data-alt-title="Living Current" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_coastal-silence.jpg"><img src="assets/thumbs-m70/ascent_coastal-silence.jpg" style="aspect-ratio: 2 / 3" alt="Coastal Silence" data-alt-title="Coastal Silence" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_inner-eclipse.jpg"><img src="assets/thumbs-m70/ascent_inner-eclipse.jpg" style="aspect-ratio: 2 / 3" alt="Inner Eclipse" data-alt-title="Inner Eclipse" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_shared-orbit.jpg"><img src="assets/thumbs-m70/ascent_shared-orbit.jpg" style="aspect-ratio: 2 / 3" alt="Shared Orbit" data-alt-title="Shared Orbit" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_origin.jpg"><img src="assets/thumbs-m70/ascent_origin.jpg" style="aspect-ratio: 2 / 3" alt="Origin" data-alt-title="Origin" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_canyons.jpg"><img src="assets/thumbs-m70/ascent_canyons.jpg" style="aspect-ratio: 2 / 3" alt="Canyons" data-alt-title="Canyons" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_koi.jpg"><img src="assets/thumbs-m70/ascent_koi.jpg" style="aspect-ratio: 2 / 3" alt="Koi" data-alt-title="Koi" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_overlook.jpg"><img src="assets/thumbs-m70/ascent_overlook.jpg" style="aspect-ratio: 2 / 3" alt="Overlook" data-alt-title="Overlook" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-1.jpg"><img src="assets/thumbs-m70/ascent_no-1.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 1" data-alt-title="Ascent No. 1" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-2.jpg"><img src="assets/thumbs-m70/ascent_no-2.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 2" data-alt-title="Ascent No. 2" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-3.jpg"><img src="assets/thumbs-m70/ascent_no-3.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 3" data-alt-title="Ascent No. 3" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-4.jpg"><img src="assets/thumbs-m70/ascent_no-4.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 4" data-alt-title="Ascent No. 4" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-5.jpg"><img src="assets/thumbs-m70/ascent_no-5.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 5" data-alt-title="Ascent No. 5" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-6.jpg"><img src="assets/thumbs-m70/ascent_no-6.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 6" data-alt-title="Ascent No. 6" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-7.jpg"><img src="assets/thumbs-m70/ascent_no-7.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 7" data-alt-title="Ascent No. 7" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-8.jpg"><img src="assets/thumbs-m70/ascent_no-8.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 8" data-alt-title="Ascent No. 8" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_no-9.jpg"><img src="assets/thumbs-m70/ascent_no-9.jpg" style="aspect-ratio: 2 / 3" alt="Ascent No. 9" data-alt-title="Ascent No. 9" data-alt-size="s"></a>
+      <a class="idx-item v mid" data-y="2025" href="index-archive.html?view=1&amp;series=Ascent#ascent_verdance.jpg"><img src="assets/thumbs-m70/ascent_verdance.jpg" style="aspect-ratio: 2 / 3" alt="Verdance" data-alt-title="Verdance" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Convergence" aria-label="Series 2, Convergence">
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_synthesis.jpg"><img src="assets/thumbs-m70/convergence_synthesis.jpg" style="aspect-ratio: 3 / 2" alt="Synthesis" data-alt-title="Synthesis" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_counterpoint.jpg"><img src="assets/thumbs-m70/convergence_counterpoint.jpg" style="aspect-ratio: 3 / 2" alt="Counterpoint" data-alt-title="Counterpoint" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_counterline.jpg"><img src="assets/thumbs-m70/convergence_counterline.jpg" style="aspect-ratio: 3 / 2" alt="Counterline" data-alt-title="Counterline" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_counterpart.jpg"><img src="assets/thumbs-m70/convergence_counterpart.jpg" style="aspect-ratio: 3 / 2" alt="Counterpart" data-alt-title="Counterpart" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_counterform.jpg"><img src="assets/thumbs-m70/convergence_counterform.jpg" style="aspect-ratio: 3 / 2" alt="Counterform" data-alt-title="Counterform" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Convergence#convergence_convergence-7.jpg"><img src="assets/thumbs-m70/convergence_convergence-7.jpg" style="aspect-ratio: 3 / 2" alt="Convergence 7" data-alt-title="Convergence 7" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Core" aria-label="Series 3, Core">
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_script.jpg"><img src="assets/thumbs-m70/core_script.jpg" style="aspect-ratio: 3 / 2" alt="Script" data-alt-title="Script" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_symbiosis.jpg"><img src="assets/thumbs-m70/core_symbiosis.jpg" style="aspect-ratio: 3 / 2" alt="Symbiosis" data-alt-title="Symbiosis" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_conduit.jpg"><img src="assets/thumbs-m70/core_conduit.jpg" style="aspect-ratio: 3 / 2" alt="Conduit" data-alt-title="Conduit" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_chamber.jpg"><img src="assets/thumbs-m70/core_chamber.jpg" style="aspect-ratio: 3 / 2" alt="Chamber" data-alt-title="Chamber" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_habitat.jpg"><img src="assets/thumbs-m70/core_habitat.jpg" style="aspect-ratio: 3 / 2" alt="Habitat" data-alt-title="Habitat" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2003" href="index-archive.html?view=1&amp;series=Core#core_affinity.jpg"><img src="assets/thumbs-m70/core_affinity.jpg" style="aspect-ratio: 3 / 2" alt="Affinity" data-alt-title="Affinity" data-alt-size="s"></a>
+      <a class="idx-item" data-y="1994" href="index-archive.html?view=1&amp;series=Core#core_upwelling.jpg"><img src="assets/thumbs-m70/core_upwelling.jpg" style="aspect-ratio: 3 / 2" alt="Upwelling" data-alt-title="Upwelling" data-alt-size="s"></a>
+      <a class="idx-item" data-y="1994" href="index-archive.html?view=1&amp;series=Core#core_emergence.jpg"><img src="assets/thumbs-m70/core_emergence.jpg" style="aspect-ratio: 3 / 2" alt="Emergence" data-alt-title="Emergence" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Select" aria-label="Series 4, Select">
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_brilliance.jpg"><img src="assets/thumbs-m70/select_brilliance.jpg" style="aspect-ratio: 3 / 2" alt="Brilliance" data-alt-title="Brilliance" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_meridian.jpg"><img src="assets/thumbs-m70/select_meridian.jpg" style="aspect-ratio: 3 / 2" alt="Meridian" data-alt-title="Meridian" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_grove.jpg"><img src="assets/thumbs-m70/select_grove.jpg" style="aspect-ratio: 3 / 2" alt="Grove" data-alt-title="Grove" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_singularity.jpg"><img src="assets/thumbs-m70/select_singularity.jpg" style="aspect-ratio: 3 / 2" alt="Singularity" data-alt-title="Singularity" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_resonance.jpg"><img src="assets/thumbs-m70/select_resonance.jpg" style="aspect-ratio: 3 / 2" alt="Resonance" data-alt-title="Resonance" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_confluence.jpg"><img src="assets/thumbs-m70/select_confluence.jpg" style="aspect-ratio: 3 / 2" alt="Confluence" data-alt-title="Confluence" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_emanation.jpg"><img src="assets/thumbs-m70/select_emanation.jpg" style="aspect-ratio: 3 / 2" alt="Emanation" data-alt-title="Emanation" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2004" href="index-archive.html?view=1&amp;series=Select#select_aurora.jpg"><img src="assets/thumbs-m70/select_aurora.jpg" style="aspect-ratio: 3 / 2" alt="Aurora" data-alt-title="Aurora" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Spectrum" aria-label="Series 5, Spectrum">
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Spectrum#spectrum_chroma.jpg"><img src="assets/thumbs-m70/spectrum_chroma.jpg" style="aspect-ratio: 3 / 2" alt="Chroma" data-alt-title="Chroma" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Spectrum#spectrum_opalescence.jpg"><img src="assets/thumbs-m70/spectrum_opalescence.jpg" style="aspect-ratio: 3 / 2" alt="Opalescence" data-alt-title="Opalescence" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Spectrum#spectrum_biome.jpg"><img src="assets/thumbs-m70/spectrum_biome.jpg" style="aspect-ratio: 3 / 2" alt="Biome" data-alt-title="Biome" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Spectrum#spectrum_archipelago.jpg"><img src="assets/thumbs-m70/spectrum_archipelago.jpg" style="aspect-ratio: 3 / 2" alt="Archipelago" data-alt-title="Archipelago" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Structure" aria-label="Series 6, Structure">
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Structure#structure_framework.jpg"><img src="assets/thumbs-m70/structure_framework.jpg" style="aspect-ratio: 2 / 3" alt="Framework" data-alt-title="Framework" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Structure#structure_cadence.jpg"><img src="assets/thumbs-m70/structure_cadence.jpg" style="aspect-ratio: 2 / 3" alt="Cadence" data-alt-title="Cadence" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Structure#structure_crossings.jpg"><img src="assets/thumbs-m70/structure_crossings.jpg" style="aspect-ratio: 2 / 3" alt="Crossings" data-alt-title="Crossings" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Structure#structure_within.jpg"><img src="assets/thumbs-m70/structure_within.jpg" style="aspect-ratio: 2 / 3" alt="Within" data-alt-title="Within" data-alt-size="s"></a>
+      <a class="idx-item v" data-y="2025" href="index-archive.html?view=1&amp;series=Structure#structure_cubicle.jpg"><img src="assets/thumbs-m70/structure_cubicle.jpg" style="aspect-ratio: 2 / 3" alt="Cubicle" data-alt-title="Cubicle" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="The Turning" aria-label="Series 7, The Turning">
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_revelation.jpg"><img src="assets/thumbs-m70/the-turning_revelation.jpg" style="aspect-ratio: 3 / 2" alt="Revelation" data-alt-title="Revelation" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_the-calling.jpg"><img src="assets/thumbs-m70/the-turning_the-calling.jpg" style="aspect-ratio: 3 / 2" alt="The Calling" data-alt-title="The Calling" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_passage.jpg"><img src="assets/thumbs-m70/the-turning_passage.jpg" style="aspect-ratio: 3 / 2" alt="Passage" data-alt-title="Passage" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_momentum.jpg"><img src="assets/thumbs-m70/the-turning_momentum.jpg" style="aspect-ratio: 3 / 2" alt="Momentum" data-alt-title="Momentum" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_character.jpg"><img src="assets/thumbs-m70/the-turning_character.jpg" style="aspect-ratio: 3 / 2" alt="Character" data-alt-title="Character" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_discovery.jpg"><img src="assets/thumbs-m70/the-turning_discovery.jpg" style="aspect-ratio: 3 / 2" alt="Discovery" data-alt-title="Discovery" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=The%20Turning#the-turning_horizon.jpg"><img src="assets/thumbs-m70/the-turning_horizon.jpg" style="aspect-ratio: 3 / 2" alt="Horizon" data-alt-title="Horizon" data-alt-size="s"></a>
+    </section>
+    <section class="idx-row" data-s="Tonal" aria-label="Series 8, Tonal">
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_firelight.jpg"><img src="assets/thumbs-m70/tonal_firelight.jpg" style="aspect-ratio: 3 / 2" alt="Firelight" data-alt-title="Firelight" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_canopy.jpg"><img src="assets/thumbs-m70/tonal_canopy.jpg" style="aspect-ratio: 3 / 2" alt="Canopy" data-alt-title="Canopy" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_current.jpg"><img src="assets/thumbs-m70/tonal_current.jpg" style="aspect-ratio: 3 / 2" alt="Current" data-alt-title="Current" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_vesper-2.jpg"><img src="assets/thumbs-m70/tonal_vesper-2.jpg" style="aspect-ratio: 3 / 2" alt="Vesper" data-alt-title="Vesper" data-alt-size="s"></a>
+      <a class="idx-item" data-y="2024" href="index-archive.html?view=1&amp;series=Tonal#tonal_vesper-1.jpg"><img src="assets/thumbs-m70/tonal_vesper-1.jpg" style="aspect-ratio: 3 / 2" alt="Vesper" data-alt-title="Vesper" data-alt-size="s"></a>
+    </section>
+    <!-- (since 2026-11-23 evening, Grace) Tree of Life: five pictures of the sculpture, all one shape (the third one's; background added at
+         the sides of 1, 2 and 4, the fifth on a white to light-gray gradient), as tall as the portraits; each opens in a lightbox over the Index (since 2026-11-24; it opened About's Tree of Life tab).
+         Not a series of works: no year, and in neither Horizontal nor Vertical -->
+    <section class="idx-row" data-s="Tree of Life" aria-label="Tree of Life">
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_1.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_2.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_3.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_4.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+      <a class="idx-item tol" href="About.dc.html#tree"><img src="assets/thumbs-m70/tree-of-life_5.jpg" style="aspect-ratio: 2650 / 3084" alt="Tree of Life" data-alt-title="Tree of Life" data-alt-size="s"></a>
+    </section>
+    <!-- (since 2026-10-24) the Outliers row, hidden from the site for now; remove the comment marks to bring it back
+    <section class="idx-row" aria-label="Outliers">
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-1.jpg"><img src="assets/thumbs-m70/outliers_outliers-1.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 1" data-alt-title="Outliers 1" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-2.jpg"><img src="assets/thumbs-m70/outliers_outliers-2.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 2" data-alt-title="Outliers 2" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-3.jpg"><img src="assets/thumbs-m70/outliers_outliers-3.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 3" data-alt-title="Outliers 3" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-4.jpg"><img src="assets/thumbs-m70/outliers_outliers-4.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 4" data-alt-title="Outliers 4" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-5.jpg"><img src="assets/thumbs-m70/outliers_outliers-5.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 5" data-alt-title="Outliers 5" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-6.jpg"><img src="assets/thumbs-m70/outliers_outliers-6.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 6" data-alt-title="Outliers 6" data-alt-size="s"></a>
+      <a class="idx-item" href="index-archive.html?view=1&amp;series=Outliers#outliers_outliers-7.jpg"><img src="assets/thumbs-m70/outliers_outliers-7.jpg" style="aspect-ratio: 3 / 2" alt="Outliers 7" data-alt-title="Outliers 7" data-alt-size="s"></a>
+    </section>
+    -->
+  </main>
+</div>
+
+<footer>
+    <div class="foot">
+      <p>Copyright © 2026 <span style="white-space: nowrap">Arbor &amp; Eye</span></p>
+      <div class="social">
+        <a href="https://www.instagram.com/arbor.eye/" target="_blank" rel="noopener" aria-label="Instagram"><img src="uploads/social_IG.png" alt="Instagram"></a>
+      </div>
+    </div>
+</footer>
+<script>
+// mobile menu
+document.getElementById('burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+// hovering a thumbnail: its series named above the thumbnails, its title to the right of its row, the other rows dimmed
+const idx = document.getElementById('idx'), label = document.getElementById('idxSeries'), title = document.getElementById('idxTitle');
+// (since 2026-10-29) the layout: 'all' (every series, or a year), 's' (one series, spread out and enlarged), 'h' (Horizontal), 'v' (Vertical)
+let mode = 'all', titleSwap = 0;
+// the distance from the title's top to the middle of its capitals (they sit above the middle of the line, over the descenders' room)
+const capCtx = document.createElement('canvas').getContext('2d');
+function capMid() {
+  const cs = getComputedStyle(title);
+  capCtx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+  const m = capCtx.measureText('H'), content = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
+  return (title.offsetHeight - content) / 2 + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent / 2;
+}
+const TGAP = 25, HOV_S = 1.3;   // HOV_S: a work's hover size in one series (since 2026-10-30; Vertical's is 1.075). TGAP: a hover title's gap under its work, in the spread-out layouts (4px, then 7px more since 2026-10-29)
+function placeTitle(row) {
+  const box = idx.getBoundingClientRect(), pad = parseFloat(getComputedStyle(idx).paddingRight);
+  let x, y;
+  if (mode === 'all') {   // to the right of the row: 24px past its last thumbnail, centred on the row
+    const items = row.querySelectorAll('.idx-item:not([hidden])'), last = items[items.length - 1];   // (its resting place, plus the genie's push)
+    y = last.offsetTop + last.offsetHeight / 2 - capMid();   // (since 2026-10-29) its capitals centred on the row (they were 5, then 9px below)
+    x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  } else {   // under the hovered work, centred on it (following it where the genie nudges it)
+    const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
+    x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
+    y = mode === 'h' ? it.offsetTop + it.offsetHeight * (1 + ((it._sc || 1) - 1) / 2) + 8   // Horizontal (since 2026-10-30): 8px under the work's swell, which grows out on all four sides
+      : it.offsetTop + it.offsetHeight * (mode === 's' && it.classList.contains('lastrow') ? 1 : 1 + ((parseFloat(getComputedStyle(it).getPropertyValue('--hz')) || 1.075) - 1) / 2) + TGAP - 8;   // (under its hover size, centre-out: its genie swell in one series, 107.5% in Vertical; a series' last row grows upward; 8px higher since 2026-11-02)
+  }
+  const jump = !title.classList.contains('show');   // a title coming into view is put in place at once, only then follows the swell
+  if (jump) title.style.transition = 'none';
+  title.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+  if (jump) { void title.offsetWidth; title.style.transition = ''; }
+}
+// the genie, as on G5 (since 2026-10-29; it was 120% from each centre): the thumbnails on the cursor's line of its row swell
+// along a bell curve centred on the cursor (150% at its peak, spreading 1.7 thumbnails either way), each growing up from its
+// base and nudged sideways so they never overlap, the thumbnail under the cursor staying under it; following the cursor
+// softly (0.45s); leaving the row lets them settle back (0.5s)
+const PEAK = 0.5;
+function genie(row, x, item, peak = PEAK) {
+  const box = idx.getBoundingClientRect(), line = [...row.querySelectorAll('.idx-item:not([hidden])')].filter(it => it.offsetTop === item.offsetTop);
+  const base = line.map(it => ({ cx: box.left + it.offsetLeft + it.offsetWidth / 2, w: it.offsetWidth }));
+  const slot = base.reduce((t, b) => t + b.w, 0) / base.length;
+  let sc = base.map(b => 1 + peak * Math.exp(-Math.pow((x - b.cx) / (1.7 * slot), 2)));
+  if (mode === 's') {   // (since 2026-11-01) a line too wide to swell fully within 96px of the screen's edges swells only as much as fits
+    const room = document.documentElement.clientWidth - 2 * 96, rest = base[base.length - 1].cx + base[base.length - 1].w / 2 - base[0].cx + base[0].w / 2;
+    const grow = sc.reduce((t, v, k) => t + (v - 1) * base[k].w, 0);
+    if (rest + grow > room) { const f = Math.max(0, (room - rest) / grow); sc = sc.map(v => 1 + (v - 1) * f); }
+  }
+  const extra = sc.map((v, k) => (v - 1) * base[k].w), total = extra.reduce((a, b) => a + b, 0);
+  let pivot = 0;   // the growth left of the cursor, taken off every shift so the thumbnail under the cursor stays put
+  base.forEach((b, k) => { pivot += extra[k] * Math.max(0, Math.min(1, (x - b.cx + b.w / 2) / b.w)); });
+  // one series (since 2026-11-01): its few large works swell wide, so the whole line slides to stay 96px clear of the screen's edges
+  // (centred on the screen if the swell is wider than that)
+  let fit = 0;
+  if (mode === 's') {
+    let a2 = 0, L = Infinity, R = -Infinity;
+    base.forEach((b, k) => { const c = b.cx + a2 + extra[k] / 2 - pivot; a2 += extra[k]; L = Math.min(L, c - b.w * sc[k] / 2); R = Math.max(R, c + b.w * sc[k] / 2); });
+    const m = 96, W = document.documentElement.clientWidth;
+    fit = R - L <= W - 2 * m ? Math.max(0, m - L) - Math.max(0, R - (W - m)) : (W - L - R) / 2;
+  }
+  let acc = 0;
+  line.forEach((it, k) => {
+    const shift = acc + extra[k] / 2 - pivot + fit; acc += extra[k];
+    it._dx = shift; it._sc = sc[k];
+    it.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.6s ease';   /* (since 2026-11-17, Grace) quicker to react: 0.6s, moving at once and settling softly (0.9s on a slow-starting ease before) */   // (since 2026-11-13, Grace) half the speed (was 0.45s)
+    it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
+    it.style.zIndex = String(Math.round(sc[k] * 100));
+  });
+  // the row's last thumbnail ends up the swell right of the cursor further right: the title keeps clear of it
+  const all = row.querySelectorAll('.idx-item:not([hidden])');
+  row._titleShift = line.includes(all[all.length - 1]) ? total - pivot + fit : 0;
+  placeTitle(row);
+}
+function settle(row) {   // (one series and Vertical keep their own CSS easing, so every hover there grows the same way)
+  row.querySelectorAll('.idx-item').forEach(it => { it._dx = 0; it._sc = 1; it.style.transition = mode === 's' || mode === 'v' ? '' : 'transform 1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1s cubic-bezier(0.22, 1, 0.36, 1)'; it.style.transform = ''; it.style.zIndex = ''; it.classList.remove('hot'); });
+}
+const fine = matchMedia('(hover: hover) and (pointer: fine)');
+document.querySelectorAll('.idx-row').forEach(row => {
+  row.addEventListener('mousemove', e => {
+    if (!fine.matches || flipping) return;
+    const it = e.target.closest('.idx-item'); if (!it) return;
+    row._hot = it;
+    // (since 2026-11-02) a work the pointer was already resting on when a series finished arriving gets no mouseenter: moving over it
+    // brings its title up all the same
+    if (mode !== 'all' && (title._for !== it || !title.classList.contains('show')) && !titleSwap) it.dispatchEvent(new MouseEvent('mouseenter'));
+    if (mode === 'v' || mode === 's') placeTitle(row);   // the enlarged works grow a little from their centres, as G5's grid does (CSS; one series since 2026-11-02, the genie before)
+    else genie(row, e.clientX, it);
+    row.querySelectorAll('.idx-item.hot').forEach(h => h !== it && h.classList.remove('hot')); it.classList.add('hot');
+  });
+  // (since 2026-11-25) in a year's block (rows without a box of their own) the gap between two works is not leaving: only leaving the block is
+  const inBlock = e => { const b = document.getElementById('idxYear'); return !!(b && row.parentElement === b && e.relatedTarget && b.contains(e.relatedTarget)); };
+  row.addEventListener('mouseleave', e => { if (inBlock(e)) return; settle(row); row._titleShift = 0; });
+  row.querySelectorAll('.idx-item').forEach(item => item.addEventListener('mouseenter', () => {
+    if (flipping) return;
+    document.querySelectorAll('.idx-row.on').forEach(r => { if (r !== row) settle(r); r.classList.remove('on'); });
+    row.classList.add('on'); idx.classList.add('hovering');
+    label.textContent = row.getAttribute('aria-label'); label.classList.add('show');
+    row._hot = item;
+    const showIt = () => { title._for = item; title.textContent = item.querySelector('img').alt; placeTitle(row); title.classList.add('show'); };
+    // (since 2026-10-29) under the works the title never slides from one to the next: it fades out (0.25s), then fades in at the new one
+    clearTimeout(titleSwap); titleSwap = 0;
+    if (mode !== 'all' && title.classList.contains('show') && title._for !== item) {
+      title.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)'; title.classList.remove('show');
+      titleSwap = setTimeout(() => { titleSwap = 0; title.style.transition = ''; if (row._hot === item && row.classList.contains('on')) showIt(); }, 250);
+    } else showIt();
+  }));
+  row.addEventListener('mouseleave', e => { if (inBlock(e)) return; clearTimeout(titleSwap); titleSwap = 0; title.style.transition = ''; row.classList.remove('on'); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show'); });
+});
+// ---- (since 2026-10-28) Filters, as on G5: Series (each series, or horizontal / vertical works) and Year, one at a time
+// (choosing one sets the other back to all). A year shows only the matching works, rows left with none hidden. Years come
+// from G5's list of works (Outliers and Spectrum have none yet). (Since 2026-10-29) a series moves to the middle of the
+// screen and spreads out, enlarged, in the rows below; Horizontal and Vertical centre their rows, spaced out (sizes in layout()).
+const $ = id => document.getElementById(id);
+let fSeries = 'All', fYear = 'All';
+const SERIES_OPTS = [['All', 'All Series'], ['Ascent'], ['Convergence'], ['Core'], ['Select'], ['Spectrum'], ['Structure'], ['The Turning'], ['Tonal'], ['Tree of Life'], ['Horizontal'], ['Vertical']];
+const yearOpts = () => [['All', 'All Years']].concat([...new Set([...document.querySelectorAll('.idx-item[data-y]')].map(a => a.dataset.y))].sort((a, b) => b - a).map(y => [y]));
+// one series on its own: works per row (the last row centred under the others)
+const SERIES_COLS = { 'Ascent': 6, 'Convergence': 3, 'Core': 3, 'Select': 3, 'Spectrum': 2, 'Structure': 3, 'The Turning': 3, 'Tonal': 3, 'Tree of Life': 5 };   // (Tonal 3/2 since 2026-10-30; it was 2/2/1)
+// rows set by hand where the plain split would differ, each centred: Convergence's seven works 3/1/3 (2026-10-29; sized as Core is)
+// (since 2026-11-23, Grace: "match grids we have on gallery", desktop) each series in Gallery's grid columns: Convergence, Core, Select and
+// The Turning two across (Gallery's 2 x 2 pages; here every work at once, as large as fits the screen), Structure 3 over 2, Ascent 5 over 4
+// (Spectrum two across and Tonal 3 over 2 already matched). Before: Convergence 3/3, Core and Select 3/3/2, The Turning 4/3, Structure 5
+// (since 2026-11-25, Grace) The Turning 4 + 3, every work on the first screen (FIT_ALL; it was 2/2/2/1, scrolling); Structure's five in one row, larger
+const SERIES_ROWS = { 'The Turning': [4, 3], 'Ascent': [5, 4], 'Structure': [5], 'Convergence': [2, 2, 2], 'Core': [3, 2, 3], 'Select': [3, 2, 3] };   // (Structure's five in one row since 2026-11-19, Grace; they were 3 + 2)   // (Ascent's nine 5 + 4 since 2026-11-19, Grace; they were 6 + 3)   // (since 2026-11-19 Convergence's six fall into 3 + 3 and The Turning's seven are 4 + 3, Convergence 6 and The Turning 6 having left the site; Convergence's seven were 3/1/3)   // (Core and Select 3 + 2 + 3 since 2026-11-24, Grace; they were 2/2/2/2)
+// (since 2026-11-19, Grace) a year's works in rows of these lengths, in order, series running on into the next row where they
+// must (2025: 7 + 7; 2024: 5, 4, 4, 5), each row centred; laid out in one block (#idxYear, see layout) whose series rows flow
+// (since 2026-11-23, Grace, matching Gallery) 2025 four across (was 7 + 7); Vertical (the same fourteen portraits) laid out the same way
+// through this block, four across, rather than a row of six per series
+// (since 2026-11-23) a grid of more than two rows: its works the size Gallery's two-row pages give them, the page scrolling to the
+// rows below (fitting every row on one screen made them about half that)
+const FIT_ROWS = 2;
+const FIT_ALL = { 'Core': 1, 'Select': 1, 'The Turning': 1 };   // (since 2026-11-24, Grace) the series of 8, in 3 + 2 + 3: as large as fits, every row on one screen
+// and no wider than the nav's margins (the logo's left edge to the bag's right)
+// (since 2026-11-25, Grace) 2025 and Vertical (Ascent's 18 portraits and Structure's 5) six across, 6 + 6 + 6 + 5, every row on the
+// first screen (they had fallen back to one long row of tiny works once Ascent grew to 18); Horizontal in five rows of 6, 8, 8, 8, 8,
+// laid out as a year is, with the fourth series' works (Tonal) moved after the fifth's so they fill out the bottom two rows (HZ_ORDER)
+const YEAR_ROWS = { '2025': [6, 6, 6, 5], '2024': [5, 4, 4, 5], 'Vertical': [6, 6, 6, 5], 'Horizontal': [6, 8, 8, 8, 8] };
+const HZ_ORDER = [0, 1, 2, 4, 3, 5];
+// sized as if in rows of this many, then scaled, and allowed past the content width to 96px from the screen's edges (the page may
+// scroll): Ascent 15% larger, Spectrum 46% (35%, then 20% more, then 10% smaller on 2026-10-30), Tonal 25% larger than it was in
+// rows of 2 (2026-10-30)
+const SERIES_SIZE = { 'Structure': [5, 1.35], 'Ascent': [6, 1.15],   // (Structure since 2026-11-19, Grace: one row of five, about 12% larger than its 3 + 2 had been)
+  'Spectrum': [2, 1.35 * 1.2 * 0.9], 'Tonal': [2, 1.25] };
+// (since 2026-11-02) each series' own adjustments on top of that: k = size, cx / cy = the space between columns / rows, dy = moved up (-)
+// or down, row2 = the second row that much lower, zoom = the hovered work's size (the growth over 1.075's 7.5%: Ascent 1.25 times,
+// Convergence, Core, Select and Structure 2.5 times, Tonal 1.75 times); Spectrum's columns as far apart as its rows.
+// Since later on 2026-11-02 every series and Vertical share one hover size, Convergence's (ZOOM, 118.75%), and Convergence, Core
+// and Select have their columns twice as far apart (1.5 times before); then Ascent's and Structure's too (1 and 1.5 times before),
+// and Spectrum's hover 80% of that growth (115%)
+const Z = f => 1 + 0.075 * f, ZOOM = Z(2.5);
+const SERIES_TUNE = {
+  'Ascent': { k: 0.9, row2: 20, cx: 2 },
+  'Convergence': { k: 1.15, dy: -30, cx: 2 }, 'Core': { k: 1.15, dy: -30, cx: 2 },
+  'Select': { k: 1.15, dy: -30, cx: 2 }, 'Structure': { k: 1.15, dy: -30, cx: 0.9 },   // (since 2026-11-19, Grace) one row of five (SERIES_ROWS), the columns closer (0.9, was 2) so the works can be larger within the content width; row1 = the top row that much lower (Structure's 15px while it was 3 + 2)
+ 
+  'Spectrum': { k: 0.9, cxRow: true, zoom: Z(2.5 * 0.8) },
+  'The Turning': { k: 1.15, cx: 2 },
+  'Tonal': { dy: -50, cx: 2, cy: 2 }
+};
+const VERT_TUNE = { cx: 1.5, zoom: ZOOM };   // Vertical: the columns 1.5 times as far apart
+const thumbH = () => Math.min(197, Math.max(42, innerWidth * 0.05133));   // --idx-h
+// (since 2026-10-29) all series: the series name rides up onto the Series / Year menus' line, and the rows sit low enough that the
+// first row's genie (150%, growing upward) stays 12px clear of it
+function liftLabel() {   // (Horizontal and Vertical: the name on the menus' line too, the rows then closing up under it)
+  label.style.transform = label.style.marginBottom = '';
+  if (innerWidth < 768) return;
+  // (since 2026-11-19, Grace) the name's baseline on the menus' baseline, in every mode (a single series too: it used to stay below
+  // the menus there), so it always shows in the same place
+  const base = el => { const m = document.createElement('span'); m.style.cssText = 'display: inline-block; width: 0; height: 0; vertical-align: baseline'; el.appendChild(m); const y = m.getBoundingClientRect().top; m.remove(); return y; };
+  const f = document.querySelector('.filters').getBoundingClientRect(), l = label.getBoundingClientRect();
+  const d = (l.top + l.height / 2) - (f.top + f.height / 2), db = base(label) - base(document.querySelector('#fmSeries .fm-btn span'));
+  label.style.transform = 'translateY(' + (-db).toFixed(1) + 'px)';
+  if (mode === 's') return;
+  if (mode !== 'all') return;
+  const row = [...idx.querySelectorAll('.idx-row')].find(r => !r.hidden); if (!row) return;
+  const hmax = Math.max(...[...row.querySelectorAll('.idx-item:not([hidden])')].map(a => a.offsetHeight));
+  label.style.marginBottom = (Math.max(14, 12 + hmax / 2 - d - parseFloat(getComputedStyle(idx).rowGap)) - 30).toFixed(1) + 'px';   // (the rows 30px higher since 2026-11-02)
+}
+// (since 2026-11-09, Grace) all series: every work in the top row swells from its centre (.mid), not just the five under the series
+// name; re-marked whenever the rows can re-wrap (layout, resize, the thumbnails loading)
+function markTop() {
+  if (mode !== 'all') return;
+  const first = [...document.querySelectorAll('.idx-row')].find(r => !r.hidden), top = first ? [...first.querySelectorAll('.idx-item:not([hidden])')] : [];
+  document.querySelectorAll('.idx-item').forEach(a => a.classList.toggle('mid', top.length > 0 && a.parentElement === first && a.offsetTop === top[0].offsetTop));
+}
+addEventListener('load', markTop);
+document.querySelectorAll('.idx-item img').forEach(i => i.addEventListener('load', markTop));
+// (since 2026-11-25, Grace) all series: a series too long for one line (Ascent's 18) splits into even lines (9 + 9) rather than
+// filling the first line and leaving a short one under it (13 + 5); the row is narrowed to its first half's width so it breaks there
+// INDEX22 (since 2026-11-25, Grace, trial): every thumbnail scaled down by the same factor so that Ascent's 18 fit on one row
+function fitAscent() {
+  const root = document.documentElement; root.style.removeProperty('--idx-h');
+  if (mode !== 'all') return;
+  const row = [...document.querySelectorAll('.idx-row')].find(r => !r.hidden && r.dataset.s === 'Ascent'); if (!row) return;
+  const cs = getComputedStyle(idx), avail = idx.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  for (let t = 0; t < 4; t++) {
+    const items = [...row.querySelectorAll('.idx-item:not([hidden])')]; if (!items.length) return;
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0, need = items.reduce((w, a) => w + a.getBoundingClientRect().width, 0) + gap * (items.length - 1);
+    if (need <= avail - 0.5) return;
+    const ih = items[0].getBoundingClientRect().width;   // (a portrait's width is the thumbnail height, --idx-h)
+    root.style.setProperty('--idx-h', (ih * (avail - 1) / need).toFixed(2) + 'px');
+  }
+}
+function balanceRows() {
+  fitAscent();
+  document.querySelectorAll('.idx-row').forEach(row => {
+    row.style.maxWidth = ''; if (row.hidden) return;
+    const items = [...row.querySelectorAll('.idx-item:not([hidden])')]; if (items.length < 2) return;
+    const lines = new Set(items.map(a => a.offsetTop)).size; if (lines < 2) return;
+    const k = Math.ceil(items.length / lines), a = items[0], b = items[k - 1];
+    row.style.maxWidth = (b.offsetLeft + b.offsetWidth - a.offsetLeft + 1).toFixed(1) + 'px';
+  });
+}
+function layout() {
+  const rows = [...document.querySelectorAll('.idx-row')];
+  rows.forEach((r, k) => { if (r.dataset.o == null) r.dataset.o = k; });
+  const yw = document.getElementById('idxYear'); if (yw) { [...yw.children].sort((a, b) => a.dataset.o - b.dataset.o).forEach(c => idx.insertBefore(c, yw)); yw.remove(); }   // (back in their own order: Horizontal's block reorders them)   // a year's block, taken apart again
+  rows.forEach(r => r.removeAttribute('style'));
+  document.querySelectorAll('.idx-item').forEach(a => { a.style.marginLeft = a.style.marginRight = a.style.position = a.style.top = ''; });
+  idx.style.gap = '';
+  idx.classList.remove('m-s', 'm-h', 'm-v');
+  liftLabel();
+  if (mode === 'all') { balanceRows(); markTop(); return; }
+  idx.classList.add('m-' + mode);
+  const cs = getComputedStyle(idx), aw = idx.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const th = parseFloat(getComputedStyle(title).fontSize) * 1.25, H = thumbH();
+  const gx = Math.max(25, aw * 0.02), gy = TGAP + th + Math.max(18, gx * 0.7);   // at least 25px between works; under each, room for its title
+  const shown = rows.filter(r => !r.hidden);
+  const set = (row, ih, cols, w, colGap, rowGap) => {
+    row.style.setProperty('--ih', ih.toFixed(2) + 'px');
+    if (cols) row.style.width = (cols * w + (cols - 1) * colGap + 1).toFixed(1) + 'px';
+    row.style.columnGap = colGap.toFixed(1) + 'px'; row.style.rowGap = rowGap.toFixed(1) + 'px';
+  };
+  if (mode === 's') {   // as large as fits with room round it: up to 8 times a thumbnail's area (2.83 times as wide and tall)
+    const row = shown[0]; if (!row) return;
+    const items = row.querySelectorAll('.idx-item:not([hidden])'), n = items.length, tol = items[0].classList.contains('tol'), v = tol || items[0].classList.contains('v'), r = tol ? 2650 / 3084 : v ? 2 / 3 : 3 / 2;   // (Tree of Life: as tall as the portraits, its own shape)
+    let split = SERIES_ROWS[row.dataset.s];
+    if (!split || split.reduce((a, b) => a + b, 0) !== n) split = null;
+    const cols = split ? Math.max(...split) : Math.min(n, SERIES_COLS[row.dataset.s] || 3), nr = split ? split.length : Math.ceil(n / cols);
+    const top = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const ah = innerHeight - top - parseFloat(cs.paddingBottom);
+    const fit = (c, k) => Math.min((aw * 0.9 - (c - 1) * gx) / c / r, (ah * 0.94 - (k - 1) * gy - TGAP - th) / k);
+    const sz = SERIES_SIZE[row.dataset.s];
+    const wMax = Math.max(aw * 0.9, innerWidth - 2 * 96);
+    let h = sz ? Math.min(sz[1] * Math.min(fit(sz[0], Math.ceil(n / sz[0])), 2.83 * (v ? 1.5 * H : H)), (wMax - (cols - 1) * gx) / cols / r)
+                 : Math.min(fit(cols, FIT_ALL[row.dataset.s] ? nr : Math.min(nr, FIT_ROWS)), 2.83 * (v ? 1.5 * H : H));
+    const T = SERIES_TUNE[row.dataset.s] || {}, zoom = T.zoom || ZOOM;
+    h *= T.k || 1;
+    // rows: far enough apart for a hovered work's growth and its title (the last row grows upward), plus Ascent's lower second row
+    let gyS, gxS;
+    const apply = () => {
+      gyS = Math.max(gy * (T.cy || 1), (zoom - 1) / 2 * h + TGAP + th + 6) + (T.row2 || 0);
+      gxS = T.cxRow ? gyS : gx * (T.cx || 1);
+      set(row, v ? h / 1.5 : h, cols, h * r, gxS, gyS);
+    };
+    apply();
+    if (FIT_ALL[row.dataset.s]) {   // the largest size whose rows fit the screen (the last row's title 16px above its bottom) and the nav's width
+      const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0);
+      let lo = 20, hi = 3000;
+      for (let i = 0; i < 24; i++) {
+        h = (lo + hi) / 2; apply();
+        if (row.offsetHeight <= maxH + 0.5 && cols * h * r + (cols - 1) * gxS + 1 <= aw + 0.5) lo = h; else hi = h;
+      }
+      h = lo; apply();
+    }
+    // never past the screen: the last row's title stays 16px above its bottom, so the works grow only as far as that allows (Fit
+    // the screen, since 2026-11-02; the enlarged series at first, every series since the shared hover size)
+    for (let i = 0; i < 3 && (nr <= FIT_ROWS || FIT_ALL[row.dataset.s]); i++) {
+      const maxH = innerHeight - 16 - TGAP - (th + 2) - top - (parseFloat(cs.rowGap) || 0),   // (the row starts the series list's gap below `top`)
+        rh = row.offsetHeight, gaps = rh - nr * (v ? h : h);
+      if (rh <= maxH + 0.5) break;
+      h *= (maxH - gaps) / (rh - gaps); apply();
+    }
+    // (since 2026-11-02) and never wider than the nav's margins (the logo's left edge to the bag's right, the content's width): only
+    // a hovered work grows past them
+    for (let i = 0; i < 3; i++) {
+      const rw = cols * h * r + (cols - 1) * gxS + 1;
+      if (rw <= aw + 0.5) break;
+      h *= (aw - 1 - (cols - 1) * gxS) / (cols * h * r); apply();
+    }
+    row.style.setProperty('--hz', zoom);
+    const rw = cols * h * r + (cols - 1) * gxS + 1;
+    if (rw > aw) row.style.marginLeft = row.style.marginRight = ((aw - rw) / 2).toFixed(1) + 'px';   // wider than the content: still centred
+    if (split) {   // a shorter row is held in by equal margins on its outer works, so it breaks where it should, centred
+      let i = 0;
+      split.forEach(k => { const pad = ((cols - k) * (h * r + gxS) / 2).toFixed(2) + 'px'; items[i].style.marginLeft = pad; items[i + k - 1].style.marginRight = pad; i += k; });
+    }
+    // (since 2026-10-30) the last row's works grow upward from their base, so their titles stay on screen
+    items.forEach(a => a.classList.toggle('lastrow', a.offsetTop === items[n - 1].offsetTop));
+    if (T.row1) { const t0 = items[0].offsetTop; [...items].filter(a => a.offsetTop === t0).forEach(a => { a.style.position = 'relative'; a.style.top = T.row1 + 'px'; }); }
+    // moved up (SERIES_TUNE dy): from its centred place, never closer than its usual gap under the series name
+    if (T.dy) { const rh = row.offsetHeight; row.style.marginTop = Math.max(0, (ah - rh) / 2 + T.dy).toFixed(1) + 'px'; row.style.marginBottom = 'auto'; }
+  } else if (mode === 'v' && (fSeries === 'All' || YEAR_ROWS[fSeries])) {
+    // (since 2026-11-13, Grace) one year: each series on its own row, centred, every work the same size, as large as fits on the
+    // screen (never more than one series' largest); a year of a single series with 6 or more works in two rows. The rows only as
+    // far apart as a hovered work's growth and its title need, and the whole block centred between the menus and the screen's foot
+    if (fSeries === 'Horizontal' && shown.length === HZ_ORDER.length) { const o = HZ_ORDER.map(k => shown[k]); shown.length = 0; shown.push(...o); }
+    const zY = ZOOM, lists = shown.map(row => [...row.querySelectorAll('.idx-item:not([hidden])')]);
+    const v = lists[0][0].classList.contains('v'), r = v ? 2 / 3 : 3 / 2;   // (each year's works share one shape)
+    const yk = fSeries === 'All' ? fYear : fSeries, flat = lists.flat(), ys = YEAR_ROWS[yk] && YEAR_ROWS[yk].reduce((a, b) => a + b, 0) === flat.length ? YEAR_ROWS[yk] : null;
+    const cols = ys ? [Math.max(...ys)] : lists.map(l => shown.length === 1 && l.length >= 6 ? Math.ceil(l.length / 2) : l.length);
+    const R = ys ? ys.length : lists.reduce((t, l, k) => t + Math.ceil(l.length / cols[k]), 0), most = Math.max(...cols);
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const top0 = fb + 24, ah = innerHeight - top0 - 24;
+    const gapFor = h => (zY - 1) / 2 * h + TGAP + th + 10;
+    const gxY = Math.max(16, aw * 0.009);   // (works closer side by side than elsewhere, so a long row's works can be larger)
+    let h = Math.min(2.83 * (v ? 1.5 * H : H), (aw * 0.98 - (most - 1) * gxY) / most / r);
+    const RF = ys && YEAR_ROWS !== null && Math.max(...ys) === 4 ? Math.min(R, FIT_ROWS) : R;   // (four-across grids: Gallery's two-row size, the page scrolling)
+    for (let i = 0; i < 4; i++) { const need = RF * h + (RF - 1) * gapFor(h) + TGAP + th + (zY - 1) / 2 * h; if (need <= ah + 0.5) break; h *= ah / need; }
+    const ry = gapFor(h), block = R * h + (R - 1) * ry + TGAP + th;
+    if (ys) {   // the year's rows set by hand: its series rows gathered into one centred block, flowing as one; a short row held in by equal margins on its outer works
+      const w = document.createElement('div'); w.id = 'idxYear'; w.className = 'idx-yr'; idx.insertBefore(w, shown[0]); shown.forEach(row => w.appendChild(row));
+      shown.forEach(row => { row.style.setProperty('--ih', (v ? h / 1.5 : h).toFixed(2) + 'px'); row.style.setProperty('--hz', zY); });
+      set(w, v ? h / 1.5 : h, most, h * r, gxY, ry);
+      let i = 0; ys.forEach(k => { const pad = ((most - k) * (h * r + gxY) / 2).toFixed(2) + 'px'; flat[i].style.marginLeft = pad; flat[i + k - 1].style.marginRight = pad; i += k; });
+      w.style.marginTop = (top0 + Math.max(0, (ah - block) / 2) - flow - ry).toFixed(1) + 'px';
+    } else {
+    shown.forEach((row, k) => { set(row, v ? h / 1.5 : h, cols[k], h * r, gxY, ry); row.style.setProperty('--hz', zY); });
+    shown[0].style.marginTop = (top0 + Math.max(0, (ah - block) / 2) - flow - ry).toFixed(1) + 'px';
+    }
+    idx.style.gap = ry.toFixed(1) + 'px';
+  } else if (mode === 'v') {   // up to 4 times a thumbnail's area (twice as wide and tall); Ascent in rows of 6, extra space between the series
+    // (since 2026-10-29) the rows 75% as far apart as before and every work on screen on load: smaller where the rows would not fit
+    // (later that day) the gap between the two series the same as between Ascent's rows, and the white space between the menus
+    // and the first row halved
+    // (never closer than a title under a swollen work needs)
+    const gxV = gx * VERT_TUNE.cx, zV = VERT_TUNE.zoom;
+    const ry = Math.max(gy * 0.75, (zV - 1) / 2 * 3 * H + TGAP + th + 6), sy = ry, ns = shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length);
+    const most = Math.max(...ns.map(n => Math.min(6, n))), nr = ns.reduce((a, n) => a + Math.ceil(n / 6), 0);
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;   // where a row would start
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    const top = fb + (flow + H * 0.1 - fb) / 2;
+    const ah = innerHeight - top - 16, hov = 1 + (zV - 1) / 2;   // (16px clear under the last title)
+    const h = Math.min(3 * H, (aw * 0.95 - (most - 1) * gxV) / most * 1.5,
+      (ah - (nr - shown.length) * ry - (shown.length - 1) * sy - TGAP - th) / (nr - 1 + hov));
+    shown.forEach((row, k) => { const cols = Math.min(6, ns[k]); set(row, h / 1.5, cols, h * 2 / 3, gxV, ry); row.style.setProperty('--hz', zV); });
+    idx.style.gap = sy.toFixed(1) + 'px';
+    shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
+  } else {   // Horizontal: each series still one row, 25% larger (less if the longest row would not fit), a little apart
+    const g = H * 0.15, most = Math.max(...shown.map(row => row.querySelectorAll('.idx-item:not([hidden])').length));
+    // (since 2026-10-29) the rows 65%, then 75% of that, as far apart as before, and the white space between the menus and the
+    // first row halved
+    const sy0 = (18 + th + g * 2) * 0.65 * 0.75;
+    const flow = idx.getBoundingClientRect().top + se.scrollTop + parseFloat(cs.paddingTop) + label.offsetHeight + 14;
+    const fb = document.querySelector('.filters').getBoundingClientRect().bottom + se.scrollTop;
+    const top = fb + (flow + (18 + th + g * 2) * 0.65 - fb) / 2;   // the first row's top
+    // (since 2026-10-30) small enough that the last row's swell (a quarter of its height below it) and its title stay on screen;
+    // the rows (since 2026-10-30) at least far enough apart that a hovered work's swell and its title clear the row below by 12px
+    const n = shown.length, c = 8 + th + 12, room = innerHeight - 16 - th - (top - se.scrollTop);
+    const h = Math.min(1.25 * H, (aw - (most - 1) * g) / most / 1.5,
+      (room - (n - 1) * sy0) / (n + PEAK / 2), (room - (n - 1) * c) / (n + PEAK / 2 + (n - 1) * PEAK / 2));
+    const sy = Math.max(sy0, h * PEAK / 2 + c);
+    idx.style.gap = sy.toFixed(1) + 'px';
+    shown[0].style.marginTop = (top - flow - sy).toFixed(1) + 'px';
+    shown.forEach(row => set(row, h, 0, 0, g, g));
+  }
+  // works shown larger than their thumbnails swap to the full-size image once it has loaded (since 2026-11-19 measured against the
+  // thumbnail's own width, 600px landscape but 400px portrait: portraits up to 540px wide stayed soft on Ned's screen)
+  const dpr = devicePixelRatio || 1;
+  shown.forEach(row => row.querySelectorAll('.idx-item:not([hidden]) img').forEach(img => {
+    const tw = img.naturalWidth || (img.closest('.idx-item').classList.contains('v') ? 400 : 600);
+    if (img.dataset.big || img.closest('.idx-item').offsetWidth * dpr <= tw * 0.9) return;
+    img.dataset.big = 1; const big = img.getAttribute('src').replace('assets/thumbs-m70/', 'assets/works-m70/'), pre = new Image();
+    pre.onload = () => { img.src = big; }; pre.src = big;
+  }));
+}
+// changing the filter: works leaving fade out (0.3s); the rest glide from where they were to where they now go, growing or
+// shrinking on the way (0.8s), and works arriving fade in
+let flipping = false, flipT = 0, goT = 0;   // goT: a filter change waiting for its leavers to fade (since 2026-11-17 a newer pick cancels it, so quick picks no longer race)
+function applyFilter() {
+  const rows = [...document.querySelectorAll('.idx-row')], items = [...document.querySelectorAll('.idx-item')];
+  rows.forEach(settle); idx.classList.remove('hovering'); label.classList.remove('show'); title.classList.remove('show');
+  const vis = a => !a.hidden && !a.closest('.idx-row').hidden;
+  const was = new Set(items.filter(vis)), next = new Set();
+  rows.forEach(row => {
+    const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
+    row.querySelectorAll('.idx-item').forEach(a => {
+      const v = a.classList.contains('v'), t = a.classList.contains('tol');
+      if (inSeries && (fSeries !== 'Horizontal' || (!v && !t)) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)) next.add(a);
+    });
+  });
+  const leaving = [...was].filter(a => !next.has(a));
+  flipping = true;
+  const go = () => {
+    const first = new Map([...was].filter(a => next.has(a)).map(a => [a, a.getBoundingClientRect()]));
+    items.forEach(a => { a.hidden = !next.has(a); a.style.opacity = ''; });
+    rows.forEach(row => { row.hidden = !row.querySelector('.idx-item:not([hidden])'); });
+    mode = fSeries === 'Horizontal' ? 'v' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';   // (a year: laid out like Vertical, see layout)
+    layout();
+    if (mode !== 'all') { se.scrollTop = 0; tY = 0; }
+    const moving = [];
+    items.filter(a => next.has(a)).forEach(a => {
+      const f = first.get(a), l = a.getBoundingClientRect();
+      a.style.transition = 'none';
+      if (!f) { a.style.opacity = '0'; return; }
+      a.style.transformOrigin = '0 0';
+      a.style.transform = 'translate(' + (f.left - l.left).toFixed(1) + 'px, ' + (f.top - l.top).toFixed(1) + 'px) scale(' + (f.width / l.width).toFixed(4) + ', ' + (f.height / l.height).toFixed(4) + ')';
+      moving.push(a);
+    });
+    void idx.offsetWidth;
+    requestAnimationFrame(() => {
+      moving.forEach(a => { a.style.transition = 'transform 1.333s cubic-bezier(0.22, 1, 0.36, 1)';   /* (since 2026-11-13, Grace) a series' entrance at 60% of its speed: every time here / 0.6 */ a.style.transform = ''; });
+      items.filter(a => next.has(a) && !first.has(a)).forEach(a => { a.style.transition = 'opacity 1s cubic-bezier(0.4, 0, 0.2, 1) 0.417s'; a.style.opacity = ''; });
+    });
+    clearTimeout(flipT); flipT = setTimeout(() => { items.forEach(a => { a.style.transition = ''; a.style.transformOrigin = ''; }); flipping = false; }, 1500);
+  };
+  clearTimeout(goT); goT = 0;
+  if (leaving.length) { leaving.forEach(a => { a.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; a.style.opacity = '0'; }); goT = setTimeout(() => { goT = 0; go(); }, 500); }
+  else go();
+}
+addEventListener('resize', () => { if (mode !== 'all') layout(); else { balanceRows(); liftLabel(); markTop(); } });
+addEventListener('load', () => { if (mode === 'all') { balanceRows(); markTop(); } });
+liftLabel(); document.fonts && document.fonts.ready.then(liftLabel);
+const menuRenders = [];
+function menu(id, label, opts, get, set) {
+  const m = $(id), btn = m.querySelector('.fm-btn'), list = m.querySelector('.fm-list');
+  const render = () => {
+    btn.querySelector('span').textContent = get() === 'All' ? label : get();
+    btn.classList.toggle('chosen', get() !== 'All');
+    list.innerHTML = '';
+    opts().forEach(([v, l]) => { const o = document.createElement('button'); o.setAttribute('role', 'option'); o.textContent = l || v; o.classList.toggle('on', get() === v); o.setAttribute('aria-selected', get() === v);
+      o.addEventListener('click', e => { e.stopPropagation(); set(v); close(); menuRenders.forEach(r => r()); applyFilter(); keepAddress(); }); list.appendChild(o); });
+  };
+  btn.addEventListener('click', e => { e.stopPropagation(); const open = !m.classList.contains('open'); close(); m.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); });
+  render(); menuRenders.push(render);
+}
+// (since 2026-11-19, Grace) the address follows the Series / Year choice (works-index.html?series=<name> or ?year=<year>), as on
+// GALLERY, so a reload or a copied link opens the same choice
+function keepAddress() {
+  const q = new URLSearchParams(); if (fSeries !== 'All') q.set('series', fSeries); else if (fYear !== 'All') q.set('year', fYear);
+  history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+}
+function close() { document.querySelectorAll('.filter-menu.open').forEach(x => { x.classList.remove('open'); x.querySelector('.fm-btn').setAttribute('aria-expanded', 'false'); }); }
+menu('fmSeries', 'Series', () => SERIES_OPTS, () => fSeries, v => { fSeries = v; if (v !== 'All') fYear = 'All'; });
+menu('fmYear', 'Year', yearOpts, () => fYear, v => { fYear = v; if (v !== 'All') fSeries = 'All'; });
+document.addEventListener('click', e => { if (!e.target.closest('.filter-menu')) close(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+// ---- (since 2026-10-28) Mouse wheel: whenever the page is taller than the screen, the wheel glides it, as on G6 (each step
+// 60% as far, easing out over about a third of a second); touch, the keyboard and the scrollbar scroll natively
+const se = document.scrollingElement, maxY = () => se.scrollHeight - innerHeight;
+let tY = se.scrollTop, gliding = false, lastT = 0;
+function glide() {
+  if (gliding) return; gliding = true; lastT = performance.now();
+  const step = now => {
+    const dt = Math.min(64, now - lastT); lastT = now;
+    const cur = se.scrollTop, d = tY - cur;
+    if (Math.abs(d) < 0.5) { se.scrollTop = tY; gliding = false; return; }
+    const stepY = d * (1 - Math.exp(-dt / 340));   // (since 2026-11-17) at least 1px a frame: the last tiny steps rounded away, so the glide stalled a few px short and never ended
+    se.scrollTop = Math.abs(stepY) < 1 ? cur + Math.sign(d) * Math.min(1, Math.abs(d)) : cur + stepY;
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+addEventListener('wheel', e => {
+  if (e.ctrlKey || maxY() <= 0) return;   // (pinch zoom; nothing to scroll)
+  e.preventDefault();
+  const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1;
+  if (!gliding) tY = se.scrollTop;
+  tY = Math.max(0, Math.min(maxY(), tY + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit * 0.6));
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { se.scrollTop = tY; return; }   // reduce motion: no glide (since 2026-11-09)
+  glide();
+}, { passive: false });
+addEventListener('scroll', () => { if (!gliding) tY = se.scrollTop; }, { passive: true });
+// (since 2026-11-17, Grace) the sticky band (menus' line and series name, see the CSS): kept under the header, the name kept on its line
+const tools = document.querySelector('.tools'), hdr = document.querySelector('header');
+let bandExt = 14;
+function band() {
+  if (!fine.matches) return;
+  const hb = hdr ? hdr.getBoundingClientRect().height : 0;
+  document.documentElement.style.setProperty('--band-top', hb.toFixed(1) + 'px');
+  const tr = tools.getBoundingClientRect(), lr = label.getBoundingClientRect(), ty = parseFloat((label.style.transform.match(/-?[\d.]+/) || [0])[0]) || 0;
+  label.style.top = (hb + (lr.top - ty) - tr.top).toFixed(1) + 'px';   // the name sticks at the same moment as the menus' line
+  bandExt = Math.max(0, lr.bottom - tr.bottom) + 14;
+  tools.style.setProperty('--band-ext', bandExt.toFixed(1) + 'px');
+}
+const liftLabel0 = liftLabel;
+liftLabel = function () { liftLabel0(); band(); };
+addEventListener('resize', band); band(); document.fonts && document.fonts.ready.then(band);
+// once scrolled, a thumbnail partly under the band that the pointer comes to rest on (moving or wheeling over its visible part)
+// glides down until it shows whole at its hover size, 8px clear of the band
+function hoverTop(it) {
+  const cs = getComputedStyle(it), oy = parseFloat(cs.transformOrigin.split(' ')[1]) || 0;
+  const sc = mode === 'all' || mode === 'h' ? 1 + PEAK : (parseFloat(cs.getPropertyValue('--hz')) || 1.075);
+  const top = it.offsetParent === idx ? idx.getBoundingClientRect().top + it.offsetTop : it.getBoundingClientRect().top;
+  return top + oy * (1 - sc);
+}
+let pX = null, pY = null, revealT = 0;
+function reveal() {
+  if (gliding) { clearTimeout(revealT); revealT = setTimeout(reveal, 100); return; }   // wait for the wheel's glide to finish
+  if (!fine.matches || flipping || pX === null || se.scrollTop <= 0) return;
+  const el = document.elementFromPoint(pX, pY), it = el && el.closest && el.closest('.idx-item'); if (!it) return;
+  const need = tools.getBoundingClientRect().bottom + bandExt + 8 - hoverTop(it);
+  if (need > 0.5) { tY = Math.max(0, se.scrollTop - need); if (matchMedia('(prefers-reduced-motion: reduce)').matches) se.scrollTop = tY; else glide(); }
+}
+addEventListener('mousemove', e => { if (e.clientX === pX && e.clientY === pY) return; pX = e.clientX; pY = e.clientY; clearTimeout(revealT); revealT = setTimeout(reveal, 120); }, { passive: true });
+addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(reveal, 260); }, { passive: true });
+/* (since 2026-11-19, Grace) a reload (or the browser's Back) puts the Index back as it was: the same Series / Year choice and the
+   same scroll, at once, with no fade. Kept in sessionStorage as the page is left; a fresh visit from the nav starts at the top. */
+(function () {
+  const KEY = 'ae-index:' + location.pathname;
+  addEventListener('pagehide', () => { try { sessionStorage.setItem(KEY, JSON.stringify({ s: fSeries, y: fYear, sy: se.scrollTop })); } catch (e) {} });
+  let r = null;
+  try { const n = performance.getEntriesByType('navigation')[0]; if (n && (n.type === 'reload' || n.type === 'back_forward')) r = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  // (since 2026-11-19) no saved state (a copied link, or storage off): the choice in the address, from the top
+  const qs = new URLSearchParams(location.search), aS = qs.get('series'), aY = qs.get('year');
+  if (!r && (aS || aY)) r = { s: aS || 'All', y: aS ? 'All' : aY || 'All', sy: 0 };
+  if (!r) return;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const okS = v => v === 'All' || SERIES_OPTS.some(o => o[0] === v), okY = v => v === 'All' || yearOpts().some(o => o[0] === v);
+  if ((r.s !== 'All' && okS(r.s)) || (r.y !== 'All' && okY(r.y))) {
+    fSeries = okS(r.s) ? r.s : 'All'; fYear = okY(r.y) ? r.y : 'All';
+    menuRenders.forEach(f => f());
+    const rows = [...document.querySelectorAll('.idx-row')];
+    rows.forEach(row => {
+      const inSeries = fSeries === 'All' || fSeries === 'Horizontal' || fSeries === 'Vertical' || row.dataset.s === fSeries;
+      row.querySelectorAll('.idx-item').forEach(a => { const v = a.classList.contains('v'), t = a.classList.contains('tol'); a.hidden = !(inSeries && (fSeries !== 'Horizontal' || (!v && !t)) && (fSeries !== 'Vertical' || v) && (fYear === 'All' || a.dataset.y === fYear)); });
+      row.hidden = !row.querySelector('.idx-item:not([hidden])');
+    });
+    mode = fSeries === 'Horizontal' ? 'v' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';
+    layout();
+  }
+  keepAddress();
+  const sy = +r.sy || 0, put = () => { se.scrollTop = sy; tY = se.scrollTop; };
+  put(); setTimeout(put, 0); document.fonts && document.fonts.ready.then(put); addEventListener('load', put, { once: true });
+})();
+</script>
+<div class="tol-lb" hidden role="dialog" aria-modal="true" aria-label="Tree of Life"><img alt=""></div>
+<div class="tp-bar tol-bar" hidden>
+  <button class="tp-btn prev" aria-label="Previous"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
+  <button class="tp-btn xl" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
+  <button class="tp-btn next" aria-label="Next"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
+</div>
+<script>
+// (since 2026-11-24, Grace) the Tree of Life row's lightbox (2000px files in assets/works-m70-2000/)
+(function () {
+  const lb = document.querySelector('.tol-lb'), img = lb.querySelector('img'), bar = document.querySelector('.tol-bar');
+  const links = [...document.querySelectorAll('.idx-item.tol')], srcs = links.map(a => a.querySelector('img').getAttribute('src').replace('thumbs-m70/', 'works-m70-2000/'));
+  let i = 0, back = null;
+  const show = () => { img.src = srcs[i]; img.alt = 'Tree of Life, ' + (i + 1) + ' of ' + srcs.length; };
+  const step = d => { i = (i + d + srcs.length) % srcs.length; show(); };
+  const open = k => { i = k; back = document.activeElement; show(); lb.hidden = bar.hidden = false; document.body.style.overflow = 'hidden'; bar.querySelector('.xl').focus(); };
+  const close = () => { lb.hidden = bar.hidden = true; document.body.style.overflow = ''; if (back) back.focus(); };
+  // (since 2026-11-25, Grace) they open in the shared zoom view (zoom-view.js), the artwork page's slider zoom; the plain lightbox above is no longer opened
+  links.forEach((a, k) => a.addEventListener('click', e => { e.preventDefault(); ZoomView.open(srcs.map((u, j) => ({ src: u, alt: 'Tree of Life, ' + (j + 1) + ' of ' + srcs.length })), k, { dots: true, start: 1, noScale: true, plainDots: true }); }));   // (Process's dots, X top right, since 2026-11-25, Grace; opening at 1x, since later that day; then no slider and Process's dots without the pill)
+  lb.addEventListener('click', close);
+  img.addEventListener('click', e => { e.stopPropagation(); const r = img.getBoundingClientRect(); step(e.clientX - r.left > r.width / 2 ? 1 : -1); });
+  bar.querySelector('.prev').addEventListener('click', () => step(-1));
+  bar.querySelector('.next').addEventListener('click', () => step(1));
+  bar.querySelector('.xl').addEventListener('click', close);
+  addEventListener('keydown', e => { if (lb.hidden) return; if (['Escape', 'ArrowRight', 'ArrowLeft'].includes(e.key)) e.stopPropagation(); if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } }, true);
+  srcs.forEach(u => { const p = new Image(); p.src = u; });
+})();
+</script>
+<link rel="stylesheet" href="zoom-view.css?v=5">
+<script src="zoom-view.js?v=5"></script>
+<script src="body-fit.js?v=9" data-nav="home"></script>
+</body>
+</html>
