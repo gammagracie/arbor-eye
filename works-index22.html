@@ -174,7 +174,7 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
 .idx-item { box-shadow: 3px 5px 14px -4px rgba(20,20,20,0.24); }
 .idx-item.v, .idx-item.tol { height: calc(var(--ih) * 1.5); }   /* (since 2026-10-24) a portrait the same size as a landscape, turned upright: as tall as a landscape is wide (the Ascent and Structure rows are that much taller) */
 /* (since 2026-11-25, Grace) all series: the Tree of Life thumbnails as wide as the portraits (their own shape, so a little shorter than them; they were as tall as the portraits) */
-.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.tol { height: calc(var(--ih) * 1.5 * 3084 / 2650); }   /* INDEX22: as wide as a landscape (Tonal's thumbnails above), so taller than the portraits */
+.idx:not(.m-s):not(.m-v):not(.m-h) .idx-item.tol { height: calc(var(--ih) * 3084 / 2650); }   /* INDEX22: as on INDEX, as wide as the portraits (as wide as Tonal's landscapes for part of 2026-11-25) */
 /* (since 2026-10-21) the hovered work's title to the right of its row, 24px past the row's last thumbnail and centred on the row
    (EB Garamond italic capitals, as the galleries' hover titles); placed by the script below, kept within the page's side padding */
 .idx { position: relative; }
@@ -424,10 +424,15 @@ const TGAP = 25, HOV_S = 1.3;   // HOV_S: a work's hover size in one series (sin
 function placeTitle(row) {
   const box = idx.getBoundingClientRect(), pad = parseFloat(getComputedStyle(idx).paddingRight);
   let x, y;
-  if (mode === 'all') {   // to the right of the row: 24px past its last thumbnail, centred on the row
-    const items = row.querySelectorAll('.idx-item:not([hidden])'), last = items[items.length - 1];   // (its resting place, plus the genie's push)
-    y = last.offsetTop + last.offsetHeight / 2 - capMid();   // (since 2026-10-29) its capitals centred on the row (they were 5, then 9px below)
-    x = Math.min(last.offsetLeft + last.offsetWidth + (row._titleShift || 0) + 24, box.width - pad - title.offsetWidth);   // never past the bag icon's line
+  if (mode === 'all') {   // to the right of the row: 39px past its last thumbnail, centred on the row
+    // (since 2026-11-25, Grace) on the line of the hovered work (a series over two lines, Ascent's 9 + 9: the first line's title beside
+    // the first line), and centred on that line's last thumbnail as it is drawn, its genie swell included (it grows up from its base,
+    // or from its centre in the top row), so hovering the rightmost work keeps the title level with it
+    const items = [...row.querySelectorAll('.idx-item:not([hidden])')], hot = row._hot && items.includes(row._hot) ? row._hot : items[items.length - 1];
+    const line = items.filter(a => a.offsetTop === hot.offsetTop), last = line[line.length - 1], sc = last._sc || 1, h = last.offsetHeight;
+    const mid = Math.abs(parseFloat(getComputedStyle(last).transformOrigin.split(' ')[1]) - h) > 2;   // (centre-out in the top row, base-up elsewhere)
+    y = (mid ? last.offsetTop + h / 2 : last.offsetTop + h - h * sc / 2) - capMid();   // its capitals centred on the work
+    x = Math.min(last.offsetLeft + last.offsetWidth / 2 + (last._dx || 0) + last.offsetWidth * sc / 2 + 24 + 15, box.width - 12 - title.offsetWidth);   // INDEX22 (since 2026-11-25, Grace): out into the margin where it must (Ascent's one row reaches the bag icon's line), never past 12px from the screen's edge   // (since 2026-11-25, Grace) 39px past the line's last thumbnail (was 24)
   } else {   // under the hovered work, centred on it (following it where the genie nudges it)
     const it = title._for; if (!it) return;   // (the work it names: it never slides on to the next one, see below)
     x = Math.max(pad, Math.min(it.offsetLeft + it.offsetWidth / 2 + (it._dx || 0) - title.offsetWidth / 2, box.width - pad - title.offsetWidth));
