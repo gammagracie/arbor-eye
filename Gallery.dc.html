@@ -331,9 +331,9 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             {{ printImg }}
           </div>
           <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it) -->
-          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 12px; display: flex; justify-content: center; gap: 18px">
+          <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 12px; display: flex; justify-content: center; gap: 0">   <!-- (since 2026-11-25, Grace) Studio's dots: current filled light gray, the others a 2px gray ring, 12px apart -->
             <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
-              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-clip: padding-box; padding: 0; cursor: pointer; background: {{ dt.bg }}; transition: background 0.35s ease"></button>
+              <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" aria-current="{{ dt.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ dt.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ dt.ring }}; padding: 0; cursor: pointer"></button>
             </sc-for>
           </div>
         </div>
@@ -919,7 +919,7 @@ class Component extends DCLogic {
       // the buy page's print: arrows and dots step through the framing views (the frame colour choice follows)
       pcPrev: (e) => { e.stopPropagation(); pcGo((pcI + nPc - 1) % nPc); },
       pcNext: (e) => { e.stopPropagation(); pcGo((pcI + 1) % nPc); },
-      pcDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); pcGo(i); }, aria: label, bg: i === pcI ? '#141414' : '#C9C5BD' })),
+      pcDots: views.concat(vid ? [['film', 'Film']] : []).map(([f, label], i) => ({ pick: (e) => { e.stopPropagation(); pcGo(i); }, aria: label, cur: i === pcI ? 'true' : 'false', sbg: i === pcI ? '#C9C5BD' : 'transparent', ring: i === pcI ? '#C9C5BD' : '#A8A39A' })),
       // the zoom view: the same for the original's framing views
       zoomPrev: () => zGo((zI + nPc - 1) % nPc),
       zoomNext: () => zGo((zI + 1) % nPc),
