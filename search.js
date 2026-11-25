@@ -18,6 +18,11 @@
 .srch input:focus, .srch input:focus-visible { outline: none !important; box-shadow: none !important; }
 .srch input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(28px * var(--fs, 1)); letter-spacing: 0.06em; color: #141414; padding: 4px 0; }
 .srch input::placeholder { color: #6E6A63; }
+/* (since 2026-11-25, Grace) the caret and what is typed sit centred in the field; 40px on the right balances the magnifier and its gap on the left, so they centre on the whole underlined row */
+.srch input { text-align: center; padding-right: 40px; }
+/* the browser's own clear x (Safari, Chrome) takes 16px on the right once something is typed: 16px on the left balances it */
+.srch input::-webkit-search-cancel-button { width: 16px; height: 16px; margin: 0; }
+@supports selector(::-webkit-search-cancel-button) { .srch input:not(:placeholder-shown) { padding-left: 16px; } }
 .srch-x { position: fixed; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 9999px; border: none; padding: 0; background: #FFFFFF; color: #1C1C1C; box-shadow: 0 2px 10px rgba(28, 28, 28, 0.15); display: grid; place-items: center; cursor: pointer; }
 .srch-count { margin: 14px 0 0; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.16em; text-transform: uppercase; color: #6E6B66; }
 .srch h2 { margin: 36px 0 10px; font-family: "Neuzeit Grotesk", "Helvetica Neue", Helvetica, sans-serif; font-weight: 400; font-size: calc(12px * var(--fs, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: #6E6B66; }
