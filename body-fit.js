@@ -17,7 +17,7 @@
     const bar = document.querySelector('header > div'), logo = bar && bar.querySelector('a'), c = document.querySelector('header a[data-t="Contact"]');
     const foot = document.querySelector('footer > div');
     if (!bar || !logo || !c) return;
-    if (!matchMedia('(min-width: 1280px)').matches) {
+    if (!matchMedia('(min-width: 1024px)').matches) {
       bar.style.paddingLeft = bar.style.paddingRight = ''; if (foot) foot.style.paddingLeft = foot.style.paddingRight = ''; shift = 0; return; }
     // (since 2026-11-09, Grace) the homepage is H77: the header and footer on its lines, the logo's left edge and the bag icon's
     // right edge (the footer's copy too) on the edges of its painting: --h77-pad, the same sum as index.html's stylesheet
@@ -25,7 +25,9 @@
     const W = root.clientWidth, H = innerHeight, hH = bar.getBoundingClientRect().height;   // var(--header-h)
     // (since 2026-11-23, Grace, at 1280) 1280-1439px wide: the margins at 80%, as --nav-hp in nav-index.css
     const k = W < 1440 ? 0.8 : 1;
-    const pad = (k * Math.max(24, (W - 1.1 * (0.86 * (H - hH) - 32.9) * 1.7048) / 2)).toFixed(2) + 'px';
+    // (since 2026-11-24, Grace) desktops 1024-1279px wide (the desktop layout since that day): never less than 11.1% of the width before the
+    // 80%, as at 1280 x 720 (142px, 114px after it), where the painting's own sum leaves almost no margin
+    const pad = (k * Math.max(24, (W - 1.1 * (0.86 * (H - hH) - 32.9) * 1.7048) / 2, W < 1280 ? 0.111 * W : 0)).toFixed(2) + 'px';
     bar.style.paddingLeft = bar.style.paddingRight = pad;
     shift = 0;
     if (foot && foot.style.paddingLeft !== pad) foot.style.paddingLeft = foot.style.paddingRight = pad;

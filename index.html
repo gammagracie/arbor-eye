@@ -19,15 +19,19 @@
    painting with its hanging thumbnails leaves less than 40px of white above and below; the painting and thumbnails then
    centred between the header and the screen's bottom (--h77-top). The block is the frame (width / 1.7673) and the
    thumbnails hanging 32.9px + 2.074% of the width below it: 0.58658 x width + 32.9px */
-@media (min-width: 1280px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.05473125); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
+@media (min-width: 1024px) { :root { --h77-pad: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); --h77-thumb: calc((100vw - 2 * var(--h77-pad)) * 0.05473125); --h77-top: max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)); } }
 
 /* (since 2026-11-22, Grace, from 1728 x 1000) desktops up to 2000px: the painting and thumbnails 18px lower than centred, nearer the
    Gallery's line (her pick: same size, as low as the hover title under the thumbnails allows); less on short windows so the title
    still shows (9px at 720 tall). At 1728 x 1000 the painting's top 112px (was 94; the Gallery's work 135) */
-@media (min-width: 1280px) and (max-width: 2000px) { :root { --h77-top: calc(max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)) + max(0px, min(18px, calc(4.3vh - 22px)))); } }
+@media (min-width: 1024px) and (max-width: 2000px) { :root { --h77-top: calc(max(12px, calc((100vh - var(--header-h) - (100vw - 2 * var(--h77-pad)) * 0.58658 - 38.9px) / 2)) + max(0px, min(18px, calc(4.3vh - 22px)))); } }
 
 /* (since 2026-11-13, Grace) desktop: no scrolling; the painting, thumbnails and hover title fit the window, only white lies below */
-@media (min-width: 1280px) and (hover: hover) and (pointer: fine) { html, body { overflow-y: hidden; } }
+/* (since 2026-11-24, Grace) desktops 1024-1279px wide (the desktop layout since that day): the painting's side margins never less than
+   11.1% of the width, as at 1280 x 720 */
+@media (min-width: 1024px) and (max-width: 1279px) { :root { --h77-pad: max(24px, 11.1vw, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2)); } }
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) { html, body { overflow-y: hidden; } }
 </style>
 <!-- H77 (homepage trial, 2026-10-28; built from index.html by _incoming/make_h2.py, so edit the homepage and re-run that): every
      painting 7.5% wider at the same height (assets/home-h4/: the width added across the painting's interior by repeating its
@@ -41,12 +45,12 @@
 <script src="./support.js"></script>
 <script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=10">
+<link rel="stylesheet" href="nav-index.css?v=11">
 </head>
 <body>
 <x-dc>
@@ -202,7 +206,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
   &quot;cartCount&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 9, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Header&quot;}
 }">
 class Component extends DCLogic {
-  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1280, menuOpen: false, index: 0, vpos: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
+  state = { mobile: typeof window !== 'undefined' && window.innerWidth < 768, tablet: typeof window !== 'undefined' && window.innerWidth < 1024, menuOpen: false, index: 0, vpos: 0, hover: false, fade: false, ratio: 1.5, railBase: 0, animate: false, intro: 'pre', heroOk: null, heroBad: null };   // heroOk / heroBad: the main image's src once it has loaded / failed // ratio: the scans' proportion; the hero frame keeps it for every work
   // The carousel shows the uncropped gallery scans (paper border included). `cropped` keeps the original
   // cropped file for each piece in case it is wanted again. Titles must match the Gallery entries exactly.
   arts = [
@@ -396,7 +400,7 @@ class Component extends DCLogic {
     this.onMq = () => { document.body.style.overflow = ''; this.setState({ mobile: this.mq.matches, menuOpen: false }); };
     this.mq.addEventListener('change', this.onMq);
     this.setState({ mobile: this.mq.matches });
-    this.mqTablet = window.matchMedia('(max-width: 1279px)');
+    this.mqTablet = window.matchMedia('(max-width: 1023px)');
     this.onMqTablet = () => this.setState({ tablet: this.mqTablet.matches });
     this.mqTablet.addEventListener('change', this.onMqTablet);
     this.setState({ tablet: this.mqTablet.matches });

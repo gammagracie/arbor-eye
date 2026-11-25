@@ -15,12 +15,12 @@
 <script src="alt-text.js?v=7" data-auto></script>
 <script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
-<link rel="stylesheet" href="nav-match.css?v=3">
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=10">
+<link rel="stylesheet" href="nav-index.css?v=11">
 </head>
 <body>
 <x-dc>
@@ -71,7 +71,7 @@ html { scrollbar-gutter: stable; }
   --ct-head: clamp(22px, 1.35vw, 70px); }
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the photo and the coloured boxes 60px shorter, as About's pictures,
    so the tab bar sits 60px higher, always above the fold */
-@media (min-width: 1280px) and (max-width: 1439px) {
+@media (min-width: 1024px) and (max-width: 1439px) {
   :root:root { --ct-h: min(calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) + 12px - 60px), calc(var(--ct-w) * 0.75)); }
 }
 /* (since 2026-11-22, Grace, 1920 notes) desktops up to 2000px wide: the photo and the two coloured boxes the same height and place as
@@ -94,7 +94,7 @@ html { scrollbar-gutter: stable; }
 /* (since 2026-11-23, Grace, at 1280) Shipping on 1280-1440px screens: its text as About's Biography, 12px on a 19px line; and the
    square sculpture photo fills the box instead of setting its height (it made the box 527px tall at 1280 x 720, 32px taller than
    Email's, so the tab bar dropped below the other tabs' line) */
-@media (min-width: 1280px) and (max-width: 1440px) { .bt p:not(.lbl), .bt li { font-size: 12px; line-height: 19px; } .bt + img { height: 0 !important; min-height: 100%; } }
+@media (min-width: 1024px) and (max-width: 1440px) { .bt p:not(.lbl), .bt li { font-size: 12px; line-height: 19px; } .bt + img { height: 0 !important; min-height: 100%; } }
 .bt p.lbl ~ p.lbl { padding-top: calc(clamp(15px, 0.9vw, 44px) * 1.1); } @media (min-width: 2001px) { .bt p.lbl ~ p.lbl { padding-top: calc((14.5px * var(--fs) + 6px) * 1.1); } }   /* (since 2026-10-24) Returns: each later subsection twice a paragraph's gap below the one before */
 /* TEMP: while G5 / G6 / G7 are in the nav, tighten it at tablet widths so the header stays on one line */
 @media (min-width: 768px) and (max-width: 1919px) { header nav { gap: 16px !important; font-size: calc(12px * var(--fs)) !important; letter-spacing: 0.08em !important; } }
@@ -116,7 +116,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 .prev-box:hover { background: #4A6247 !important; color: #FFFFFF !important; }
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the content centred top to bottom between the header and the foot of
    the screen (at 1280 x 720 the photo 38px below the header and the tab-bar rule 38px above the screen's foot, was 2 / 73) */
-@media (min-width: 1280px) and (max-width: 1439px) { .ct-main { justify-content: center; } .ct-main > section { padding-top: 0 !important; } }
+@media (min-width: 1024px) and (max-width: 1439px) { .ct-main { justify-content: center; } .ct-main > section { padding-top: 0 !important; } }
 /* (since 2026-11-23 evening, Grace) desktop: the photograph and the Shipping sculpture with a drop shadow for depth (since 2026-11-24 tighter than the Gallery works': 6px 7px 16px -5px, 34% black; it was theirs, 12px 14px 32px -8px)
    (the photograph's 10px top trim kept; its clip opened at the sides and foot so the shadow shows) */
 .ct-photo { box-shadow: 6px 7px 16px -5px rgba(20,20,20,0.34); clip-path: inset(10px -80px -80px -80px) !important; }
@@ -483,6 +483,6 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script src="body-fit.js?v=8" data-nav="home"></script>
+<script src="body-fit.js?v=9" data-nav="home"></script>
 </body>
 </html>

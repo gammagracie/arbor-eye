@@ -15,9 +15,14 @@ header nav { align-items: baseline; }
 @media (min-width: 768px) and (max-width: 899px) { html header nav { gap: 28px !important; } }
 /* (since 2026-11-23, Grace, at 1440) the header logo at 85% (216 x 59px becomes 184 x 50) on 1440-class screens, 1280-1511px wide;
    scaled from its left edge and vertical middle, so it keeps its line and stays centred on the nav. 1512px and up unchanged. */
-@media (min-width: 1280px) and (max-width: 1511px) { html header a[aria-label="Arbor & Eye"] { transform: scale(0.85); transform-origin: 0 50%; } }
+@media (min-width: 1024px) and (max-width: 1511px) { html header a[aria-label="Arbor & Eye"] { transform: scale(0.85); transform-origin: 0 50%; } }
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the page's side margins at 80% (--nav-hp, which every page's header,
    content and footer sit on: 114px at 1280 x 720, was 142). 1440px and up unchanged. */
-@media (min-width: 1280px) and (max-width: 1439px) {
+@media (min-width: 1024px) and (max-width: 1439px) {
   html:root:root { --nav-hp: calc(0.8 * max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2))); }
+}
+/* (since 2026-11-24, Grace) desktops 1024-1279px wide (the desktop layout since that day): the margins never less than 8.9% of the width
+   (80% of 11.1%), as at 1280 x 720, where the painting's own sum leaves almost none */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html:root:root { --nav-hp: calc(0.8 * max(24px, 11.1vw, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2))); }
 }

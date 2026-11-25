@@ -22,7 +22,7 @@
 @media (min-width: 2501px) { :root { --header-h: 102px; } }   /* (since 2026-11-06, Grace; every page) screens over 2500px: the header 30px taller, 15px more above and below the logo and nav (80px before; 96px for part of the day) */
 @media (min-width: 768px) { :root { --thumb-h: 37.5px; } }   /* filmstrip thumbnails 25% larger since 2026-10-21 (were 30px, 25px on phones) */
 /* desktop (since 2026-10-26): the filmstrip thumbnails half as large again (56px) and only 2px apart; over 2000px 80.5px (since 2026-10-27, 15% larger than the 70px of 10-26) */
-@media (min-width: 1280px) { :root { --thumb-h: 56px; --thumb-gap: 7px; } }   /* (since 2026-11-06) 7px between the filmstrip thumbnails in every view and filter (was 2px) */
+@media (min-width: 1024px) { :root { --thumb-h: 56px; --thumb-gap: 7px; } }   /* (since 2026-11-06) 7px between the filmstrip thumbnails in every view and filter (was 2px) */
 @media (min-width: 2001px) { :root { --thumb-h: 80.5px; } }
 @media (min-width: 768px) { :root { --side-pad: 48px; } }
 @media (min-width: 1024px) { :root { --side-pad: 10vw; } }
@@ -89,17 +89,17 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button { text-align: left; border: none; background: transparent; padding: 11px 32px; font-family: inherit; font-size: calc(14px * var(--fs)); font-weight: 300; letter-spacing: 0.08em; color: #141414; cursor: pointer; white-space: nowrap; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }   /* the chosen option in black, bold (since 2026-10-23; it was a paler grey) */
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
-@media (min-width: 1280px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow, YEAR's right edge on YEAR's */
+@media (min-width: 1024px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow, YEAR's right edge on YEAR's */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
 .count svg { width: 17px; height: 17px; fill: currentColor; display: block; }
-/* view icons by screen size (since 2026-10-19): desktop (1280px and wider) 1 / 3 in a row / 3 x 3; small desktop and tablet
-   (768-1279px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
+/* view icons by screen size (since 2026-10-19): desktop (1024px and wider since 2026-11-24; was 1280) 1 / 3 in a row / 3 x 3; tablet
+   (768-1023px) 1 / 2-column grid; phones show the works as a one-column list instead (no icons) */
 .count[data-n="2"] { display: none; }
 .page.few .count[data-n="9"] { display: none; }
 .count svg.g2, .page.vert .count svg.g3 { display: none; } .page.vert .count svg.g2 { display: block; }   /* (since 2026-10-21 for Vertical, 2026-10-22 for every series in pages of 2 x 2) the grid icon is 2 x 2 */   /* (since 2026-10-21) a filter leaving 3 works or fewer: no 3 x 3 grid; they show in the 3-up row, centred */
-@media (min-width: 768px) and (max-width: 1279px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
+@media (min-width: 768px) and (max-width: 1023px) { .count[data-n="3"], .count[data-n="9"] { display: none; } .count[data-n="2"] { display: flex; } }
 /* phones: every work in one scrolling column, full content width, its title under it; a tap opens the detail view */
 .list { display: none; }
 .page.listmode { height: auto; }
@@ -170,7 +170,7 @@ html.touch .page.moving .caption, html.touch .page.moving .step { opacity: 0; tr
 .track { display: flex; gap: var(--thumb-gap, 6px); align-items: flex-end; width: max-content; padding: 0 var(--side-pad); will-change: transform; pointer-events: auto; }
 /* desktop (since 2026-11-04; edge to edge from 2026-10-27): the filmstrip never runs past the nav, the logo's left edge to the bag's
    right, its thumbnails fading out over the last 32px as they slide past those lines; at either end of the row they rest just inside the fade */
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   /* (since 2026-11-13, Grace) the row rests with its first thumbnail on the logo's line and its last on the bag's: the strip runs
      32px past each line and the thumbnails fade out there, outside the lines */
   .strip-wrap { margin-left: calc(var(--side-pad) - 32px); margin-right: calc(var(--side-pad) - 32px);
@@ -209,13 +209,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <script src="alt-text.js?v=7"></script>
 <script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
-<link rel="stylesheet" href="nav-match.css?v=3">
+<link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=10">
+<link rel="stylesheet" href="nav-index.css?v=11">
 </head>
 <body>
 <div class="page" id="page">
@@ -376,7 +376,7 @@ document.documentElement.classList.toggle('touch', !matchMedia('(hover: hover) a
 // Views by screen size (since 2026-10-19): desktop (1280px and wider) 1, 3 in a row or 9 (three rows of three); small desktop and
 // tablet (768-1279px) 1 or a 2-column grid (view 2: two to four rows, as many as fit without making the works much smaller); phones a one-column
 // list of every work (the featured row is not used there). Each size remembers its own choice.
-const phone = matchMedia('(max-width: 767px)'), tab = matchMedia('(min-width: 768px) and (max-width: 1279px)');
+const phone = matchMedia('(max-width: 767px)'), tab = matchMedia('(min-width: 768px) and (max-width: 1023px)');
 // (since 2026-11-08) the page's content margin: the header bar's padding from the stylesheet (--side-pad), not the inline padding
 // body-fit.js gives the header to put it in the homepage's place
 function sideLine() { const b = document.querySelector('.bar'), l = b.style.paddingLeft; b.style.paddingLeft = ''; const v = parseFloat(getComputedStyle(b).paddingLeft); b.style.paddingLeft = l; return v; }
@@ -1018,7 +1018,7 @@ stripReady = true;
 if (phone.matches) { page.classList.add('listmode'); buildList(); if (start > 0) { const el = document.getElementById('li-' + WORKS[start].f); if (el) el.scrollIntoView({ block: 'start' }); } }   // phones: the list, opened at the work named in the URL
 if (restored && restored.sy) scrollTo(0, restored.sy);   /* (since 2026-11-15) and scrolled where it was */
 </script>
-<script src="body-fit.js?v=8" data-nav="home"></script>
+<script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-08, as on GX3) the line under the featured thumbnails. It follows them as the set changes and as the strip
 // scrolls (read each frame from the thumbnails' layout and the strip's own shift, so a hovered thumbnail's swell does not move it)

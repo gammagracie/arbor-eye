@@ -3,7 +3,7 @@
    edge sit, --nav-hp = index.html's --h77-pad, the same sum. Both page margins take it, so whatever was on the nav's old 8% / 10%
    lines (--side-pad) or under CONTACT (--body-pad) now sits on these. body-fit.js (data-nav="home") puts the header and footer on
    the same lines. html:root outranks the pages' own :root rules. */
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   html:root { --nav-hp: max(24px, calc((100vw - 1.1 * (0.86 * (100vh - var(--header-h)) - 32.9px) * 1.7048) / 2));
               --side-pad: var(--nav-hp); --body-pad: var(--nav-hp);
               /* (since 2026-11-13, Grace) Home, About and Contact start at the same height: the homepage painting's top, the white under

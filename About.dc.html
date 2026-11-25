@@ -11,12 +11,12 @@
 <script src="alt-text.js?v=7" data-auto></script>
 <script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
-<link rel="stylesheet" href="nav-match.css?v=3">
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=10">
+<link rel="stylesheet" href="nav-index.css?v=11">
 </head>
 <body>
 <x-dc>
@@ -40,12 +40,12 @@
   --proc-text: min(var(--ab-measure), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 0.7 * min(calc((var(--ab-h) - 28px) * 4 / 3), calc(var(--ab-w) - 83.2px - var(--ab-gap) - 360px)))); }   /* (since 2026-10-28) the box: the whole height between the header and the tab labels less 50px above and below, as on Contact (the tab labels 11.5px; the bar 22px above them, 18px below, a 1px rule) */
 @media (min-width: 2001px) { :root { --ab-body: calc(clamp(15px, 0.9vw, 44px) + 6px); } }
 /* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px: Process's photos and films square, as tall as the Biography portrait (the box's height, or less where the copy needs 600px); their sides cropped; the copy takes the rest */
-@media (min-width: 1280px) { :root { --proc-sq: min(var(--ab-h), calc(var(--ab-w) - var(--ab-gap) - 600px)); --proc-text: min(var(--ab-measure), calc(var(--ab-w) - var(--ab-gap) - var(--proc-sq))); }
+@media (min-width: 1024px) { :root { --proc-sq: min(var(--ab-h), calc(var(--ab-w) - var(--ab-gap) - 600px)); --proc-text: min(var(--ab-measure), calc(var(--ab-w) - var(--ab-gap) - var(--proc-sq))); }
   .ab-proc-media { width: var(--proc-sq) !important; } .ab-proc-slide { aspect-ratio: 1 / 1 !important; } }
 /* (since 2026-11-20, Grace; since 2026-11-21 every desktop, 1280px and wider) over 2000px: the Process block (photo and copy) centred up and down in the box */
-@media (min-width: 1280px) { .ab-proc-box { align-content: center !important; } }
+@media (min-width: 1024px) { .ab-proc-box { align-content: center !important; } }
 /* (since 2026-11-23, Grace) desktop: the Process copy's last paragraph without its bottom margin, so the heading-to-last-line text is centred on the photo (it sat 13px high at 3840) */
-@media (min-width: 1280px) { .ab-proc-box .ab-copy > p:last-child { margin-bottom: 0 !important; } }
+@media (min-width: 1024px) { .ab-proc-box .ab-copy > p:last-child { margin-bottom: 0 !important; } }
 /* (since 2026-11-24, Grace) Studio, the desktop strip: no heading; the photos fill the same box as Contact's photo and the other tabs'
    pictures (the full width, logo's left edge to the bag icon's right; the box's height, top and bottom level with them, 15px taller up
    to 2000px wide as Biography and Contact are), so nothing jumps between tabs. Slide 1: the work table at its own shape on the right,
@@ -74,7 +74,7 @@
 .ab-portrait-crop .ab-portrait { height: calc(100% + 60px); margin-top: -30px; width: 100% !important; object-fit: cover; }   /* (since 2026-11-13, Grace) the portrait 60px taller in the same box, 30px cropped off its top and bottom; the copy moves right with it, the gap unchanged */   /* (since 2026-11-01) the portrait as tall as the box, or as large as leaves the copy its width (80% of the box from 2026-10-30) */
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: every tab's pictures 60px shorter, so the tab bar under them sits
    60px higher, always above the fold (it was 13px from the window's bottom); the copy beside them is unchanged */
-@media (min-width: 1280px) and (max-width: 1439px) {
+@media (min-width: 1024px) and (max-width: 1439px) {
   :root:root { --ab-h: calc(100vh - var(--header-h) - var(--home-top, 50px) - 28px - var(--tab-h) - var(--home-bot, 32px) - 60px); }
 }
 /* (since 2026-11-22, Grace, 1920 notes) desktops up to 2000px wide: Biography's portrait and Tree of Life's photo 15px taller, growing
@@ -86,7 +86,7 @@
   .ab-portrait-crop { height: calc(var(--ab-h) + 15px); width: calc((var(--ab-h) + 75px) * 3 / 4); margin-bottom: -15px; }
   .ab-tol-img { width: min(calc((var(--ab-h) + 15px) * 1.2143), calc(var(--ab-w) - var(--ab-gap) - 300px)) !important; margin-bottom: -15px; }
 }
-@media (min-width: 1280px) and (max-width: 2000px) {
+@media (min-width: 1024px) and (max-width: 2000px) {
   :root { --proc-sq: min(var(--ab-h), calc((var(--ab-w) - 60px - var(--ab-head) * 4.3 - clamp(25px, 1.6vw, 80px)) * 2 / 3), calc(var(--ab-w) - var(--ab-gap) - 480px)); }
 }
 /* the paragraphs of every desktop tab, and of Contact's Shipping and Returns (since 2026-10-22; class bt), styled as Biography's
@@ -99,15 +99,15 @@
 @media (min-width: 2001px) and (max-width: 2350px) { :root { --ab-para: calc(14.5px * var(--fs) + 3px); } }
 /* (since 2026-11-23, Grace) Tree of Life, every desktop width: the copy 25px further left (nearer the photo) and wider, its right
    edge on the bag icon's line (the box's right edge); it was 25-51px short of it at 1728, 2560 and 3840 */
-@media (min-width: 1280px) { .ab-tol-text { margin-left: -25px; max-width: calc(100% + 25px) !important; justify-self: stretch !important; } }
+@media (min-width: 1024px) { .ab-tol-text { margin-left: -25px; max-width: calc(100% + 25px) !important; justify-self: stretch !important; } }
 /* (since 2026-11-24, Grace) 1280-2000px: the Tree of Life text 25px further right (the -25px above undone), clear of the photo's shadow;
    its right edge stays on the bag icon's line, so it is 25px narrower. Over 2000px it stays under GALLERY */
-@media (min-width: 1280px) and (max-width: 2000px) { .ab-tol-text { margin-left: 0; max-width: 100% !important; } }
+@media (min-width: 1024px) and (max-width: 2000px) { .ab-tol-text { margin-left: 0; max-width: 100% !important; } }
 .ab-bio { max-width: calc(var(--ab-para) * 52) !important; }
 @media (min-width: 1000px) { .ab-bio { max-width: var(--bio-text) !important; } }   /* (since 2026-11-01) desktop: the width the copy had before the tabs widened */
 /* (since 2026-11-23, Grace, from 1280) Biography on desktops up to 1440px wide: the copy 12px (14.5px before; 12.5px earlier that day)
    on a 19px line (2px less than 12px x 1.75), the column as wide as before, so the text runs shorter on short laptop screens */
-@media (min-width: 1280px) and (max-width: 1440px) { .ab-bio .bt p { font-size: 12px; line-height: 19px; } }
+@media (min-width: 1024px) and (max-width: 1440px) { .ab-bio .bt p { font-size: 12px; line-height: 19px; } }
 .bt ul { margin: 0; padding-left: 1.2em; } .bt > :last-child, .bt li:last-child { margin-bottom: 0; }
 @media (min-width: 2001px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 6px); margin-bottom: 1.1em; } }
 @media (min-width: 2001px) and (max-width: 2350px) { .bt p:not(.lbl), .bt li { font-size: calc(14.5px * var(--fs) + 3px); } }
@@ -194,7 +194,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 :where(button[aria-label^="Previous"], a[aria-label^="Previous"], button[aria-label^="Next"], a[aria-label^="Next"])::before { content: ""; position: absolute; inset: -5px; }
 /* (since 2026-11-23, Grace, at 1280) desktops 1280-1439px wide: the content centred top to bottom between the header and the foot of
    the screen (at 1280 x 720 the content (picture top to tab-bar rule) 43px below the header and 43px above the screen's foot, was 12 / 73) */
-@media (min-width: 1280px) and (max-width: 1439px) { .ab-main { justify-content: center; } .ab-main > section { padding-top: 0 !important; } }
+@media (min-width: 1024px) and (max-width: 1439px) { .ab-main { justify-content: center; } .ab-main > section { padding-top: 0 !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -736,7 +736,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script src="body-fit.js?v=8" data-nav="home"></script>
+<script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-23, Grace, Ned's screen) over 2000px wide: the Tree of Life text starts exactly under the nav's GALLERY. The text's place
 // comes from the picture and GALLERY's from the nav's right end, so they only met by chance; the left margin is measured to close the gap

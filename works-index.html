@@ -84,7 +84,7 @@ body.menu-open .menu { transform: translateY(0); visibility: visible; }
 .fm-list button:hover { color: #6E6B66; } .fm-list button.on { color: #141414; font-weight: 600; }
 .fm-btn.chosen span { font-weight: 600; }
 .fm-list .fm-note { padding: 8px 32px 2px; font-size: calc(11px * var(--fs)); letter-spacing: 0.1em; color: #ADA9A2; }
-@media (min-width: 1280px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow (since 2026-11-02) */
+@media (min-width: 1024px) { #fmSeries .fm-list { left: 0; right: auto; } .fm-list { width: calc(144px * var(--fs)); } .fm-list button { padding-left: 18px; padding-right: 18px; } .fm-list .fm-note { padding-left: 18px; padding-right: 18px; } }   /* (since 2026-11-02, desktop) the open list 60% of its old 240px, the options 18px in from its sides; the SERIES list's left edge on the SERIES arrow (since 2026-11-02) */
 @media (max-width: 767px) { .tools { display: none; } }
 .count { border: none; background: transparent; padding: 2px; cursor: pointer; display: flex; color: #C9C5BD; transition: color 0.2s ease; }
 .count:hover { color: #6E6B66; } .count.on { color: #141414; }
@@ -241,13 +241,13 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <script src="alt-text.js?v=7"></script>
 <script src="search-data.js?v=2" defer></script>
 <script src="search.js?v=8" defer></script>
-<link rel="stylesheet" href="sticky-nav.css?v=2">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
+<link rel="stylesheet" href="sticky-nav.css?v=3">   <!-- TEST: sticky header (2026-11-06); remove this line to take it out -->
 <link rel="stylesheet" href="hover-title.css?v=2">   <!-- one hover-title size site-wide, per screen width (since 2026-11-06) -->
-<link rel="stylesheet" href="nav-match.css?v=3">
+<link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
-<link rel="stylesheet" href="nav-index.css?v=10">
+<link rel="stylesheet" href="nav-index.css?v=11">
 </head>
 <body>
 <div class="page index" id="page">
@@ -920,6 +920,6 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
   srcs.forEach(u => { const p = new Image(); p.src = u; });
 })();
 </script>
-<script src="body-fit.js?v=8" data-nav="home"></script>
+<script src="body-fit.js?v=9" data-nav="home"></script>
 </body>
 </html>

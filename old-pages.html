@@ -37,7 +37,7 @@ li.mag a:hover { background: #E9E0D0; }
 :root { --header-h: clamp(72px, 57px + 1.172vw, 80px); }
 @media (min-width: 1000px) { :root { --header-h: calc(clamp(72px, 57px + 1.172vw, 80px) - 8px); } }   /* (since 2026-11-13, Grace) desktop: 4px less above and below the logo and nav */
 @media (min-width: 2501px) { :root { --header-h: 102px; } }
-@media (min-width: 1280px) { .wrap { max-width: none; padding-left: var(--nav-hp); padding-right: var(--nav-hp); } }
+@media (min-width: 1024px) { .wrap { max-width: none; padding-left: var(--nav-hp); padding-right: var(--nav-hp); } }
 @media (min-width: 2001px) {
   .wrap { padding-top: 90px; padding-bottom: 120px; }
   .logo, .logo img { width: 270.5px; } .logo { margin-bottom: 70px; }
@@ -50,7 +50,7 @@ li.mag a:hover { background: #E9E0D0; }
   li { break-inside: avoid; }
 }
 </style>
-<link rel="stylesheet" href="nav-match.css?v=3">
+<link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=1"></script>
