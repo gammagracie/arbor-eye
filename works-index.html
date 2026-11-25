@@ -476,8 +476,11 @@ function genie(row, x, item, peak = PEAK) {
     it._dx = shift; it._sc = sc[k];
     it.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.6s ease';   /* (since 2026-11-17, Grace) quicker to react: 0.6s, moving at once and settling softly (0.9s on a slow-starting ease before) */   // (since 2026-11-13, Grace) half the speed (was 0.45s)
     it.style.transform = 'translateX(' + shift.toFixed(1) + 'px) scale(' + sc[k].toFixed(3) + ')';
-    it.style.zIndex = String(Math.round(sc[k] * 100));
+    it.style.zIndex = String(Math.round(sc[k] * 100) + (it === item ? 1000 : 0));   // (since 2026-11-25, Grace) the hovered work always on the top layer
   });
+  // (since 2026-11-25) a series over two lines (Ascent): the line the pointer left settles back at once, so the two lines never swell into each other
+  row.querySelectorAll('.idx-item:not([hidden])').forEach(it => { if (line.includes(it) || !it._sc || it._sc === 1) return;
+    it._dx = 0; it._sc = 1; it.style.transform = ''; it.style.zIndex = ''; });
   // the row's last thumbnail ends up the swell right of the cursor further right: the title keeps clear of it
   const all = row.querySelectorAll('.idx-item:not([hidden])');
   row._titleShift = line.includes(all[all.length - 1]) ? total - pivot + fit : 0;
@@ -599,12 +602,14 @@ addEventListener('load', markTop);
 document.querySelectorAll('.idx-item img').forEach(i => i.addEventListener('load', markTop));
 // (since 2026-11-25, Grace) all series: a series too long for one line (Ascent's 18) splits into even lines (9 + 9) rather than
 // filling the first line and leaving a short one under it (13 + 5); the row is narrowed to its first half's width so it breaks there
+const FIRST_LINE = { 'Ascent': 10 };   // (since 2026-11-25, Grace) Ascent's first line holds 10, the second the rest (8); it was 9 + 9
 function balanceRows() {
   document.querySelectorAll('.idx-row').forEach(row => {
     row.style.maxWidth = ''; if (row.hidden) return;
     const items = [...row.querySelectorAll('.idx-item:not([hidden])')]; if (items.length < 2) return;
     const lines = new Set(items.map(a => a.offsetTop)).size; if (lines < 2) return;
-    const k = Math.ceil(items.length / lines), a = items[0], b = items[k - 1];
+    const k = Math.min(items.length - 1, FIRST_LINE[row.dataset.s] || Math.ceil(items.length / lines)), a = items[0], b = items[k - 1];
+    if (b.offsetTop !== a.offsetTop) return;   // (that many do not fit on one line here: left to wrap as it falls)
     row.style.maxWidth = (b.offsetLeft + b.offsetWidth - a.offsetLeft + 1).toFixed(1) + 'px';
   });
 }
