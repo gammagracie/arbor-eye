@@ -607,7 +607,8 @@ class Component extends DCLogic {
   openLb(e) {
     const t = e.target.closest && e.target.closest('img, video'); if (!t) return;
     const els = [...e.currentTarget.querySelectorAll('img, video')].filter(el => el.getClientRects().length);   // (since 2026-11-20) photos hidden at this size stay out of the lightbox
-    this.setState({ lb: { i: els.indexOf(t), items: els.map(el => ({ src: el.getAttribute('src'), video: el.tagName === 'VIDEO', poster: el.getAttribute('poster'), alt: el.getAttribute('alt') || el.getAttribute('aria-label') || '' })) } });
+    // (since 2026-11-25, Grace) they open in the shared zoom view (zoom-view.js), the artwork page's slider zoom, not the plain lightbox
+    window.ZoomView.open(els.map(el => ({ src: el.getAttribute('src'), video: el.tagName === 'VIDEO', poster: el.getAttribute('poster'), alt: el.getAttribute('alt') || el.getAttribute('aria-label') || '' })), els.indexOf(t));
   }
   car(key, n) {
     const i = this.state[key];
@@ -736,6 +737,8 @@ class Component extends DCLogic {
   }
 }
 </script>
+<link rel="stylesheet" href="zoom-view.css?v=1">
+<script src="zoom-view.js?v=1"></script>
 <script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-23, Grace, Ned's screen) over 2000px wide: the Tree of Life text starts exactly under the nav's GALLERY. The text's place

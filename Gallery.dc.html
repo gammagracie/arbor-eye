@@ -915,7 +915,8 @@ class Component extends DCLogic {
       mountLabel: custom ? 'Custom' : frame === 'none' ? 'None' : 'Reveal',
       // lightbox carousel of the framing views
       lightboxOpen: this.state.lightbox,
-      openLightbox: () => this.setState({ lightbox: true, lbIndex: pcI }),
+      // (since 2026-11-25, Grace) the print opens in the shared zoom view (zoom-view.js), the original's slider zoom, not the plain lightbox
+      openLightbox: () => window.ZoomView.open(views.map(([f, label]) => mockOf(f) ? { src: mockOf(f), alt: mockAlt(f) } : { src: d.src, alt: d.title + ', ' + label.toLowerCase(), style: framed(f, '0 6px 24px rgba(20,20,20,0.20)') }).concat(vid ? [{ src: d.video + '.mp4', poster: d.video + '.jpg', video: true, alt: d.title + ', framed, in a room' }] : []), pcI),
       // the buy page's print: arrows and dots step through the framing views (the frame colour choice follows)
       pcPrev: (e) => { e.stopPropagation(); pcGo((pcI + nPc - 1) % nPc); },
       pcNext: (e) => { e.stopPropagation(); pcGo((pcI + 1) % nPc); },
@@ -993,6 +994,8 @@ class Component extends DCLogic {
   }
 }
 </script>
+<link rel="stylesheet" href="zoom-view.css?v=1">
+<script src="zoom-view.js?v=1"></script>
 <script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-17, Grace) side by side (desktop): the magnify icon sits right of the work, its ink left-aligned with the text above it

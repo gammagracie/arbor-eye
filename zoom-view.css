@@ -1,0 +1,56 @@
+/* (since 2026-11-25, Grace: "make it look like the one with the slider everywhere") the shared zoom view, a copy of the artwork
+   page's zoom (Gallery.dc.html) for every other lightbox: About's Process and Studio photos, the Index's Tree of Life row and the
+   buy page's framing views. White ground; the picture opens at 2x, centred; liquid-glass previous / close / next circles at the
+   foot and the glass scale (-, slider 1x-5x, +, level) just above them; the wheel or a pinch zooms about the pointer, a drag moves
+   the picture, the arrow keys step, Escape closes. While the picture moves the controls fade out and are back the instant it stops. */
+.zv { position: fixed; inset: 0; z-index: 1000; background: #FFFFFF; overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 200px; box-sizing: border-box; }
+.zv[hidden], .zv-bar[hidden], .zv-scale[hidden], .zv-dots[hidden], .zv-x[hidden] { display: none; }
+.zv img, .zv video { display: block; flex: none; height: auto; box-shadow: 0 6px 24px rgba(20, 20, 20, 0.20); touch-action: none; user-select: none; -webkit-user-drag: none; }
+.zv img { cursor: grab; } .zv.zv-drag img { cursor: grabbing; }
+.zv-bar { position: fixed; left: 0; right: 0; bottom: 20px; z-index: 1001; display: flex; justify-content: center; align-items: center; gap: 18px; pointer-events: none; transition: opacity 0.12s ease; }
+.zv-bar .zv-btn { pointer-events: auto; position: relative; width: 44px; height: 44px; border-radius: 9999px; color: #1C1C1C; padding: 0; display: grid; place-items: center; cursor: pointer; }
+.zv-bar .zv-btn.xl { width: 56px; height: 56px; }
+.zv-ic { display: grid; place-items: center; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; position: relative; z-index: 1; }
+.zv-ic svg { display: block; }
+.zv-btn.prev:hover svg { animation: zv-prev 0.45s ease-in-out; }
+.zv-btn.next:hover svg { animation: zv-next 0.45s ease-in-out; }
+.zv-btn.xl:hover svg { animation: zv-close 0.45s ease-in-out; }
+@keyframes zv-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
+@keyframes zv-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+@keyframes zv-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
+.zv-scale { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); z-index: 1001; display: grid; grid-auto-flow: column; align-items: center; justify-items: center; gap: 10px; padding: 7px 18px 7px 8px; border-radius: 9999px; }
+.zv-scale > * { position: relative; z-index: 1; }
+/* the glass, exactly as on the artwork page's zoom */
+.zv-btn, .zv-scale, .zv-pill { --gx: 30%; --gy: 0%; isolation: isolate; box-sizing: border-box; border: none;
+  background: linear-gradient(170deg, rgba(236, 244, 255, 0.40), rgba(214, 228, 250, 0.28));
+  -webkit-backdrop-filter: blur(7px) saturate(1.9) brightness(1.08); backdrop-filter: blur(7px) saturate(1.9) brightness(1.08);
+  box-shadow: inset 2px 2px 1.5px -0.5px rgba(255, 255, 255, 1), inset -1.5px -2px 1.5px -0.5px rgba(190, 210, 240, 0.75),
+    inset 0 3px 6px -2px rgba(255, 255, 255, 0.6), inset 0 -6px 10px -4px rgba(40, 70, 120, 0.22),
+    inset 0 0 10px 1px rgba(255, 255, 255, 0.3), inset 0 -14px 20px -14px rgba(20, 30, 60, 0.22),
+    0 8px 24px rgba(20, 20, 20, 0.16), 0 1px 3px rgba(20, 20, 20, 0.10);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.12s ease; }
+.zv-btn::before, .zv-scale::before, .zv-pill::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.12) 38%, rgba(255, 255, 255, 0) 70%); }
+.zv-btn::after, .zv-scale::after, .zv-pill::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.05) 60%, rgba(255, 255, 255, 0.6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.zv-bar .zv-btn:hover { transform: scale(1.06); } .zv-bar .zv-btn:active { transform: scale(0.94); transition-duration: 0.12s; }
+body.zv-moving .zv-bar, body.zv-moving .zv-scale, body.zv-moving .zv-dots, body.zv-moving .zv-x { opacity: 0; pointer-events: none; }
+.zv-sb { width: 30px; height: 30px; border: none; border-radius: 50%; padding: 0; background: transparent; color: #1C1C1C; cursor: pointer; display: grid; place-items: center; }
+.zv-sb:hover { background: rgba(255,255,255,0.35); box-shadow: inset 0 1px 1px rgba(255,255,255,0.9); }
+.zv-range { width: 200px; height: 20px; margin: 0; accent-color: #141414; cursor: pointer; }
+.zv-val { min-width: 3.2em; text-align: right; font-size: calc(11px * var(--fs, 1)); letter-spacing: 0.08em; color: #6E6B66; font-variant-numeric: tabular-nums; font-family: inherit; }
+@media (min-width: 2501px) { .zv-range { width: 320px; } }
+/* (since 2026-11-25, Grace; the Index's Tree of Life) the dots version: Process's dots (a 24px target drawing a 12px dot, 12px apart; the
+   current one filled light gray, the others a 2px gray ring) on a whiter glass pill where previous / next were, the X at the top right,
+   the scale 12px above the dots */
+.zv-dots { position: fixed; left: 0; right: 0; bottom: 20px; z-index: 1001; display: flex; justify-content: center; pointer-events: none; transition: opacity 0.12s ease; }
+.zv-pill { position: relative; pointer-events: auto; display: flex; padding: 4px 8px; border-radius: 9999px; }
+.zv-dots .zv-pill { background: rgba(255, 255, 255, 0.82); }
+.zv-pill > * { position: relative; z-index: 1; }
+.zv-dot { width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background: transparent; background-clip: padding-box; box-shadow: inset 0 0 0 2px #A8A39A; padding: 0; cursor: pointer; }
+.zv-dot[aria-current="true"] { background-color: #C9C5BD; box-shadow: inset 0 0 0 2px #C9C5BD; }
+.zv-x { position: fixed; top: 20px; right: 20px; z-index: 1001; transition: opacity 0.12s ease; }
+.zv-x .zv-btn { width: 44px; height: 44px; border-radius: 9999px; color: #1C1C1C; padding: 0; display: grid; place-items: center; cursor: pointer; position: relative; }
+.zv-x .zv-btn:hover { transform: scale(1.06); } .zv-x .zv-btn:active { transform: scale(0.94); transition-duration: 0.12s; }
+.zv-scale.zv-low { bottom: 64px; }
