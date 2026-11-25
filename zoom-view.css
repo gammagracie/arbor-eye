@@ -54,3 +54,6 @@ body.zv-moving .zv-bar, body.zv-moving .zv-scale, body.zv-moving .zv-dots, body.
 .zv-x .zv-btn { width: 44px; height: 44px; border-radius: 9999px; color: #1C1C1C; padding: 0; display: grid; place-items: center; cursor: pointer; position: relative; }
 .zv-x .zv-btn:hover { transform: scale(1.06); } .zv-x .zv-btn:active { transform: scale(0.94); transition-duration: 0.12s; }
 .zv-scale.zv-low { bottom: 64px; }
+/* (since 2026-11-25, Grace; the Index's Tree of Life) plain: Process's dots just as on the About page, no pill behind them */
+.zv-dots.zv-plain .zv-pill { background: none; padding: 0; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+.zv-dots.zv-plain .zv-pill::before, .zv-dots.zv-plain .zv-pill::after { display: none; }

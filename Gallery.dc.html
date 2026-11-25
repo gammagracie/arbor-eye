@@ -306,10 +306,9 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <div class="zoombox" style="position: fixed; inset: 0; z-index: 40; background: #FFFFFF; overflow: auto; display: flex; align-items: safe center; justify-content: safe center; padding: 56px 32px 200px; box-sizing: border-box">   <!-- (bottom 200px since 2026-11-23, room for the scale; 160 before) -->
           {{ zoomImg }}
         </div>
+        <!-- (since 2026-11-25, Grace) the previous / next arrows under the scale removed; the close X stays where it was (the arrow keys still step through the framing views) -->
         <div class="tp-bar zoom-bar">
-          <button class="tp-btn prev" onClick="{{ zoomPrev }}" aria-label="Previous"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
           <button class="tp-btn xl" onClick="{{ closeZoom }}" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
-          <button class="tp-btn next" onClick="{{ zoomNext }}" aria-label="Next"><span class="tp-ic"><svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg></span></button>
         </div>
         <div class="zoom-scale" style="display: {{ zoomScaleDisplay }}">
           <button class="zs-btn" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M0 7h14" stroke="currentColor"></path></svg></button>

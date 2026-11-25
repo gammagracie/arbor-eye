@@ -921,7 +921,7 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
   const open = k => { i = k; back = document.activeElement; show(); lb.hidden = bar.hidden = false; document.body.style.overflow = 'hidden'; bar.querySelector('.xl').focus(); };
   const close = () => { lb.hidden = bar.hidden = true; document.body.style.overflow = ''; if (back) back.focus(); };
   // (since 2026-11-25, Grace) they open in the shared zoom view (zoom-view.js), the artwork page's slider zoom; the plain lightbox above is no longer opened
-  links.forEach((a, k) => a.addEventListener('click', e => { e.preventDefault(); ZoomView.open(srcs.map((u, j) => ({ src: u, alt: 'Tree of Life, ' + (j + 1) + ' of ' + srcs.length })), k, { dots: true }); }));   // (Process's dots, X top right, since 2026-11-25, Grace)
+  links.forEach((a, k) => a.addEventListener('click', e => { e.preventDefault(); ZoomView.open(srcs.map((u, j) => ({ src: u, alt: 'Tree of Life, ' + (j + 1) + ' of ' + srcs.length })), k, { dots: true, start: 1, noScale: true, plainDots: true }); }));   // (Process's dots, X top right, since 2026-11-25, Grace; opening at 1x, since later that day; then no slider and Process's dots without the pill)
   lb.addEventListener('click', close);
   img.addEventListener('click', e => { e.stopPropagation(); const r = img.getBoundingClientRect(); step(e.clientX - r.left > r.width / 2 ? 1 : -1); });
   bar.querySelector('.prev').addEventListener('click', () => step(-1));
@@ -931,8 +931,8 @@ addEventListener('wheel', () => { clearTimeout(revealT); revealT = setTimeout(re
   srcs.forEach(u => { const p = new Image(); p.src = u; });
 })();
 </script>
-<link rel="stylesheet" href="zoom-view.css?v=1">
-<script src="zoom-view.js?v=1"></script>
+<link rel="stylesheet" href="zoom-view.css?v=3">
+<script src="zoom-view.js?v=3"></script>
 <script src="body-fit.js?v=9" data-nav="home"></script>
 </body>
 </html>

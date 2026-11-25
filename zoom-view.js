@@ -5,7 +5,7 @@
     prev: '<svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg>',
     next: '<svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg>',
     close: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg>' };
-  let box, bar, scale, dotsEl, xEl, useDots = false, range, val, items = [], i = 0, level = 2, ratio = 1, back = null, pan = null, gBase = 1, mt = 0;
+  let box, bar, scale, dotsEl, xEl, useDots = false, startAt = 2, noScale = false, range, val, items = [], i = 0, level = 2, ratio = 1, back = null, pan = null, gBase = 1, mt = 0;
   const btn = (cls, label, ic) => '<button class="zv-btn ' + cls + '" aria-label="' + label + '"><span class="zv-ic">' + ic + '</span></button>';
   function build() {
     box = document.createElement('div'); box.className = 'zv'; box.hidden = true; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
@@ -55,11 +55,11 @@
   function zoomMid(to) { const b = box.getBoundingClientRect(); zoomTo(to, b.left + b.width / 2, b.top + (b.height - 104) / 2); }
   function centre() { let n = 0; const go = () => { const el = media(); if (el && el.tagName === 'IMG' && el.complete && el.naturalWidth) { box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; box.scrollTop = (box.scrollHeight - box.clientHeight) / 2; } if (++n < 12) requestAnimationFrame(go); }; requestAnimationFrame(go); }
   function show() {
-    const it = items[i]; box.textContent = ''; level = 2; box.setAttribute('aria-label', it.alt || 'Picture');
+    const it = items[i]; box.textContent = ''; level = startAt; box.setAttribute('aria-label', it.alt || 'Picture');
     let el;
     if (it.video) { el = document.createElement('video'); el.src = it.src; if (it.poster) el.poster = it.poster; el.autoplay = el.loop = el.muted = el.playsInline = true;
       el.style.cssText = 'width: auto; height: calc(100vh - 256px); max-width: 90vw'; scale.hidden = true; }
-    else { el = document.createElement('img'); el.alt = it.alt || ''; el.draggable = false; scale.hidden = false; if (it.style) Object.assign(el.style, it.style);
+    else { el = document.createElement('img'); el.alt = it.alt || ''; el.draggable = false; scale.hidden = noScale; if (it.style) Object.assign(el.style, it.style);
       el.onload = () => { ratio = el.naturalWidth / el.naturalHeight; size(); centre(); }; el.src = it.src; }
     box.append(el); size(); centre();
     bar.querySelector('.prev').style.visibility = bar.querySelector('.next').style.visibility = items.length > 1 ? '' : 'hidden';
@@ -69,7 +69,7 @@
   }
   function step(d) { i = (i + d + items.length) % items.length; show(); }
   function close() { box.hidden = bar.hidden = scale.hidden = dotsEl.hidden = xEl.hidden = true; box.textContent = ''; document.body.style.overflow = ''; still(); if (back && back.focus) back.focus(); }
-  window.ZoomView = { open(list, k, opts) { if (!box) build(); items = list; i = k || 0; useDots = !!(opts && opts.dots) && list.length > 1; back = document.activeElement;
+  window.ZoomView = { open(list, k, opts) { if (!box) build(); items = list; i = k || 0; useDots = !!(opts && opts.dots) && list.length > 1; startAt = (opts && opts.start) || 2; noScale = !!(opts && opts.noScale); dotsEl.classList.toggle('zv-plain', !!(opts && opts.plainDots));   // (noScale: no slider; plainDots: Process's dots without the glass pill)   // (start: the level it opens at, 2x unless asked) back = document.activeElement;
     box.hidden = false; bar.hidden = useDots; dotsEl.hidden = xEl.hidden = !useDots; scale.classList.toggle('zv-low', useDots); document.body.style.overflow = 'hidden'; show();
     (useDots ? xEl : bar).querySelector('.xl').focus({ preventScroll: true }); } };
 })();
