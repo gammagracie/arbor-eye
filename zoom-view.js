@@ -4,13 +4,16 @@
   const IC = {
     prev: '<svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path></svg>',
     next: '<svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path></svg>',
+    minus: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8h14" stroke="currentColor"></path></svg>',
+    plus: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor"></path></svg>',
     close: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg>' };
   let box, bar, scale, dotsEl, xEl, useDots = false, startAt = 2, noScale = false, range, val, items = [], i = 0, level = 2, ratio = 1, back = null, pan = null, gBase = 1, mt = 0;
   const btn = (cls, label, ic) => '<button class="zv-btn ' + cls + '" aria-label="' + label + '"><span class="zv-ic">' + ic + '</span></button>';
   function build() {
     box = document.createElement('div'); box.className = 'zv'; box.hidden = true; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
     bar = document.createElement('div'); bar.className = 'zv-bar'; bar.hidden = true;
-    bar.innerHTML = btn('prev', 'Previous', IC.prev) + btn('xl', 'Close', IC.close) + btn('next', 'Next', IC.next);
+    // (since 2026-11-25, Grace) - and + either side of the X in place of previous / next: seven even zoom steps from 1x to 5x (the arrow keys still step between pictures)
+    bar.innerHTML = btn('zout', 'Zoom out', IC.minus) + btn('xl', 'Close', IC.close) + btn('zin', 'Zoom in', IC.plus);
     scale = document.createElement('div'); scale.className = 'zv-scale'; scale.hidden = true;
     scale.innerHTML = '<button class="zv-sb" data-z="-1" aria-label="Zoom out"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M0 7h14" stroke="currentColor"></path></svg></button>' +
       '<input class="zv-range" type="range" min="1" max="5" step="0.05" aria-label="Zoom level">' +
@@ -22,7 +25,9 @@
     document.body.append(box, bar, scale, dotsEl, xEl);
     xEl.querySelector('button').onclick = close;
     range = scale.querySelector('.zv-range'); val = scale.querySelector('.zv-val');
-    bar.querySelector('.prev').onclick = () => step(-1); bar.querySelector('.next').onclick = () => step(1); bar.querySelector('.xl').onclick = close;
+    const ST = 4 / 6;
+    bar.querySelector('.zout').onclick = () => zoomMid(Math.max(1, 1 + (Math.ceil((level - 1) / ST - 0.001) - 1) * ST));
+    bar.querySelector('.zin').onclick = () => zoomMid(Math.min(5, 1 + (Math.floor((level - 1) / ST + 0.001) + 1) * ST)); bar.querySelector('.xl').onclick = close;
     range.oninput = () => zoomMid(parseFloat(range.value));
     scale.querySelectorAll('.zv-sb').forEach(b => b.onclick = () => zoomMid(b.dataset.z > 0 ? Math.min(5, Math.floor(level * 2 + 0.001) / 2 + 0.5) : Math.max(1, Math.ceil(level * 2 - 0.001) / 2 - 0.5)));
     box.addEventListener('pointerdown', e => { if (e.button !== 0 || level <= 1 || !e.target.closest('img')) return; e.preventDefault(); pan = { x: e.clientX, y: e.clientY, l: box.scrollLeft, t: box.scrollTop }; box.classList.add('zv-drag'); });
@@ -62,10 +67,12 @@
     else { el = document.createElement('img'); el.alt = it.alt || ''; el.draggable = false; scale.hidden = noScale; if (it.style) Object.assign(el.style, it.style);
       el.onload = () => { ratio = el.naturalWidth / el.naturalHeight; size(); centre(); }; el.src = it.src; }
     box.append(el); size(); centre();
-    bar.querySelector('.prev').style.visibility = bar.querySelector('.next').style.visibility = items.length > 1 ? '' : 'hidden';
+    bar.querySelector('.zout').style.visibility = bar.querySelector('.zin').style.visibility = it.video ? 'hidden' : '';   // (a film does not zoom)
     if (useDots) { const pill = dotsEl.firstChild; pill.textContent = '';
+      const ar = (d, lab, svg) => { const b = document.createElement('button'); b.className = 'dot-arrow'; b.setAttribute('aria-label', lab); b.innerHTML = svg; b.onclick = () => step(d); return b; };   // (since 2026-11-25) a thin chevron either side of the dots
+      pill.append(ar(-1, 'Previous', '<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="6.5 0.5 0.5 6 6.5 11.5"></polyline></svg>'));
       items.forEach((_, k) => { const d = document.createElement('button'); d.className = 'zv-dot'; d.setAttribute('aria-label', 'Show ' + (k + 1) + ' of ' + items.length);
-        if (k === i) d.setAttribute('aria-current', 'true'); d.onclick = () => { i = k; show(); }; pill.append(d); }); }
+        if (k === i) d.setAttribute('aria-current', 'true'); d.onclick = () => { i = k; show(); }; pill.append(d); }); pill.append(ar(1, 'Next', '<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="0.5 0.5 6.5 6 0.5 11.5"></polyline></svg>')); }
   }
   function step(d) { i = (i + d + items.length) % items.length; show(); }
   function close() { box.hidden = bar.hidden = scale.hidden = dotsEl.hidden = xEl.hidden = true; box.textContent = ''; document.body.style.overflow = ''; still(); if (back && back.focus) back.focus(); }

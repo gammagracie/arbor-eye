@@ -44,6 +44,10 @@ p, h1, h2, h3, li { text-wrap: pretty; }
 .work img { transition: box-shadow 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
 .work:hover img { box-shadow: 0 8px 24px rgba(20,20,20,0.17) !important; }
 /* (since 2026-10-21) the buy page's print and the zoom view step through the three framing views too: arrows at the sides on hover, three dots under */
+/* (since 2026-11-25, Grace) a small thin chevron either side of the carousel dots, as tall as a dot (12px), in the rings' gray; each a 24px target */
+.dot-arrow { width: 24px; height: 24px; border: none; background: transparent; padding: 0; display: grid; place-items: center; cursor: pointer; color: #A8A39A; transition: color 0.2s ease; }
+.dot-arrow:hover { color: #6E6B66; }
+.dot-arrow svg { display: block; }
 .pc-arrow { opacity: 0; transition: opacity 0.2s ease; } .print-car:hover .pc-arrow, .pc-arrow:focus-visible { opacity: 1; }
 /* (since 2026-11-23, Grace) the zoom view's scale: a white pill, (later that day) across the foot of the screen just above the previous /
    close / next buttons, centred on them: -, the slider (1x at the left, 5x at the right; 4x until later on 2026-11-23), + and the level, in the place the hint
@@ -307,8 +311,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           {{ zoomImg }}
         </div>
         <!-- (since 2026-11-25, Grace) the previous / next arrows under the scale removed; the close X stays where it was (the arrow keys still step through the framing views) -->
+        <!-- (since 2026-11-25, Grace, trial) glass - and + either side of the X: each steps the zoom to the next of seven even levels from 1x to 5x -->
         <div class="tp-bar zoom-bar">
+          <button class="tp-btn zstep" style="display: {{ zoomScaleDisplay }}" onClick="{{ zoomStepOut }}" aria-label="Zoom out"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8h14" stroke="currentColor"></path></svg></span></button>
           <button class="tp-btn xl" onClick="{{ closeZoom }}" aria-label="Close"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m1 1 14 14M1 15 15 1" stroke="currentColor"></path></svg></span></button>
+          <button class="tp-btn zstep" style="display: {{ zoomScaleDisplay }}" onClick="{{ zoomStepIn }}" aria-label="Zoom in"><span class="tp-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor"></path></svg></span></button>
         </div>
         <div class="zoom-scale" style="display: {{ zoomScaleDisplay }}">
           <button class="zs-btn" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M0 7h14" stroke="currentColor"></path></svg></button>
@@ -331,9 +338,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
           </div>
           <!-- (since 2026-11-06) the dots 30px apart (2.5 times the 12px they were) and each one a 24px target, twice the 12px dot it draws (a 6px clear border round it) -->
           <div style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 12px; display: flex; justify-content: center; gap: 0">   <!-- (since 2026-11-25, Grace) Studio's dots: current filled light gray, the others a 2px gray ring, 12px apart -->
+            <button class="dot-arrow" onClick="{{ pcPrev }}" aria-label="Previous view"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="6.5 0.5 0.5 6 6.5 11.5"></polyline></svg></button>
             <sc-for list="{{ pcDots }}" as="dt" hint-placeholder-count="3">
               <button onClick="{{ dt.pick }}" aria-label="{{ dt.aria }}" aria-current="{{ dt.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ dt.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ dt.ring }}; padding: 0; cursor: pointer"></button>
             </sc-for>
+            <button class="dot-arrow" onClick="{{ pcNext }}" aria-label="Next view"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="0.5 0.5 6.5 6 0.5 11.5"></polyline></svg></button>
           </div>
         </div>
         <div style="order: {{ printInfoOrder }}; display: grid; gap: 20px; align-content: start; justify-items: start; padding-top: {{ printInfoPad }}">
@@ -950,6 +959,9 @@ class Component extends DCLogic {
       zoomScaleVal: String(Math.round(this.state.zoomLevel * 100) / 100),
       zoomScaleLabel: (Math.round(this.state.zoomLevel * 10) / 10) + 'x',
       zoomScaleInput: (e) => this.zoomMid(parseFloat(e.target.value)),
+      // the seven zoom levels the - and + beside the X step between, evenly from 1x to 5x: 1, 1.7, 2.3, 3, 3.7, 4.3, 5
+      zoomStepIn: () => { const st = 4 / 6; this.zoomMid(Math.min(5, 1 + (Math.floor((this.state.zoomLevel - 1) / st + 0.001) + 1) * st)); },
+      zoomStepOut: () => { const st = 4 / 6; this.zoomMid(Math.max(1, 1 + (Math.ceil((this.state.zoomLevel - 1) / st - 0.001) - 1) * st)); },
       zoomIn: () => this.zoomMid(Math.min(5, Math.floor(this.state.zoomLevel * 2 + 0.001) / 2 + 0.5)),
       zoomOut: () => this.zoomMid(Math.max(1, Math.ceil(this.state.zoomLevel * 2 - 0.001) / 2 - 0.5)),
       zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 256px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
@@ -993,8 +1005,8 @@ class Component extends DCLogic {
   }
 }
 </script>
-<link rel="stylesheet" href="zoom-view.css?v=1">
-<script src="zoom-view.js?v=1"></script>
+<link rel="stylesheet" href="zoom-view.css?v=5">
+<script src="zoom-view.js?v=5"></script>
 <script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-17, Grace) side by side (desktop): the magnify icon sits right of the work, its ink left-aligned with the text above it

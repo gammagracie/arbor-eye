@@ -57,3 +57,7 @@ body.zv-moving .zv-bar, body.zv-moving .zv-scale, body.zv-moving .zv-dots, body.
 /* (since 2026-11-25, Grace; the Index's Tree of Life) plain: Process's dots just as on the About page, no pill behind them */
 .zv-dots.zv-plain .zv-pill { background: none; padding: 0; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
 .zv-dots.zv-plain .zv-pill::before, .zv-dots.zv-plain .zv-pill::after { display: none; }
+/* (zoom view dots, since 2026-11-25, Grace) a small thin chevron either side of the carousel dots, as tall as a dot (12px), in the rings' gray; each a 24px target */
+.zv-pill .dot-arrow { width: 24px; height: 24px; border: none; background: transparent; padding: 0; display: grid; place-items: center; cursor: pointer; color: #A8A39A; transition: color 0.2s ease; }
+.zv-pill .dot-arrow:hover { color: #6E6B66; }
+.zv-pill .dot-arrow svg { display: block; }

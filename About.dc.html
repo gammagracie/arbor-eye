@@ -180,6 +180,10 @@ html { scrollbar-gutter: stable; }
 .tp-btn.xl:hover svg { animation: tp-close 0.45s ease-in-out; }
 @keyframes tp-prev { 49% { transform: translateX(-26px); } 50% { transform: translateX(26px); } }
 @keyframes tp-next { 49% { transform: translateX(26px); } 50% { transform: translateX(-26px); } }
+/* (since 2026-11-25, Grace) a small thin chevron either side of the carousel dots, as tall as a dot (12px), in the rings' gray; each a 24px target */
+.dot-arrow { width: 24px; height: 24px; border: none; background: transparent; padding: 0; display: grid; place-items: center; cursor: pointer; color: #A8A39A; transition: color 0.2s ease; }
+.dot-arrow:hover { color: #6E6B66; }
+.dot-arrow svg { display: block; }
 /* the desktop strips open the lightbox */
 .proc-slider img, .proc-slider video, .stu-slider img { cursor: zoom-in; }
 @keyframes tp-close { 49% { transform: translateY(-34px); } 50% { transform: translateY(34px); } }
@@ -456,9 +460,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
             <!-- the dots hang under the photo, so the copy stays centred on the photo itself -->
             <!-- (since 2026-11-23 evening, Grace) static round dots again, 12px apart: the current one filled light gray, the others a ring with a 2px gray edge. Each a 24px target (a 6px clear border round what it draws). 2026-11-22 to 11-23: animated pill dots -->
             <div style="position: absolute; top: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 0; padding-top: 14px">
+              <button class="dot-arrow" onClick="{{ procDeskPrev }}" aria-label="Previous photo"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="6.5 0.5 0.5 6 6.5 11.5"></polyline></svg></button>
               <sc-for list="{{ procDeskDots }}" as="d" hint-placeholder-count="4">
                 <button onClick="{{ d.go }}" aria-label="{{ d.label }}" aria-current="{{ d.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ d.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ d.ring }}; padding: 0; cursor: pointer"></button>
               </sc-for>
+              <button class="dot-arrow" onClick="{{ procDeskNext }}" aria-label="Next photo"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="0.5 0.5 6.5 6 0.5 11.5"></polyline></svg></button>
             </div>
             <!-- (since 2026-11-09) pause / play for the two looping films, at the right under the photo, level with the dots -->
             <button class="ab-films-btn" onClick="{{ filmsToggle }}" aria-label="{{ filmsLabel }}" aria-pressed="{{ filmsPressed }}" title="{{ filmsLabel }}"><svg style="display: {{ pauseIcon }}" width="10" height="12" viewBox="0 0 10 12" fill="currentColor"><rect x="1" y="0" width="2.5" height="12"></rect><rect x="6.5" y="0" width="2.5" height="12"></rect></svg><svg style="display: {{ playIcon }}" width="10" height="12" viewBox="0 0 10 12" fill="currentColor"><polygon points="1,0 10,6 1,12"></polygon></svg></button>
@@ -494,9 +500,11 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <!-- (since 2026-11-23 evening, Grace) static round dots, as on Process: the current one filled light gray, the others a ring with a 2px gray edge;
              each a 24px target. 2026-11-23 (day): animated pill dots; 2026-11-06 to 11-22: static round dots, the current one black -->
         <div class="ab-stu-dots" style="display: flex; justify-content: center; gap: 0; padding-top: 14px; margin-bottom: -6px">
+          <button class="dot-arrow" onClick="{{ stuDeskPrev }}" aria-label="Previous slide"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="6.5 0.5 0.5 6 6.5 11.5"></polyline></svg></button>
           <sc-for list="{{ stuDeskDots }}" as="d" hint-placeholder-count="2">
             <button onClick="{{ d.go }}" aria-label="{{ d.label }}" aria-current="{{ d.cur }}" style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid transparent; background-color: {{ d.sbg }}; background-clip: padding-box; box-shadow: inset 0 0 0 2px {{ d.ring }}; padding: 0; cursor: pointer"></button>
           </sc-for>
+          <button class="dot-arrow" onClick="{{ stuDeskNext }}" aria-label="Next slide"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1"><polyline points="0.5 0.5 6.5 6 0.5 11.5"></polyline></svg></button>
         </div>
       </div>
       <!-- the tab bar exactly where Contact's is: under the box, from the logo's left edge to the bag icon's right, the labels 14px -->
@@ -737,8 +745,8 @@ class Component extends DCLogic {
   }
 }
 </script>
-<link rel="stylesheet" href="zoom-view.css?v=1">
-<script src="zoom-view.js?v=1"></script>
+<link rel="stylesheet" href="zoom-view.css?v=5">
+<script src="zoom-view.js?v=5"></script>
 <script src="body-fit.js?v=9" data-nav="home"></script>
 <script>
 // (since 2026-11-23, Grace, Ned's screen) over 2000px wide: the Tree of Life text starts exactly under the nav's GALLERY. The text's place
