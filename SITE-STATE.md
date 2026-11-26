@@ -176,11 +176,12 @@ The three templated gallery files (clean, boxed, horizontal) share the same data
 
 ## Home
 
-- **Phones held upright (under 768px wide), since 2026-11-26 (Grace)** (`home-panel.css?v=5`, `home-panel.js?v=6`, markup `.hp` in `index.html`; tablets, landscape phones and desktop keep the framed painting):
+- **Phones held upright (under 768px wide), since 2026-11-26 (Grace)** (`home-panel.css?v=6`, `home-panel.js?v=7`, markup `.hp` in `index.html`; tablets, landscape phones and desktop keep the framed painting):
   - One painting fills the screen as a close view (cover, 1.75x), under the header, which goes transparent with a white logo and menu icon (back to normal while the menu is open). A faint 30%-black gradient fades down from the top behind the logo and menu, and up from the bottom behind the thumbnails.
   - On load, the desktop intro over it: the white Tree of Life fades in (3.2s) and away, then the wordmark on its faint panel (in 1.8s, held 6s, out 1.8s); any tap or swipe cuts it short.
+  - Slideshow (since 2026-11-26 late, Grace): as the wordmark fades, the painting moves slowly, easing out from close up (2.1-2.25x to 1.5-1.65x, drifting a little; no edge ever shows) for 3.5s, fades, and the next of the nine follows, round and round, the thumbnails following. A tap on the painting, a swipe, or a thumbnail or arrow tap stops it where it is. Reduced motion: it still advances, without the movement.
   - Five thumbnails along the bottom, as on desktop: the current work in the middle, two either side, from all nine Home works in Home's order (Articulation left out as there); Home's thumbnail crop, 51 x 34 on a phone, growing slightly with the width. A thumbnail tap loads that work; a swipe left or right moves to the next or previous work (the arrows show for 1s).
-  - A tap on the painting brings up the series and title and a "View the work" link (no tagline on phones), then arrows either side; all fade after 2s. The arrows take taps even while faded (each tap moves on and brings the type up again). The link opens the work's page (`Gallery.dc.html#Title`).
+  - A tap on the painting brings up the series and title and a "View this work" link (no tagline on phones), then arrows either side; all fade after 2s. The arrows take taps even while faded (each tap moves on and brings the type up again). The link opens the work's page (`Gallery.dc.html#Title`).
   - Footer: with a mouse, resting the pointer in the bottom 20px for 1.5s slides the page up by the footer's height (the thumbnails rise with it); moving above the footer slides it back. On a phone the page scrolls the same way by finger.
   - **Panels Flow (trial)**: `index.html?flow=1`, linked as "Home: Panels Flow (test)" in the phone menu. The same, but the painting drifts (slow zoom and pan over 48s) until the first touch, scroll or key, then holds still. No drift with reduced motion.
 

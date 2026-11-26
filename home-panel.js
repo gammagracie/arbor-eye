@@ -1,9 +1,11 @@
 // (since 2026-11-26, Grace) Home on phones held upright (under 768px) (see home-panel.css):
-//  - on load, the intro as on desktop: the Tree of Life, then the wordmark, then the painting alone
+//  - on load, the intro as on desktop: the Tree of Life, then the wordmark; then a slideshow (since 2026-11-26 late, Grace): each
+//    painting moves slowly, easing out from close up (never showing its edges) for 3.5s, fades, and the next comes up, round all
+//    nine, until the visitor taps the painting (or swipes, or taps a thumbnail or arrow); then it holds still where it is
 //  - five thumbnails along the bottom, as on desktop: the current work in the middle, two either side, from all nine Home works
 //    (in Home's order, Articulation left out as there); a thumbnail tap loads that work
 //  - a swipe left or right moves to the next or previous work (the arrows show for 1s)
-//  - a tap on the painting brings up the series, title and "View the work" link, then the arrows either side; all fade after 2s.
+//  - a tap on the painting brings up the series, title and "View this work" link, then the arrows either side; all fade after 2s.
 //    The arrows can be tapped at any time (they sit at the screen's edges, level with the title); a tap brings the type up too
 //  - the footer: with a mouse, resting the pointer at the bottom for 1.5s slides the page up so the footer shows and the
 //    thumbnails rise with it, and moving off it slides it back; on a phone the page scrolls up the same way with a finger
@@ -22,7 +24,12 @@
     ['Affinity', 'core_affinity', 'Series 3 · Core', 'Related forms create a unified field.', [0.117, 0.880, 0.175, 0.833]],
     ['Conduit', 'core_conduit', 'Series 3 · Core', 'Pathways connect a shared structure.', [0.108, 0.892, 0.163, 0.823]],
     ['Upwelling', 'core_upwelling', 'Series 3 · Core', 'Parallel forms organize a living field.', null]];
-  const ARROWS_MS = 1000, TAP_MS = 2000, ARROW_LAG = 350, FOOT_HOLD = 1500;
+  const ARROWS_MS = 1000, TAP_MS = 2000, ARROW_LAG = 350, FOOT_HOLD = 1500, MOVE_MS = 3500, FADE_MS = 500;
+  // each painting's movement: from close up to a little further out, drifting a little; scale never below 1.45 and the drift never more
+  // than the room the scale leaves, so no edge of the painting shows. Turn by turn round the list
+  const MOVES = [[2.2, 1.6, [-3, 2], [2, -1]], [2.15, 1.55, [3, 3], [-2, 0]], [2.25, 1.65, [0, -3], [1, 2]], [2.1, 1.5, [-2, -2], [3, 1]]];
+  const CALM = matchMedia('(prefers-reduced-motion: reduce)');
+  let auto = false, move = null, nextT = 0, moveN = 0;
   const FLOW = /[?&]flow=1\b/.test(location.search);
   const MQ = matchMedia('(max-width: 767px) and (orientation: portrait)');
   let cur = 0, swap = 0, arT = 0, x0 = null, y0 = null, warmed = false, started = false;
@@ -49,19 +56,29 @@
     k = mod(k); if (k === cur) return; cur = k; const w = W[k];
     strip(); bg.style.opacity = 0; clearTimeout(swap);
     swap = setTimeout(() => {
-      bg.onload = () => { bg.style.opacity = 1; };
+      bg.onload = () => { bg.style.opacity = 1; if (auto) play(); };
+      if (!auto && move) { move.cancel(); move = null; }
       bg.src = 'assets/works/' + w[1] + '.jpg'; bg.alt = w[0];
       q('.hp-k').textContent = w[2]; q('.hp-t').textContent = w[0]; q('.hp-d').textContent = w[3]; q('.hp-btn').href = href(k);
     }, 250);
   }
+  // the slideshow: the painting moves for 3.5s, fades, and the next one comes up and moves in turn
+  function play() {
+    const bg = q('.hp-bg'); if (!bg || !auto) return;
+    const [s0, s1, a, b] = MOVES[moveN++ % MOVES.length];
+    if (move) move.cancel();
+    if (!CALM.matches && bg.animate) move = bg.animate([{ transform: 'scale(' + s0 + ') translate(' + a[0] + '%, ' + a[1] + '%)' }, { transform: 'scale(' + s1 + ') translate(' + b[0] + '%, ' + b[1] + '%)' }], { duration: MOVE_MS, easing: 'cubic-bezier(0.37, 0, 0.63, 1)', fill: 'forwards' });
+    clearTimeout(nextT); nextT = setTimeout(() => { if (auto) pick(cur + 1); }, MOVE_MS - FADE_MS / 2);
+  }
+  function stop() { stopped = true; if (!auto) return; auto = false; clearTimeout(nextT); if (move) move.pause(); }
   // the intro, timed as on desktop (index.html): the tree in from 0.15s, away from 3.55s, the wordmark in from 5.15s, away from
   // 11.15s. A tap, swipe or key cuts it short (a quicker fade)
-  let iT = [], inIntro = false;
+  let iT = [], inIntro = false, stopped = false;
   function intro() {
     if (!q('.hp')) return; inIntro = true;
     const at = (ms, f) => iT.push(setTimeout(() => { const n = q('.hp'); if (n) f(n); }, ms));
     at(150, n => n.classList.add('i-tree')); at(3550, n => n.classList.remove('i-tree'));
-    at(5150, n => n.classList.add('i-mark')); at(11150, n => n.classList.remove('i-mark')); at(13000, () => { inIntro = false; });
+    at(5150, n => n.classList.add('i-mark')); at(11150, n => { n.classList.remove('i-mark'); if (!FLOW && !stopped) { auto = true; play(); } }); at(13000, () => { inIntro = false; });
   }
   function endIntro() {
     if (!inIntro) return; inIntro = false; iT.forEach(clearTimeout); iT = [];
@@ -88,11 +105,11 @@
   document.addEventListener('click', e => {
     setTimeout(menu, 30);
     const t = e.target.closest ? e.target : null; if (!t || !t.closest('.hp')) return;
-    const b = t.closest('.hp-strip button'); if (b) { endIntro(); return pick(cur + +b.dataset.slot); }
+    const b = t.closest('.hp-strip button'); if (b) { stop(); endIntro(); return pick(cur + +b.dataset.slot); }
     if (t.closest('.hp-strip')) return;
-    const a = t.closest('.hp-arr'); if (a) { pick(cur + (a.classList.contains('next') ? 1 : -1)); return reveal(); }
-    if (t.closest('a')) return;   // the "View the work" link goes there itself
-    reveal();
+    const a = t.closest('.hp-arr'); if (a) { stop(); pick(cur + (a.classList.contains('next') ? 1 : -1)); return reveal(); }
+    if (t.closest('a')) return;   // the "View this work" link goes there itself
+    stop(); reveal();
   });
   document.addEventListener('keydown', () => setTimeout(menu, 30));
   addEventListener('resize', () => setTimeout(menu, 30), { passive: true });
@@ -102,7 +119,7 @@
   }, { passive: true });
   document.addEventListener('touchend', e => {
     if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { endIntro(); pick(cur + (dx < 0 ? 1 : -1)); showArrows(); }
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { stop(); endIntro(); pick(cur + (dx < 0 ? 1 : -1)); showArrows(); }
   }, { passive: true });
   // the footer, with a mouse: as footer-peek.js does on desktop, but the page itself slides up (so the thumbnails rise with the
   // footer) after the pointer rests in the bottom 20px for 1.5s, and back down once it moves above the footer
