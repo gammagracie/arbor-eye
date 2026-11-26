@@ -196,6 +196,14 @@ footer { flex: none; height: var(--footer-h); box-sizing: border-box; border-top
    over the header (the genie lifts thumbnails as high as z-index 150; the header was 30). The header keeps its own #FDFDFB background */
 .index header { z-index: 300 !important; }
 .idx-row[hidden], .idx-item[hidden] { display: none; }
+/* (since 2026-11-26, Ned via Grace) Ascent's roll arrow (all series): right of the 11th work, points left once rolled (see rollRows) */
+.roll-btn { position: absolute; z-index: 4; transform: translateY(-50%); padding: 10px 8px; border: none; background: none; cursor: pointer; color: #9A968F; display: flex; transition: color 0.2s ease, opacity 0.3s ease; }
+.roll-btn:hover { color: #141414; }
+.roll-btn[hidden] { display: none; }
+.roll-btn svg { height: var(--rh, 30px); width: auto; transition: transform 0.4s ease; }
+.roll-btn.back svg { transform: scaleX(-1); }
+.idx.hovering .roll-btn { opacity: 0.25; }
+
 /* (since 2026-10-29) the spread-out layouts, sized by the script below: one series (.m-s), Horizontal (.m-h) and Vertical (.m-v).
    Rows centred, each work's title under it on hover (as on G5); one series and Vertical enlarge the works and hover them as
    G5's grid does (107.5%, 0.9s), Horizontal keeps the genie; one series has the genie too since 2026-11-01 (130% at its peak) */
@@ -249,7 +257,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
 <link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
-<script src="footer-peek.js?v=2"></script>
+<script src="footer-peek.js?v=3"></script>
 <link rel="stylesheet" href="nav-index.css?v=12">
 </head>
 <body>
@@ -428,7 +436,10 @@ function placeTitle(row) {
     // the first line), and centred on that line's last thumbnail as it is drawn, its genie swell included (it grows up from its base,
     // or from its centre in the top row), so hovering the rightmost work keeps the title level with it
     const items = [...row.querySelectorAll('.idx-item:not([hidden])')], hot = row._hot && items.includes(row._hot) ? row._hot : items[items.length - 1];
-    const line = items.filter(a => a.offsetTop === hot.offsetTop), last = line[line.length - 1], sc = last._sc || 1, h = last.offsetHeight;
+    const line = items.filter(a => a.offsetTop === hot.offsetTop), last = line[line.length - 1], h = last.offsetHeight;
+    // (since 2026-11-25 night, Grace) a series' second line (Ascent): the title holds one height for every work on it, the height it has
+    // when the third-from-last work is hovered (the line's last thumbnail then swells about 12.5%)
+    const sc = hot.offsetTop !== items[0].offsetTop ? 1 + PEAK * Math.exp(-Math.pow(2 / 1.7, 2)) : (last._sc || 1);
     const mid = Math.abs(parseFloat(getComputedStyle(last).transformOrigin.split(' ')[1]) - h) > 2;   // (centre-out in the top row, base-up elsewhere)
     y = (mid ? last.offsetTop + h / 2 : last.offsetTop + h - h * sc / 2) - capMid();   // its capitals centred on the work
     x = Math.min(last.offsetLeft + last.offsetWidth / 2 + (last._dx || 0) + last.offsetWidth * sc / 2 + 24 + 15, box.width - pad - title.offsetWidth);   // never past the bag icon's line   // (since 2026-11-25, Grace) 39px past the line's last thumbnail (was 24)
@@ -603,7 +614,64 @@ document.querySelectorAll('.idx-item img').forEach(i => i.addEventListener('load
 // (since 2026-11-25, Grace) all series: a series too long for one line (Ascent's 18) splits into even lines (9 + 9) rather than
 // filling the first line and leaving a short one under it (13 + 5); the row is narrowed to its first half's width so it breaks there
 const FIRST_LINE = { 'Ascent': 10 };   // (since 2026-11-25, Grace) Ascent's first line holds 10, the second the rest (8); it was 9 + 9
+// (since 2026-11-26, Ned via Grace) all series: Ascent shows 11 works on one line, with a small arrow right of the 11th. The arrow
+// rolls the line right to left so works 8-18 show (1-7 roll out of view to the left) and turns to point left; clicked again it rolls
+// back to 1-11. At rest the works out of view are hidden (data-roll marks the ones hidden here), so the hover swell and the titles
+// work on the 11 shown as on any line. Where 11 do not fit on one line, the series wraps as before.
+const ROLL = { 'Ascent': 11 }, rollAt = {}, ROLL_MS = 700;
+let rolling = false;
+const unroll = row => (row || document).querySelectorAll('.idx-item[data-roll]').forEach(a => { a.hidden = false; a.removeAttribute('data-roll'); });
+function rollBtn(row) {
+  let b = idx.querySelector('.roll-btn[data-s="' + row.dataset.s + '"]');
+  if (!b) {
+    b = document.createElement('button'); b.type = 'button'; b.className = 'roll-btn'; b.dataset.s = row.dataset.s;
+    b.innerHTML = '<svg viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg>';
+    b.addEventListener('click', () => roll(row)); idx.appendChild(b);
+  }
+  return b;
+}
+function rollRows() {
+  document.querySelectorAll('.idx-row').forEach(row => {
+    const n = ROLL[row.dataset.s]; if (!n) return;
+    const b = rollBtn(row); if (rolling) return;
+    unroll(row); row.style.maxWidth = ''; b.hidden = true;
+    if (mode !== 'all' || row.hidden) return;
+    const items = [...row.querySelectorAll('.idx-item:not([hidden])')];
+    if (items.length <= n || items[n - 1].offsetTop !== items[0].offsetTop) return;
+    const at = rollAt[row.dataset.s] ? items.length - n : 0;
+    items.forEach((a, k) => { if (k < at || k >= at + n) { a.hidden = true; a.dataset.roll = '1'; } });
+    const last = items[at + n - 1];
+    b.hidden = false; b.classList.toggle('back', !!rollAt[row.dataset.s]);
+    b.setAttribute('aria-label', rollAt[row.dataset.s] ? 'Show the first ' + row.dataset.s + ' works' : 'Show more ' + row.dataset.s + ' works');
+    const bx = idx.getBoundingClientRect(), lr = last.getBoundingClientRect();
+    b.style.left = (lr.right - bx.left + 40 - 8).toFixed(1) + 'px';   // (since 2026-11-26, Ned) 40px clear between the last work and the arrow (less the button's 8px padding)
+    b.style.top = (lr.top - bx.top + lr.height / 2).toFixed(1) + 'px';
+    b.style.setProperty('--rh', (lr.height * 0.26).toFixed(1) + 'px');
+  });
+}
+function roll(row) {
+  if (rolling) return;
+  const s = row.dataset.s, n = ROLL[s], was = !!rollAt[s];
+  const shown = [...row.querySelectorAll('.idx-item:not([hidden])')];
+  const w = shown[shown.length - 1].offsetLeft + shown[shown.length - 1].offsetWidth - shown[0].offsetLeft;
+  rows_settle(row); rolling = true; unroll(row);
+  const items = [...row.querySelectorAll('.idx-item:not([hidden])')], k = items.length - n;
+  // (since 2026-11-26, Ned) while it rolls, the line reaches 30px past its last work into a feathered edge, so works slide in and out
+  // through a soft fade rather than a hard cut
+  const FEATHER = 30, fm = 'linear-gradient(to right, #000 calc(100% - ' + FEATHER + 'px), transparent)';
+  Object.assign(row.style, { flexWrap: 'nowrap', overflowX: 'clip', maxWidth: (w + 1 + FEATHER).toFixed(1) + 'px', webkitMaskImage: fm, maskImage: fm });
+  const d = items[k].offsetLeft - items[0].offsetLeft, f = items[0];
+  f.style.transition = 'none'; f.style.marginLeft = (was ? -d : 0) + 'px'; void f.offsetWidth;
+  f.style.transition = 'margin-left ' + ROLL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)'; f.style.marginLeft = (was ? 0 : -d) + 'px';
+  rollAt[s] = !was; rollBtn(row).classList.toggle('back', !was);
+  setTimeout(() => {
+    f.style.transition = ''; f.style.marginLeft = ''; Object.assign(row.style, { flexWrap: '', overflowX: '', webkitMaskImage: '', maskImage: '' });
+    rolling = false; balanceRows(); markTop();
+  }, ROLL_MS + 30);
+}
+const rows_settle = row => { try { settle(row); } catch (e) {} };
 function balanceRows() {
+  rollRows();
   document.querySelectorAll('.idx-row').forEach(row => {
     row.style.maxWidth = ''; if (row.hidden) return;
     const items = [...row.querySelectorAll('.idx-item:not([hidden])')]; if (items.length < 2) return;
@@ -623,6 +691,7 @@ function layout() {
   idx.classList.remove('m-s', 'm-h', 'm-v');
   liftLabel();
   if (mode === 'all') { balanceRows(); markTop(); return; }
+  rollRows();   // (Ascent's roll: off outside all series)
   idx.classList.add('m-' + mode);
   const cs = getComputedStyle(idx), aw = idx.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   const th = parseFloat(getComputedStyle(title).fontSize) * 1.25, H = thumbH();
@@ -786,7 +855,7 @@ function applyFilter() {
   flipping = true;
   const go = () => {
     const first = new Map([...was].filter(a => next.has(a)).map(a => [a, a.getBoundingClientRect()]));
-    items.forEach(a => { a.hidden = !next.has(a); a.style.opacity = ''; });
+    items.forEach(a => { a.hidden = !next.has(a); a.removeAttribute('data-roll'); a.style.opacity = ''; });
     rows.forEach(row => { row.hidden = !row.querySelector('.idx-item:not([hidden])'); });
     mode = fSeries === 'Horizontal' ? 'v' : fSeries === 'Vertical' ? 'v' : fSeries !== 'All' ? 's' : fYear !== 'All' ? 'v' : 'all';   // (a year: laid out like Vertical, see layout)
     layout();

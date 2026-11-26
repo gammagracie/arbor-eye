@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="nav-match.css?v=4">
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
-<script src="footer-peek.js?v=2"></script>
+<script src="footer-peek.js?v=3"></script>
 <link rel="stylesheet" href="nav-index.css?v=12">
 <style>/* (since 2026-11-19, Grace) "Go back to gallery": its clickable area 5px larger on every side (the link itself, and its underline, unmoved) */
 .back-link { position: relative; } .back-link::before { content: ''; position: absolute; inset: -5px; }</style>
@@ -538,6 +538,7 @@ class Component extends DCLogic {
   // (since 2026-11-23, Grace) the zoom view opens already magnified (2x), centred on the work; the scale on the right, the wheel or a
   // pinch change it (1x to 5x) and a drag moves the work; clicks on the work do nothing (the double-click steps are gone)
   setZoom(open) {
+    cancelAnimationFrame(this.zgRaf); this.zgTo = null; this.zgF = null;
     document.body.style.overflow = open ? 'hidden' : '';
     this.setState({ zoom: open, zoomLevel: open ? 2 : 1, zoomVid: false }, () => { if (open) this.zoomCentre(); });
   }
@@ -547,11 +548,38 @@ class Component extends DCLogic {
       if (++n < 12) requestAnimationFrame(go); };
     requestAnimationFrame(go);
   }
-  // zoom about the middle of the view (the scale and its + / - buttons)
-  zoomMid(level) {
-    const box = document.querySelector('.zoombox'); if (!box) return;
-    const b = box.getBoundingClientRect(); this.zoomTo(level, b.left + b.width / 2, b.top + (b.height - 104) / 2);
+  // (since 2026-11-26) zoom about the middle of the view (the scale and its + / - buttons): the point of the work at the middle of
+  // what is showing (above the 104px toolbar) stays put. The scroll is set as soon as the new size is drawn, in the same update,
+  // so nothing jumps
+  zoomFocus() {
+    const box = document.querySelector('.zoombox'), img = box && box.querySelector('img'); if (!img || !img.offsetWidth) return null;
+    const cx = box.clientWidth / 2, cy = (box.clientHeight - 104) / 2;
+    return { box, img, cx, cy, fx: (box.scrollLeft + cx - img.offsetLeft) / img.offsetWidth, fy: (box.scrollTop + cy - img.offsetTop) / img.offsetHeight };
   }
+  zoomAt(level, F) {
+    level = Math.max(1, Math.min(5, level)); if (!F) return;
+    this.setState({ zoomLevel: level }, () => {
+      F.box.scrollLeft = F.img.offsetLeft + F.fx * F.img.offsetWidth - F.cx;
+      F.box.scrollTop = F.img.offsetTop + F.fy * F.img.offsetHeight - F.cy;
+    });
+  }
+  zoomMid(level) { this.zoomAt(level, this.zoomFocus()); }
+  // (since 2026-11-26, Ned via Grace) the + and - glide to the next level, passing through every size in between (about 0.45s,
+  // eased), about the point that was in the middle when the glide began; a further click while it glides heads on from the level it
+  // was heading for, about the same point
+  zoomGlide(to) {
+    cancelAnimationFrame(this.zgRaf);
+    const F = (this.zgTo != null && this.zgF) || this.zoomFocus(); if (!F) return;
+    this.zgF = F; this.zgTo = to = Math.max(1, Math.min(5, to));
+    const from = this.state.zoomLevel, t0 = performance.now(), D = 450;
+    const tick = now => {
+      const t = Math.min(1, (now - t0) / D), k = 1 - Math.pow(1 - t, 3);
+      this.zoomAt(from + (to - from) * k, F);
+      if (t < 1) this.zgRaf = requestAnimationFrame(tick); else { this.zgTo = null; this.zgF = null; }
+    };
+    this.zgRaf = requestAnimationFrame(tick);
+  }
+  zoomAim() { return this.zgTo != null ? this.zgTo : this.state.zoomLevel; }
   // step the zoom level, then scroll the lightbox so the point that was clicked stays in view
   zoomStep(e, level) {
     const r = e.currentTarget.getBoundingClientRect();
@@ -958,12 +986,12 @@ class Component extends DCLogic {
       zoomScaleDisplay: vid && this.state.zoomVid ? 'none' : 'grid',
       zoomScaleVal: String(Math.round(this.state.zoomLevel * 100) / 100),
       zoomScaleLabel: (Math.round(this.state.zoomLevel * 10) / 10) + 'x',
-      zoomScaleInput: (e) => this.zoomMid(parseFloat(e.target.value)),
+      zoomScaleInput: (e) => { cancelAnimationFrame(this.zgRaf); this.zgTo = null; this.zgF = null; this.zoomMid(parseFloat(e.target.value)); },
       // the seven zoom levels the - and + beside the X step between, evenly from 1x to 5x: 1, 1.7, 2.3, 3, 3.7, 4.3, 5
-      zoomStepIn: () => { const st = 4 / 6; this.zoomMid(Math.min(5, 1 + (Math.floor((this.state.zoomLevel - 1) / st + 0.001) + 1) * st)); },
-      zoomStepOut: () => { const st = 4 / 6; this.zoomMid(Math.max(1, 1 + (Math.ceil((this.state.zoomLevel - 1) / st - 0.001) - 1) * st)); },
-      zoomIn: () => this.zoomMid(Math.min(5, Math.floor(this.state.zoomLevel * 2 + 0.001) / 2 + 0.5)),
-      zoomOut: () => this.zoomMid(Math.max(1, Math.ceil(this.state.zoomLevel * 2 - 0.001) / 2 - 0.5)),
+      zoomStepIn: () => { const st = 4 / 6, z = this.zoomAim(); this.zoomGlide(Math.min(5, 1 + (Math.floor((z - 1) / st + 0.001) + 1) * st)); },
+      zoomStepOut: () => { const st = 4 / 6, z = this.zoomAim(); this.zoomGlide(Math.max(1, 1 + (Math.ceil((z - 1) / st - 0.001) - 1) * st)); },
+      zoomIn: () => this.zoomGlide(Math.min(5, Math.floor(this.zoomAim() * 2 + 0.001) / 2 + 0.5)),
+      zoomOut: () => this.zoomGlide(Math.max(1, Math.ceil(this.zoomAim() * 2 - 0.001) / 2 - 0.5)),
       zoomImg: d && (vid && this.state.zoomVid ? film({ height: 'calc(100vh - 256px)', width: 'auto', maxWidth: '90vw', flex: 'none', boxShadow: '0 6px 24px rgba(20,20,20,0.20)' }) : React.createElement('img', { src: mockOf((views[this.state.detailView] || views[0])[0]) || d.src, alt: mockOf((views[this.state.detailView] || views[0])[0]) ? mockAlt(views[this.state.detailView][0]) : d.title, 'data-alt-title': d.title, 'data-alt-tag': d.desc, onError: this.ph(d), onLoad: (e) => this.setState({ lbRatio: e.currentTarget.naturalWidth / e.currentTarget.naturalHeight }),
         draggable: false,
 

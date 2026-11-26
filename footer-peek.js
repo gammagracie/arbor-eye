@@ -1,5 +1,5 @@
 // (since 2026-11-13, Grace) desktop, every page: the footer stays out of sight below the window's bottom edge. When the pointer
-// reaches the bottom 20px of the window and rests there 2.5s it slides up (since 2026-11-25, Grace; at once before); once the pointer moves off it, it slides back down. It also shows while
+// reaches the bottom 20px of the window and rests there 1.5s it slides up (since 2026-11-26; 2.5s from 25 Nov, at once before); once the pointer moves off it, it slides back down. It also shows while
 // something in it has keyboard focus. Phones and touch screens keep the footer as before.
 (() => {
   const MQ = '(min-width: 1000px) and (hover: hover) and (pointer: fine)';
@@ -8,7 +8,7 @@
   document.head.appendChild(st);
   const root = document.documentElement; root.classList.add('fp');
   const mq = matchMedia(MQ); let up = false, wait = 0;
-  const HOLD = 2500;   // (since 2026-11-25, Grace) how long the pointer stays in the bottom 20px before the footer slides up
+  const HOLD = 1500;   // (since 2026-11-26, Ned via Grace; 2.5s from 25 Nov) how long the pointer stays in the bottom 20px before the footer slides up
   const set = v => { if (v !== up) { up = v; root.classList.toggle('fp-up', v); } };
   addEventListener('mousemove', e => {
     if (!mq.matches) return;

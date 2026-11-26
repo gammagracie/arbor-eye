@@ -1,0 +1,61 @@
+/* (since 2026-11-26, Grace) Home on phones held upright (under 768px wide; tablets keep the framed painting, since 26 Nov): in place of the framed
+   painting and tray, one painting fills the screen as a close view, under the header, with its series, title, tagline and a
+   "View the work" link over it, and the four Home works as thumbnails along the bottom to change it. The header sits over the
+   painting with a white logo and menu icon. Wider and landscape screens are untouched: everything here is inside the media query. */
+.hp { display: none; }
+@media (max-width: 767px) and (orientation: portrait) {
+  main[data-screen-label="Home — Gallery"] { padding: 0 !important; }
+  main[data-screen-label="Home — Gallery"] > section { display: none !important; }
+  .hp { display: grid; place-items: center; position: relative; height: 100vh; height: 100svh; margin-top: calc(-1 * var(--header-h) - 1px); overflow: hidden; text-align: center; color: #fff; }
+  .hp-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.75); transition: opacity 0.5s ease; }
+  /* faint shading: 30% black at the top fading out behind the logo and menu, the same flipped behind the thumbnails, and a light
+     overall tint so the white type reads */
+  .hp::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0) 160px), linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0) 160px), rgba(10,10,10,0.16); }
+  .hp-tx { position: relative; z-index: 2; padding: 0 10%; text-shadow: 0 1px 14px rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.6s ease; pointer-events: none; }
+  /* the type shows on a tap of the painting and fades after 2s (home-panel.js); it comes back while its link has keyboard focus */
+  .hp.tx-on .hp-tx, .hp-tx:focus-within { opacity: 1; }
+  .hp.tx-on .hp-tx a { pointer-events: auto; }
+  .hp { cursor: pointer; }   /* a tap on the painting shows its title and link (home-panel.js) */
+  /* arrows either side of the title: shown for a second when the page opens and after each swipe, then fade */
+  .hp-arr { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); padding: 14px 10px; border: none; background: none; color: #fff; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; filter: drop-shadow(0 1px 6px rgba(0,0,0,0.45)); display: flex; }
+  .hp-arr.prev { left: max(8px, 2vw); } .hp-arr.next { right: max(8px, 2vw); }
+  .hp-arr svg { width: clamp(13px, 1.2vw + 8px, 18px); height: auto; }
+  .hp.arr-on .hp-arr { opacity: 1; pointer-events: auto; }
+  /* (since 2026-11-26, Grace) phones: no tagline; the series, title and link show only when the painting is tapped */
+  .hp-d { display: none; }
+  /* (since 2026-11-26, Grace) the intro, as on desktop: the white Tree of Life fades in (3.2s) and away, then the wordmark on its faint
+     panel (1.8s in, 6s held, 1.8s out); home-panel.js sets the steps. Over the painting, under the type */
+  .hp-intro { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .hp-tree { position: absolute; left: 50%; top: 50%; height: min(36svh, 72vw); width: auto; transform: translate(-48%, -50%); opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); }
+  .hp-word { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 78vw; padding: 4.6vw 3.7vw; background: rgba(0, 0, 0, 0.0975); line-height: 0; opacity: 0; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); }
+  .hp-word img { display: block; width: 100%; height: auto; filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.55)); }
+  .hp.i-tree .hp-tree, .hp.i-mark .hp-word { opacity: 1; }
+  .hp.i-skip .hp-tree, .hp.i-skip .hp-word { transition-duration: 0.4s; }
+  .hp-k { margin: 0; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .hp-t { margin: 14px 0 0; font: 400 clamp(34px, 7vw, 58px)/1.05 'EB Garamond', serif; letter-spacing: 0.12em; text-transform: uppercase; }
+  .hp-d { margin: 12px auto 0; font: italic 400 clamp(17px, 2.6vw, 21px)/1.4 'EB Garamond', serif; max-width: 26em; }
+  a.hp-btn, a.hp-btn:hover { display: inline-block; margin-top: 26px; padding: 11px 20px; border: 1px solid rgba(255,255,255,0.9); color: #fff; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-shadow: none; background: rgba(0,0,0,0.12); }
+  /* thumbnails as on Home: each scan zoomed so a thin edge of its paper shows, 3:2, all on one line */
+  .hp-strip { position: absolute; left: 0; right: 0; bottom: clamp(30px, 1.5vw + 24px, 40px); z-index: 2; display: flex; justify-content: center; align-items: center; gap: clamp(12px, 1.4vw + 6px, 18px); }
+  /* (Grace, 26 Nov) 51 x 34 on a phone, growing a little with the width: about 72 x 48 on an iPad held upright (820px) */
+  .hp-strip button { --th: clamp(34px, 3.3vw + 21px, 50px); height: var(--th); width: calc(var(--th) * 1.5); padding: 0; border: none; background: none; cursor: pointer; overflow: hidden; opacity: 0.75; transition: opacity 0.3s ease; box-shadow: 0 3px 12px rgba(0,0,0,0.35); }
+  .hp-strip button[aria-current="true"] { opacity: 1; }
+  .hp-strip img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(1.12); transform-origin: 0 0; }
+  /* Panels Flow (trial, index.html?flow=1): the painting drifts, growing, shrinking and panning over about 48s, until the
+     visitor first touches, scrolls or presses a key (home-panel.js adds .still), then holds where it is */
+  @keyframes hp-drift {
+    0%   { transform: scale(1.75) translate(0, 0); }
+    22%  { transform: scale(2.1) translate(-5%, 3%); }
+    48%  { transform: scale(1.55) translate(4%, -3%); }
+    74%  { transform: scale(1.95) translate(5%, 5%); }
+    100% { transform: scale(1.75) translate(0, 0); }
+  }
+  .hp.flow .hp-bg { animation: hp-drift 48s ease-in-out infinite; will-change: transform; }
+  .hp.flow.still .hp-bg { animation-play-state: paused; }
+  /* the header over the painting: no background or rule, the logo and menu icon white (back to normal while the menu is open) */
+  html:not(.hp-menu) header { background: transparent !important; border-bottom-color: transparent !important; }
+  html:not(.hp-menu) header a[aria-label="Arbor & Eye"] img { filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(0,0,0,0.35)); }
+  html:not(.hp-menu) header button[aria-label="Menu"] { filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4)); }
+  html:not(.hp-menu) header button[aria-label="Menu"] span { background: #fff !important; }
+}
+@media (prefers-reduced-motion: reduce) { .hp.flow .hp-bg { animation: none !important; } }
