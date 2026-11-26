@@ -17,10 +17,11 @@
   .hp.tx-on .hp-tx a { pointer-events: auto; }
   .hp { cursor: pointer; }   /* a tap on the painting shows its title and link (home-panel.js) */
   /* arrows either side of the title: shown for a second when the page opens and after each swipe, then fade */
-  .hp-arr { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); padding: 14px 10px; border: none; background: none; color: #fff; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; filter: drop-shadow(0 1px 6px rgba(0,0,0,0.45)); display: flex; }
+  .hp-arr { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); padding: 14px 10px; border: none; background: none; color: #fff; cursor: pointer; opacity: 0; transition: opacity 0.5s ease; filter: drop-shadow(0 1px 6px rgba(0,0,0,0.45)); display: flex; }
   .hp-arr.prev { left: max(8px, 2vw); } .hp-arr.next { right: max(8px, 2vw); }
   .hp-arr svg { width: clamp(13px, 1.2vw + 8px, 18px); height: auto; }
-  .hp.arr-on .hp-arr { opacity: 1; pointer-events: auto; }
+  .hp.arr-on .hp-arr { opacity: 1; }   /* (since 2026-11-26 late) the arrows take taps even while faded, so a tap at the edge always moves on */
+  .hp-arr { padding: 40px 14px; }
   /* (since 2026-11-26, Grace) phones: no tagline; the series, title and link show only when the painting is tapped */
   .hp-d { display: none; }
   /* (since 2026-11-26, Grace) the intro, as on desktop: the white Tree of Life fades in (3.2s) and away, then the wordmark on its faint

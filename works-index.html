@@ -269,7 +269,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <nav class="main">
           <a href="gallery.html" data-t="Gallery">Gallery</a>
           <a href="About.dc.html" data-t="About">About</a>
-          <a class="nav-index" aria-current="page" style="font-weight: 700" href="works-index.html" data-t="Index">Index</a><a class="nav-index22" href="works-index22.html" data-t="Index22">Index22</a>
+          <a class="nav-index" aria-current="page" style="font-weight: 700" href="works-index.html" data-t="Index">Index</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
         <div class="icons">
@@ -644,7 +644,7 @@ function rollRows() {
     b.hidden = false; b.classList.toggle('back', !!rollAt[row.dataset.s]);
     b.setAttribute('aria-label', rollAt[row.dataset.s] ? 'Show the first ' + row.dataset.s + ' works' : 'Show more ' + row.dataset.s + ' works');
     const bx = idx.getBoundingClientRect(), lr = last.getBoundingClientRect();
-    b.style.left = (lr.right - bx.left + 40 - 8).toFixed(1) + 'px';   // (since 2026-11-26, Ned) 40px clear between the last work and the arrow (less the button's 8px padding)
+    b.style.left = (lr.right - bx.left + 95 - 8).toFixed(1) + 'px';   // (since 2026-11-26 late, Grace) 95px clear between the last work and the arrow (40px earlier that day; less the button's 8px padding)
     b.style.top = (lr.top - bx.top + lr.height / 2).toFixed(1) + 'px';
     b.style.setProperty('--rh', (lr.height * 0.26).toFixed(1) + 'px');
   });

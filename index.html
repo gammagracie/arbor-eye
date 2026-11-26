@@ -50,8 +50,8 @@
 <link rel="stylesheet" href="a11y.css?v=2">   <!-- (since 2026-11-09) focus rings, reduce motion, screen-reader headings -->
 <script src="a11y.js?v=2"></script>
 <script src="footer-peek.js?v=3"></script>
-<link rel="stylesheet" href="home-panel.css?v=4">   <!-- (since 2026-11-26) Home on phones held upright (under 768px) -->
-<script src="home-panel.js?v=5" defer></script>
+<link rel="stylesheet" href="home-panel.css?v=5">   <!-- (since 2026-11-26) Home on phones held upright (under 768px) -->
+<script src="home-panel.js?v=6" defer></script>
 <link rel="stylesheet" href="nav-index.css?v=12">
 </head>
 <body>
@@ -115,7 +115,7 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
         <nav style="display: flex; gap: 40px; font-size: calc(13px * var(--fs)); letter-spacing: 0.18em; text-transform: uppercase">
           <a href="gallery.html" data-t="Gallery">Gallery</a>
           <a href="About.dc.html" data-t="About">About</a>
-          <a class="nav-index" href="works-index.html" data-t="Index">Index</a><a class="nav-index22" href="works-index22.html" data-t="Index22">Index22</a>
+          <a class="nav-index" href="works-index.html" data-t="Index">Index</a>
           <a href="Contact-tabs.dc.html" data-t="Contact">Contact</a>
         </nav>
       </sc-if>
@@ -169,11 +169,12 @@ a[data-t]::after { content: attr(data-t); height: 0; overflow: hidden; visibilit
     <div class="hp-tx"><p class="hp-k">Series 4 · Select</p><h2 class="hp-t">Brilliance</h2><p class="hp-d">Light reveals what was always there.</p><a class="hp-btn" href="Gallery.dc.html#Brilliance">View the work</a></div>
     <button type="button" class="hp-arr prev" aria-label="Previous artwork"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline vector-effect="non-scaling-stroke" points="21 1 1 30.66 21 59"></polyline></svg></button>
     <button type="button" class="hp-arr next" aria-label="Next artwork"><svg width="13" height="36" viewBox="0 0 22 60" fill="none" stroke="currentColor" stroke-width="1.5"><polyline vector-effect="non-scaling-stroke" points="1 1 21 30.66 1 59"></polyline></svg></button>
-    <div class="hp-strip">
-      <button type="button" aria-label="Brilliance" aria-current="true" data-k="0"><img src="assets/thumbs/select_brilliance.jpg" alt="" loading="lazy" style="transform: translate(-5.83%, -6.05%) scale(1.1211)"></button>
-      <button type="button" aria-label="Symbiosis" aria-current="false" data-k="1"><img src="assets/thumbs/core_symbiosis.jpg" alt="" loading="lazy" style="transform: translate(-6.00%, -6.17%) scale(1.1166)"></button>
-      <button type="button" aria-label="Emergence" aria-current="false" data-k="2"><img src="assets/thumbs/core_emergence-no-dedication.jpg" alt="" loading="lazy" style="transform: translate(-5.63%, -5.69%) scale(1.1137)"></button>
-      <button type="button" aria-label="Script" aria-current="false" data-k="3"><img src="assets/thumbs/core_script.jpg" alt="" loading="lazy" style="transform: translate(-5.76%, -6.04%) scale(1.1152)"></button>
+    <div class="hp-strip">   <!-- five, as on desktop: the current work in the middle (home-panel.js fills them as the work changes) -->
+      <button type="button" aria-label="Conduit" aria-current="false" data-slot="-2" data-k="7"><img src="assets/thumbs/core_conduit.jpg" alt="" loading="lazy" style="transform: translate(-4.34%, -3.58%) scale(1.0867)"></button>
+      <button type="button" aria-label="Upwelling" aria-current="false" data-slot="-1" data-k="8"><img src="assets/thumbs/core_upwelling.jpg" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Brilliance" aria-current="true" data-slot="0" data-k="0"><img src="assets/thumbs/select_brilliance.jpg" alt="" loading="lazy" style="transform: translate(-5.83%, -6.05%) scale(1.1211)"></button>
+      <button type="button" aria-label="Symbiosis" aria-current="false" data-slot="1" data-k="1"><img src="assets/thumbs/core_symbiosis.jpg" alt="" loading="lazy" style="transform: translate(-6.00%, -6.17%) scale(1.1166)"></button>
+      <button type="button" aria-label="Emergence" aria-current="false" data-slot="2" data-k="2"><img src="assets/thumbs/core_emergence-no-dedication.jpg" alt="" loading="lazy" style="transform: translate(-5.63%, -5.69%) scale(1.1137)"></button>
     </div>
   </div>
   <section style="padding: {{ heroPad }}; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; transform: {{ heroLift }}">
