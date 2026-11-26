@@ -481,6 +481,7 @@ Artifact (Ascent), Convergence 6 and The Turning 6 are off the site: out of ever
 
 ## Open items
 
+- **Phone Home lives only in `index.html` (26 Nov)**: the `home-panel.css` / `home-panel.js` links, the `.hp` block inside `main` and the "Home: Panels Flow (test)" menu link were added straight to `index.html`, which `_incoming/make_h2.py h77` normally rewrites from `Home.dc.html`. Copy them into the build before re-running it, or they are lost.
 - **New About photos from Ned** (2026-11-20): these look soft on Ned's 4K screen. Studio: the desk, watercolors and tools photos. Process: the brush-roll photo and the two films. The list with sizes is `~/Desktop/art-arbor-gallery-NED/_review/2026-11-20/ned-new-photos-list.md`. Grace is writing to Ned; until then the current photos stay.
 - **PREV square** (the small green square in the top-right corner of every page except Prev, linking to `old-pages.html`): it is for review only and should be removed before launch.
 
