@@ -1,6 +1,6 @@
 // (since 2026-11-26, Grace) Home on phones held upright (under 768px) (see home-panel.css):
 //  - on load, the intro as on desktop: the Tree of Life, then the wordmark; then a slideshow (since 2026-11-26 late, Grace): each
-//    painting moves slowly, easing out from close up (never showing its edges) for 3.5s, fades, and the next comes up, round all
+//    painting moves slowly, easing out from close up (never showing its edges) for 11s, fades, and the next comes up, round all
 //    nine, until the visitor taps the painting (or swipes, or taps a thumbnail or arrow); then it holds still where it is
 //  - five thumbnails along the bottom, as on desktop: the current work in the middle, two either side, from all nine Home works
 //    (in Home's order, Articulation left out as there); a thumbnail tap loads that work
@@ -24,10 +24,11 @@
     ['Affinity', 'core_affinity', 'Series 3 · Core', 'Related forms create a unified field.', [0.117, 0.880, 0.175, 0.833]],
     ['Conduit', 'core_conduit', 'Series 3 · Core', 'Pathways connect a shared structure.', [0.108, 0.892, 0.163, 0.823]],
     ['Upwelling', 'core_upwelling', 'Series 3 · Core', 'Parallel forms organize a living field.', null]];
-  const ARROWS_MS = 1000, TAP_MS = 2000, ARROW_LAG = 350, FOOT_HOLD = 1500, MOVE_MS = 3500, FADE_MS = 500;
+  const ARROWS_MS = 1000, TAP_MS = 2000, ARROW_LAG = 350, FOOT_HOLD = 1500, MOVE_MS = 11000, FADE_MS = 500;   // (Grace, 26 Nov late: 11s a work, was 3.5s)
   // each painting's movement: from close up to a little further out, drifting a little; scale never below 1.45 and the drift never more
   // than the room the scale leaves, so no edge of the painting shows. Turn by turn round the list
-  const MOVES = [[2.2, 1.6, [-3, 2], [2, -1]], [2.15, 1.55, [3, 3], [-2, 0]], [2.25, 1.65, [0, -3], [1, 2]], [2.1, 1.5, [-2, -2], [3, 1]]];
+  // (Grace, 26 Nov late) moving at 20% of its first speed: over 11s about 0.38 in scale and 3% of drift (it was 0.6 and 5% in 3.5s)
+  const MOVES = [[2.0, 1.62, [-1.8, 1.2], [1.2, -0.6]], [1.95, 1.57, [1.8, 1.8], [-1.2, 0]], [2.05, 1.67, [0, -1.8], [0.6, 1.2]], [1.9, 1.52, [-1.2, -1.2], [1.8, 0.6]]];
   const CALM = matchMedia('(prefers-reduced-motion: reduce)');
   let auto = false, move = null, nextT = 0, moveN = 0;
   const FLOW = /[?&]flow=1\b/.test(location.search);

@@ -26,8 +26,9 @@
   .hp-d { display: none; }
   /* (since 2026-11-26, Grace) the intro, as on desktop: the white Tree of Life fades in (3.2s) and away, then the wordmark on its faint
      panel (1.8s in, 6s held, 1.8s out); home-panel.js sets the steps. Over the painting, under the type */
+  /* the tree sits 25px right of centre (Grace, 26 Nov late) */
   .hp-intro { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-  .hp-tree { position: absolute; left: 50%; top: 50%; height: min(36svh, 72vw); width: auto; transform: translate(-48%, -50%); opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); }
+  .hp-tree { position: absolute; left: calc(50% + 25px); top: 50%; height: min(36svh, 72vw); width: auto; transform: translate(-48%, -50%); opacity: 0; transition: opacity 3.2s cubic-bezier(0.4, 0, 0.6, 1); }
   .hp-word { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 78vw; padding: 4.6vw 3.7vw; background: rgba(0, 0, 0, 0.0975); line-height: 0; opacity: 0; transition: opacity 1.8s cubic-bezier(0.45, 0, 0.55, 1); }
   .hp-word img { display: block; width: 100%; height: auto; filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.55)); }
   .hp.i-tree .hp-tree, .hp.i-mark .hp-word { opacity: 1; }
