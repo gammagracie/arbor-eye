@@ -61,15 +61,18 @@
       if (!auto && move) { move.cancel(); move = null; }
       bg.src = 'assets/works/' + w[1] + '.jpg'; bg.alt = w[0];
       q('.hp-k').textContent = w[2]; q('.hp-t').textContent = w[0]; q('.hp-d').textContent = w[3]; q('.hp-btn').href = href(k);
-    }, 250);
+    }, FADE_MS);   // (26 Nov late) the new painting goes in only once the old one has faded right out, so nothing pops
   }
   // the slideshow: the painting moves for 3.5s, fades, and the next one comes up and moves in turn
   function play() {
     const bg = q('.hp-bg'); if (!bg || !auto) return;
     const [s0, s1, a, b] = MOVES[moveN++ % MOVES.length];
     if (move) move.cancel();
-    if (!CALM.matches && bg.animate) move = bg.animate([{ transform: 'scale(' + s0 + ') translate(' + a[0] + '%, ' + a[1] + '%)' }, { transform: 'scale(' + s1 + ') translate(' + b[0] + '%, ' + b[1] + '%)' }], { duration: MOVE_MS, easing: 'cubic-bezier(0.37, 0, 0.63, 1)', fill: 'forwards' });
-    clearTimeout(nextT); nextT = setTimeout(() => { if (auto) pick(cur + 1); }, MOVE_MS - FADE_MS / 2);
+    // the first painting starts from where it already sits (its resting pose, the first move's start), so nothing jumps when the
+    // wordmark fades; the later ones start their own move as they fade in
+    const from = moveN === 1 ? getComputedStyle(bg).transform : 'scale(' + s0 + ') translate(' + a[0] + '%, ' + a[1] + '%)';
+    if (!CALM.matches && bg.animate) move = bg.animate([{ transform: from }, { transform: 'scale(' + s1 + ') translate(' + b[0] + '%, ' + b[1] + '%)' }], { duration: MOVE_MS, easing: 'cubic-bezier(0.37, 0, 0.63, 1)', fill: 'forwards' });
+    clearTimeout(nextT); nextT = setTimeout(() => { if (auto) pick(cur + 1); }, MOVE_MS - FADE_MS);   // the fade out ends as the move does
   }
   function stop() { stopped = true; if (!auto) return; auto = false; clearTimeout(nextT); if (move) move.pause(); }
   // the intro, timed as on desktop (index.html): the tree in from 0.15s, away from 3.55s, the wordmark in from 5.15s, away from
